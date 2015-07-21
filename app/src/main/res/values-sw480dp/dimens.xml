@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="login_button">28sp</dimen>
+    <dimen name="text">21sp</dimen>
+    <dimen name="login_checkbox_width">30dp</dimen>
+    <dimen name="margin_5dp">9dp</dimen>
+</resources>
