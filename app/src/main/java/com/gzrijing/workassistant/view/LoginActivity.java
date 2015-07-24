@@ -1,6 +1,7 @@
-package com.gzrijing.workassistant;
+package com.gzrijing.workassistant.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.gzrijing.workassistant.R;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener {
@@ -107,7 +110,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void login() {
-
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("fragId", "0");
+        startActivity(intent);
     }
 
     @Override

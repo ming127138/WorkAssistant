@@ -71,7 +71,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="8"
                     android:background="@null"
-                    android:textColorHint="@color/hint_grey"
+                    android:textColorHint="@color/grey_hint"
                     android:hint="输入账号"
                     android:inputType="textPersonName"
                     android:textSize="@dimen/text"
@@ -100,7 +100,7 @@
                     android:layout_weight="8"
                     android:background="@null"
                     android:hint="输入密码"
-                    android:textColorHint="@color/hint_grey"
+                    android:textColorHint="@color/grey_hint"
                     android:inputType="textPassword"
                     android:textSize="@dimen/text"
                     android:textColor="@color/black"/>
