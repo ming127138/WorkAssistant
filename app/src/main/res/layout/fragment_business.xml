@@ -12,7 +12,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/business_install_meter_btn"
+                android:id="@+id/business_pipe_inspection_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -22,7 +22,7 @@
                 android:textSize="@dimen/text"/>
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/business_pipe_repair_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -32,7 +32,7 @@
                 android:textSize="@dimen/text" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/business_meter_install_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/business_btn_off"
@@ -42,7 +42,7 @@
                 android:textSize="@dimen/text" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/business_meter_repair_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
