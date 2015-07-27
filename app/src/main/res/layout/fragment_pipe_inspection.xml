@@ -1,7 +1,527 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_content"
     tools:context="com.gzrijing.workassistant.view.PipeInspectionFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item1_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_20dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="一月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num1_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num1_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item2_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="二月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num2_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num2_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item3_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="三月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num3_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num3_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item4_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="四月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num4_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num4_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item5_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="五月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num5_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num5_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item6_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="六月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num6_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num6_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item7_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="七月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num7_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num7_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item8_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="八月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num8_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num8_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item9_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="九月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num9_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num9_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item10_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="十月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num10_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num10_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item11_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="十一月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num11_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num11_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pipe_inspection_item12_rl"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_50dp"
+                android:layout_marginBottom="@dimen/sw_20dp"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:layout_marginRight="@dimen/sw_20dp"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:background="@drawable/bg_title_item">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sw_20dp"
+                    android:text="十二月份计划"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/pipe_inspection_num12_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/sw_40dp"
+                    android:text="0"
+                    android:textColor="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/pipe_inspection_num12_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="@dimen/sw_15dp"
+                    android:paddingRight="@dimen/sw_15dp"
+                    android:paddingTop="@dimen/sw_15dp"
+                    android:src="@drawable/btn_arrow" />
+            </RelativeLayout>
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

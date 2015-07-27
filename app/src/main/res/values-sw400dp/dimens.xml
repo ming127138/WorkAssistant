@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="login_button">24dp</dimen>
-    <dimen name="text">18dp</dimen>
-    <dimen name="login_checkbox_width">25dp</dimen>
-    <dimen name="margin_5dp">7dp</dimen>
+    <dimen name="sw_5dp">6dp</dimen>
+    <dimen name="sw_10dp">12dp</dimen>
+    <dimen name="sw_15dp">18dp</dimen>
+    <dimen name="sw_20dp">24dp</dimen>
+    <dimen name="sw_40dp">48dp</dimen>
+    <dimen name="sw_50dp">60dp</dimen>
 </resources>

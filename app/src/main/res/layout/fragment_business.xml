@@ -19,7 +19,7 @@
                 android:background="@drawable/business_btn_off"
                 android:text="管网巡检"
                 android:textColor="@color/grey_text"
-                android:textSize="@dimen/text"/>
+                android:textSize="@dimen/sw_15dp"/>
 
             <Button
                 android:id="@+id/business_pipe_repair_btn"
@@ -29,7 +29,7 @@
                 android:background="@drawable/business_btn_off"
                 android:text="管网维修"
                 android:textColor="@color/grey_text"
-                android:textSize="@dimen/text" />
+                android:textSize="@dimen/sw_15dp" />
 
             <Button
                 android:id="@+id/business_meter_install_btn"
@@ -39,7 +39,7 @@
                 android:layout_weight="1"
                 android:text="移表挂表"
                 android:textColor="@color/grey_text"
-                android:textSize="@dimen/text" />
+                android:textSize="@dimen/sw_15dp" />
 
             <Button
                 android:id="@+id/business_meter_repair_btn"
@@ -49,7 +49,7 @@
                 android:background="@drawable/business_btn_off"
                 android:text="水表维护"
                 android:textColor="@color/grey_text"
-                android:textSize="@dimen/text" />
+                android:textSize="@dimen/sw_15dp" />
         </LinearLayout>
 
     <FrameLayout

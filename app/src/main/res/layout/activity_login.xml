@@ -74,7 +74,7 @@
                     android:textColorHint="@color/grey_hint"
                     android:hint="输入账号"
                     android:inputType="textPersonName"
-                    android:textSize="@dimen/text"
+                    android:textSize="@dimen/sw_15dp"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
@@ -102,7 +102,7 @@
                     android:hint="输入密码"
                     android:textColorHint="@color/grey_hint"
                     android:inputType="textPassword"
-                    android:textSize="@dimen/text"
+                    android:textSize="@dimen/sw_15dp"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
@@ -114,7 +114,7 @@
                 android:gravity="center_vertical"
                 android:text="V1.0.0"
                 android:textColor="@color/blue"
-                android:textSize="@dimen/text" />
+                android:textSize="@dimen/sw_15dp" />
 
             <Button
                 android:id="@+id/login_login_btn"
@@ -125,7 +125,7 @@
                 android:background="@drawable/login_login"
                 android:text="登    录"
                 android:textColor="@color/white"
-                android:textSize="@dimen/login_button" />
+                android:textSize="@dimen/sw_20dp" />
 
             <View
                 android:layout_width="match_parent"
@@ -140,9 +140,9 @@
 
                 <ImageView
                     android:id="@+id/login_checkbox_iv"
-                    android:layout_width="@dimen/login_checkbox_width"
+                    android:layout_width="@dimen/sw_15dp"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/margin_5dp"
+                    android:layout_marginRight="@dimen/sw_5dp"
                     android:layout_toLeftOf="@+id/textView"
                     android:src="@drawable/login_checkbox_off" />
 
@@ -155,7 +155,7 @@
                     android:gravity="center_vertical"
                     android:hint="输入密码"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text" />
+                    android:textSize="@dimen/sw_15dp" />
             </RelativeLayout>
         </LinearLayout>
 
