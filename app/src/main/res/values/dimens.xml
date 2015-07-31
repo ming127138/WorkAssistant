@@ -6,8 +6,10 @@
 
     <dimen name="sw_5dp">4dp</dimen>
     <dimen name="sw_10dp">8dp</dimen>
+    <dimen name="sw_12dp">9.5dp</dimen>
     <dimen name="sw_15dp">12dp</dimen>
     <dimen name="sw_20dp">16dp</dimen>
+    <dimen name="sw_40dp">32dp</dimen>
     <dimen name="sw_50dp">40dp</dimen>
 
 </resources>

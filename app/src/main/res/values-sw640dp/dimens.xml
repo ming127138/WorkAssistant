@@ -2,6 +2,7 @@
 <resources>
     <dimen name="sw_5dp">9dp</dimen>
     <dimen name="sw_10dp">18dp</dimen>
+    <dimen name="sw_12dp">22dp</dimen>
     <dimen name="sw_15dp">27dp</dimen>
     <dimen name="sw_20dp">36dp</dimen>
     <dimen name="sw_40dp">72dp</dimen>

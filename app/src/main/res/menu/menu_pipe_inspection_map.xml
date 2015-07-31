@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.gzrijing.workassistant.view.PipeInspectionMapActivity">
+    <item
+        android:id="@+id/pipe_inspection_overflow_download"
+        android:orderInCategory="100"
+        android:title="下载离线地图"
+        app:showAsAction="never" />
+</menu>

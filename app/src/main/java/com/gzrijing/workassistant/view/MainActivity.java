@@ -66,7 +66,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 "action_bar_title", "id", "android");
         tv_actionBar = (TextView) findViewById(titleId);
 
-
         Intent intent = getIntent();
         int id = Integer.parseInt(intent.getStringExtra("fragId"));
         if (id == 0) {
