@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/sw_5dp">
+
+
+    <TextView
+        android:id="@+id/listview_item_inspection_parameter_key_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/sw_5dp"
+        android:layout_marginTop="@dimen/sw_5dp"
+        android:layout_marginBottom="@dimen/sw_5dp"
+        android:text="参数："
+        android:textColor="@color/black"
+        android:textSize="@dimen/sw_15dp" />
+
+    <EditText
+        android:id="@+id/listview_item_inspection_parameter_value_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sw_5dp"
+        android:textCursorDrawable="@drawable/edit_cursor_blue"
+        android:background="@drawable/edit_line_white_blue"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sw_15dp" />
+</LinearLayout>

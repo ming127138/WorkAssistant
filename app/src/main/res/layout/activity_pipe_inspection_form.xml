@@ -1,0 +1,79 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.gzrijing.workassistant.view.PipeInspectionFormActivity">
+
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/sw_10dp"
+                android:text="点检内容"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sw_40dp"
+                android:background="@color/grey_hint"
+                android:orientation="horizontal"
+                android:padding="@dimen/sw_5dp">
+
+                <ImageView
+                    android:id="@+id/pipe_inspection_form_check_all_iv"
+                    android:layout_width="@dimen/sw_20dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/sw_5dp"
+                    android:src="@drawable/login_checkbox_off" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/sw_5dp"
+                    android:gravity="center_vertical"
+                    android:text="全选"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_text"></FrameLayout>
+
+            <com.gzrijing.workassistant.widget.MyListView
+                android:id="@+id/pipe_inspection_form_standard_lv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_hint" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/sw_10dp"
+                android:text="特殊参数"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_20dp" />
+
+            <com.gzrijing.workassistant.widget.MyListView
+                android:id="@+id/pipe_inspection_form_parameter_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_hint" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

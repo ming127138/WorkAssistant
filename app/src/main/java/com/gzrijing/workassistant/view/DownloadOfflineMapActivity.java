@@ -1,15 +1,9 @@
 package com.gzrijing.workassistant.view;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Size;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.baidu.mapapi.map.offline.MKOLSearchRecord;
@@ -19,30 +13,22 @@ import com.baidu.mapapi.map.offline.MKOfflineMapListener;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.DownloadOfflineMapAdapter;
 import com.gzrijing.workassistant.entity.LocalMap;
-import com.gzrijing.workassistant.widget.MyProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadOfflineMapActivity extends Activity implements MKOfflineMapListener {
+public class DownloadOfflineMapActivity extends AppCompatActivity implements MKOfflineMapListener {
 
     private MKOfflineMap mOffline;
     private ListView lv_Package;
-    /**
-     * 已下载的离线地图信息列表
-     */
-    private ArrayList<MKOLUpdateElement> localMapList = null;
+    private ArrayList<MKOLUpdateElement> localMapList = null;   //已下载的离线地图信息列表
     private DownloadOfflineMapAdapter adapter;
     private List<LocalMap> localMaps;
-    private MyProgressBar mProgressBar;
-    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_offline_map);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);//显示返回icon
 
         initData();
         initViews();
@@ -89,6 +75,10 @@ public class DownloadOfflineMapActivity extends Activity implements MKOfflineMap
     }
 
     private void initViews() {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         lv_Package = (ListView) findViewById(R.id.download_offline_map_lv);
         adapter = new DownloadOfflineMapAdapter(this, localMaps, mOffline);
         lv_Package.setAdapter(adapter);

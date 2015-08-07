@@ -3,21 +3,19 @@ package com.gzrijing.workassistant.view;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private Toolbar mToolbar;
     private ImageView iv_business;
     private ImageView iv_manage;
     private ImageView iv_acceptance;
@@ -27,7 +25,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ManageFragment manageFragment;
     private AcceptanceFragment acceptanceFragment;
     private MoreFragment moreFragment;
-    private TextView tv_actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,32 +36,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setListeners();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private void initData() {
-        int titleId = Resources.getSystem().getIdentifier(
-                "action_bar_title", "id", "android");
-        tv_actionBar = (TextView) findViewById(titleId);
 
         Intent intent = getIntent();
         int id = Integer.parseInt(intent.getStringExtra("fragId"));
@@ -84,6 +56,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void initViews() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
+
+
         iv_business = (ImageView) findViewById(R.id.main_business_iv);
         iv_manage = (ImageView) findViewById(R.id.main_manage_iv);
         iv_acceptance = (ImageView) findViewById(R.id.main_acceptance_iv);
@@ -136,7 +112,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         hideFragments(transaction);
         switch (index) {
             case 0:
-                tv_actionBar.setText("业务");
+                mToolbar.setTitle("业务");
                 iv_business.setImageResource(R.drawable.main_bottom_business_on);
                 if (businessFragment == null) {
                     businessFragment = new BusinessFragment();
@@ -146,7 +122,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 break;
             case 1:
-                tv_actionBar.setText("管理");
+                mToolbar.setTitle("管理");
                 iv_manage.setImageResource(R.drawable.main_bottom_manage_on);
                 if (manageFragment == null) {
                     manageFragment = new ManageFragment();
@@ -156,7 +132,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 break;
             case 2:
-                tv_actionBar.setText("验收");
+                mToolbar.setTitle("验收");
                 iv_acceptance.setImageResource(R.drawable.main_bottom_acceptance_on);
                 if (acceptanceFragment == null) {
                     acceptanceFragment = new AcceptanceFragment();
@@ -166,7 +142,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 break;
             case 3:
-                tv_actionBar.setText("更多");
+                mToolbar.setTitle("更多");
                 iv_more.setImageResource(R.drawable.main_bottom_more_on);
                 if (moreFragment == null) {
                     moreFragment = new MoreFragment();

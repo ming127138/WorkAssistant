@@ -5,6 +5,8 @@
     <dimen name="sw_12dp">22dp</dimen>
     <dimen name="sw_15dp">27dp</dimen>
     <dimen name="sw_20dp">36dp</dimen>
+    <dimen name="sw_30dp">54dp</dimen>
     <dimen name="sw_40dp">72dp</dimen>
     <dimen name="sw_50dp">90dp</dimen>
+    <dimen name="sw_200dp">360dp</dimen>
 </resources>

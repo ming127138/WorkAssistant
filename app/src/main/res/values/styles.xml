@@ -1,22 +1,19 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-    </style>
-
-    <!-- actionbar theme. -->
-    <style name="CustomActionBarTheme" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-    </style>
-
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/blue</item>
-        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
-    </style>
-
-    <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/white</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Actionbar color -->
+        <item name="colorPrimary">@color/blue</item>
+        <!--Status bar color-->
+        <item name="colorPrimaryDark">@color/blue</item>
+        <!--Window color-->
+        <item name="android:windowBackground">@color/grey_bg</item>
+        <!--text color-->
+        <item name="android:textColorPrimary">@color/white</item>
+        <!--Control color-->
+        <item name="colorControlNormal">@color/white</item>
+        <!--menu selected color-->
+        <item name="colorAccent">@color/grey</item>
     </style>
 
     <!-- ProgressBar theme. -->

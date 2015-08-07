@@ -34,15 +34,14 @@
         <activity
             android:name=".view.MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"
-            android:theme="@style/CustomActionBarTheme"></activity>
-        <activity
-            android:name=".view.PipeInspectionMapActivity"
-            android:theme="@style/CustomActionBarTheme"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.PipeInspectionMapActivity" />
         <activity
             android:name=".view.DownloadOfflineMapActivity"
-            android:label="@string/title_activity_download_offline_map"
-            android:theme="@style/CustomActionBarTheme"></activity>
+            android:label="@string/title_activity_download_offline_map" />
+        <activity
+            android:name=".view.PipeInspectionFormActivity"
+            android:label="@string/title_activity_pipe_inspection_form" />
     </application>
 
 </manifest>
