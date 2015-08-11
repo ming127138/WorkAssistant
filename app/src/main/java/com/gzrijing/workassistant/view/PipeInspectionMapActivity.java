@@ -151,6 +151,14 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         });
+                        btn_report.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionReportActivity.class);
+                                intent.putExtra("number", markers.get(index).getId());
+                                startActivity(intent);
+                            }
+                        });
                     }
                 }
                 InfoWindow infoWindow = new InfoWindow(view, point, -48);

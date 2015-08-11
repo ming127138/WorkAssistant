@@ -8,5 +8,7 @@
     <dimen name="sw_30dp">36dp</dimen>
     <dimen name="sw_40dp">48dp</dimen>
     <dimen name="sw_50dp">60dp</dimen>
+    <dimen name="sw_100dp">120dp</dimen>
+    <dimen name="sw_150dp">180dp</dimen>
     <dimen name="sw_200dp">240dp</dimen>
 </resources>
