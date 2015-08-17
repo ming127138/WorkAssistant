@@ -9,4 +9,5 @@
     <color name="grey_bg">#DDDDDD</color>//221,221,221
     <color name="grey_content">#EBEBF4</color>//235,235,244
     <color name="grey_text">#858E99</color>//133,142,153
+    <color name="pink_bg">#FCE2AC</color>//252,226,172
 </resources>

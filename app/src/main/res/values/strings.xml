@@ -12,4 +12,6 @@
     <string name="title_activity_pipe_inspection_report">问题上报</string>
     <string name="title_activity_pipe_repair_distribute">管网维修</string>
     <string name="title_activity_pipe_repair_progress">PipeRepairProgressActivity</string>
+    <string name="title_activity_pipe_repair_distribute_info">PipeRepairDistributeInfoActivity
+    </string>
 </resources>
