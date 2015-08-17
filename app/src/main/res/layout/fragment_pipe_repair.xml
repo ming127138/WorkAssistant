@@ -1,10 +1,142 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_text"
+    android:orientation="vertical"
     tools:context="com.gzrijing.workassistant.view.PipeRepairFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_image"/>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:paddingLeft="@dimen/sw_30dp"
+        android:paddingRight="@dimen/sw_30dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/pipe_repair_distribute_item_rl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sw_50dp"
+            android:layout_marginTop="@dimen/sw_20dp"
+            android:background="@drawable/bg_title_item">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:text="待派发工单"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/pipe_repair_distribute_num_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/sw_30dp"
+                android:text="0"
+                android:textColor="@color/grey_text"
+                android:textSize="@dimen/sw_15dp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@+id/pipe_repair_distribute_num_tv"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingBottom="@dimen/sw_15dp"
+                android:paddingRight="@dimen/sw_5dp"
+                android:paddingTop="@dimen/sw_15dp"
+                android:src="@drawable/btn_arrow" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pipe_repair_order_item_rl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sw_50dp"
+            android:layout_marginTop="@dimen/sw_20dp"
+            android:background="@drawable/bg_title_item">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:text="我的工单"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/pipe_repair_order_num_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/sw_30dp"
+                android:text="0"
+                android:textColor="@color/grey_text"
+                android:textSize="@dimen/sw_15dp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@+id/pipe_repair_order_num_tv"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingBottom="@dimen/sw_15dp"
+                android:paddingRight="@dimen/sw_5dp"
+                android:paddingTop="@dimen/sw_15dp"
+                android:src="@drawable/btn_arrow" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/pipe_repair_complete_item_rl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sw_50dp"
+            android:layout_marginTop="@dimen/sw_20dp"
+            android:background="@drawable/bg_title_item">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/sw_20dp"
+                android:text="已完成工单"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/pipe_repair_complete_num_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/sw_30dp"
+                android:text="0"
+                android:textColor="@color/grey_text"
+                android:textSize="@dimen/sw_15dp" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@+id/pipe_repair_complete_num_tv"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingBottom="@dimen/sw_15dp"
+                android:paddingRight="@dimen/sw_5dp"
+                android:paddingTop="@dimen/sw_15dp"
+                android:src="@drawable/btn_arrow" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

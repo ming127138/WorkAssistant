@@ -46,6 +46,14 @@
             android:name=".view.PipeInspectionReportActivity"
             android:label="@string/title_activity_pipe_inspection_report" >
         </activity>
+        <activity
+            android:name=".view.PipeRepairDistributeActivity"
+            android:label="@string/title_activity_pipe_repair_distribute" >
+        </activity>
+        <activity
+            android:name=".view.PipeRepairProgressActivity"
+            android:label="@string/title_activity_pipe_repair_progress" >
+        </activity>
     </application>
 
 </manifest>

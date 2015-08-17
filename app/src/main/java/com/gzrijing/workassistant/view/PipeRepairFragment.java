@@ -1,21 +1,29 @@
 package com.gzrijing.workassistant.view;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 
 public class PipeRepairFragment extends Fragment implements View.OnClickListener{
 
     private View PipeRepairLayout;
+    private RelativeLayout rl_distribute;
+    private TextView tv_disNum;
+    private RelativeLayout rl_order;
+    private TextView tv_ordNum;
+    private RelativeLayout rl_complete;
+    private TextView tv_comNum;
 
     public PipeRepairFragment() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,22 +43,36 @@ public class PipeRepairFragment extends Fragment implements View.OnClickListener
     }
 
     private void initViews() {
-
+        rl_distribute = (RelativeLayout) PipeRepairLayout.findViewById(R.id.pipe_repair_distribute_item_rl);
+        tv_disNum = (TextView) PipeRepairLayout.findViewById(R.id.pipe_repair_distribute_num_tv);
+        rl_order = (RelativeLayout) PipeRepairLayout.findViewById(R.id.pipe_repair_order_item_rl);
+        tv_ordNum = (TextView) PipeRepairLayout.findViewById(R.id.pipe_repair_order_num_tv);
+        rl_complete = (RelativeLayout) PipeRepairLayout.findViewById(R.id.pipe_repair_complete_item_rl);
+        tv_comNum = (TextView) PipeRepairLayout.findViewById(R.id.pipe_repair_complete_num_tv);
     }
 
     private void setListeners() {
-
+        rl_distribute.setOnClickListener(this);
+        rl_order.setOnClickListener(this);
+        rl_complete.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case 0:
+            case R.id.pipe_repair_distribute_item_rl:
+                Intent intent = new Intent(PipeRepairLayout.getContext(), PipeRepairDistributeActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.pipe_repair_order_item_rl:
+
+                break;
+
+            case R.id.pipe_repair_complete_item_rl:
 
                 break;
         }
     }
-
 
 }

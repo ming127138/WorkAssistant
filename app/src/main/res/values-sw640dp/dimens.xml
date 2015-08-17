@@ -9,6 +9,7 @@
     <dimen name="sw_40dp">72dp</dimen>
     <dimen name="sw_50dp">90dp</dimen>
     <dimen name="sw_100dp">180dp</dimen>
+    <dimen name="sw_120dp">216dp</dimen>
     <dimen name="sw_150dp">270dp</dimen>
     <dimen name="sw_200dp">360dp</dimen>
 </resources>
