@@ -6,6 +6,6 @@
         android:id="@+id/action_distribute"
         android:orderInCategory="100"
         android:icon="@drawable/icon_distribute"
-        android:title="派发"
+        android:title="派工"
         app:showAsAction="always" />
 </menu>

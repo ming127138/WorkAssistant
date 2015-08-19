@@ -114,6 +114,12 @@ public class SubordinateActivity extends AppCompatActivity {
             return true;
         }
 
+        if(id == R.id.action_location){
+            Intent intent = new Intent(this, SubordinateLocationActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

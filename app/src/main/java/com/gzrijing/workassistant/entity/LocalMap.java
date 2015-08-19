@@ -1,8 +1,5 @@
 package com.gzrijing.workassistant.entity;
 
-/**
- * Created by ME on 2015/7/30.
- */
 public class LocalMap {
     private int cityId;
     private String cityName;

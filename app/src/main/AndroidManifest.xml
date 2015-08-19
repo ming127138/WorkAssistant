@@ -62,6 +62,10 @@
             android:name=".view.SubordinateActivity"
             android:label="@string/title_activity_subordinate" >
         </activity>
+        <activity
+            android:name=".view.SubordinateLocationActivity"
+            android:label="@string/title_activity_subordinate_location" >
+        </activity>
     </application>
 
 </manifest>

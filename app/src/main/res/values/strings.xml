@@ -14,4 +14,5 @@
     <string name="title_activity_pipe_repair_progress">PipeRepairProgressActivity</string>
     <string name="title_activity_pipe_repair_distribute_info">派发任务</string>
     <string name="title_activity_subordinate">下属列表</string>
+    <string name="title_activity_subordinate_location">下属实时位置</string>
 </resources>
