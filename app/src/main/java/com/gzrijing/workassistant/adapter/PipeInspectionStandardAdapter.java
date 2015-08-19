@@ -67,16 +67,13 @@ public class PipeInspectionStandardAdapter extends BaseAdapter {
 
         v.standard.setText(standards.get(position).getStandard());
 
-        final ImageView iv_checkBox = v.checkBox;
         v.ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isCheck) {
                     standards.get(position).setIsCheck(false);
-                    iv_checkBox.setImageResource(R.drawable.login_checkbox_off);
                 } else {
                     standards.get(position).setIsCheck(true);
-                    iv_checkBox.setImageResource(R.drawable.login_checkbox_on);
                 }
                 notifyDataSetChanged();
             }

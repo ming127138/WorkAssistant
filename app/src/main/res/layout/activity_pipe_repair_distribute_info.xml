@@ -1,16 +1,149 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.gzrijing.workassistant.view.PipeRepairDistributeInfoActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+    <include layout="@layout/toolbar" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/sw_10dp"
+        android:padding="@dimen/sw_5dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/pipe_repair_distribute_info_order_id_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="　工单ID："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sw_5dp"
+            android:text="紧急级别："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sw_5dp"
+            android:text="　 信息1："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sw_5dp"
+            android:text=" 　信息2："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sw_5dp"
+            android:text="　 信息3："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"/>
+
+    <LinearLayout
+        android:id="@+id/pipe_repair_distribute_info_executor_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/sw_10dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="　执行者："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/pipe_repair_distribute_info_executor_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="未选择"
+                android:textColorHint="@color/grey_text"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp"/>
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/sw_20dp"
+            android:layout_weight="1"
+            android:src="@drawable/btn_arrow"
+            android:layout_gravity="right|center_vertical"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"/>
+
+    <LinearLayout
+        android:id="@+id/pipe_repair_distribute_info_date_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/sw_10dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工单期限："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/pipe_repair_distribute_info_date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="未选择"
+                android:textColorHint="@color/grey_text"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp"/>
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/sw_20dp"
+            android:layout_weight="1"
+            android:src="@drawable/btn_arrow"
+            android:layout_gravity="right|center_vertical"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"/>
+
+</LinearLayout>

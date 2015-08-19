@@ -58,6 +58,10 @@
             android:name=".view.PipeRepairDistributeInfoActivity"
             android:label="@string/title_activity_pipe_repair_distribute_info" >
         </activity>
+        <activity
+            android:name=".view.SubordinateActivity"
+            android:label="@string/title_activity_subordinate" >
+        </activity>
     </application>
 
 </manifest>

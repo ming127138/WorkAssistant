@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.gzrijing.workassistant.view.SubordinateActivity">
+    <item
+        android:id="@+id/action_location"
+        android:orderInCategory="100"
+        android:icon="@drawable/icon_chart"
+        android:title="工作饱和度"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_statistics"
+        android:orderInCategory="100"
+        android:icon="@drawable/icon_location"
+        android:title="实时位置"
+        app:showAsAction="always" />
+</menu>
