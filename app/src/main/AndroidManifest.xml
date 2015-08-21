@@ -66,6 +66,18 @@
             android:name=".view.SubordinateLocationActivity"
             android:label="@string/title_activity_subordinate_location" >
         </activity>
+        <activity
+            android:name=".view.PipeRepairOrderActivity"
+            android:label="@string/title_activity_pipe_repair_order" >
+        </activity>
+        <activity
+            android:name=".view.PipeRepairReportActivity"
+            android:label="@string/title_activity_pipe_repair_report" >
+        </activity>
+        <activity
+            android:name=".view.SuppliesActivity"
+            android:label="@string/title_activity_supplies" >
+        </activity>
     </application>
 
 </manifest>

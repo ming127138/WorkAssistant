@@ -5,34 +5,27 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.gzrijing.workassistant.R;
 
-public class PipeRepairDistributeActivity extends AppCompatActivity implements View.OnClickListener{
-
+public class PipeRepairOrderActivity extends AppCompatActivity implements View.OnClickListener{
     private Button btn_on;
     private Button btn_off;
     private FragmentManager fragmentManager;
-    private PipeRepairDistributeOnFragment pipeRepairDistributeOnFragment;
-    private PipeRepairDistributeOffFragment pipeRepairDistributeOffFragment;
+    private PipeRepairOrderOnFragment pipeRepairOrderOnFragment;
+    private PipeRepairOrderOffFragment pipeRepairOrderOffFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pipe_repair_distribute);
+        setContentView(R.layout.activity_pipe_repair_order);
 
         initViews();
         initData();
         setListeners();
-    }
-
-    private void initData() {
-        fragmentManager = getSupportFragmentManager();
-        setTabSelection(0);
     }
 
     private void initViews() {
@@ -40,9 +33,13 @@ public class PipeRepairDistributeActivity extends AppCompatActivity implements V
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        btn_on = (Button) findViewById(R.id.pipe_repair_distribute_on_btn);
-        btn_off = (Button) findViewById(R.id.pipe_repair_distribute_off_btn);
+        btn_on = (Button) findViewById(R.id.pipe_repair_order_on_btn);
+        btn_off = (Button) findViewById(R.id.pipe_repair_order_off_btn);
+    }
 
+    private void initData() {
+        fragmentManager = getSupportFragmentManager();
+        setTabSelection(0);
     }
 
     private void setListeners() {
@@ -53,13 +50,13 @@ public class PipeRepairDistributeActivity extends AppCompatActivity implements V
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        case R.id.pipe_repair_distribute_on_btn:
-            setTabSelection(0);
-            break;
+            case R.id.pipe_repair_order_on_btn:
+                setTabSelection(0);
+                break;
 
-        case R.id.pipe_repair_distribute_off_btn:
-            setTabSelection(1);
-            break;
+            case R.id.pipe_repair_order_off_btn:
+                setTabSelection(1);
+                break;
         }
     }
 
@@ -72,11 +69,11 @@ public class PipeRepairDistributeActivity extends AppCompatActivity implements V
                 btn_on.setTextColor(getResources().getColor(R.color.white));
                 btn_off.setBackgroundResource(R.drawable.btn_paging_right_off);
                 btn_off.setTextColor(getResources().getColor(R.color.blue));
-                if (pipeRepairDistributeOnFragment == null) {
-                    pipeRepairDistributeOnFragment = new PipeRepairDistributeOnFragment();
-                    transaction.add(R.id.fragment_pipe_repair_distribute, pipeRepairDistributeOnFragment);
+                if (pipeRepairOrderOnFragment == null) {
+                    pipeRepairOrderOnFragment = new PipeRepairOrderOnFragment();
+                    transaction.add(R.id.fragment_pipe_repair_order, pipeRepairOrderOnFragment);
                 } else {
-                    transaction.show(pipeRepairDistributeOnFragment);
+                    transaction.show(pipeRepairOrderOnFragment);
                 }
                 break;
             case 1:
@@ -84,11 +81,11 @@ public class PipeRepairDistributeActivity extends AppCompatActivity implements V
                 btn_on.setTextColor(getResources().getColor(R.color.blue));
                 btn_off.setBackgroundResource(R.drawable.btn_paging_right_on);
                 btn_off.setTextColor(getResources().getColor(R.color.white));
-                if (pipeRepairDistributeOffFragment == null) {
-                    pipeRepairDistributeOffFragment = new PipeRepairDistributeOffFragment();
-                    transaction.add(R.id.fragment_pipe_repair_distribute, pipeRepairDistributeOffFragment);
+                if (pipeRepairOrderOffFragment == null) {
+                    pipeRepairOrderOffFragment = new PipeRepairOrderOffFragment();
+                    transaction.add(R.id.fragment_pipe_repair_order, pipeRepairOrderOffFragment);
                 } else {
-                    transaction.show(pipeRepairDistributeOffFragment);
+                    transaction.show(pipeRepairOrderOffFragment);
                 }
                 break;
         }
@@ -96,11 +93,11 @@ public class PipeRepairDistributeActivity extends AppCompatActivity implements V
     }
 
     private void hideFragments(FragmentTransaction transaction) {
-        if (pipeRepairDistributeOnFragment != null) {
-            transaction.hide(pipeRepairDistributeOnFragment);
+        if (pipeRepairOrderOnFragment != null) {
+            transaction.hide(pipeRepairOrderOnFragment);
         }
-        if (pipeRepairDistributeOffFragment != null) {
-            transaction.hide(pipeRepairDistributeOffFragment);
+        if (pipeRepairOrderOffFragment != null) {
+            transaction.hide(pipeRepairOrderOffFragment);
         }
     }
 

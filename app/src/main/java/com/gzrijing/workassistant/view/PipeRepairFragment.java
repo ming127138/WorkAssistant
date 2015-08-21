@@ -61,12 +61,13 @@ public class PipeRepairFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.pipe_repair_distribute_item_rl:
-                Intent intent = new Intent(PipeRepairLayout.getContext(), PipeRepairDistributeActivity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(PipeRepairLayout.getContext(), PipeRepairDistributeActivity.class);
+                startActivity(intent1);
                 break;
 
             case R.id.pipe_repair_order_item_rl:
-
+                Intent intent2 = new Intent(PipeRepairLayout.getContext(), PipeRepairOrderActivity.class);
+                startActivity(intent2);
                 break;
 
             case R.id.pipe_repair_complete_item_rl:

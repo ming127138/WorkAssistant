@@ -15,4 +15,7 @@
     <string name="title_activity_pipe_repair_distribute_info">派发任务</string>
     <string name="title_activity_subordinate">下属列表</string>
     <string name="title_activity_subordinate_location">下属实时位置</string>
+    <string name="title_activity_pipe_repair_order">管网维修</string>
+    <string name="title_activity_pipe_repair_report">管网维修汇报</string>
+    <string name="title_activity_supplies">查询耗材</string>
 </resources>
