@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
+    android:paddingTop="@dimen/sw_5dp"
+    android:paddingBottom="@dimen/sw_5dp"
     android:orientation="horizontal">
 
     <ImageView
@@ -10,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/sw_15dp"
         android:layout_weight="2"
-        android:src="@drawable/icon_red_dot" />
+        android:src="@drawable/icon_delete" />
 
     <TextView
         android:id="@+id/listview_item_supplies_supplies_name_tv"
@@ -63,14 +65,15 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/sw_15dp"
             android:layout_weight="1"
-            android:src="@drawable/icon_red_dot" />
+            android:src="@drawable/icon_arrow_up" />
 
-        <TextView
+        <EditText
             android:id="@+id/listview_item_supplies_supplies_num_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:background="@color/white"
             android:text="数量"
             android:textColor="@color/black"
             android:textSize="@dimen/sw_12dp" />
@@ -80,7 +83,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/sw_15dp"
             android:layout_weight="1"
-            android:src="@drawable/icon_red_dot" />
+            android:src="@drawable/icon_arrow_down" />
     </LinearLayout>
 
 

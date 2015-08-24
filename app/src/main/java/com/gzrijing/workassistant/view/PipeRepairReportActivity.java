@@ -15,6 +15,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.adapter.PipeRepairSuppliesAdapter;
+import com.gzrijing.workassistant.entity.Supplies;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PipeRepairReportActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -26,8 +32,10 @@ public class PipeRepairReportActivity extends AppCompatActivity implements View.
     private LinearLayout ll_finishInfo;
     private EditText et_content;
     private boolean isCheck;
-    private Button btn_add;
+    private Button btn_edit;
     private ListView lv_supplies;
+    private List<Supplies> suppliesList;
+    private PipeRepairSuppliesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,8 @@ public class PipeRepairReportActivity extends AppCompatActivity implements View.
         Intent intent = getIntent();
         title = intent.getStringExtra("title");
 
+        suppliesList = new ArrayList<Supplies>();
+
     }
 
     private void initViews() {
@@ -57,15 +67,16 @@ public class PipeRepairReportActivity extends AppCompatActivity implements View.
         iv_finish = (ImageView) findViewById(R.id.pipe_repair_report_finish_iv);
         ll_finishInfo = (LinearLayout) findViewById(R.id.pipe_repair_report_finish_info_ll);
         et_content = (EditText) findViewById(R.id.pipe_repair_report_content_et);
-        btn_add = (Button) findViewById(R.id.pipe_repair_report_add_btn);
+        btn_edit = (Button) findViewById(R.id.pipe_repair_report_edit_btn);
         lv_supplies = (ListView) findViewById(R.id.pipe_repair_report_supplies_lv);
-
+        adapter = new PipeRepairSuppliesAdapter(this, suppliesList);
+        lv_supplies.setAdapter(adapter);
     }
 
     private void setListeners() {
         ll_progress.setOnClickListener(this);
         ll_finish.setOnClickListener(this);
-        btn_add.setOnClickListener(this);
+        btn_edit.setOnClickListener(this);
     }
 
     @Override
@@ -90,10 +101,25 @@ public class PipeRepairReportActivity extends AppCompatActivity implements View.
                     isCheck = !isCheck;
                 }
                 break;
-            case R.id.pipe_repair_report_add_btn:
+            case R.id.pipe_repair_report_edit_btn:
                 Intent intent = new Intent(this, SuppliesActivity.class);
-                startActivity(intent);
+                intent.putExtra("suppliesList", (Serializable)suppliesList);
+                startActivityForResult(intent, 10);
                 break;
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 10){
+            if(resultCode == 10){
+                List<Supplies> suppliess = (List<Supplies>)data.getSerializableExtra("suppliesList");
+                suppliesList.clear();
+                suppliesList.addAll(suppliess);
+                adapter.notifyDataSetChanged();
+            }
         }
 
     }

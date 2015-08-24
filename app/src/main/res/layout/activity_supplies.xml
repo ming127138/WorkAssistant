@@ -33,7 +33,7 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/sw_15dp"
                     android:layout_weight="2"
-                    android:src="@drawable/icon_red_dot" />
+                    android:src="@drawable/icon_delete" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -81,6 +81,11 @@
                     android:textSize="@dimen/sw_12dp" />
 
             </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
 
             <com.gzrijing.workassistant.widget.MyListView
                 android:id="@+id/supplies_supplies_lv"
@@ -346,6 +351,11 @@
                     android:textSize="@dimen/sw_12dp" />
 
             </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
 
             <com.gzrijing.workassistant.widget.MyListView
                 android:id="@+id/supplies_query_lv"

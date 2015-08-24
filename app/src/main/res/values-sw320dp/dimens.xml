@@ -5,6 +5,7 @@
     <dimen name="sw_12dp">12dp</dimen>
     <dimen name="sw_15dp">15dp</dimen>
     <dimen name="sw_20dp">20dp</dimen>
+    <dimen name="sw_25dp">25dp</dimen>
     <dimen name="sw_30dp">30dp</dimen>
     <dimen name="sw_40dp">40dp</dimen>
     <dimen name="sw_50dp">50dp</dimen>
