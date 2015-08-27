@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.data.PipeRepairOrderData;
+
+import org.litepal.crud.DataSupport;
 
 public class PipeRepairOrderActivity extends AppCompatActivity implements View.OnClickListener{
     private Button btn_on;
@@ -38,6 +41,7 @@ public class PipeRepairOrderActivity extends AppCompatActivity implements View.O
     }
 
     private void initData() {
+//        DataSupport.deleteAll(PipeRepairOrderData.class);
         fragmentManager = getSupportFragmentManager();
         setTabSelection(0);
     }

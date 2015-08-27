@@ -1,9 +1,11 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +18,12 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.PipeRepairSuppliesAdapter;
+import com.gzrijing.workassistant.data.PipeRepairOrderData;
+import com.gzrijing.workassistant.data.SuppliesData;
 import com.gzrijing.workassistant.entity.Supplies;
+
+import org.litepal.crud.DataSupport;
+import org.litepal.tablemanager.Connector;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,7 +31,7 @@ import java.util.List;
 
 public class PipeRepairReportActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String title;
+    private String orderId;
     private LinearLayout ll_progress;
     private ImageView iv_progress;
     private LinearLayout ll_finish;
@@ -49,15 +56,28 @@ public class PipeRepairReportActivity extends AppCompatActivity implements View.
 
     private void initData() {
         Intent intent = getIntent();
-        title = intent.getStringExtra("title");
+        orderId = intent.getStringExtra("orderId");
 
         suppliesList = new ArrayList<Supplies>();
+        List<PipeRepairOrderData> orderDatas = DataSupport.where("orderId = ?", orderId).find(PipeRepairOrderData.class);
+        Log.e("order", orderDatas.toString());
+        List<SuppliesData> datas = orderDatas.get(0).getSuppliesDataList();
+        for (int i = 0; i < datas.size(); i++) {
+            Supplies supplies = new Supplies();
+            supplies.setId(datas.get(i).getNo());
+            supplies.setName(datas.get(i).getName());
+            supplies.setSpec(datas.get(i).getSpec());
+            supplies.setUnit(datas.get(i).getUnit());
+            supplies.setUnitPrice(datas.get(i).getUnitPrice());
+            supplies.setNum(datas.get(i).getNum());
+            suppliesList.add(supplies);
+        }
 
     }
 
     private void initViews() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(title);
+        mToolbar.setTitle(orderId);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -103,7 +123,8 @@ public class PipeRepairReportActivity extends AppCompatActivity implements View.
                 break;
             case R.id.pipe_repair_report_edit_btn:
                 Intent intent = new Intent(this, SuppliesActivity.class);
-                intent.putExtra("suppliesList", (Serializable)suppliesList);
+                intent.putExtra("orderId", orderId);
+                intent.putExtra("suppliesList", (Serializable) suppliesList);
                 startActivityForResult(intent, 10);
                 break;
         }
@@ -113,9 +134,9 @@ public class PipeRepairReportActivity extends AppCompatActivity implements View.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 10){
-            if(resultCode == 10){
-                List<Supplies> suppliess = (List<Supplies>)data.getSerializableExtra("suppliesList");
+        if (requestCode == 10) {
+            if (resultCode == 10) {
+                List<Supplies> suppliess = (List<Supplies>) data.getSerializableExtra("suppliesList");
                 suppliesList.clear();
                 suppliesList.addAll(suppliess);
                 adapter.notifyDataSetChanged();

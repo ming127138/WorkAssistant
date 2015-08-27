@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.adapter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,18 +13,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.entity.PipeRepairDistributeOff;
+import com.gzrijing.workassistant.data.PipeRepairOrderData;
+import com.gzrijing.workassistant.entity.PipeRepairOrderOff;
+import com.gzrijing.workassistant.entity.PipeRepairOrderOn;
+import com.gzrijing.workassistant.view.PipeInspectionFragment;
 import com.gzrijing.workassistant.view.PipeRepairDistributeInfoActivity;
+import com.gzrijing.workassistant.view.PipeRepairOrderOnFragment;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
 public class PipeRepairOrderOffAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater listContainer;
-    private List<PipeRepairDistributeOff> repairOffInfos;
+    private List<PipeRepairOrderOff> repairOffInfos;
 
     public PipeRepairOrderOffAdapter(
-            Context context, List<PipeRepairDistributeOff> repairOffInfos) {
+            Context context, List<PipeRepairOrderOff> repairOffInfos) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.repairOffInfos = repairOffInfos;
@@ -61,6 +68,8 @@ public class PipeRepairOrderOffAdapter extends BaseAdapter {
                     R.id.listview_item_pipe_repair_order_off_info2_tv);
             v.three = (TextView) convertView.findViewById(
                     R.id.listview_item_pipe_repair_order_off_info3_tv);
+            v.deadline = (TextView) convertView.findViewById(
+                    R.id.listview_item_pipe_repair_order_off_deadline_tv);
             v.confirm = (RelativeLayout) convertView.findViewById(
                     R.id.listview_item_pipe_repair_order_off_confirm_rl);
             v.icon = (ImageView) convertView.findViewById(
@@ -79,17 +88,18 @@ public class PipeRepairOrderOffAdapter extends BaseAdapter {
         v.one.setText(repairOffInfos.get(position).getInfo1());
         v.two.setText(repairOffInfos.get(position).getInfo2());
         v.three.setText(repairOffInfos.get(position).getInfo3());
-        v.time.setText(repairOffInfos.get(position).getTime());
-        if(repairOffInfos.get(position).isUrgent()){
+        v.deadline.setText(repairOffInfos.get(position).getDeadline());
+        v.time.setText(repairOffInfos.get(position).getRemindTime());
+        if (repairOffInfos.get(position).isUrgent()) {
             v.urgent.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             v.urgent.setVisibility(View.GONE);
         }
-        if(repairOffInfos.get(position).isFlag()){
+        if (repairOffInfos.get(position).isReceive()) {
             v.bg.setBackgroundResource(R.color.white);
             v.icon.setImageResource(R.drawable.icon_distribute_task);
             v.sign.setText("开始处理");
-        }else{
+        } else {
             v.bg.setBackgroundResource(R.color.pink_bg);
             v.icon.setImageResource(R.drawable.icon_confirm);
             v.sign.setText("确认收到");
@@ -98,12 +108,28 @@ public class PipeRepairOrderOffAdapter extends BaseAdapter {
         v.confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(repairOffInfos.get(position).isFlag()){
-//                    Intent intent = new Intent(context, PipeRepairorderInfoActivity.class);
-//                    intent.putExtra("id", repairOffInfos.get(position).getId());
-//                    context.startActivity(intent);
-                }else{
-                    repairOffInfos.get(position).setFlag(true);
+                if (repairOffInfos.get(position).isReceive()) {
+                    ContentValues values = new ContentValues();
+                    values.put("state", true);
+                    DataSupport.updateAll(PipeRepairOrderData.class, values,
+                            "orderId = ?", repairOffInfos.get(position).getId());
+                    PipeRepairOrderOn repairOnInfo = new PipeRepairOrderOn();
+                    repairOnInfo.setId(repairOffInfos.get(position).getId());
+                    repairOnInfo.setUrgent(repairOffInfos.get(position).isUrgent());
+                    repairOnInfo.setInfo1(repairOffInfos.get(position).getInfo1());
+                    repairOnInfo.setInfo2(repairOffInfos.get(position).getInfo2());
+                    repairOnInfo.setInfo3(repairOffInfos.get(position).getInfo3());
+                    repairOnInfo.setDeadline(repairOffInfos.get(position).getDeadline());
+                    PipeRepairOrderOnFragment.repairOnInfos.add(repairOnInfo);
+                    PipeRepairOrderOnFragment.adapter.notifyDataSetChanged();
+                    repairOffInfos.remove(position);
+                    notifyDataSetChanged();
+                } else {
+                    repairOffInfos.get(position).setReceive(true);
+                    ContentValues values = new ContentValues();
+                    values.put("receive", true);
+                    DataSupport.updateAll(PipeRepairOrderData.class, values,
+                            "orderId = ?", repairOffInfos.get(position).getId());
                     notifyDataSetChanged();
                 }
             }
@@ -117,6 +143,7 @@ public class PipeRepairOrderOffAdapter extends BaseAdapter {
         private TextView one;
         private TextView two;
         private TextView three;
+        private TextView deadline;
         private RelativeLayout confirm;
         private ImageView icon;
         private TextView sign;

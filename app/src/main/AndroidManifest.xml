@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
+        android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -38,29 +39,36 @@
         <activity android:name=".view.PipeInspectionMapActivity" />
         <activity
             android:name=".view.DownloadOfflineMapActivity"
-            android:label="@string/title_activity_download_offline_map" />
+            android:label="@string/title_activity_download_offline_map"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.PipeInspectionFormActivity"
-            android:label="@string/title_activity_pipe_inspection_form" />
+            android:label="@string/title_activity_pipe_inspection_form"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.PipeInspectionReportActivity"
-            android:label="@string/title_activity_pipe_inspection_report" >
+            android:label="@string/title_activity_pipe_inspection_report"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".view.PipeRepairDistributeActivity"
-            android:label="@string/title_activity_pipe_repair_distribute" >
+            android:label="@string/title_activity_pipe_repair_distribute"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".view.PipeRepairProgressActivity"
-            android:label="@string/title_activity_pipe_repair_progress" >
+            android:label="@string/title_activity_pipe_repair_progress"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".view.PipeRepairDistributeInfoActivity"
-            android:label="@string/title_activity_pipe_repair_distribute_info" >
+            android:label="@string/title_activity_pipe_repair_distribute_info"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".view.SubordinateActivity"
-            android:label="@string/title_activity_subordinate" >
+            android:label="@string/title_activity_subordinate"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".view.SubordinateLocationActivity"
@@ -68,11 +76,13 @@
         </activity>
         <activity
             android:name=".view.PipeRepairOrderActivity"
-            android:label="@string/title_activity_pipe_repair_order" >
+            android:label="@string/title_activity_pipe_repair_order"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".view.PipeRepairReportActivity"
-            android:label="@string/title_activity_pipe_repair_report" >
+            android:label="@string/title_activity_pipe_repair_report"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".view.SuppliesActivity"

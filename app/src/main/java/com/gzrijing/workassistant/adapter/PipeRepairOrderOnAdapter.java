@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.entity.PipeRepairDistributeOn;
+import com.gzrijing.workassistant.entity.PipeRepairOrderOn;
 import com.gzrijing.workassistant.view.PipeRepairReportActivity;
 
 import java.util.List;
@@ -19,10 +19,10 @@ import java.util.List;
 public class PipeRepairOrderOnAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater listContainer;
-    private List<PipeRepairDistributeOn> repairOnInfos;
+    private List<PipeRepairOrderOn> repairOnInfos;
 
     public PipeRepairOrderOnAdapter(
-            Context context, List<PipeRepairDistributeOn> repairOnInfos) {
+            Context context, List<PipeRepairOrderOn> repairOnInfos) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.repairOnInfos = repairOnInfos;
@@ -60,6 +60,8 @@ public class PipeRepairOrderOnAdapter extends BaseAdapter {
                     R.id.listview_item_pipe_repair_order_on_info2_tv);
             v.three = (TextView) convertView.findViewById(
                     R.id.listview_item_pipe_repair_order_on_info3_tv);
+            v.deadline = (TextView) convertView.findViewById(
+                    R.id.listview_item_pipe_repair_order_on_deadline_tv);
             v.report = (RelativeLayout) convertView.findViewById(
                     R.id.listview_item_pipe_repair_order_on_report_rl);
             convertView.setTag(v);
@@ -67,9 +69,10 @@ public class PipeRepairOrderOnAdapter extends BaseAdapter {
             v = (ViewHolder) convertView.getTag();
         }
         v.id.setText(repairOnInfos.get(position).getId());
-        v.one.setText(repairOnInfos.get(position).getInfo2());
-        v.two.setText(repairOnInfos.get(position).getInfo3());
-        v.three.setText(repairOnInfos.get(position).getInfo4());
+        v.one.setText(repairOnInfos.get(position).getInfo1());
+        v.two.setText(repairOnInfos.get(position).getInfo2());
+        v.three.setText(repairOnInfos.get(position).getInfo3());
+        v.deadline.setText(repairOnInfos.get(position).getDeadline());
         if(repairOnInfos.get(position).isUrgent()){
             v.urgent.setVisibility(View.VISIBLE);
         }else{
@@ -80,7 +83,7 @@ public class PipeRepairOrderOnAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PipeRepairReportActivity.class);
-                intent.putExtra("title", repairOnInfos.get(position).getId());
+                intent.putExtra("orderId", repairOnInfos.get(position).getId());
                 context.startActivity(intent);
             }
         });
@@ -93,6 +96,7 @@ public class PipeRepairOrderOnAdapter extends BaseAdapter {
         private TextView one;
         private TextView two;
         private TextView three;
+        private TextView deadline;
         private RelativeLayout report;
     }
 }

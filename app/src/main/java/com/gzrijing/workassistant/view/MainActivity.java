@@ -3,6 +3,7 @@ package com.gzrijing.workassistant.view;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.gzrijing.workassistant.R;
+
+import org.litepal.tablemanager.Connector;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initData() {
-
+        SQLiteDatabase db = Connector.getDatabase();
         Intent intent = getIntent();
         int id = Integer.parseInt(intent.getStringExtra("fragId"));
         if (id == 0) {

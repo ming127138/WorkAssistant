@@ -17,8 +17,12 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesQueryAdapter;
+import com.gzrijing.workassistant.data.PipeRepairOrderData;
+import com.gzrijing.workassistant.data.SuppliesData;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesQuery;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,6 +42,7 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
     private Button btn_keyword;
     private ListView lv_supplies;
     private ListView lv_query;
+    private String orderId;
     private List<SuppliesQuery> suppliesQueries;
     private List<Supplies> suppliesList;
     private SuppliesAdapter adapter;
@@ -56,7 +61,8 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
 
     private void initData() {
         Intent intent = getIntent();
-        suppliesList = (List<Supplies>)intent.getSerializableExtra("suppliesList");
+        orderId = intent.getStringExtra("orderId");
+        suppliesList = (List<Supplies>) intent.getSerializableExtra("suppliesList");
         suppliesQueries = new ArrayList<SuppliesQuery>();
 
     }
@@ -95,7 +101,7 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SuppliesQuery query = suppliesQueries.get(position);
-                Supplies supplies = new Supplies(query.getName(), query.getSpec(),
+                Supplies supplies = new Supplies(query.getId(), query.getName(), query.getSpec(),
                         query.getUnit(), query.getUnitPrice(), 1);
                 suppliesList.add(supplies);
                 adapter.notifyDataSetChanged();
@@ -218,8 +224,27 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (id == R.id.action_save) {
+            List<PipeRepairOrderData> orderDatas = DataSupport.where("orderId = ?", orderId).find(PipeRepairOrderData.class);
+            List<SuppliesData> datas = orderDatas.get(0).getSuppliesDataList();
+            for(SuppliesData data : datas){
+                data.delete();
+            }
+            for (int i = 0; i < suppliesList.size(); i++) {
+                SuppliesData data = new SuppliesData();
+                data.setNo(suppliesList.get(i).getId());
+                data.setName(suppliesList.get(i).getName());
+                data.setSpec(suppliesList.get(i).getSpec());
+                data.setUnit(suppliesList.get(i).getUnit());
+                data.setUnitPrice(suppliesList.get(i).getUnitPrice());
+                data.setNum(suppliesList.get(i).getNum());
+                data.setPipeRepairOrderData(orderDatas.get(0));
+                datas.add(data);
+            }
+            DataSupport.saveAll(datas);
+            orderDatas.get(0).setSuppliesDataList(datas);
+            orderDatas.get(0).save();
             Intent intent = getIntent();
-            intent.putExtra("suppliesList", (Serializable)suppliesList);
+            intent.putExtra("suppliesList", (Serializable) suppliesList);
             setResult(10, intent);
             finish();
             return true;

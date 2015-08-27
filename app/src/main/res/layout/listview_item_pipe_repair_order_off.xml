@@ -102,6 +102,29 @@
                 android:textSize="@dimen/sw_15dp"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/sw_10dp"
+            android:paddingRight="@dimen/sw_10dp"
+            android:paddingBottom="@dimen/sw_10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  期限："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/listview_item_pipe_repair_order_off_deadline_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="XXXXXXXXX"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp"/>
+        </LinearLayout>
 
         <ImageView
             android:layout_width="match_parent"

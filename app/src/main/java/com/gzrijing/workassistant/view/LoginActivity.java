@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.service.LoginService;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener {
@@ -71,9 +72,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         et_user.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     iv_user.setImageResource(R.drawable.login_user_on);
-                }else{
+                } else {
                     iv_user.setImageResource(R.drawable.login_user_off);
                 }
             }
@@ -82,9 +83,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         et_pwd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     iv_pwd.setImageResource(R.drawable.login_pwd_on);
-                }else{
+                } else {
                     iv_pwd.setImageResource(R.drawable.login_pwd_off);
                 }
             }
