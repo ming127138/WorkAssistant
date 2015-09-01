@@ -66,7 +66,7 @@ public class PipeInspectionReportActivity extends AppCompatActivity implements V
 
         faults = new ArrayList<InspectionFault>();
         for (int i = 1; i < 6; i++) {
-            InspectionFault fault = new InspectionFault("XXXXXX故障" + i, false);
+            InspectionFault fault = new InspectionFault("常规故障" + i, false);
             faults.add(fault);
         }
 

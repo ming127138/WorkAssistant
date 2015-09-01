@@ -101,7 +101,7 @@ public class PipeRepairDistributeOffAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if(repairOffInfos.get(position).isFlag()){
                     Intent intent = new Intent(context, PipeRepairDistributeInfoActivity.class);
-                    intent.putExtra("id", repairOffInfos.get(position).getId());
+                    intent.putExtra("orderId", repairOffInfos.get(position).getId());
                     context.startActivity(intent);
                 }else{
                     repairOffInfos.get(position).setFlag(true);

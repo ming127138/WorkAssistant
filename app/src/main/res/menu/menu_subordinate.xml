@@ -3,13 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.gzrijing.workassistant.view.SubordinateActivity">
     <item
-        android:id="@+id/action_chart"
-        android:orderInCategory="100"
-        android:icon="@drawable/icon_chart"
-        android:title="工作饱和度"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_location"
         android:orderInCategory="100"
         android:icon="@drawable/icon_location"

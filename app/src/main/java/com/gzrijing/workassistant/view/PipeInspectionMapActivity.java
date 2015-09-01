@@ -100,6 +100,11 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
                 bitmap = BitmapDescriptorFactory
                         .fromResource(R.drawable.map_fireplug);
             }
+            if (markers.get(i).getTag() == 2) {
+                // 构建Marker图标
+                bitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.icon_red_dot);
+            }
             // 构建MarkerOption，用于在地图上添加Marker
             OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
             // 在地图上添加Marker，并显示
@@ -108,11 +113,11 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
     }
 
     private List<Marker> getMarker() {
-        String[] ids = {"ET001", "ET002", "ET003"};
-        double[] latitudes = {23.043248, 23.045206, 23.044973};
-        double[] longitudes = {113.315723, 113.31403, 113.316671};
-        int[] tags = {0, 1, 0};
-        String[] infos = {"信息001", "信息002", "信息003"};
+        String[] ids = {"", "ET001", "ET002", "ET003"};
+        double[] latitudes = {23.044807, 23.043248, 23.045206, 23.044973};
+        double[] longitudes = {113.314668, 113.315723, 113.31403, 113.316671};
+        int[] tags = {2, 0, 1, 0};
+        String[] infos = {"", "信息001", "信息002", "信息003"};
         List<Marker> markers = new ArrayList<Marker>();
         for (int i = 0; i < ids.length; i++) {
             Marker marker = new Marker();

@@ -30,6 +30,7 @@ import java.util.List;
 
 public class PipeRepairDistributeInfoActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private String orderId;
     private LinearLayout ll_executor;
     private TextView tv_executor;
     private LinearLayout ll_date;
@@ -47,11 +48,11 @@ public class PipeRepairDistributeInfoActivity extends AppCompatActivity implemen
         initViews();
         setListeners();
 
-
     }
 
     private void initData() {
-
+        Intent intent = getIntent();
+        orderId = intent.getStringExtra("orderId");
     }
 
     private void initViews() {
@@ -59,6 +60,11 @@ public class PipeRepairDistributeInfoActivity extends AppCompatActivity implemen
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        TextView tv_orderId = (TextView) findViewById(R.id.pipe_repair_distribute_info_order_id_tv);
+        tv_orderId.setText("　工单ID："+orderId);
+        TextView tv_urgent = (TextView) findViewById(R.id.pipe_repair_distribute_info_urgent_tv);
+        tv_urgent.setText("紧急级别：紧急");
+        tv_urgent.setTextColor(getResources().getColor(R.color.red));
         ll_executor = (LinearLayout) findViewById(R.id.pipe_repair_distribute_info_executor_ll);
         tv_executor = (TextView) findViewById(R.id.pipe_repair_distribute_info_executor_tv);
         ll_date = (LinearLayout) findViewById(R.id.pipe_repair_distribute_info_date_ll);

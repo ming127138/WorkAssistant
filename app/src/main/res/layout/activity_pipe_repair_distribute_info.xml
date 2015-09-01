@@ -23,6 +23,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp" />
         <TextView
+            android:id="@+id/pipe_repair_distribute_info_urgent_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/sw_5dp"
@@ -33,21 +34,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/sw_5dp"
-            android:text="　 信息1："
+            android:text="　 信息1：xxxxxx信息"
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/sw_5dp"
-            android:text=" 　信息2："
+            android:text=" 　信息2：xxxxxx信息"
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/sw_5dp"
-            android:text="　 信息3："
+            android:text="　 信息3：xxxxxx信息"
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp"/>
 
