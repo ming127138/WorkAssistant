@@ -40,35 +40,35 @@
         <activity
             android:name=".view.DownloadOfflineMapActivity"
             android:label="@string/title_activity_download_offline_map"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.PipeInspectionFormActivity"
             android:label="@string/title_activity_pipe_inspection_form"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.PipeInspectionReportActivity"
             android:label="@string/title_activity_pipe_inspection_report"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.PipeRepairDistributeActivity"
             android:label="@string/title_activity_pipe_repair_distribute"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.PipeRepairProgressActivity"
             android:label="@string/title_activity_pipe_repair_progress"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.PipeRepairDistributeInfoActivity"
             android:label="@string/title_activity_pipe_repair_distribute_info"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.SubordinateActivity"
             android:label="@string/title_activity_subordinate"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.SubordinateLocationActivity"
@@ -77,16 +77,26 @@
         <activity
             android:name=".view.PipeRepairOrderActivity"
             android:label="@string/title_activity_pipe_repair_order"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.PipeRepairReportActivity"
             android:label="@string/title_activity_pipe_repair_report"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.SuppliesActivity"
             android:label="@string/title_activity_supplies" >
+        </activity>
+        <activity
+            android:name=".view.WaterSupplyRepairDistributeActivity"
+            android:label="@string/title_activity_water_supply_repair_distribute"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".view.ProgressActivity"
+            android:label="@string/title_activity_progress"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

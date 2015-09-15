@@ -18,4 +18,36 @@
     <string name="title_activity_pipe_repair_order">管网维修</string>
     <string name="title_activity_pipe_repair_report">管网维修汇报</string>
     <string name="title_activity_supplies">查询耗材</string>
+    <string name="title_activity_water_supply_repair_distribute">供水维修</string>
+
+
+    <string-array name="business_item">
+        <item>全部</item>
+        <item>供水维修</item>
+        <item>供水管网维护</item>
+        <item>挂表工程</item>
+        <item>移表户外</item>
+        <item>故障水表</item>
+        <item>违章水表</item>
+        <item>供水工程、供水零散工程、供水维修通知单工程</item>
+        <item>污水工程、污水零散工程</item>
+        <item>污水维修工程</item>
+        <item>其他工程</item>
+    </string-array>
+
+    <string-array name="worker_fragment_state_item">
+        <item>全部</item>
+        <item>未处理</item>
+        <item>处理中</item>
+        <item>完成</item>
+    </string-array>
+
+    <string-array name="leader_fragment_state_item">
+        <item>全部</item>
+        <item>未派发</item>
+        <item>已派发</item>
+        <item>完成</item>
+    </string-array>
+    <string name="title_activity_progress">ProgressActivity</string>
+
 </resources>

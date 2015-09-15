@@ -1,29 +1,35 @@
 package com.gzrijing.workassistant.view;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.data.BusinessData;
+import com.gzrijing.workassistant.data.WaterSupplyRepairData;
+
+import org.litepal.crud.DataSupport;
 
 
-public class BusinessFragment extends Fragment implements View.OnClickListener {
+public class BusinessFragment extends Fragment {
 
     private View layoutView;
-    private Button btn_pipeInspection;
-    private Button btn_pipeRepair;
-    private Button btn_meterInstall;
-    private Button btn_meterRepair;
-    private PipeInspectionFragment pipeInspectionFragment;
-    private PipeRepairFragment pipeRepairFragment;
-    private MeterInstallFragment meterInstallFragment;
-    private MeterRepairFragment meterRepairFragment;
+    private LeaderFragment leaderFragment;
+    private WorkerFragment workerFragment;
+    private String userName;
 
     public BusinessFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initData();
     }
 
     @Override
@@ -31,14 +37,10 @@ public class BusinessFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         layoutView = inflater.inflate(R.layout.fragment_business, container, false);
 
-        initData();
-        initViews();
-        setListeners();
-
         if (savedInstanceState == null) {
-            Fragment fragment = getChildFragmentManager().findFragmentByTag(0 + "");
+            Fragment fragment = getChildFragmentManager().findFragmentByTag(1 + "");
             if (fragment == null) {
-                setTabSelection(0);
+                setTabSelection(1);
             }
         }
 
@@ -46,89 +48,53 @@ public class BusinessFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initData() {
+        DataSupport.deleteAll(BusinessData.class);
+        SharedPreferences app = getActivity().getSharedPreferences(
+                "saveUserInfo", getActivity().MODE_PRIVATE);
+        userName = app.getString("userName", "");
+
+        WaterSupplyRepairData data1 = new WaterSupplyRepairData();
+        data1.setTime("2015-9-14 10:10");
+        data1.setAddress("XXX地址");
+        data1.setReason("XXX故障原因");
+        data1.setRePairType("XXX维修类型");
+        data1.setContacts("张某某");
+        data1.setTel("159XXXXXXXX");
+        data1.setRemarks("XXX备注");
+        data1.save();
+        BusinessData data = new BusinessData();
+        data.setUser(userName);
+        data.setOrderId("工单007");
+        data.setUrgent(true);
+        data.setType("供水维修");
+        data.setState("未派发");
+        data.setDeadline("2015-10-1");
+        data.setFlag("确认收到");
+        data.setWaterSupplyRepairData(data1);
+        data.save();
 
 
     }
 
-    private void initViews() {
-        btn_pipeInspection = (Button) layoutView.findViewById(R.id.business_pipe_inspection_btn);
-        btn_pipeRepair = (Button) layoutView.findViewById(R.id.business_pipe_repair_btn);
-        btn_meterInstall = (Button) layoutView.findViewById(R.id.business_meter_install_btn);
-        btn_meterRepair = (Button) layoutView.findViewById(R.id.business_meter_repair_btn);
-    }
-
-    private void setListeners() {
-        btn_pipeInspection.setOnClickListener(this);
-        btn_pipeRepair.setOnClickListener(this);
-        btn_meterInstall.setOnClickListener(this);
-        btn_meterRepair.setOnClickListener(this);
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.business_pipe_inspection_btn:
-                setTabSelection(0);
-                break;
-
-            case R.id.business_pipe_repair_btn:
-                setTabSelection(1);
-                break;
-
-            case R.id.business_meter_install_btn:
-                setTabSelection(2);
-                break;
-
-            case R.id.business_meter_repair_btn:
-                setTabSelection(3);
-                break;
-        }
-    }
 
     private void setTabSelection(int index) {
-        clearSelection();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         hideFragments(transaction);
         switch (index) {
             case 0:
-                btn_pipeInspection.setBackgroundResource(R.drawable.business_btn_on);
-                btn_pipeInspection.setTextColor(getResources().getColor(R.color.blue));
-                if (pipeInspectionFragment == null) {
-                    pipeInspectionFragment = new PipeInspectionFragment();
-                    transaction.add(R.id.content, pipeInspectionFragment);
+                if (leaderFragment == null) {
+                    leaderFragment = new LeaderFragment();
+                    transaction.add(R.id.fragment_business, leaderFragment);
                 } else {
-                    transaction.show(pipeInspectionFragment);
+                    transaction.show(leaderFragment);
                 }
                 break;
             case 1:
-                btn_pipeRepair.setBackgroundResource(R.drawable.business_btn_on);
-                btn_pipeRepair.setTextColor(getResources().getColor(R.color.blue));
-                if (pipeRepairFragment == null) {
-                    pipeRepairFragment = new PipeRepairFragment();
-                    transaction.add(R.id.content, pipeRepairFragment);
+                if (workerFragment == null) {
+                    workerFragment = new WorkerFragment();
+                    transaction.add(R.id.fragment_business, workerFragment);
                 } else {
-                    transaction.show(pipeRepairFragment);
-                }
-                break;
-            case 2:
-                btn_meterInstall.setBackgroundResource(R.drawable.business_btn_on);
-                btn_meterInstall.setTextColor(getResources().getColor(R.color.blue));
-                if (meterInstallFragment == null) {
-                    meterInstallFragment = new MeterInstallFragment();
-                    transaction.add(R.id.content, meterInstallFragment);
-                } else {
-                    transaction.show(meterInstallFragment);
-                }
-                break;
-            case 3:
-                btn_meterRepair.setBackgroundResource(R.drawable.business_btn_on);
-                btn_meterRepair.setTextColor(getResources().getColor(R.color.blue));
-                if (meterRepairFragment == null) {
-                    meterRepairFragment = new MeterRepairFragment();
-                    transaction.add(R.id.content, meterRepairFragment);
-                } else {
-                    transaction.show(meterRepairFragment);
+                    transaction.show(workerFragment);
                 }
                 break;
 
@@ -136,32 +102,15 @@ public class BusinessFragment extends Fragment implements View.OnClickListener {
         transaction.commit();
     }
 
-    private void clearSelection() {
-        btn_pipeInspection.setBackgroundResource(R.drawable.business_btn_off);
-        btn_pipeInspection.setTextColor(getResources().getColor(R.color.grey_text));
-        btn_pipeRepair.setBackgroundResource(R.drawable.business_btn_off);
-        btn_pipeRepair.setTextColor(getResources().getColor(R.color.grey_text));
-        btn_meterInstall.setBackgroundResource(R.drawable.business_btn_off);
-        btn_meterInstall.setTextColor(getResources().getColor(R.color.grey_text));
-        btn_meterRepair.setBackgroundResource(R.drawable.business_btn_off);
-        btn_meterRepair.setTextColor(getResources().getColor(R.color.grey_text));
-    }
-
     /**
      * 将所有的Fragment都置为隐藏状态。
      */
     private void hideFragments(FragmentTransaction transaction) {
-        if (pipeInspectionFragment != null) {
-            transaction.hide(pipeInspectionFragment);
+        if (leaderFragment != null) {
+            transaction.hide(leaderFragment);
         }
-        if (pipeRepairFragment != null) {
-            transaction.hide(pipeRepairFragment);
-        }
-        if (meterInstallFragment != null) {
-            transaction.hide(meterInstallFragment);
-        }
-        if (meterRepairFragment != null) {
-            transaction.hide(meterRepairFragment);
+        if (workerFragment != null) {
+            transaction.hide(workerFragment);
         }
     }
 

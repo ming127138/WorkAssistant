@@ -1,60 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.gzrijing.workassistant.view.BusinessFragment">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/business_pipe_inspection_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/business_btn_off"
-                android:text="管网巡检"
-                android:textColor="@color/grey_text"
-                android:textSize="@dimen/sw_15dp"/>
-
-            <Button
-                android:id="@+id/business_pipe_repair_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/business_btn_off"
-                android:text="管网维修"
-                android:textColor="@color/grey_text"
-                android:textSize="@dimen/sw_15dp" />
-
-            <Button
-                android:id="@+id/business_meter_install_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/business_btn_off"
-                android:layout_weight="1"
-                android:text="移表挂表"
-                android:textColor="@color/grey_text"
-                android:textSize="@dimen/sw_15dp" />
-
-            <Button
-                android:id="@+id/business_meter_repair_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/business_btn_off"
-                android:text="水表维护"
-                android:textColor="@color/grey_text"
-                android:textSize="@dimen/sw_15dp" />
-        </LinearLayout>
-
     <FrameLayout
-        android:id="@+id/content"
+        android:id="@+id/fragment_business"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9" />
-</LinearLayout>
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
-    <dbname value="demo"></dbname>
-    <version value="4"></version>
+    <dbname value="workassistant"></dbname>
+    <version value="11"></version>
     <list>
         <mapping class="com.gzrijing.workassistant.data.PipeRepairOrderData"></mapping>
         <mapping class="com.gzrijing.workassistant.data.SuppliesData"></mapping>
+        <mapping class="com.gzrijing.workassistant.data.BusinessData"></mapping>
+        <mapping class="com.gzrijing.workassistant.data.WaterSupplyRepairData"></mapping>
     </list>
 </litepal>
