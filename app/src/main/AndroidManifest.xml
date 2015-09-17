@@ -17,7 +17,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/MyAppTheme" >
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="55GGDSEHicXHKpf2FaLYiinD" />
@@ -51,21 +51,6 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".view.PipeRepairDistributeActivity"
-            android:label="@string/title_activity_pipe_repair_distribute"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".view.PipeRepairProgressActivity"
-            android:label="@string/title_activity_pipe_repair_progress"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".view.PipeRepairDistributeInfoActivity"
-            android:label="@string/title_activity_pipe_repair_distribute_info"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".view.SubordinateActivity"
             android:label="@string/title_activity_subordinate"
             android:screenOrientation="portrait" >
@@ -75,18 +60,9 @@
             android:label="@string/title_activity_subordinate_location" >
         </activity>
         <activity
-            android:name=".view.PipeRepairOrderActivity"
-            android:label="@string/title_activity_pipe_repair_order"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".view.PipeRepairReportActivity"
-            android:label="@string/title_activity_pipe_repair_report"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".view.SuppliesActivity"
-            android:label="@string/title_activity_supplies" >
+            android:label="@string/title_activity_supplies"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".view.WaterSupplyRepairDistributeActivity"
@@ -96,6 +72,11 @@
         <activity
             android:name=".view.ProgressActivity"
             android:label="@string/title_activity_progress"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".view.SuppliesApplyActivity"
+            android:label="@string/title_activity_supplies_apply"
             android:screenOrientation="portrait">
         </activity>
     </application>

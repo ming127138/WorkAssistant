@@ -48,7 +48,6 @@ public class SuppliesQueryAdapter extends BaseAdapter {
             v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_query_name_tv);
             v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_query_spec_tv);
             v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_query_unit_tv);
-            v.unitPrice = (TextView) convertView.findViewById(R.id.listview_item_supplies_query_unit_price_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -58,7 +57,6 @@ public class SuppliesQueryAdapter extends BaseAdapter {
         v.name.setText(suppliesQueries.get(position).getName());
         v.spec.setText(suppliesQueries.get(position).getSpec());
         v.unit.setText(suppliesQueries.get(position).getUnit());
-        v.unitPrice.setText(suppliesQueries.get(position).getUnitPrice());
 
         return convertView;
     }
@@ -68,6 +66,5 @@ public class SuppliesQueryAdapter extends BaseAdapter {
         private TextView name;
         private TextView spec;
         private TextView unit;
-        private TextView unitPrice;
     }
 }

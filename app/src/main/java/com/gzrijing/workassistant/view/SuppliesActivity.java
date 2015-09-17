@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesQueryAdapter;
-import com.gzrijing.workassistant.data.PipeRepairOrderData;
+import com.gzrijing.workassistant.data.BusinessData;
 import com.gzrijing.workassistant.data.SuppliesData;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesQuery;
@@ -35,7 +35,6 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
     private EditText et_name;
     private EditText et_spec;
     private EditText et_unit;
-    private EditText et_unitPrice;
     private EditText et_id;
     private Button btn_id;
     private EditText et_keyword;
@@ -77,7 +76,6 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
         et_name = (EditText) findViewById(R.id.supplies_name_et);
         et_spec = (EditText) findViewById(R.id.supplies_spec_et);
         et_unit = (EditText) findViewById(R.id.supplies_unit_et);
-        et_unitPrice = (EditText) findViewById(R.id.supplies_unit_price_et);
         et_id = (EditText) findViewById(R.id.supplies_query_id_et);
         btn_id = (Button) findViewById(R.id.supplies_query_id_btn);
         et_keyword = (EditText) findViewById(R.id.supplies_query_keyword_et);
@@ -101,8 +99,8 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SuppliesQuery query = suppliesQueries.get(position);
-                Supplies supplies = new Supplies(query.getId(), query.getName(), query.getSpec(),
-                        query.getUnit(), query.getUnitPrice(), 1);
+                Supplies supplies = new Supplies(-1, query.getId(), query.getName(), query.getSpec(),
+                        query.getUnit(), 1, "申请中");
                 suppliesList.add(supplies);
                 adapter.notifyDataSetChanged();
             }
@@ -134,7 +132,7 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
     private void queryId() {
         suppliesQueries.clear();
         for (int i = 1; i < 5; i++) {
-            SuppliesQuery query = new SuppliesQuery("SQ00" + i, "名称" + i, "规格" + i, "单位" + i, "单价" + i);
+            SuppliesQuery query = new SuppliesQuery("SQ00" + i, "名称" + i, "规格" + i, "单位" + i);
             suppliesQueries.add(query);
         }
         queryAdapter.notifyDataSetChanged();
@@ -143,7 +141,7 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
     private void queryKeyword() {
         suppliesQueries.clear();
         for (int i = 1; i < 5; i++) {
-            SuppliesQuery query = new SuppliesQuery("SQ00" + i, "名称" + i, "规格" + i, "单位" + i, "单价" + i);
+            SuppliesQuery query = new SuppliesQuery("SQ00" + i, "名称" + i, "规格" + i, "单位" + i);
             suppliesQueries.add(query);
         }
         queryAdapter.notifyDataSetChanged();
@@ -153,7 +151,6 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
         String name = et_name.getText().toString().trim();
         String spec = et_spec.getText().toString().trim();
         String unit = et_unit.getText().toString().trim();
-        String unitPrice = et_unitPrice.getText().toString().trim();
         if (name.equals("")) {
             if (mToast == null) {
                 mToast = Toast.makeText(this, "请填写名称", Toast.LENGTH_SHORT);
@@ -184,28 +181,17 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
             mToast.show();
             return;
         }
-        if (unitPrice.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请填写单价", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请填写单价");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
-            return;
-        }
         Supplies supplies = new Supplies();
         supplies.setName(name);
         supplies.setSpec(spec);
         supplies.setUnit(unit);
-        supplies.setUnitPrice(unitPrice);
         supplies.setNum(1);
+        supplies.setState("申请中");
         suppliesList.add(supplies);
         adapter.notifyDataSetChanged();
         et_name.setText("");
         et_spec.setText("");
         et_unit.setText("");
-        et_unitPrice.setText("");
     }
 
     @Override
@@ -224,10 +210,12 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (id == R.id.action_save) {
-            List<PipeRepairOrderData> orderDatas = DataSupport.where("orderId = ?", orderId).find(PipeRepairOrderData.class);
-            List<SuppliesData> datas = orderDatas.get(0).getSuppliesDataList();
+            BusinessData businessData = DataSupport.where("orderId = ?", orderId).find(BusinessData.class, true).get(0);
+            List<SuppliesData> datas = businessData.getSuppliesDataList();
             for(SuppliesData data : datas){
-                data.delete();
+                if(data.getFlag().equals("创建")){
+                    data.delete();
+                }
             }
             for (int i = 0; i < suppliesList.size(); i++) {
                 SuppliesData data = new SuppliesData();
@@ -235,14 +223,13 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
                 data.setName(suppliesList.get(i).getName());
                 data.setSpec(suppliesList.get(i).getSpec());
                 data.setUnit(suppliesList.get(i).getUnit());
-                data.setUnitPrice(suppliesList.get(i).getUnitPrice());
                 data.setNum(suppliesList.get(i).getNum());
-                data.setPipeRepairOrderData(orderDatas.get(0));
-                datas.add(data);
+                data.setState(suppliesList.get(i).getState());
+                data.setFlag("创建");
+                data.save();
+                businessData.getSuppliesDataList().add(data);
             }
-            DataSupport.saveAll(datas);
-            orderDatas.get(0).setSuppliesDataList(datas);
-            orderDatas.get(0).save();
+            businessData.save();
             Intent intent = getIntent();
             intent.putExtra("suppliesList", (Serializable) suppliesList);
             setResult(10, intent);

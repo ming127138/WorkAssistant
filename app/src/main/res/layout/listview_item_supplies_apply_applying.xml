@@ -8,17 +8,7 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/listview_item_supplies_query_id_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="编码"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sw_12dp" />
-
-    <TextView
-        android:id="@+id/listview_item_supplies_query_name_tv"
+        android:id="@+id/listview_item_supplies_apply_applying_name_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -28,7 +18,7 @@
         android:textSize="@dimen/sw_12dp" />
 
     <TextView
-        android:id="@+id/listview_item_supplies_query_spec_tv"
+        android:id="@+id/listview_item_supplies_apply_applying_spec_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -38,13 +28,33 @@
         android:textSize="@dimen/sw_12dp" />
 
     <TextView
-        android:id="@+id/listview_item_supplies_query_unit_tv"
+        android:id="@+id/listview_item_supplies_apply_applying_unit_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
         android:text="单位"
         android:textColor="@color/black"
+        android:textSize="@dimen/sw_12dp" />
+
+    <TextView
+        android:id="@+id/listview_item_supplies_apply_applying_num_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="数量"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sw_12dp" />
+
+    <TextView
+        android:id="@+id/listview_item_supplies_apply_applying_state_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="状态"
+        android:textColor="@color/blue"
         android:textSize="@dimen/sw_12dp" />
 
 </LinearLayout>

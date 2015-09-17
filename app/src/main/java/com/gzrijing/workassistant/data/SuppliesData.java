@@ -4,13 +4,14 @@ import org.litepal.crud.DataSupport;
 
 public class SuppliesData extends DataSupport {
     private int id;
-    private String No;
-    private String name;
-    private String spec;
-    private String unit;
-    private String unitPrice;
-    private int num;
-    private PipeRepairOrderData pipeRepairOrderData;
+    private String No;          //材料编号
+    private String name;        //材料名称
+    private String spec;        //材料规格
+    private String unit;        //材料单位
+    private int num;            //数量
+    private String flag;        //创建，申请，领出三种状态
+    private String state;       //申请材料状态（申请中，已批准，可领用）
+    private BusinessData businessData;
 
     public int getId() {
         return id;
@@ -52,14 +53,6 @@ public class SuppliesData extends DataSupport {
         this.unit = unit;
     }
 
-    public String getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(String unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     public int getNum() {
         return num;
     }
@@ -68,11 +61,27 @@ public class SuppliesData extends DataSupport {
         this.num = num;
     }
 
-    public PipeRepairOrderData getPipeRepairOrderData() {
-        return pipeRepairOrderData;
+    public String getFlag() {
+        return flag;
     }
 
-    public void setPipeRepairOrderData(PipeRepairOrderData pipeRepairOrderData) {
-        this.pipeRepairOrderData = pipeRepairOrderData;
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public BusinessData getBusinessData() {
+        return businessData;
+    }
+
+    public void setBusinessData(BusinessData businessData) {
+        this.businessData = businessData;
     }
 }

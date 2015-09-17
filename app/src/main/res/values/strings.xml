@@ -10,12 +10,8 @@
     <string name="title_activity_download_offline_map">离线地图管理</string>
     <string name="title_activity_pipe_inspection_form">巡检表格</string>
     <string name="title_activity_pipe_inspection_report">问题上报</string>
-    <string name="title_activity_pipe_repair_distribute">管网维修</string>
-    <string name="title_activity_pipe_repair_progress">PipeRepairProgressActivity</string>
-    <string name="title_activity_pipe_repair_distribute_info">派发任务</string>
     <string name="title_activity_subordinate">下属列表</string>
     <string name="title_activity_subordinate_location">下属实时位置</string>
-    <string name="title_activity_pipe_repair_order">管网维修</string>
     <string name="title_activity_pipe_repair_report">管网维修汇报</string>
     <string name="title_activity_supplies">查询耗材</string>
     <string name="title_activity_water_supply_repair_distribute">供水维修</string>
@@ -48,6 +44,7 @@
         <item>已派发</item>
         <item>完成</item>
     </string-array>
-    <string name="title_activity_progress">ProgressActivity</string>
+    <string name="title_activity_progress">工程进度</string>
+    <string name="title_activity_supplies_apply">材料申请</string>
 
 </resources>

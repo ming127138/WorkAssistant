@@ -44,16 +44,6 @@
         android:textColor="@color/black"
         android:textSize="@dimen/sw_12dp" />
 
-    <TextView
-        android:id="@+id/listview_item_supplies_supplies_unit_price_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:gravity="center"
-        android:text="单价/元"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sw_12dp" />
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"

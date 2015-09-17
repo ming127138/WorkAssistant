@@ -50,7 +50,6 @@ public class SuppliesAdapter extends BaseAdapter {
             v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_name_tv);
             v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_spec_tv);
             v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_unit_tv);
-            v.unitPrice = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_unit_price_tv);
             v.num = (EditText) convertView.findViewById(R.id.listview_item_supplies_supplies_num_tv);
             v.up = (ImageView) convertView.findViewById(R.id.listview_item_supplies_supplies_num_up_iv);
             v.down = (ImageView) convertView.findViewById(R.id.listview_item_supplies_supplies_num_down_iv);
@@ -62,7 +61,6 @@ public class SuppliesAdapter extends BaseAdapter {
         v.name.setText(suppliesList.get(position).getName());
         v.spec.setText(suppliesList.get(position).getSpec());
         v.unit.setText(suppliesList.get(position).getUnit());
-        v.unitPrice.setText(suppliesList.get(position).getUnitPrice());
         v.num.setText(suppliesList.get(position).getNum() + "");
 
         v.del.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +113,6 @@ public class SuppliesAdapter extends BaseAdapter {
         private TextView name;
         private TextView spec;
         private TextView unit;
-        private TextView unitPrice;
         private EditText num;
         private ImageView up;
         private ImageView down;
