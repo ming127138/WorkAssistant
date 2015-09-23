@@ -99,6 +99,10 @@
             android:label="@string/title_activity_supplies_return_edit"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".view.WaterSupplyRepairInfoActivity"
+            android:label="@string/title_activity_water_supply_repair_info" >
+        </activity>
     </application>
 
 </manifest>

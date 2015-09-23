@@ -17,6 +17,7 @@ import com.gzrijing.workassistant.data.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.WaterSupplyRepairDistributeActivity;
+import com.gzrijing.workassistant.view.WaterSupplyRepairInfoActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -65,6 +66,8 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.id.listview_item_business_leader_type_tv);
             v.state = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_state_tv);
+            v.info = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_leader_info_tv);
             v.deadline = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_deadline_tv);
             v.flag = (TextView) convertView.findViewById(
@@ -82,11 +85,22 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         v.type.setText(orderList.get(position).getType());
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
+
         if(orderList.get(position).isUrgent()){
             v.urgent.setVisibility(View.VISIBLE);
         }else{
             v.urgent.setVisibility(View.GONE);
         }
+
+        v.info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, WaterSupplyRepairInfoActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
         final String flag = orderList.get(position).getFlag();
         v.flag.setText(flag);
         if(flag.equals("确认收到") || flag.equals("派发")){
@@ -132,6 +146,7 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         private ImageView urgent;
         private TextView type;
         private TextView state;
+        private TextView info;
         private TextView deadline;
         private TextView flag;
         private LinearLayout bg_ll;
