@@ -20,8 +20,11 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesApplyApplyingAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyCreatedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReceivedAdapter;
+import com.gzrijing.workassistant.adapter.SuppliesApplyReturnAdapter;
 import com.gzrijing.workassistant.data.BusinessData;
+import com.gzrijing.workassistant.data.MachineData;
 import com.gzrijing.workassistant.data.SuppliesData;
+import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.widget.MyListView;
@@ -46,15 +49,20 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
     private Button btn_apply;
     private TextView tv_useTime;
     private EditText et_remarks;
+    private Button btn_returnEdit;
+    private Button btn_return;
     private MyListView lv_created;
     private MyListView lv_applying;
     private MyListView lv_received;
+    private MyListView lv_return;
     private List<Supplies> createdList = new ArrayList<Supplies>();
     private List<Supplies> applyingList = new ArrayList<Supplies>();
     private List<Supplies> receivedList = new ArrayList<Supplies>();
+    private List<Supplies> returnList = new ArrayList<Supplies>();
     private SuppliesApplyCreatedAdapter createdAdapter;
     private SuppliesApplyApplyingAdapter applyingAdapter;
     private SuppliesApplyReceivedAdapter receivedAdapter;
+    private SuppliesApplyReturnAdapter returnAdapter;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Toast mToast;
@@ -90,13 +98,15 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
                 supplies.setState(data.getState());
                 applyingList.add(supplies);
             }
-            if(data.getFlag().equals("领出")){
+            if(data.getFlag().equals("领用")){
                 Supplies supplies = new Supplies();
+                supplies.setDataId(data.getId());
                 supplies.setId(data.getNo());
                 supplies.setName(data.getName());
                 supplies.setSpec(data.getSpec());
                 supplies.setUnit(data.getUnit());
                 supplies.setNum(data.getNum());
+                supplies.setState(data.getState());
                 receivedList.add(supplies);
             }
         }
@@ -112,6 +122,9 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
         tv_useTime = (TextView) findViewById(R.id.supplies_apply_use_time_tv);
         et_remarks = (EditText) findViewById(R.id.supplies_apply_remarks_et);
 
+        btn_returnEdit = (Button) findViewById(R.id.supplies_apply_return_edit_btn);
+        btn_return = (Button) findViewById(R.id.supplies_apply_return_btn);
+
         lv_created = (MyListView) findViewById(R.id.supplies_apply_created_lv);
         createdAdapter = new SuppliesApplyCreatedAdapter(this, createdList);
         lv_created.setAdapter(createdAdapter);
@@ -121,23 +134,28 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
         lv_applying = (MyListView) findViewById(R.id.supplies_apply_applying_lv);
         applyingAdapter = new SuppliesApplyApplyingAdapter(this, applyingList, receivedList, receivedAdapter);
         lv_applying.setAdapter(applyingAdapter);
+        lv_return = (MyListView) findViewById(R.id.supplies_apply_return_lv);
+        returnAdapter = new SuppliesApplyReturnAdapter(this, returnList);
+        lv_return.setAdapter(returnAdapter);
     }
 
     private void setListeners() {
         btn_edit.setOnClickListener(this);
         btn_apply.setOnClickListener(this);
         tv_useTime.setOnClickListener(this);
+        btn_returnEdit.setOnClickListener(this);
+        btn_return.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.supplies_apply_edit_btn:
-                Intent intent = new Intent(this, SuppliesActivity.class);
-                intent.putExtra("orderId", orderId);
-                intent.putExtra("userName", userName);
-                intent.putExtra("suppliesList", (Serializable) createdList);
-                startActivityForResult(intent, 10);
+                Intent intent1 = new Intent(this, SuppliesApplyEditActivity.class);
+                intent1.putExtra("orderId", orderId);
+                intent1.putExtra("userName", userName);
+                intent1.putExtra("suppliesList", (Serializable) createdList);
+                startActivityForResult(intent1, 10);
                 break;
 
             case R.id.supplies_apply_apply_btn:
@@ -146,6 +164,17 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
 
             case R.id.supplies_apply_use_time_tv:
                 getUseTime();
+                break;
+
+            case R.id.supplies_apply_return_edit_btn:
+                Intent intent2 = new Intent(this, SuppliesReturnEditActivity.class);
+                intent2.putExtra("orderId", orderId);
+                intent2.putExtra("suppliesList", (Serializable) receivedList);
+                startActivityForResult(intent2, 20);
+                break;
+
+            case R.id.supplies_apply_return_btn:
+                returnConfirm();
                 break;
         }
     }
@@ -187,6 +216,41 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
         createdList.clear();
         createdAdapter.notifyDataSetChanged();
         applyingAdapter.notifyDataSetChanged();
+    }
+
+    private void returnConfirm() {
+        for(Supplies reList : returnList){
+            SuppliesData suppliesData = DataSupport.find(SuppliesData.class, reList.getDataId());
+            int num = suppliesData.getNum() - reList.getNum();
+            if(num == 0){
+                DataSupport.delete(SuppliesData.class, reList.getDataId());
+            }else{
+                ContentValues values = new ContentValues();
+                values.put("num", num);
+                DataSupport.update(SuppliesData.class, values, reList.getDataId());
+            }
+        }
+
+        receivedList.clear();
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        List<SuppliesData> suppliesDatas = businessData.getSuppliesDataList();
+        for(SuppliesData data : suppliesDatas){
+            if(data.getFlag().equals("领用")){
+                Supplies supplies = new Supplies();
+                supplies.setDataId(data.getId());
+                supplies.setId(data.getNo());
+                supplies.setName(data.getName());
+                supplies.setSpec(data.getSpec());
+                supplies.setUnit(data.getUnit());
+                supplies.setNum(data.getNum());
+                supplies.setState(data.getState());
+                receivedList.add(supplies);
+            }
+        }
+        receivedAdapter.notifyDataSetChanged();
+        returnList.clear();
+        returnAdapter.notifyDataSetChanged();
+        btn_return.setVisibility(View.GONE);
     }
 
     private void getUseTime() {
@@ -244,6 +308,20 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
                 createdList.clear();
                 createdList.addAll(suppliess);
                 createdAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (requestCode == 20) {
+            if (resultCode == 20) {
+                List<Supplies> suppliesList = (List<Supplies>) data.getSerializableExtra("suppliesList");
+                if (suppliesList.size() > 0) {
+                    btn_return.setVisibility(View.VISIBLE);
+                } else {
+                    btn_return.setVisibility(View.GONE);
+                }
+                returnList.clear();
+                returnList.addAll(suppliesList);
+                returnAdapter.notifyDataSetChanged();
             }
         }
     }

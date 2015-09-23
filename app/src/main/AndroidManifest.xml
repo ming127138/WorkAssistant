@@ -60,8 +60,8 @@
             android:label="@string/title_activity_subordinate_location" >
         </activity>
         <activity
-            android:name=".view.SuppliesActivity"
-            android:label="@string/title_activity_supplies"
+            android:name=".view.SuppliesApplyEditActivity"
+            android:label="@string/title_activity_supplies_apply_edit"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -82,17 +82,22 @@
         <activity
             android:name=".view.MachineApplyActivity"
             android:label="@string/title_activity_machine_apply"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.MachineApplyEditActivity"
             android:label="@string/title_activity_machine_apply_edit"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.MachineReturnEditActivity"
             android:label="@string/title_activity_machine_return_edit"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".view.SuppliesReturnEditActivity"
+            android:label="@string/title_activity_supplies_return_edit"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

@@ -9,8 +9,8 @@ public class SuppliesData extends DataSupport {
     private String spec;        //材料规格
     private String unit;        //材料单位
     private int num;            //数量
-    private String flag;        //创建，申请，领出三种状态
-    private String state;       //申请材料状态（申请中，已批准，可领用）
+    private String flag;        //创建，申请，领用三种状态
+    private String state;       //申请材料状态（申请中，未能准备，领用）
     private BusinessData businessData;
 
     public int getId() {

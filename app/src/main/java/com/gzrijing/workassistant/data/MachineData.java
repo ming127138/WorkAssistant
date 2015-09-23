@@ -9,7 +9,7 @@ public class MachineData extends DataSupport {
     private String spec;                //机械规格
     private String unit;                //机械单位
     private int num;                    //数量
-    private String flag;                //创建，申请，领出，退回四种状态
+    private String flag;                //创建，申请，领用，退回四种状态
     private String state;               //申请机械状态(申请中，未能准备，领用，退回申请中，退回)
     private String returnType;          //机械退回类型（正常，故障）
     private BusinessData businessData;

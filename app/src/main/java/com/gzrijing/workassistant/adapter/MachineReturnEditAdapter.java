@@ -131,8 +131,8 @@ public class MachineReturnEditAdapter extends BaseAdapter {
             }
         });
 
-        for (Machine name : machineList) {
-            if (!name.isCheck()) {
+        for (Machine machine : machineList) {
+            if (!machine.isCheck()) {
                 iv_checkAll.setImageResource(R.drawable.spinner_item_check_off);
                 isCheckAll = false;
                 return convertView;

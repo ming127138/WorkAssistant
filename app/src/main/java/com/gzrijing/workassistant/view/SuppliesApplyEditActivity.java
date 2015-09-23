@@ -16,11 +16,9 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesAdapter;
-import com.gzrijing.workassistant.adapter.SuppliesAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesQueryAdapter;
 import com.gzrijing.workassistant.data.BusinessData;
 import com.gzrijing.workassistant.data.SuppliesData;
-import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.Supplies;
 
 import org.litepal.crud.DataSupport;
@@ -29,7 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuppliesActivity extends AppCompatActivity implements View.OnClickListener {
+public class SuppliesApplyEditActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String userName;
     private ImageView iv_delAll;
@@ -53,7 +51,7 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_supplies);
+        setContentView(R.layout.activity_supplies_apply_edit);
 
         initData();
         initViews();
@@ -212,7 +210,7 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_supplies, menu);
+        getMenuInflater().inflate(R.menu.menu_supplies_apply_edit, menu);
         return true;
     }
 
