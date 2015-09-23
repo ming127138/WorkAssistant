@@ -3,7 +3,6 @@ package com.gzrijing.workassistant.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +87,6 @@ public class MachineReturnEditAdapter extends BaseAdapter {
                         .setSingleChoiceItems(item, dialogFlag.get(position), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.e("which", which + "");
                                 finalV.tv_type.setText(item[which]);
                                 machineList.get(position).setReturnType(item[which]);
                                 dialogFlag.put(position, which);
