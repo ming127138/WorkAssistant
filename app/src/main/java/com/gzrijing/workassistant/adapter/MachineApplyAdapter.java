@@ -1,39 +1,36 @@
 package com.gzrijing.workassistant.adapter;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.entity.Machine;
 
 import java.util.List;
 
-public class SuppliesAdapter extends BaseAdapter {
+public class MachineApplyAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<Supplies> suppliesList;
+    private List<Machine> machineList;
 
-    public SuppliesAdapter(Context context, List<Supplies> suppliesList) {
+    public MachineApplyAdapter(Context context, List<Machine> machineList) {
         listContainer = LayoutInflater.from(context);
-        this.suppliesList = suppliesList;
+        this.machineList = machineList;
     }
 
     @Override
     public int getCount() {
-        return suppliesList.size();
+        return machineList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return suppliesList.get(position);
+        return machineList.get(position);
     }
 
     @Override
@@ -47,23 +44,23 @@ public class SuppliesAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_supplies_supplies, parent, false);
-            v.del = (ImageView) convertView.findViewById(R.id.listview_item_supplies_supplies_del_iv);
-            v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_spec_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_num_tv);
-            v.up = (ImageView) convertView.findViewById(R.id.listview_item_supplies_supplies_num_up_iv);
-            v.down = (ImageView) convertView.findViewById(R.id.listview_item_supplies_supplies_num_down_iv);
+                    R.layout.listview_item_machine_apply, parent, false);
+            v.del = (ImageView) convertView.findViewById(R.id.listview_item_machine_apply_del_iv);
+            v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_name_tv);
+            v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_spec_tv);
+            v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_unit_tv);
+            v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_num_tv);
+            v.up = (ImageView) convertView.findViewById(R.id.listview_item_machine_apply_num_up_iv);
+            v.down = (ImageView) convertView.findViewById(R.id.listview_item_machine_apply_num_down_iv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.name.setText(suppliesList.get(position).getName());
-        v.spec.setText(suppliesList.get(position).getSpec());
-        v.unit.setText(suppliesList.get(position).getUnit());
-        v.num.setText(suppliesList.get(position).getNum() + "");
+        v.name.setText(machineList.get(position).getName());
+        v.spec.setText(machineList.get(position).getSpec());
+        v.unit.setText(machineList.get(position).getUnit());
+        v.num.setText(machineList.get(position).getNum() + "");
 
         v.del.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,23 +87,23 @@ public class SuppliesAdapter extends BaseAdapter {
     }
 
     private void down(int position) {
-        int num = suppliesList.get(position).getNum();
+        int num = machineList.get(position).getNum();
         if (num > 1) {
             num--;
-            suppliesList.get(position).setNum(num);
+            machineList.get(position).setNum(num);
             notifyDataSetChanged();
         }
     }
 
     private void up(int position) {
-        int num = suppliesList.get(position).getNum();
+        int num = machineList.get(position).getNum();
         num++;
-        suppliesList.get(position).setNum(num);
+        machineList.get(position).setNum(num);
         notifyDataSetChanged();
     }
 
     private void delete(int position) {
-        suppliesList.remove(position);
+        machineList.remove(position);
         notifyDataSetChanged();
     }
 

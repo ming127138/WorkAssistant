@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.gzrijing.workassistant.view.SuppliesActivity">
+    tools:context="com.gzrijing.workassistant.view.MachineApplyEditActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -19,7 +19,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="申请材料列表："
+                android:text="申请机械列表："
                 android:textColor="@color/black"
                 android:textSize="@dimen/sw_15dp" />
 
@@ -29,7 +29,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/supplies_del_all_iv"
+                    android:id="@+id/machine_apply_edit_del_all_iv"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/sw_15dp"
                     android:layout_weight="2"
@@ -76,20 +76,20 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/black"/>
+                android:background="@color/black" />
 
             <com.gzrijing.workassistant.widget.MyListView
-                android:id="@+id/supplies_supplies_lv"
+                android:id="@+id/machine_apply_edit_apply_lv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></com.gzrijing.workassistant.widget.MyListView>
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:layout_marginTop="2dp"
-                android:padding="@dimen/sw_5dp"
-                android:orientation="vertical">
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/sw_5dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -99,12 +99,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="自定义材料："
+                        android:text="自定义机械："
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_15dp" />
 
                     <Button
-                        android:id="@+id/supplies_add_btn"
+                        android:id="@+id/machine_apply_edit_add_btn"
                         android:layout_width="@dimen/sw_30dp"
                         android:layout_height="@dimen/sw_20dp"
                         android:layout_alignParentRight="true"
@@ -117,8 +117,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/sw_5dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/sw_5dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -128,7 +128,7 @@
                         android:textSize="@dimen/sw_15dp" />
 
                     <EditText
-                        android:id="@+id/supplies_name_et"
+                        android:id="@+id/machine_apply_edit_name_et"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_line_gray_blue"
@@ -140,8 +140,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/sw_5dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/sw_5dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -151,7 +151,7 @@
                         android:textSize="@dimen/sw_15dp" />
 
                     <EditText
-                        android:id="@+id/supplies_spec_et"
+                        android:id="@+id/machine_apply_edit_spec_et"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_line_gray_blue"
@@ -163,8 +163,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/sw_5dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/sw_5dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -174,7 +174,7 @@
                         android:textSize="@dimen/sw_15dp" />
 
                     <EditText
-                        android:id="@+id/supplies_unit_et"
+                        android:id="@+id/machine_apply_edit_unit_et"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_line_gray_blue"
@@ -202,17 +202,17 @@
                     android:textSize="@dimen/sw_15dp" />
 
                 <EditText
-                    android:id="@+id/supplies_query_id_et"
+                    android:id="@+id/machine_apply_edit_query_id_et"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:background="@drawable/edit_frame_gray_blue"
-                    android:textCursorDrawable="@drawable/edit_cursor_blue"
                     android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/edit_cursor_blue"
                     android:textSize="@dimen/sw_15dp" />
 
                 <Button
-                    android:id="@+id/supplies_query_id_btn"
+                    android:id="@+id/machine_apply_edit_query_id_btn"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/sw_30dp"
                     android:layout_marginLeft="@dimen/sw_5dp"
@@ -240,7 +240,7 @@
                     android:textSize="@dimen/sw_15dp" />
 
                 <EditText
-                    android:id="@+id/supplies_query_keyword_et"
+                    android:id="@+id/machine_apply_edit_query_keyword_et"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
@@ -249,7 +249,7 @@
                     android:textSize="@dimen/sw_15dp" />
 
                 <Button
-                    android:id="@+id/supplies_query_keyword_btn"
+                    android:id="@+id/machine_apply_edit_query_keyword_btn"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/sw_30dp"
                     android:layout_marginLeft="@dimen/sw_5dp"
@@ -302,20 +302,17 @@
                     android:text="单位"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_12dp" />
-
             </LinearLayout>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/black"/>
+                android:background="@color/black" />
 
             <com.gzrijing.workassistant.widget.MyListView
-                android:id="@+id/supplies_query_lv"
+                android:id="@+id/machine_apply_edit_query_lv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </com.gzrijing.workassistant.widget.MyListView>
-
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

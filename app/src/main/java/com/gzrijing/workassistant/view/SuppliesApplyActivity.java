@@ -4,10 +4,10 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +40,7 @@ import java.util.List;
 
 public class SuppliesApplyActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private String userName;
     private String orderId;
     private Button btn_edit;
     private Button btn_apply;
@@ -56,6 +57,7 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
     private SuppliesApplyReceivedAdapter receivedAdapter;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +70,13 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
     }
 
     private void initData() {
+        SharedPreferences app = getSharedPreferences(
+                "saveUserInfo", MODE_PRIVATE);
+        userName = app.getString("userName", "");
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
-        BusinessData businessData = DataSupport.where("orderId = ?", orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
         List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
         for(SuppliesData data : suppliesDataList){
             if(data.getFlag().equals("申请")){
@@ -130,6 +135,7 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
             case R.id.supplies_apply_edit_btn:
                 Intent intent = new Intent(this, SuppliesActivity.class);
                 intent.putExtra("orderId", orderId);
+                intent.putExtra("userName", userName);
                 intent.putExtra("suppliesList", (Serializable) createdList);
                 startActivityForResult(intent, 10);
                 break;
@@ -146,13 +152,19 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
 
     private void apply() {
         if(tv_useTime.getText().toString().equals("")){
-            Toast.makeText(SuppliesApplyActivity.this, "请选择领用时间", Toast.LENGTH_SHORT).show();
+            if (mToast == null) {
+                mToast = Toast.makeText(this, "请选择领用时间", Toast.LENGTH_SHORT);
+            } else {
+                mToast.setText("请选择领用时间");
+                mToast.setDuration(Toast.LENGTH_SHORT);
+            }
+            mToast.show();
             return;
         }
         ContentValues values = new ContentValues();
         values.put("flag", "申请");
         DataSupport.updateAll(SuppliesData.class, values, "flag = ?", "创建");
-        BusinessData businessData = DataSupport.where("orderId = ?", orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
         List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
         applyingList.clear();
         for(SuppliesData data : suppliesDataList){

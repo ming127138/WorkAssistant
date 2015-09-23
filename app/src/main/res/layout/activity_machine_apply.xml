@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.gzrijing.workassistant.view.SuppliesApplyActivity">
+    tools:context="com.gzrijing.workassistant.view.MachineApplyActivity">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,12 +33,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="材料申请列表："
+                        android:text="机械申请列表："
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_15dp" />
 
                     <Button
-                        android:id="@+id/supplies_apply_edit_btn"
+                        android:id="@+id/machine_apply_apply_edit_btn"
                         android:layout_width="@dimen/sw_50dp"
                         android:layout_height="@dimen/sw_25dp"
                         android:layout_alignParentRight="true"
@@ -98,9 +98,10 @@
                     android:background="@color/black" />
 
                 <com.gzrijing.workassistant.widget.MyListView
-                    android:id="@+id/supplies_apply_created_lv"
+                    android:id="@+id/machine_apply_created_lv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -116,7 +117,7 @@
                         android:textSize="@dimen/sw_15dp" />
 
                     <TextView
-                        android:id="@+id/supplies_apply_use_time_tv"
+                        android:id="@+id/machine_apply_use_time_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="未选择"
@@ -134,12 +135,58 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="退回时间："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+
+                    <TextView
+                        android:id="@+id/machine_apply_return_time_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="未选择"
+                        android:textColorHint="@color/grey_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/sw_10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="使用地点："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+
+                    <EditText
+                        android:id="@+id/machine_apply_use_address_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textCursorDrawable="@drawable/edit_cursor_blue"
+                        android:background="@drawable/edit_line_gray_blue"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/sw_10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="　备　注："
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_15dp" />
 
                     <EditText
-                        android:id="@+id/supplies_apply_remarks_et"
+                        android:id="@+id/machine_apply_apply_remarks_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textCursorDrawable="@drawable/edit_cursor_blue"
@@ -149,7 +196,7 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/supplies_apply_apply_btn"
+                    android:id="@+id/machine_apply_apply_btn"
                     android:layout_width="@dimen/sw_50dp"
                     android:layout_height="@dimen/sw_25dp"
                     android:background="@drawable/btn_blue_frame"
@@ -171,7 +218,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="材料申请中："
+                    android:text="机械申请中："
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_15dp" />
 
@@ -234,7 +281,7 @@
                     android:background="@color/black" />
 
                 <com.gzrijing.workassistant.widget.MyListView
-                    android:id="@+id/supplies_apply_applying_lv"
+                    android:id="@+id/machine_apply_applying_lv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </LinearLayout>
@@ -250,7 +297,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="已领出材料："
+                    android:text="已领用机械："
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_15dp" />
 
@@ -304,11 +351,186 @@
                     android:background="@color/black" />
 
                 <com.gzrijing.workassistant.widget.MyListView
-                    android:id="@+id/supplies_apply_received_lv"
+                    android:id="@+id/machine_apply_received_lv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:layout_marginLeft="@dimen/sw_10dp"
+                android:layout_marginRight="@dimen/sw_10dp"
+                android:background="@drawable/bg_text"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="机械退回列表："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+
+                    <Button
+                        android:id="@+id/machine_apply_return_edit_btn"
+                        android:layout_width="@dimen/sw_50dp"
+                        android:layout_height="@dimen/sw_25dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/btn_blue_frame"
+                        android:text="编辑"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/sw_12dp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/sw_5dp">
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="名称"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_12dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="规格"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_12dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="数量"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_12dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="类型"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_12dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="状态"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_12dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+
+                <com.gzrijing.workassistant.widget.MyListView
+                    android:id="@+id/machine_apply_return_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/sw_10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="退回时间："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+
+                    <TextView
+                        android:id="@+id/machine_apply_return_return_time_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="未选择"
+                        android:textColorHint="@color/grey_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/sw_10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="退回地点："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+
+                    <EditText
+                        android:id="@+id/machine_apply_return_address_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textCursorDrawable="@drawable/edit_cursor_blue"
+                        android:background="@drawable/edit_line_gray_blue"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/sw_10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="　备　注："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+
+                    <EditText
+                        android:id="@+id/machine_apply_return_remarks_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textCursorDrawable="@drawable/edit_cursor_blue"
+                        android:background="@drawable/edit_line_gray_blue"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/machine_apply_return_btn"
+                    android:layout_width="@dimen/sw_50dp"
+                    android:layout_height="@dimen/sw_25dp"
+                    android:background="@drawable/btn_blue_frame"
+                    android:layout_marginTop="@dimen/sw_10dp"
+                    android:layout_gravity="right"
+                    android:visibility="gone"
+                    android:text="申请"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/sw_12dp"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

@@ -15,13 +15,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.SuppliesAdapter;
-import com.gzrijing.workassistant.adapter.SuppliesAdapter;
-import com.gzrijing.workassistant.adapter.SuppliesQueryAdapter;
+import com.gzrijing.workassistant.adapter.MachineApplyAdapter;
+import com.gzrijing.workassistant.adapter.MachineQueryAdapter;
 import com.gzrijing.workassistant.data.BusinessData;
+import com.gzrijing.workassistant.data.MachineData;
 import com.gzrijing.workassistant.data.SuppliesData;
-import com.gzrijing.workassistant.entity.Supplies;
-import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.entity.Machine;
+
 
 import org.litepal.crud.DataSupport;
 
@@ -29,9 +29,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuppliesActivity extends AppCompatActivity implements View.OnClickListener {
+public class MachineApplyEditActivity extends AppCompatActivity implements View.OnClickListener{
 
     private String userName;
+    private String orderId;
     private ImageView iv_delAll;
     private Button btn_add;
     private EditText et_name;
@@ -41,19 +42,18 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
     private Button btn_id;
     private EditText et_keyword;
     private Button btn_keyword;
-    private ListView lv_supplies;
+    private ListView lv_apply;
     private ListView lv_query;
-    private String orderId;
-    private List<Supplies> suppliesQueries;
-    private List<Supplies> suppliesList;
-    private SuppliesAdapter adapter;
-    private SuppliesQueryAdapter queryAdapter;
+    private List<Machine> machineList;
+    private List<Machine> machineQueries;
+    private MachineApplyAdapter applyAdapter;
+    private MachineQueryAdapter queryAdapter;
     private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_supplies);
+        setContentView(R.layout.activity_machine_apply_edit);
 
         initData();
         initViews();
@@ -64,8 +64,8 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = getIntent();
         userName = intent.getStringExtra("userName");
         orderId = intent.getStringExtra("orderId");
-        suppliesList = (List<Supplies>) intent.getSerializableExtra("suppliesList");
-        suppliesQueries = new ArrayList<Supplies>();
+        machineList = (List<Machine>) intent.getSerializableExtra("machineList");
+        machineQueries = new ArrayList<Machine>();
 
     }
 
@@ -74,21 +74,21 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        iv_delAll = (ImageView) findViewById(R.id.supplies_del_all_iv);
-        btn_add = (Button) findViewById(R.id.supplies_add_btn);
-        et_name = (EditText) findViewById(R.id.supplies_name_et);
-        et_spec = (EditText) findViewById(R.id.supplies_spec_et);
-        et_unit = (EditText) findViewById(R.id.supplies_unit_et);
-        et_id = (EditText) findViewById(R.id.supplies_query_id_et);
-        btn_id = (Button) findViewById(R.id.supplies_query_id_btn);
-        et_keyword = (EditText) findViewById(R.id.supplies_query_keyword_et);
-        btn_keyword = (Button) findViewById(R.id.supplies_query_keyword_btn);
-        lv_supplies = (ListView) findViewById(R.id.supplies_supplies_lv);
-        adapter = new SuppliesAdapter(this, suppliesList);
-        lv_supplies.setAdapter(adapter);
+        iv_delAll = (ImageView) findViewById(R.id.machine_apply_edit_del_all_iv);
+        btn_add = (Button) findViewById(R.id.machine_apply_edit_add_btn);
+        et_name = (EditText) findViewById(R.id.machine_apply_edit_name_et);
+        et_spec = (EditText) findViewById(R.id.machine_apply_edit_spec_et);
+        et_unit = (EditText) findViewById(R.id.machine_apply_edit_unit_et);
+        et_id = (EditText) findViewById(R.id.machine_apply_edit_query_id_et);
+        btn_id = (Button) findViewById(R.id.machine_apply_edit_query_id_btn);
+        et_keyword = (EditText) findViewById(R.id.machine_apply_edit_query_keyword_et);
+        btn_keyword = (Button) findViewById(R.id.machine_apply_edit_query_keyword_btn);
+        lv_apply = (ListView) findViewById(R.id.machine_apply_edit_apply_lv);
+        applyAdapter = new MachineApplyAdapter(this, machineList);
+        lv_apply.setAdapter(applyAdapter);
 
-        lv_query = (ListView) findViewById(R.id.supplies_query_lv);
-        queryAdapter = new SuppliesQueryAdapter(this, suppliesQueries);
+        lv_query = (ListView) findViewById(R.id.machine_apply_edit_query_lv);
+        queryAdapter = new MachineQueryAdapter(this, machineQueries);
         lv_query.setAdapter(queryAdapter);
     }
 
@@ -101,16 +101,16 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
         lv_query.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Supplies query = suppliesQueries.get(position);
-                Supplies supplies = new Supplies();
-                supplies.setId(query.getId());
-                supplies.setName(query.getName());
-                supplies.setSpec(query.getSpec());
-                supplies.setUnit(query.getUnit());
-                supplies.setNum(1);
-                supplies.setState("申请中");
-                suppliesList.add(supplies);
-                adapter.notifyDataSetChanged();
+                Machine query = machineQueries.get(position);
+                Machine apply = new Machine();
+                apply.setId(query.getId());
+                apply.setName(query.getName());
+                apply.setSpec(query.getSpec());
+                apply.setUnit(query.getUnit());
+                apply.setNum(1);
+                apply.setState("申请中");
+                machineList.add(apply);
+                applyAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -118,52 +118,26 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.supplies_del_all_iv:
-                suppliesList.clear();
-                adapter.notifyDataSetChanged();
+            case R.id.machine_apply_edit_del_all_iv:
+                machineList.clear();
+                applyAdapter.notifyDataSetChanged();
                 break;
 
-            case R.id.supplies_add_btn:
-                addCustomSupplies();
+            case R.id.machine_apply_edit_add_btn:
+                addCustomMachine();
                 break;
 
-            case R.id.supplies_query_id_btn:
+            case R.id.machine_apply_edit_query_id_btn:
                 queryId();
                 break;
 
-            case R.id.supplies_query_keyword_btn:
+            case R.id.machine_apply_edit_query_keyword_btn:
                 queryKeyword();
                 break;
         }
     }
 
-    private void queryId() {
-        suppliesQueries.clear();
-        for (int i = 1; i < 5; i++) {
-            Supplies query = new Supplies();
-            query.setId("SQ00" + i);
-            query.setName("名称" + i);
-            query.setSpec("规格" + i);
-            query.setUnit("单位" + i);
-            suppliesQueries.add(query);
-        }
-        queryAdapter.notifyDataSetChanged();
-    }
-
-    private void queryKeyword() {
-        suppliesQueries.clear();
-        for (int i = 1; i < 5; i++) {
-            Supplies query = new Supplies();
-            query.setId("SQ00" + i);
-            query.setName("名称" + i);
-            query.setSpec("规格" + i);
-            query.setUnit("单位" + i);
-            suppliesQueries.add(query);
-        }
-        queryAdapter.notifyDataSetChanged();
-    }
-
-    private void addCustomSupplies() {
+    private void addCustomMachine() {
         String name = et_name.getText().toString().trim();
         String spec = et_spec.getText().toString().trim();
         String unit = et_unit.getText().toString().trim();
@@ -197,22 +171,48 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
             mToast.show();
             return;
         }
-        Supplies supplies = new Supplies();
-        supplies.setName(name);
-        supplies.setSpec(spec);
-        supplies.setUnit(unit);
-        supplies.setNum(1);
-        supplies.setState("申请中");
-        suppliesList.add(supplies);
-        adapter.notifyDataSetChanged();
+        Machine machine = new Machine();
+        machine.setName(name);
+        machine.setSpec(spec);
+        machine.setUnit(unit);
+        machine.setNum(1);
+        machine.setState("申请中");
+        machineList.add(machine);
+        applyAdapter.notifyDataSetChanged();
         et_name.setText("");
         et_spec.setText("");
         et_unit.setText("");
     }
 
+    private void queryId() {
+        machineQueries.clear();
+        for (int i = 1; i < 5; i++) {
+            Machine query = new Machine();
+            query.setId("SQ00" + i);
+            query.setName("名称" + i);
+            query.setSpec("规格" + i);
+            query.setUnit("单位" + i);
+            machineQueries.add(query);
+        }
+        queryAdapter.notifyDataSetChanged();
+    }
+
+    private void queryKeyword() {
+        machineQueries.clear();
+        for (int i = 1; i < 5; i++) {
+            Machine query = new Machine();
+            query.setId("SQ00" + i);
+            query.setName("名称" + i);
+            query.setSpec("规格" + i);
+            query.setUnit("单位" + i);
+            machineQueries.add(query);
+        }
+        queryAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_supplies, menu);
+        getMenuInflater().inflate(R.menu.menu_machine_apply_edit, menu);
         return true;
     }
 
@@ -227,27 +227,27 @@ public class SuppliesActivity extends AppCompatActivity implements View.OnClickL
 
         if (id == R.id.action_save) {
             BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
-            List<SuppliesData> datas = businessData.getSuppliesDataList();
-            for(SuppliesData data : datas){
+            List<MachineData> datas = businessData.getMachineDataList();
+            for(MachineData data : datas){
                 if(data.getFlag().equals("创建")){
                     data.delete();
                 }
             }
-            for (int i = 0; i < suppliesList.size(); i++) {
-                SuppliesData data = new SuppliesData();
-                data.setNo(suppliesList.get(i).getId());
-                data.setName(suppliesList.get(i).getName());
-                data.setSpec(suppliesList.get(i).getSpec());
-                data.setUnit(suppliesList.get(i).getUnit());
-                data.setNum(suppliesList.get(i).getNum());
-                data.setState(suppliesList.get(i).getState());
+            for (int i = 0; i < machineList.size(); i++) {
+                MachineData data = new MachineData();
+                data.setNo(machineList.get(i).getId());
+                data.setName(machineList.get(i).getName());
+                data.setSpec(machineList.get(i).getSpec());
+                data.setUnit(machineList.get(i).getUnit());
+                data.setNum(machineList.get(i).getNum());
+                data.setState(machineList.get(i).getState());
                 data.setFlag("创建");
                 data.save();
-                businessData.getSuppliesDataList().add(data);
+                businessData.getMachineDataList().add(data);
             }
             businessData.save();
             Intent intent = getIntent();
-            intent.putExtra("suppliesList", (Serializable) suppliesList);
+            intent.putExtra("machineList", (Serializable) machineList);
             setResult(10, intent);
             finish();
             return true;

@@ -62,7 +62,7 @@
         <activity
             android:name=".view.SuppliesActivity"
             android:label="@string/title_activity_supplies"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.WaterSupplyRepairDistributeActivity"
@@ -77,6 +77,21 @@
         <activity
             android:name=".view.SuppliesApplyActivity"
             android:label="@string/title_activity_supplies_apply"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".view.MachineApplyActivity"
+            android:label="@string/title_activity_machine_apply"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.MachineApplyEditActivity"
+            android:label="@string/title_activity_machine_apply_edit"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.MachineReturnEditActivity"
+            android:label="@string/title_activity_machine_return_edit"
             android:screenOrientation="portrait">
         </activity>
     </application>
