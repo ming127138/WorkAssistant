@@ -67,7 +67,7 @@ public class BusinessFragment extends Fragment {
         data.setOrderId("工单007");
         data.setUrgent(true);
         data.setType("供水维修");
-        data.setState("未处理");
+        data.setState("未派发");
         data.setDeadline("2015-10-1");
         data.setFlag("确认收到");
         data.setWaterSupplyRepairData(data1);

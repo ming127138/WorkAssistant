@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,13 +12,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.data.WaterSupplyRepairData;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
@@ -33,32 +34,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class WaterSupplyRepairDistributeActivity extends AppCompatActivity implements View.OnClickListener {
+public class DistributeActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private String userName;
     private String orderId;
-    private TextView tv_orderId;
-    private TextView tv_eventTime;
-    private TextView tv_address;
-    private TextView tv_reason;
-    private TextView tv_repairType;
-    private TextView tv_contacts;
-    private TextView tv_tel;
-    private TextView tv_remarks;
+    private int position;
+    private EditText et_remarks;
     private TextView tv_executor;
     private LinearLayout ll_executor;
     private TextView tv_deadline;
     private LinearLayout ll_deadline;
-    private List<Subordinate> subordinates;
+    private List<Subordinate> subordinates = new ArrayList<Subordinate>();
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    private int position;
-    private BusinessData businessData;
-    private WaterSupplyRepairData data;
+    private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_water_supply_repair_distribute);
+        setContentView(R.layout.activity_distribute);
 
         initData();
         initViews();
@@ -66,14 +60,13 @@ public class WaterSupplyRepairDistributeActivity extends AppCompatActivity imple
     }
 
     private void initData() {
+        SharedPreferences app = getSharedPreferences(
+                "saveUserInfo", MODE_PRIVATE);
+        userName = app.getString("userName", "");
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
         position = intent.getIntExtra("position", -1);
 
-        businessData = DataSupport.where("orderId = ?", orderId).find(BusinessData.class, true).get(0);
-        data = businessData.getWaterSupplyRepairData();
-
-        subordinates = new ArrayList<Subordinate>();
     }
 
     private void initViews() {
@@ -81,26 +74,11 @@ public class WaterSupplyRepairDistributeActivity extends AppCompatActivity imple
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tv_orderId = (TextView) findViewById(R.id.water_supply_repair_distribute_order_id_tv);
-        tv_orderId.setText(orderId);
-        tv_eventTime = (TextView) findViewById(R.id.water_supply_repair_distribute_event_time_tv);
-        tv_eventTime.setText(data.getTime());
-        tv_address = (TextView) findViewById(R.id.water_supply_repair_distribute_address_tv);
-        tv_address.setText(data.getAddress());
-        tv_reason = (TextView) findViewById(R.id.water_supply_repair_distribute_reason_tv);
-        tv_reason.setText(data.getReason());
-        tv_repairType = (TextView) findViewById(R.id.water_supply_repair_distribute_repair_type_tv);
-        tv_repairType.setText(data.getRePairType());
-        tv_contacts = (TextView) findViewById(R.id.water_supply_repair_distribute_contacts_tv);
-        tv_contacts.setText(data.getContacts());
-        tv_tel = (TextView) findViewById(R.id.water_supply_repair_distribute_tel_tv);
-        tv_tel.setText(data.getTel());
-        tv_remarks = (TextView) findViewById(R.id.water_supply_repair_distribute_remarks_tv);
-        tv_remarks.setText(data.getRemarks());
-        tv_executor = (TextView) findViewById(R.id.water_supply_repair_distribute_executor_tv);
-        ll_executor = (LinearLayout) findViewById(R.id.water_supply_repair_distribute_executor_ll);
-        tv_deadline = (TextView) findViewById(R.id.water_supply_repair_distribute_deadline_tv);
-        ll_deadline = (LinearLayout) findViewById(R.id.water_supply_repair_distribute_deadline_ll);
+        et_remarks = (EditText) findViewById(R.id.distribute_remarks_et);
+        tv_executor = (TextView) findViewById(R.id.distribute_executor_tv);
+        ll_executor = (LinearLayout) findViewById(R.id.distribute_executor_ll);
+        tv_deadline = (TextView) findViewById(R.id.distribute_deadline_tv);
+        ll_deadline = (LinearLayout) findViewById(R.id.distribute_deadline_ll);
     }
 
     private void setListeners() {
@@ -111,13 +89,13 @@ public class WaterSupplyRepairDistributeActivity extends AppCompatActivity imple
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.water_supply_repair_distribute_executor_ll:
+            case R.id.distribute_executor_ll:
                 Intent intent = new Intent(this, SubordinateActivity.class);
                 intent.putExtra("subordinates", (Serializable) subordinates);
                 startActivityForResult(intent, 10);
                 break;
 
-            case R.id.water_supply_repair_distribute_deadline_ll:
+            case R.id.distribute_deadline_ll:
                 getDeadline();
                 break;
         }
@@ -192,20 +170,41 @@ public class WaterSupplyRepairDistributeActivity extends AppCompatActivity imple
         }
 
         if(id == R.id.action_distribute){
+            if(tv_executor.getText().toString().equals("")){
+                if (mToast == null) {
+                    mToast = Toast.makeText(this, "请选择施工员", Toast.LENGTH_SHORT);
+                } else {
+                    mToast.setText("请选择施工员");
+                    mToast.setDuration(Toast.LENGTH_SHORT);
+                }
+                mToast.show();
+                return true;
+            }
+
+            if(tv_deadline.getText().toString().equals("")){
+                if (mToast == null) {
+                    mToast = Toast.makeText(this, "请选择工程期限", Toast.LENGTH_SHORT);
+                } else {
+                    mToast.setText("请选择工程期限");
+                    mToast.setDuration(Toast.LENGTH_SHORT);
+                }
+                mToast.show();
+                return true;
+            }
+
             ContentValues values = new ContentValues();
-            values.put("executor", tv_executor.getText().toString());
-            DataSupport.update(WaterSupplyRepairData.class, values, data.getId());
-            ContentValues values1 = new ContentValues();
-            values1.put("deadline", tv_deadline.getText().toString());
-            values1.put("flag", "查看进度");
-            DataSupport.update(BusinessData.class, values1, businessData.getId());
+            values.put("deadline", tv_deadline.getText().toString());
+            values.put("state", "已派发");
+            DataSupport.updateAll(BusinessData.class, values, "user = ? and orderId = ?", userName, orderId);
+            LeaderFragment.orderList.get(position).setState("已派发");
             LeaderFragment.orderList.get(position).setDeadline(tv_deadline.getText().toString());
-            LeaderFragment.orderList.get(position).setFlag("查看进度");
             LeaderFragment.adapter.notifyDataSetChanged();
             Toast.makeText(this, "派发成功", Toast.LENGTH_SHORT).show();
             finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 }

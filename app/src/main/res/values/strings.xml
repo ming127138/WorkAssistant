@@ -14,7 +14,7 @@
     <string name="title_activity_subordinate_location">下属实时位置</string>
     <string name="title_activity_pipe_repair_report">管网维修汇报</string>
     <string name="title_activity_supplies_apply_edit">材料查询</string>
-    <string name="title_activity_water_supply_repair_distribute">供水维修</string>
+    <string name="title_activity_distribute">工程派发</string>
 
 
     <string-array name="business_item">
@@ -52,5 +52,11 @@
     <string name="title_activity_machine_return_edit">机械退回</string>
     <string name="title_activity_supplies_return_edit">材料退回</string>
     <string name="title_activity_water_supply_repair_info">工程信息</string>
+    <string name="title_activity_machine_verify">机械审核</string>
+    <string name="title_activity_machine_verify_wait_info">待审列表</string>
+    <string name="title_activity_machine_verify_ok_info">已审列表</string>
+    <string name="title_activity_supplies_verify">材料审核</string>
+    <string name="title_activity_supplies_verify_wait_info">待审列表</string>
+    <string name="title_activity_supplies_verify_ok_info">已审列表</string>
 
 </resources>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -15,8 +16,11 @@ import android.widget.TextView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.data.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
+import com.gzrijing.workassistant.entity.MachineVerify;
+import com.gzrijing.workassistant.view.MachineVerifyActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
-import com.gzrijing.workassistant.view.WaterSupplyRepairDistributeActivity;
+import com.gzrijing.workassistant.view.DistributeActivity;
+import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
 import com.gzrijing.workassistant.view.WaterSupplyRepairInfoActivity;
 
 import org.litepal.crud.DataSupport;
@@ -58,18 +62,24 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.layout.listview_item_business_leader, parent, false);
             v.orderId = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_order_id_tv);
-            v.temInfo = (ImageView) convertView.findViewById(
-                    R.id.listview_item_business_leader_tem_info_iv);
+            v.progress = (Button) convertView.findViewById(
+                    R.id.listview_item_business_leader_progress_btn);
+            v.info = (Button) convertView.findViewById(
+                    R.id.listview_item_business_leader_info_btn);
             v.urgent = (ImageView) convertView.findViewById(
                     R.id.listview_item_business_leader_urgent_iv);
             v.type = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_type_tv);
             v.state = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_state_tv);
-            v.info = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_info_tv);
             v.deadline = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_deadline_tv);
+            v.machineVerify = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_leader_machine_verify_tv);
+            v.suppliesVerify = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_leader_supplies_verify_tv);
+            v.temInfo = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_leader_tem_info_tv);
             v.flag = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_flag_tv);
             v.bg_ll = (LinearLayout) convertView.findViewById(
@@ -86,9 +96,9 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
 
-        if(orderList.get(position).isUrgent()){
+        if (orderList.get(position).isUrgent()) {
             v.urgent.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             v.urgent.setVisibility(View.GONE);
         }
 
@@ -101,17 +111,45 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             }
         });
 
+        v.progress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProgressActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
+        v.machineVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MachineVerifyActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
+        v.suppliesVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SuppliesVerifyActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
         final String flag = orderList.get(position).getFlag();
         v.flag.setText(flag);
-        if(flag.equals("确认收到") || flag.equals("派发")){
+        if (flag.equals("确认收到")) {
             v.bg_ll.setBackgroundResource(R.color.pink_bg);
-        }else{
+        } else {
             v.bg_ll.setBackgroundResource(R.color.white);
         }
+
         v.btn_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(flag.equals("确认收到")){
+                if (flag.equals("确认收到")) {
                     orderList.get(position).setFlag("派发");
                     ContentValues values = new ContentValues();
                     values.put("flag", "派发");
@@ -120,18 +158,10 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                 }
 
-                if(flag.equals("派发")){
-                    if(orderList.get(position).getType().equals("供水维修")){
-                        Intent intent = new Intent(context, WaterSupplyRepairDistributeActivity.class);
-                        intent.putExtra("orderId", orderList.get(position).getOrderId());
-                        intent.putExtra("position", position);
-                        context.startActivity(intent);
-                    }
-                }
-
-                if(flag.equals("查看进度")){
-                    Intent intent = new Intent(context, ProgressActivity.class);
+                if (flag.equals("派发")) {
+                    Intent intent = new Intent(context, DistributeActivity.class);
                     intent.putExtra("orderId", orderList.get(position).getOrderId());
+                    intent.putExtra("position", position);
                     context.startActivity(intent);
                 }
             }
@@ -142,12 +172,15 @@ public class BusinessLeaderAdapter extends BaseAdapter {
 
     class ViewHolder {
         private TextView orderId;
-        private ImageView temInfo;
         private ImageView urgent;
         private TextView type;
         private TextView state;
-        private TextView info;
         private TextView deadline;
+        private TextView machineVerify;
+        private TextView suppliesVerify;
+        private TextView temInfo;
+        private Button progress;
+        private Button  info;
         private TextView flag;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;

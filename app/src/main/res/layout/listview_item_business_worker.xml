@@ -8,34 +8,35 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blue"
-        android:padding="@dimen/sw_10dp">
+        android:background="@color/blue" >
 
         <TextView
             android:id="@+id/listview_item_business_worker_order_id_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_margin="@dimen/sw_10dp"
             android:text="工单ID"
             android:textColor="@color/white"
             android:textSize="@dimen/sw_15dp" />
 
         <ImageView
-            android:id="@+id/listview_item_business_worker_tem_info_iv"
-            android:layout_width="@dimen/sw_20dp"
-            android:layout_height="@dimen/sw_20dp"
-            android:layout_centerVertical="true"
+            android:id="@+id/listview_item_business_worker_info_iv"
+            android:layout_width="@dimen/sw_25dp"
+            android:layout_height="@dimen/sw_25dp"
             android:layout_marginRight="@dimen/sw_5dp"
-            android:layout_toLeftOf="@+id/listview_item_business_worker_urgent_iv"
-            android:src="@drawable/btn_tem_info" />
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_info" />
 
         <ImageView
             android:id="@+id/listview_item_business_worker_urgent_iv"
-            android:layout_width="@dimen/sw_20dp"
-            android:layout_height="@dimen/sw_20dp"
-            android:layout_alignParentRight="true"
+            android:layout_width="@dimen/sw_25dp"
+            android:layout_height="@dimen/sw_25dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/btn_urgent" />
+            android:layout_marginRight="@dimen/sw_5dp"
+            android:layout_toLeftOf="@+id/listview_item_business_worker_info_iv"
+            android:src="@drawable/icon_urgent" />
     </RelativeLayout>
 
     <LinearLayout

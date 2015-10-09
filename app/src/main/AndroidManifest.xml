@@ -65,8 +65,8 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".view.WaterSupplyRepairDistributeActivity"
-            android:label="@string/title_activity_water_supply_repair_distribute"
+            android:name=".view.DistributeActivity"
+            android:label="@string/title_activity_distribute"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -101,7 +101,38 @@
         </activity>
         <activity
             android:name=".view.WaterSupplyRepairInfoActivity"
-            android:label="@string/title_activity_water_supply_repair_info" >
+            android:label="@string/title_activity_water_supply_repair_info"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".view.MachineVerifyActivity"
+            android:label="@string/title_activity_machine_verify"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".view.MachineVerifyWaitInfoActivity"
+            android:label="@string/title_activity_machine_verify_wait_info"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".view.MachineVerifyOkInfoActivity"
+            android:label="@string/title_activity_machine_verify_ok_info"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.SuppliesVerifyActivity"
+            android:label="@string/title_activity_supplies_verify"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.SuppliesVerifyWaitInfoActivity"
+            android:label="@string/title_activity_supplies_verify_wait_info"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.SuppliesVerifyOkInfoActivity"
+            android:label="@string/title_activity_supplies_verify_ok_info"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

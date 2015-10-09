@@ -65,6 +65,7 @@ public class LeaderFragment extends Fragment {
             order.setUrgent(data.isUrgent());
             order.setType(data.getType());
             order.setState(data.getState());
+            order.setDeadline(data.getDeadline());
             order.setFlag(data.getFlag());
             orderList.add(order);
         }

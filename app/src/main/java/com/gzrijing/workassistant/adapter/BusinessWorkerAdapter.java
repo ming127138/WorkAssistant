@@ -15,12 +15,10 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.view.MachineApplyActivity;
-import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.SuppliesApplyActivity;
-import com.gzrijing.workassistant.view.WaterSupplyRepairDistributeActivity;
+import com.gzrijing.workassistant.view.DistributeActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -61,8 +59,8 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                     R.layout.listview_item_business_worker, parent, false);
             v.orderId = (TextView) convertView.findViewById(
                     R.id.listview_item_business_worker_order_id_tv);
-            v.temInfo = (ImageView) convertView.findViewById(
-                    R.id.listview_item_business_worker_tem_info_iv);
+            v.info = (ImageView) convertView.findViewById(
+                    R.id.listview_item_business_worker_info_iv);
             v.urgent = (ImageView) convertView.findViewById(
                     R.id.listview_item_business_worker_urgent_iv);
             v.type = (TextView) convertView.findViewById(
@@ -135,7 +133,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
 
                 if(flag.equals("处理")){
                     if(orderList.get(position).getType().equals("供水维修")){
-                        Intent intent = new Intent(context, WaterSupplyRepairDistributeActivity.class);
+                        Intent intent = new Intent(context, DistributeActivity.class);
                         intent.putExtra("orderId", orderList.get(position).getOrderId());
                         intent.putExtra("position", position);
                         context.startActivity(intent);
@@ -150,7 +148,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
 
     class ViewHolder {
         private TextView orderId;
-        private ImageView temInfo;
+        private ImageView info;
         private ImageView urgent;
         private TextView type;
         private TextView state;
