@@ -21,21 +21,12 @@
             android:textSize="@dimen/sw_15dp" />
 
         <ImageView
-            android:id="@+id/listview_item_business_worker_info_iv"
+            android:id="@+id/listview_item_business_worker_urgent_iv"
             android:layout_width="@dimen/sw_25dp"
             android:layout_height="@dimen/sw_25dp"
             android:layout_marginRight="@dimen/sw_5dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/icon_info" />
-
-        <ImageView
-            android:id="@+id/listview_item_business_worker_urgent_iv"
-            android:layout_width="@dimen/sw_25dp"
-            android:layout_height="@dimen/sw_25dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/sw_5dp"
-            android:layout_toLeftOf="@+id/listview_item_business_worker_info_iv"
             android:src="@drawable/icon_urgent" />
     </RelativeLayout>
 
@@ -110,6 +101,30 @@
                 android:textSize="@dimen/sw_15dp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/sw_10dp"
+            android:layout_marginRight="@dimen/sw_10dp"
+            android:layout_marginBottom="@dimen/sw_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="临时信息："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/listview_item_business_worker_tem_info_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0条新临时信息"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_15dp" />
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -136,6 +151,16 @@
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
 
+            <Button
+                android:id="@+id/listview_item_business_worker_info_btn"
+                android:layout_width="@dimen/sw_60dp"
+                android:layout_height="@dimen/sw_25dp"
+                android:layout_toLeftOf="@+id/listview_item_business_worker_machine_apply_btn"
+                android:layout_marginRight="@dimen/sw_10dp"
+                android:background="@drawable/btn_blue_frame"
+                android:text="详细信息"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_12dp"/>
         </RelativeLayout>
 
         <ImageView

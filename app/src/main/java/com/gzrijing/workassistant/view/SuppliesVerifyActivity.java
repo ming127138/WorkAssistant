@@ -4,16 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.MachineVerifyAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesVerifyAdapter;
-import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
 
 import java.util.ArrayList;

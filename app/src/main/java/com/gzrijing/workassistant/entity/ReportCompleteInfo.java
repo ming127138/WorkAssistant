@@ -1,13 +1,13 @@
 package com.gzrijing.workassistant.entity;
 
-public class InspectionParameter {
+public class ReportCompleteInfo {
     private String key;
     private String value;
 
-    public InspectionParameter() {
+    public ReportCompleteInfo() {
     }
 
-    public InspectionParameter(String key, String value) {
+    public ReportCompleteInfo(String key, String value) {
         this.key = key;
         this.value = value;
     }

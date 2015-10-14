@@ -1,8 +1,5 @@
 package com.gzrijing.workassistant.entity;
 
-/**
- * Created by ME on 2015/8/4.
- */
 public class InspectionStandard {
     private String standard;
     private boolean isCheck;

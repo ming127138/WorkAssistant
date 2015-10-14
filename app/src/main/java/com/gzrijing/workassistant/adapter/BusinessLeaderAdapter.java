@@ -21,6 +21,7 @@ import com.gzrijing.workassistant.view.MachineVerifyActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.DistributeActivity;
 import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
+import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.WaterSupplyRepairInfoActivity;
 
 import org.litepal.crud.DataSupport;
@@ -133,6 +134,15 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, SuppliesVerifyActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
+        v.temInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, TemInfoActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }

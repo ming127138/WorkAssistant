@@ -58,5 +58,8 @@
     <string name="title_activity_supplies_verify">材料审核</string>
     <string name="title_activity_supplies_verify_wait_info">待审列表</string>
     <string name="title_activity_supplies_verify_ok_info">已审列表</string>
+    <string name="title_activity_tem_info">临时信息</string>
+    <string name="title_activity_tem_info_content">信息内容</string>
+    <string name="title_activity_report">工程汇报</string>
 
 </resources>

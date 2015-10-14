@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initViews() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
-
+        setSupportActionBar(mToolbar);
 
         iv_business = (ImageView) findViewById(R.id.main_business_iv);
         iv_manage = (ImageView) findViewById(R.id.main_manage_iv);
