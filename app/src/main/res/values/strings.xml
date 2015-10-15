@@ -61,5 +61,8 @@
     <string name="title_activity_tem_info">临时信息</string>
     <string name="title_activity_tem_info_content">信息内容</string>
     <string name="title_activity_report">工程汇报</string>
+    <string name="title_activity_report_info">汇报信息</string>
+    <string name="title_activity_report_info_problem">汇报内容</string>
+    <string name="title_activity_report_info_complete">汇报内容</string>
 
 </resources>

@@ -149,6 +149,21 @@
             android:label="@string/title_activity_report"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".view.ReportInfoActivity"
+            android:label="@string/title_activity_report_info"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.ReportInfoProblemActivity"
+            android:label="@string/title_activity_report_info_problem"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.ReportInfoCompleteActivity"
+            android:label="@string/title_activity_report_info_complete"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

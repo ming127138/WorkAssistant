@@ -154,7 +154,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/sw_10dp">
+            android:paddingLeft="@dimen/sw_10dp"
+            android:paddingRight="@dimen/sw_10dp"
+            android:paddingTop="@dimen/sw_10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -168,6 +170,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0条新临时信息"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/sw_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="汇报信息："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/listview_item_business_leader_report_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0条新汇报信息"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_15dp" />
         </LinearLayout>

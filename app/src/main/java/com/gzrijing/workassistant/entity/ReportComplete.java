@@ -1,13 +1,13 @@
 package com.gzrijing.workassistant.entity;
 
-public class ReportCompleteInfo {
+public class ReportComplete {
     private String key;
     private String value;
 
-    public ReportCompleteInfo() {
+    public ReportComplete() {
     }
 
-    public ReportCompleteInfo(String key, String value) {
+    public ReportComplete(String key, String value) {
         this.key = key;
         this.value = value;
     }

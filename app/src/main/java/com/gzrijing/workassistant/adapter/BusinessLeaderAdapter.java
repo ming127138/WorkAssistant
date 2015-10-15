@@ -20,6 +20,7 @@ import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.view.MachineVerifyActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.DistributeActivity;
+import com.gzrijing.workassistant.view.ReportInfoActivity;
 import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.WaterSupplyRepairInfoActivity;
@@ -81,6 +82,8 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.id.listview_item_business_leader_supplies_verify_tv);
             v.temInfo = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_tem_info_tv);
+            v.report = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_leader_report_tv);
             v.flag = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_flag_tv);
             v.bg_ll = (LinearLayout) convertView.findViewById(
@@ -148,6 +151,15 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             }
         });
 
+        v.report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ReportInfoActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
         final String flag = orderList.get(position).getFlag();
         v.flag.setText(flag);
         if (flag.equals("确认收到")) {
@@ -189,6 +201,7 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         private TextView machineVerify;
         private TextView suppliesVerify;
         private TextView temInfo;
+        private TextView report;
         private Button progress;
         private Button  info;
         private TextView flag;

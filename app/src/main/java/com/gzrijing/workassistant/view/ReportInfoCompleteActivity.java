@@ -1,21 +1,17 @@
 package com.gzrijing.workassistant.view;
 
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportCompleteAdapter;
@@ -31,69 +27,47 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class ReportCompleteFragment extends Fragment implements View.OnClickListener {
+public class ReportInfoCompleteActivity extends AppCompatActivity {
 
-    private View layoutView;
-    private String orderId;
-    private ListView lv_info;
     private List<ReportComplete> infos = new ArrayList<ReportComplete>();
+    private ListView lv_info;
     private ReportCompleteAdapter adapter;
-    private LinearLayout ll_water;
-    private ImageView iv_water;
-    private LinearLayout ll_customer;
-    private ImageView iv_customer;
-    private Button btn_report;
-    private boolean isCheck = false;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-    public ReportCompleteFragment() {
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_report_info_complete);
+
         initData();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        layoutView = inflater.inflate(R.layout.fragment_report_complete, container, false);
-
         initViews();
         setListeners();
-        return layoutView;
     }
 
     private void initData() {
-        orderId = getArguments().getString("orderId");
-
         String[] key = {"排水口径：", "排水时间：", "施工日期：", "完工日期：", "验收日期：", "施工内容：", "土建项目：", "　　备注："};
+        String[] value = {"DN121", "30", "2015-10-15 10:10", "2015-10-15 12:00", "2015-10-15 14:00",
+                                    "XXXXXX施工内容", "XXXXXXXXXXXXXXXXXX土建项目", "XXXXXX备注"};
         for (int i = 0; i < key.length; i++) {
             ReportComplete info = new ReportComplete();
             info.setKey(key[i]);
+            info.setValue(value[i]);
             infos.add(info);
         }
     }
 
     private void initViews() {
-        ll_water = (LinearLayout) layoutView.findViewById(R.id.fragment_report_complete_water_ll);
-        iv_water = (ImageView) layoutView.findViewById(R.id.fragment_report_complete_water_iv);
-        ll_customer = (LinearLayout) layoutView.findViewById(R.id.fragment_report_complete_customer_ll);
-        iv_customer = (ImageView) layoutView.findViewById(R.id.fragment_report_complete_customer_iv);
-        btn_report = (Button) layoutView.findViewById(R.id.fragment_report_complete_report_btn);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        lv_info = (ListView) layoutView.findViewById(R.id.report_complete_info_lv);
-        adapter = new ReportCompleteAdapter(getActivity(), infos);
+        lv_info = (ListView) findViewById(R.id.report_info_complete_info_lv);
+        adapter = new ReportCompleteAdapter(this, infos);
         lv_info.setAdapter(adapter);
     }
 
     private void setListeners() {
-        ll_water.setOnClickListener(this);
-        ll_customer.setOnClickListener(this);
-        btn_report.setOnClickListener(this);
-
         lv_info.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -106,12 +80,13 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
 
             }
         });
+
     }
 
     private void getDate(final int position, final TextView tv_value) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(this);
         final View timepickerview = inflater.inflate(R.layout.timepicker, null);
-        ScreenInfo screenInfo = new ScreenInfo(getActivity());
+        ScreenInfo screenInfo = new ScreenInfo(this);
         wheelMain = new WheelMain(timepickerview, true);
         wheelMain.screenheight = screenInfo.getHeight();
         String time = tv_value.getText().toString();
@@ -131,7 +106,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
         int h = c.get(Calendar.HOUR_OF_DAY);
         int min = c.get(Calendar.MINUTE);
         wheelMain.initDateTimePicker(y, m - 1, d, h, min);
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(this)
                 .setTitle("选择时间")
                 .setView(timepickerview)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -148,38 +123,27 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
                 }).show();
     }
 
-
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fragment_report_complete_water_ll:
-                if (isCheck) {
-                    iv_water.setImageResource(R.drawable.spinner_item_check_on);
-                    iv_customer.setImageResource(R.drawable.spinner_item_check_off);
-                    isCheck = !isCheck;
-                }
-                break;
-
-            case R.id.fragment_report_complete_customer_ll:
-                if (!isCheck) {
-                    iv_water.setImageResource(R.drawable.spinner_item_check_off);
-                    iv_customer.setImageResource(R.drawable.spinner_item_check_on);
-                    isCheck = !isCheck;
-                }
-                break;
-
-            case R.id.fragment_report_complete_report_btn:
-                report();
-                break;
-        }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_report_info_complete, menu);
+        return true;
     }
 
-    private void report() {
-        Log.e("1111111:", infos.get(0).getValue() + infos.get(1).getValue() + infos.get(2).getValue()
-                + infos.get(3).getValue() + infos.get(4).getValue() + infos.get(5).getValue() + infos.get(6).getValue()
-                + infos.get(7).getValue());
-        Toast.makeText(getActivity(), infos.get(0).getValue() + infos.get(1).getValue() + infos.get(2).getValue()
-                + infos.get(3).getValue() + infos.get(4).getValue() + infos.get(5).getValue() + infos.get(6).getValue()
-                + infos.get(7).getValue(), Toast.LENGTH_LONG).show();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        if(id == R.id.action_sure){
+            setResult(10);
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
