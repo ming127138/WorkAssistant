@@ -152,17 +152,23 @@
         <activity
             android:name=".view.ReportInfoActivity"
             android:label="@string/title_activity_report_info"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.ReportInfoProblemActivity"
             android:label="@string/title_activity_report_info_problem"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".view.ReportInfoCompleteActivity"
             android:label="@string/title_activity_report_info_complete"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".view.SuppliesApplyingActivity"
+            android:label="@string/title_activity_supplies_applying"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

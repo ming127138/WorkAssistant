@@ -17,11 +17,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesQueryAdapter;
-import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.data.SuppliesData;
 import com.gzrijing.workassistant.entity.Supplies;
-
-import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,7 +25,6 @@ import java.util.List;
 
 public class SuppliesApplyEditActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String userName;
     private ImageView iv_delAll;
     private Button btn_add;
     private EditText et_name;
@@ -41,7 +36,6 @@ public class SuppliesApplyEditActivity extends AppCompatActivity implements View
     private Button btn_keyword;
     private ListView lv_supplies;
     private ListView lv_query;
-    private String orderId;
     private List<Supplies> suppliesQueries;
     private List<Supplies> suppliesList;
     private SuppliesAdapter adapter;
@@ -60,8 +54,6 @@ public class SuppliesApplyEditActivity extends AppCompatActivity implements View
 
     private void initData() {
         Intent intent = getIntent();
-        userName = intent.getStringExtra("userName");
-        orderId = intent.getStringExtra("orderId");
         suppliesList = (List<Supplies>) intent.getSerializableExtra("suppliesList");
         suppliesQueries = new ArrayList<Supplies>();
 
@@ -106,7 +98,7 @@ public class SuppliesApplyEditActivity extends AppCompatActivity implements View
                 supplies.setSpec(query.getSpec());
                 supplies.setUnit(query.getUnit());
                 supplies.setNum(1);
-                supplies.setState("申请中");
+                supplies.setState("新添加");
                 suppliesList.add(supplies);
                 adapter.notifyDataSetChanged();
             }
@@ -200,7 +192,7 @@ public class SuppliesApplyEditActivity extends AppCompatActivity implements View
         supplies.setSpec(spec);
         supplies.setUnit(unit);
         supplies.setNum(1);
-        supplies.setState("申请中");
+        supplies.setState("新添加");
         suppliesList.add(supplies);
         adapter.notifyDataSetChanged();
         et_name.setText("");
@@ -224,26 +216,6 @@ public class SuppliesApplyEditActivity extends AppCompatActivity implements View
         }
 
         if (id == R.id.action_save) {
-            BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
-            List<SuppliesData> datas = businessData.getSuppliesDataList();
-            for(SuppliesData data : datas){
-                if(data.getFlag().equals("创建")){
-                    data.delete();
-                }
-            }
-            for (int i = 0; i < suppliesList.size(); i++) {
-                SuppliesData data = new SuppliesData();
-                data.setNo(suppliesList.get(i).getId());
-                data.setName(suppliesList.get(i).getName());
-                data.setSpec(suppliesList.get(i).getSpec());
-                data.setUnit(suppliesList.get(i).getUnit());
-                data.setNum(suppliesList.get(i).getNum());
-                data.setState(suppliesList.get(i).getState());
-                data.setFlag("创建");
-                data.save();
-                businessData.getSuppliesDataList().add(data);
-            }
-            businessData.save();
             Intent intent = getIntent();
             intent.putExtra("suppliesList", (Serializable) suppliesList);
             setResult(10, intent);

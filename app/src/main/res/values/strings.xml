@@ -64,5 +64,6 @@
     <string name="title_activity_report_info">汇报信息</string>
     <string name="title_activity_report_info_problem">汇报内容</string>
     <string name="title_activity_report_info_complete">汇报内容</string>
+    <string name="title_activity_supplies_applying">材料修改</string>
 
 </resources>

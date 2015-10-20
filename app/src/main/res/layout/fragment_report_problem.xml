@@ -26,6 +26,41 @@
         android:textColor="@color/black"
         android:textSize="@dimen/sw_15dp"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sw_10dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/sw_10dp">
+
+        <ImageView
+            android:id="@+id/fragment_report_problem_photo1_iv"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/sw_100dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/upload_photo" />
+
+        <ImageView
+            android:id="@+id/fragment_report_problem_photo2_iv"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/sw_100dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/upload_photo"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:id="@+id/fragment_report_problem_photo3_iv"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/sw_100dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/upload_photo"
+            android:visibility="invisible"/>
+    </LinearLayout>
+
     <Button
         android:id="@+id/fragment_report_problem_report_btn"
         android:layout_width="@dimen/sw_60dp"

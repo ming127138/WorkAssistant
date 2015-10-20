@@ -5,12 +5,14 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,14 +20,15 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesApplyApplyingAdapter;
+import com.gzrijing.workassistant.adapter.SuppliesApplyApprovalAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyCreatedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReceivedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReturnAdapter;
 import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.data.MachineData;
 import com.gzrijing.workassistant.data.SuppliesData;
-import com.gzrijing.workassistant.entity.Machine;
+import com.gzrijing.workassistant.data.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.widget.MyListView;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
@@ -53,14 +56,17 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
     private Button btn_return;
     private MyListView lv_created;
     private MyListView lv_applying;
+    private MyListView lv_approval;
     private MyListView lv_received;
     private MyListView lv_return;
     private List<Supplies> createdList = new ArrayList<Supplies>();
-    private List<Supplies> applyingList = new ArrayList<Supplies>();
+    private List<SuppliesNo> applyingList = new ArrayList<SuppliesNo>();
+    private List<Supplies> approvalList = new ArrayList<Supplies>();
     private List<Supplies> receivedList = new ArrayList<Supplies>();
     private List<Supplies> returnList = new ArrayList<Supplies>();
     private SuppliesApplyCreatedAdapter createdAdapter;
     private SuppliesApplyApplyingAdapter applyingAdapter;
+    private SuppliesApplyApprovalAdapter approvalAdapter;
     private SuppliesApplyReceivedAdapter receivedAdapter;
     private SuppliesApplyReturnAdapter returnAdapter;
     private WheelMain wheelMain;
@@ -85,9 +91,18 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
         orderId = intent.getStringExtra("orderId");
 
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        List<SuppliesNoData> suppliesNoData = businessData.getSuppliesNoList();
+        for (SuppliesNoData data : suppliesNoData) {
+            SuppliesNo suppliesNo = new SuppliesNo();
+            suppliesNo.setApplyId(data.getApplyId());
+            suppliesNo.setApplyTime(data.getApplyTime());
+            suppliesNo.setUseTime(data.getUseTime());
+            suppliesNo.setState(data.getState());
+            applyingList.add(suppliesNo);
+        }
         List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
-        for(SuppliesData data : suppliesDataList){
-            if(data.getFlag().equals("申请")){
+        for (SuppliesData data : suppliesDataList) {
+            if (data.getState().equals("已审核") || data.getState().equals("可领用")) {
                 Supplies supplies = new Supplies();
                 supplies.setDataId(data.getId());
                 supplies.setId(data.getNo());
@@ -96,9 +111,9 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
                 supplies.setUnit(data.getUnit());
                 supplies.setNum(data.getNum());
                 supplies.setState(data.getState());
-                applyingList.add(supplies);
+                approvalList.add(supplies);
             }
-            if(data.getFlag().equals("领用")){
+            if (data.getState().equals("已领用")) {
                 Supplies supplies = new Supplies();
                 supplies.setDataId(data.getId());
                 supplies.setId(data.getNo());
@@ -128,12 +143,15 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
         lv_created = (MyListView) findViewById(R.id.supplies_apply_created_lv);
         createdAdapter = new SuppliesApplyCreatedAdapter(this, createdList);
         lv_created.setAdapter(createdAdapter);
+        lv_applying = (MyListView) findViewById(R.id.supplies_apply_applying_lv);
+        applyingAdapter = new SuppliesApplyApplyingAdapter(this, applyingList);
+        lv_applying.setAdapter(applyingAdapter);
         lv_received = (MyListView) findViewById(R.id.supplies_apply_received_lv);
         receivedAdapter = new SuppliesApplyReceivedAdapter(this, receivedList);
         lv_received.setAdapter(receivedAdapter);
-        lv_applying = (MyListView) findViewById(R.id.supplies_apply_applying_lv);
-        applyingAdapter = new SuppliesApplyApplyingAdapter(this, applyingList, receivedList, receivedAdapter);
-        lv_applying.setAdapter(applyingAdapter);
+        lv_approval = (MyListView) findViewById(R.id.supplies_apply_approval_lv);
+        approvalAdapter = new SuppliesApplyApprovalAdapter(this, approvalList, receivedList, receivedAdapter);
+        lv_approval.setAdapter(approvalAdapter);
         lv_return = (MyListView) findViewById(R.id.supplies_apply_return_lv);
         returnAdapter = new SuppliesApplyReturnAdapter(this, returnList);
         lv_return.setAdapter(returnAdapter);
@@ -145,6 +163,65 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
         tv_useTime.setOnClickListener(this);
         btn_returnEdit.setOnClickListener(this);
         btn_return.setOnClickListener(this);
+
+        lv_applying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String applyId = applyingList.get(position).getApplyId();
+                if (applyId.equals("重新申请单00Y")) {
+                    List<SuppliesData> suppliesDataList = DataSupport.where("applyId = ?", applyId).find(SuppliesData.class);
+                    for (SuppliesData data : suppliesDataList) {
+                        Supplies supplies = new Supplies();
+                        supplies.setDataId(data.getId());
+                        supplies.setId(data.getNo());
+                        supplies.setName(data.getName());
+                        supplies.setSpec(data.getSpec());
+                        supplies.setUnit(data.getUnit());
+                        supplies.setNum(data.getNum());
+                        supplies.setState("已审核");
+                        approvalList.add(supplies);
+                    }
+                    ContentValues values = new ContentValues();
+                    values.put("state", "已审核");
+                    DataSupport.updateAll(SuppliesData.class, values, "applyId = ?", applyId);
+                    DataSupport.deleteAll(SuppliesNoData.class, "applyId = ?", applyId);
+                    applyingList.remove(position);
+                    applyingAdapter.notifyDataSetChanged();
+                    approvalAdapter.notifyDataSetChanged();
+                } else {
+                    Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesApplyingActivity.class);
+                    intent.putExtra("suppliesNo", (Parcelable) applyingList.get(position));
+                    intent.putExtra("position", position);
+                    intent.putExtra("userName", userName);
+                    intent.putExtra("orderId", orderId);
+                    startActivityForResult(intent, 20);
+                }
+            }
+        });
+
+        lv_approval.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String state = approvalList.get(position).getState();
+                if (state.equals("已审核")) {
+                    ContentValues values = new ContentValues();
+                    values.put("state", "可领用");
+                    DataSupport.update(SuppliesData.class, values, approvalList.get(position).getDataId());
+                    approvalList.get(position).setState("可领用");
+                    approvalAdapter.notifyDataSetChanged();
+                }
+
+                if (state.equals("可领用")) {
+                    ContentValues values = new ContentValues();
+                    values.put("state", "已领用");
+                    DataSupport.update(SuppliesData.class, values, approvalList.get(position).getDataId());
+                    receivedList.add(approvalList.get(position));
+                    receivedAdapter.notifyDataSetChanged();
+                    approvalList.remove(position);
+                    approvalAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -170,7 +247,7 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
                 Intent intent2 = new Intent(this, SuppliesReturnEditActivity.class);
                 intent2.putExtra("orderId", orderId);
                 intent2.putExtra("suppliesList", (Serializable) receivedList);
-                startActivityForResult(intent2, 20);
+                startActivityForResult(intent2, 30);
                 break;
 
             case R.id.supplies_apply_return_btn:
@@ -180,7 +257,8 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
     }
 
     private void apply() {
-        if(tv_useTime.getText().toString().equals("")){
+        String useTime = tv_useTime.getText().toString();
+        if (useTime.equals("")) {
             if (mToast == null) {
                 mToast = Toast.makeText(this, "请选择领用时间", Toast.LENGTH_SHORT);
             } else {
@@ -190,25 +268,42 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
             mToast.show();
             return;
         }
-        ContentValues values = new ContentValues();
-        values.put("flag", "申请");
-        DataSupport.updateAll(SuppliesData.class, values, "flag = ?", "创建");
+        String remarks = et_remarks.getText().toString().trim();
+        String applyId = "申请单00X";
+        Calendar rightNow = Calendar.getInstance();
+        String applyTime = dateFormat.format(rightNow.getTime());
+
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
-        List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
-        applyingList.clear();
-        for(SuppliesData data : suppliesDataList){
-            if(data.getFlag().equals("申请")){
-                Supplies supplies = new Supplies();
-                supplies.setDataId(data.getId());
-                supplies.setId(data.getNo());
-                supplies.setName(data.getName());
-                supplies.setSpec(data.getSpec());
-                supplies.setUnit(data.getUnit());
-                supplies.setNum(data.getNum());
-                supplies.setState(data.getState());
-                applyingList.add(supplies);
-            }
+        for (int i = 0; i < createdList.size(); i++) {
+            SuppliesData data = new SuppliesData();
+            data.setNo(createdList.get(i).getId());
+            data.setApplyId(applyId);
+            data.setName(createdList.get(i).getName());
+            data.setSpec(createdList.get(i).getSpec());
+            data.setUnit(createdList.get(i).getUnit());
+            data.setNum(createdList.get(i).getNum());
+            data.setState("申请中");
+            data.save();
+            businessData.getSuppliesDataList().add(data);
         }
+        SuppliesNoData data1 = new SuppliesNoData();
+        data1.setApplyId(applyId);
+        data1.setApplyTime(applyTime);
+        data1.setUseTime(useTime);
+        data1.setRemarks(remarks);
+        data1.setState("申请中");
+        data1.save();
+        businessData.getSuppliesNoList().add(data1);
+        businessData.save();
+
+        SuppliesNo suppliesNo = new SuppliesNo();
+        suppliesNo.setApplyId(applyId);
+        suppliesNo.setApplyTime(applyTime);
+        suppliesNo.setUseTime(useTime);
+        suppliesNo.setRemarks(remarks);
+        suppliesNo.setState("申请中");
+        applyingList.add(suppliesNo);
+
         btn_apply.setVisibility(View.GONE);
         tv_useTime.setText("");
         tv_useTime.setHint("未选择");
@@ -219,12 +314,12 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
     }
 
     private void returnConfirm() {
-        for(Supplies reList : returnList){
+        for (Supplies reList : returnList) {
             SuppliesData suppliesData = DataSupport.find(SuppliesData.class, reList.getDataId());
             int num = suppliesData.getNum() - reList.getNum();
-            if(num == 0){
+            if (num == 0) {
                 DataSupport.delete(SuppliesData.class, reList.getDataId());
-            }else{
+            } else {
                 ContentValues values = new ContentValues();
                 values.put("num", num);
                 DataSupport.update(SuppliesData.class, values, reList.getDataId());
@@ -234,8 +329,8 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
         receivedList.clear();
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
         List<SuppliesData> suppliesDatas = businessData.getSuppliesDataList();
-        for(SuppliesData data : suppliesDatas){
-            if(data.getFlag().equals("领用")){
+        for (SuppliesData data : suppliesDatas) {
+            if (data.getState().equals("已领用")) {
                 Supplies supplies = new Supplies();
                 supplies.setDataId(data.getId());
                 supplies.setId(data.getNo());
@@ -313,6 +408,16 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
 
         if (requestCode == 20) {
             if (resultCode == 20) {
+                SuppliesNo suppliesNo = data.getParcelableExtra("suppliesNo");
+                int position = data.getIntExtra("position", -1);
+                applyingList.remove(position);
+                applyingList.add(suppliesNo);
+                applyingAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (requestCode == 30) {
+            if (resultCode == 30) {
                 List<Supplies> suppliesList = (List<Supplies>) data.getSerializableExtra("suppliesList");
                 if (suppliesList.size() > 0) {
                     btn_return.setVisibility(View.VISIBLE);
@@ -331,7 +436,6 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            DataSupport.deleteAll(SuppliesData.class, "flag = ?", "创建");
             finish();
             return true;
         }

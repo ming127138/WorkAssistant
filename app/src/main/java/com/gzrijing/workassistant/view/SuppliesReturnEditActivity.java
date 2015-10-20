@@ -11,7 +11,6 @@ import android.widget.ImageView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesReturnEditAdapter;
-import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.widget.MyListView;
 
@@ -97,7 +96,7 @@ public class SuppliesReturnEditActivity extends AppCompatActivity implements Vie
         }
         Intent intent = getIntent();
         intent.putExtra("suppliesList", (Serializable) suppList);
-        setResult(20, intent);
+        setResult(30, intent);
         finish();
     }
 

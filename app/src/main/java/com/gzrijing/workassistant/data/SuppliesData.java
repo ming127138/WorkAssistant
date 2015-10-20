@@ -5,12 +5,12 @@ import org.litepal.crud.DataSupport;
 public class SuppliesData extends DataSupport {
     private int id;
     private String No;          //材料编号
+    private String applyId;     //材料申请单号
     private String name;        //材料名称
     private String spec;        //材料规格
     private String unit;        //材料单位
     private int num;            //数量
-    private String flag;        //创建，申请，领用三种状态
-    private String state;       //申请材料状态（申请中，未能准备，领用）
+    private String state;       //申请材料状态（申请中，已审批，领用）
     private BusinessData businessData;
 
     public int getId() {
@@ -27,6 +27,14 @@ public class SuppliesData extends DataSupport {
 
     public void setNo(String no) {
         No = no;
+    }
+
+    public String getApplyId() {
+        return applyId;
+    }
+
+    public void setApplyId(String applyId) {
+        this.applyId = applyId;
     }
 
     public String getName() {
@@ -59,14 +67,6 @@ public class SuppliesData extends DataSupport {
 
     public void setNum(int num) {
         this.num = num;
-    }
-
-    public String getFlag() {
-        return flag;
-    }
-
-    public void setFlag(String flag) {
-        this.flag = flag;
     }
 
     public String getState() {

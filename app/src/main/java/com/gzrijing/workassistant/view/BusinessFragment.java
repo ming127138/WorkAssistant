@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.data.BusinessData;
+import com.gzrijing.workassistant.data.SuppliesData;
 import com.gzrijing.workassistant.data.WaterSupplyRepairData;
+import com.gzrijing.workassistant.entity.Supplies;
 
 import org.litepal.crud.DataSupport;
 
@@ -38,9 +40,9 @@ public class BusinessFragment extends Fragment {
         layoutView = inflater.inflate(R.layout.fragment_business, container, false);
 
         if (savedInstanceState == null) {
-            Fragment fragment = getChildFragmentManager().findFragmentByTag(0 + "");
+            Fragment fragment = getChildFragmentManager().findFragmentByTag(1 + "");
             if (fragment == null) {
-                setTabSelection(0);
+                setTabSelection(1);
             }
         }
 
@@ -72,10 +74,7 @@ public class BusinessFragment extends Fragment {
         data.setFlag("确认收到");
         data.setWaterSupplyRepairData(data1);
         data.save();
-
-
     }
-
 
     private void setTabSelection(int index) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
