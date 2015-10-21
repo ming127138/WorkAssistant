@@ -46,8 +46,8 @@ public class ReportInfoCompleteActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        String[] key = {"排水口径：", "排水时间：", "施工日期：", "完工日期：", "验收日期：", "施工内容：", "土建项目：", "　　备注："};
-        String[] value = {"DN121", "30", "2015-10-15 10:10", "2015-10-15 12:00", "2015-10-15 14:00",
+        String[] key = {"表身编号", "水表产地", "水表有效日期", "排水口径", "排水时间", "施工日期", "完工日期", "验收日期", "施工内容", "土建项目", "　　备注"};
+        String[] value = {"SBBH007", "XXXX产地", "2020-10-15 13:00", "DN36", "2015-10-15 13:00", "2015-10-15 10:10", "2015-10-15 12:00", "2015-10-15 14:00",
                                     "XXXXXX施工内容", "XXXXXXXXXXXXXXXXXX土建项目", "XXXXXX备注"};
         for (int i = 0; i < key.length; i++) {
             ReportComplete info = new ReportComplete();
@@ -72,7 +72,7 @@ public class ReportInfoCompleteActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String key = infos.get(position).getKey();
-                if (key.equals("施工日期：") || key.equals("完工日期：") || key.equals("验收日期：")) {
+                if (key.equals("水表有效日期") || key.equals("排水时间") || key.equals("施工日期：") || key.equals("完工日期：") || key.equals("验收日期：")) {
                     TextView tv_value = (TextView) view.findViewById(
                             R.id.listview_item_fragment_report_complete_date_value_tv);
                     getDate(position, tv_value);

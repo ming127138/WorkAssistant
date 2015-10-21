@@ -13,6 +13,13 @@
         android:textColor="@color/black"
         android:textSize="@dimen/sw_15dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="："
+        android:textColor="@color/black"
+        android:textSize="@dimen/sw_15dp" />
+
     <EditText
         android:id="@+id/listview_item_fragment_report_complete_edittext_value_et"
         android:layout_width="match_parent"

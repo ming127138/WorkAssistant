@@ -16,14 +16,13 @@ import android.widget.TextView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.data.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
-import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.view.MachineVerifyActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.DistributeActivity;
 import com.gzrijing.workassistant.view.ReportInfoActivity;
 import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
-import com.gzrijing.workassistant.view.WaterSupplyRepairInfoActivity;
+import com.gzrijing.workassistant.view.DetailedInfoActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -109,7 +108,7 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         v.info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, WaterSupplyRepairInfoActivity.class);
+                Intent intent = new Intent(context, DetailedInfoActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }

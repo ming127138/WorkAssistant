@@ -4,18 +4,18 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.data.SuppliesData;
-import com.gzrijing.workassistant.data.WaterSupplyRepairData;
-import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.data.DetailedInfoData;
 
 import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class BusinessFragment extends Fragment {
@@ -55,24 +55,24 @@ public class BusinessFragment extends Fragment {
                 "saveUserInfo", getActivity().MODE_PRIVATE);
         userName = app.getString("userName", "");
 
-        WaterSupplyRepairData data1 = new WaterSupplyRepairData();
-        data1.setTime("2015-9-14 10:10");
-        data1.setAddress("XXX地址");
-        data1.setReason("XXX故障原因");
-        data1.setRePairType("XXX维修类型");
-        data1.setContacts("张某某");
-        data1.setTel("159XXXXXXXX");
-        data1.setRemarks("XXX备注");
-        data1.save();
+        String[] keys = {"　　性质", "水表编号", "用户名称", "用户地址", "联系电话", "水表口径", "　　备注"};
+        String[] values = {"报装","SBBH007","李XX","XXXXXX地址","135XXXXXXXX","DN36","XXXX备注"};
+
         BusinessData data = new BusinessData();
         data.setUser(userName);
         data.setOrderId("工单007");
         data.setUrgent(true);
-        data.setType("供水维修");
-        data.setState("未派发");
+        data.setType("水表工程");
+        data.setState("未处理");
         data.setDeadline("2015-10-1");
         data.setFlag("确认收到");
-        data.setWaterSupplyRepairData(data1);
+        for(int i=0;i<keys.length;i++){
+            DetailedInfoData data1 = new DetailedInfoData();
+            data1.setKey(keys[i]);
+            data1.setValue(values[i]);
+            data1.save();
+            data.getDetailedInfoList().add(data1);
+        }
         data.save();
     }
 

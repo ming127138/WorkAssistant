@@ -51,7 +51,7 @@
     <string name="title_activity_machine_apply_edit">机械查询</string>
     <string name="title_activity_machine_return_edit">机械退回</string>
     <string name="title_activity_supplies_return_edit">材料退回</string>
-    <string name="title_activity_water_supply_repair_info">工程信息</string>
+    <string name="title_activity_detailed_info">工程信息</string>
     <string name="title_activity_machine_verify">机械审核</string>
     <string name="title_activity_machine_verify_wait_info">待审列表</string>
     <string name="title_activity_machine_verify_ok_info">已审列表</string>

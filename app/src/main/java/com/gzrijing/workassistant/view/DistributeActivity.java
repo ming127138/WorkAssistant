@@ -156,7 +156,7 @@ public class DistributeActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_water_supply_repair_distribute, menu);
+        getMenuInflater().inflate(R.menu.menu_distribute, menu);
         return true;
     }
 

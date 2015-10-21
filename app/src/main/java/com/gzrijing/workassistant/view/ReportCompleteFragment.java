@@ -69,7 +69,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     private void initData() {
         orderId = getArguments().getString("orderId");
 
-        String[] key = {"排水口径：", "排水时间：", "施工日期：", "完工日期：", "验收日期：", "施工内容：", "土建项目：", "　　备注："};
+        String[] key = {"表身编号", "水表产地", "水表有效日期", "排水口径", "排水时间", "施工日期", "完工日期", "验收日期", "施工内容", "土建项目", "　　备注"};
         for (int i = 0; i < key.length; i++) {
             ReportComplete info = new ReportComplete();
             info.setKey(key[i]);
@@ -98,7 +98,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String key = infos.get(position).getKey();
-                if (key.equals("施工日期：") || key.equals("完工日期：") || key.equals("验收日期：")) {
+                if (key.equals("水表有效日期") || key.equals("排水时间") || key.equals("施工日期") || key.equals("完工日期") || key.equals("验收日期")) {
                     TextView tv_value = (TextView) view.findViewById(
                             R.id.listview_item_fragment_report_complete_date_value_tv);
                     getDate(position, tv_value);

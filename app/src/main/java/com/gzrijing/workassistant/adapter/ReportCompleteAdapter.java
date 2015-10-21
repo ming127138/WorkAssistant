@@ -52,24 +52,13 @@ public class ReportCompleteAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         String key = infos.get(position).getKey();
-        if (key.equals("排水口径：")) {
+        if (key.equals("排水口径")) {
             if (infos.get(position).getValue() == null || infos.get(position).getValue().equals("")) {
                 infos.get(position).setValue("DN");
             }
         }
 
-        if (key.equals("排水时间：")) {
-            convertView = listContainer.inflate(
-                    R.layout.listview_item_fragment_report_complete_min, parent, false);
-            TextView tv_key = (TextView) convertView.findViewById(
-                    R.id.listview_item_fragment_report_complete_min_key_tv);
-            EditText et_value = (EditText) convertView.findViewById(
-                    R.id.listview_item_fragment_report_complete_min_value_et);
-            getET(position, tv_key, et_value);
-            return convertView;
-        }
-
-        if (key.equals("施工日期：") || key.equals("完工日期：") || key.equals("验收日期：")) {
+        if (key.equals("水表有效日期") || key.equals("排水时间") || key.equals("施工日期") || key.equals("完工日期") || key.equals("验收日期")) {
             convertView = listContainer.inflate(
                     R.layout.listview_item_fragment_report_complete_date, parent, false);
             TextView tv_key = (TextView) convertView.findViewById(

@@ -22,7 +22,7 @@ import com.gzrijing.workassistant.view.MachineApplyActivity;
 import com.gzrijing.workassistant.view.ReportActivity;
 import com.gzrijing.workassistant.view.SuppliesApplyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
-import com.gzrijing.workassistant.view.WaterSupplyRepairInfoActivity;
+import com.gzrijing.workassistant.view.DetailedInfoActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -137,7 +137,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         v.info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, WaterSupplyRepairInfoActivity.class);
+                Intent intent = new Intent(context, DetailedInfoActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }

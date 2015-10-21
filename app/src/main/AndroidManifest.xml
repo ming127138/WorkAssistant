@@ -100,8 +100,8 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".view.WaterSupplyRepairInfoActivity"
-            android:label="@string/title_activity_water_supply_repair_info"
+            android:name=".view.DetailedInfoActivity"
+            android:label="@string/title_activity_detailed_info"
             android:screenOrientation="portrait" >
         </activity>
         <activity

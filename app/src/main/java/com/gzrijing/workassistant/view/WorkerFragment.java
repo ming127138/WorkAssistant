@@ -1,6 +1,5 @@
 package com.gzrijing.workassistant.view;
 
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,10 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.BusinessLeaderAdapter;
 import com.gzrijing.workassistant.adapter.BusinessWorkerAdapter;
 import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 
 import org.litepal.crud.DataSupport;
