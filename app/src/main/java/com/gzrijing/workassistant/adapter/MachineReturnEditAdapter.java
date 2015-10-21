@@ -75,9 +75,10 @@ public class MachineReturnEditAdapter extends BaseAdapter {
         v.name.setText(machineList.get(position).getName());
         v.spec.setText(machineList.get(position).getSpec());
         v.num.setText(machineList.get(position).getNum() + "");
+        v.tv_type.setText(machineList.get(position).getReturnType());
         final ViewHolder finalV = v;
         final String[] item = new String[]{"正常", "故障"};
-        if(dialogFlag.get(position) == null){
+        if (dialogFlag.get(position) == null) {
             dialogFlag.put(position, 0);
         }
         v.ll_type.setOnClickListener(new View.OnClickListener() {

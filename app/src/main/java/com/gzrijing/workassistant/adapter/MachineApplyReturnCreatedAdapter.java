@@ -12,12 +12,12 @@ import com.gzrijing.workassistant.entity.Machine;
 
 import java.util.List;
 
-public class MachineApplyReturnAdapter extends BaseAdapter {
+public class MachineApplyReturnCreatedAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
     private List<Machine> machineList;
 
-    public MachineApplyReturnAdapter(Context context, List<Machine> machineList) {
+    public MachineApplyReturnCreatedAdapter(Context context, List<Machine> machineList) {
         listContainer = LayoutInflater.from(context);
         this.machineList = machineList;
     }
@@ -43,12 +43,12 @@ public class MachineApplyReturnAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_machine_apply_return, parent, false);
-            v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_spec_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_num_tv);
-            v.returnType = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_type_tv);
-            v.returnState = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_state_tv);
+                    R.layout.listview_item_machine_apply_return_created, parent, false);
+            v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_created_name_tv);
+            v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_created_spec_tv);
+            v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_created_num_tv);
+            v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_created_unit_tv);
+            v.returnType = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_created_type_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -57,8 +57,8 @@ public class MachineApplyReturnAdapter extends BaseAdapter {
         v.name.setText(machineList.get(position).getName());
         v.spec.setText(machineList.get(position).getSpec());
         v.num.setText(machineList.get(position).getNum() + "");
+        v.unit.setText(machineList.get(position).getUnit());
         v.returnType.setText(machineList.get(position).getReturnType());
-        v.returnState.setText(machineList.get(position).getState());
 
         return convertView;
     }
@@ -67,7 +67,7 @@ public class MachineApplyReturnAdapter extends BaseAdapter {
         private TextView name;
         private TextView spec;
         private TextView num;
+        private TextView unit;
         private TextView returnType;
-        private TextView returnState;
     }
 }

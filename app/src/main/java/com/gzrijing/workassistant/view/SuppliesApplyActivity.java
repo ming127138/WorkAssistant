@@ -229,8 +229,6 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
         switch (v.getId()) {
             case R.id.supplies_apply_edit_btn:
                 Intent intent1 = new Intent(this, SuppliesApplyEditActivity.class);
-                intent1.putExtra("orderId", orderId);
-                intent1.putExtra("userName", userName);
                 intent1.putExtra("suppliesList", (Serializable) createdList);
                 startActivityForResult(intent1, 10);
                 break;

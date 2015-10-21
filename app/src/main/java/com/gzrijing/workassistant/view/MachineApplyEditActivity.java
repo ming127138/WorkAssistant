@@ -17,13 +17,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MachineApplyAdapter;
 import com.gzrijing.workassistant.adapter.MachineQueryAdapter;
-import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.data.MachineData;
-import com.gzrijing.workassistant.data.SuppliesData;
 import com.gzrijing.workassistant.entity.Machine;
-
-
-import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,8 +25,6 @@ import java.util.List;
 
 public class MachineApplyEditActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private String userName;
-    private String orderId;
     private ImageView iv_delAll;
     private Button btn_add;
     private EditText et_name;
@@ -62,8 +54,6 @@ public class MachineApplyEditActivity extends AppCompatActivity implements View.
 
     private void initData() {
         Intent intent = getIntent();
-        userName = intent.getStringExtra("userName");
-        orderId = intent.getStringExtra("orderId");
         machineList = (List<Machine>) intent.getSerializableExtra("machineList");
         machineQueries = new ArrayList<Machine>();
 
@@ -108,7 +98,7 @@ public class MachineApplyEditActivity extends AppCompatActivity implements View.
                 apply.setSpec(query.getSpec());
                 apply.setUnit(query.getUnit());
                 apply.setNum(1);
-                apply.setState("申请中");
+                apply.setState("新添加");
                 machineList.add(apply);
                 applyAdapter.notifyDataSetChanged();
             }
@@ -176,7 +166,7 @@ public class MachineApplyEditActivity extends AppCompatActivity implements View.
         machine.setSpec(spec);
         machine.setUnit(unit);
         machine.setNum(1);
-        machine.setState("申请中");
+        machine.setState("新添加");
         machineList.add(machine);
         applyAdapter.notifyDataSetChanged();
         et_name.setText("");
@@ -226,26 +216,6 @@ public class MachineApplyEditActivity extends AppCompatActivity implements View.
         }
 
         if (id == R.id.action_save) {
-            BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
-            List<MachineData> datas = businessData.getMachineDataList();
-            for(MachineData data : datas){
-                if(data.getFlag().equals("创建")){
-                    data.delete();
-                }
-            }
-            for (int i = 0; i < machineList.size(); i++) {
-                MachineData data = new MachineData();
-                data.setNo(machineList.get(i).getId());
-                data.setName(machineList.get(i).getName());
-                data.setSpec(machineList.get(i).getSpec());
-                data.setUnit(machineList.get(i).getUnit());
-                data.setNum(machineList.get(i).getNum());
-                data.setState(machineList.get(i).getState());
-                data.setFlag("创建");
-                data.save();
-                businessData.getMachineDataList().add(data);
-            }
-            businessData.save();
             Intent intent = getIntent();
             intent.putExtra("machineList", (Serializable) machineList);
             setResult(10, intent);

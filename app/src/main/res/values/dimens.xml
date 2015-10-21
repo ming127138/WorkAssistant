@@ -17,4 +17,5 @@
     <dimen name="sw_120dp">96dp</dimen>
     <dimen name="sw_150dp">120dp</dimen>
     <dimen name="sw_200dp">160dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

@@ -5,11 +5,11 @@ import org.litepal.crud.DataSupport;
 public class MachineData extends DataSupport {
     private int id;
     private String No;                  //机械编号
+    private String applyId;             //机械申请单号
     private String name;                //机械名称
     private String spec;                //机械规格
     private String unit;                //机械单位
     private int num;                    //数量
-    private String flag;                //创建，申请，领用，退回四种状态
     private String state;               //申请机械状态(申请中，未能准备，领用，退回申请中，退回)
     private String returnType;          //机械退回类型（正常，故障）
     private BusinessData businessData;
@@ -28,6 +28,14 @@ public class MachineData extends DataSupport {
 
     public void setNo(String no) {
         No = no;
+    }
+
+    public String getApplyId() {
+        return applyId;
+    }
+
+    public void setApplyId(String applyId) {
+        this.applyId = applyId;
     }
 
     public String getName() {
@@ -60,14 +68,6 @@ public class MachineData extends DataSupport {
 
     public void setNum(int num) {
         this.num = num;
-    }
-
-    public String getFlag() {
-        return flag;
-    }
-
-    public void setFlag(String flag) {
-        this.flag = flag;
     }
 
     public String getState() {

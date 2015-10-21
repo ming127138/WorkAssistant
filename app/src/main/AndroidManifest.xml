@@ -164,10 +164,14 @@
             android:label="@string/title_activity_report_info_complete"
             android:screenOrientation="portrait" >
         </activity>
-
         <activity
             android:name=".view.SuppliesApplyingActivity"
             android:label="@string/title_activity_supplies_applying"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".view.MachineApplyingActivity"
+            android:label="@string/title_activity_machine_applying"
             android:screenOrientation="portrait" >
         </activity>
     </application>

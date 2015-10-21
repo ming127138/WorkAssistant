@@ -5,12 +5,15 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,12 +21,16 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MachineApplyApplyingAdapter;
+import com.gzrijing.workassistant.adapter.MachineApplyApprovalAdapter;
 import com.gzrijing.workassistant.adapter.MachineApplyCreatedAdapter;
 import com.gzrijing.workassistant.adapter.MachineApplyReceivedAdapter;
-import com.gzrijing.workassistant.adapter.MachineApplyReturnAdapter;
+import com.gzrijing.workassistant.adapter.MachineApplyReturnApplyingAdapter;
+import com.gzrijing.workassistant.adapter.MachineApplyReturnCreatedAdapter;
 import com.gzrijing.workassistant.data.BusinessData;
 import com.gzrijing.workassistant.data.MachineData;
+import com.gzrijing.workassistant.data.MachineNoData;
 import com.gzrijing.workassistant.entity.Machine;
+import com.gzrijing.workassistant.entity.MachineNo;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.widget.MyListView;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
@@ -55,17 +62,23 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
     private EditText et_returnRemarks;
     private Button btn_return;
     private MyListView lv_created;
-    private MyListView lv_received;
     private MyListView lv_applying;
-    private MyListView lv_return;
+    private MyListView lv_received;
+    private MyListView lv_approval;
+    private MyListView lv_returnCreated;
+    private MyListView lv_returnApplying;
     private List<Machine> createdList = new ArrayList<Machine>();
+    private List<MachineNo> applyingList = new ArrayList<MachineNo>();
     private List<Machine> receivedList = new ArrayList<Machine>();
-    private List<Machine> applyingList = new ArrayList<Machine>();
-    private List<Machine> returnList = new ArrayList<Machine>();
+    private List<Machine> approvalList = new ArrayList<Machine>();
+    private List<Machine> returnCreatedList = new ArrayList<Machine>();
+    private List<Machine> returnApplyingList = new ArrayList<Machine>();
     private MachineApplyCreatedAdapter createdAdapter;
-    private MachineApplyReceivedAdapter receivedAdapter;
     private MachineApplyApplyingAdapter applyingAdapter;
-    private MachineApplyReturnAdapter returnAdapter;
+    private MachineApplyReceivedAdapter receivedAdapter;
+    private MachineApplyApprovalAdapter approvalAdapter;
+    private MachineApplyReturnCreatedAdapter returnCreatedAdapter;
+    private MachineApplyReturnApplyingAdapter returnApplyingAdapter;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Toast mToast;
@@ -88,9 +101,21 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
         orderId = intent.getStringExtra("orderId");
 
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        List<MachineNoData> machineNoData = businessData.getMachineNoList();
+        for (MachineNoData data : machineNoData) {
+            MachineNo machineNo = new MachineNo();
+            machineNo.setApplyId(data.getApplyId());
+            machineNo.setApplyTime(data.getApplyTime());
+            machineNo.setUseTime(data.getUseTime());
+            machineNo.setReturnTime(data.getReturnTime());
+            machineNo.setUseAddress(data.getUseAddress());
+            machineNo.setState(data.getState());
+            applyingList.add(machineNo);
+        }
+
         List<MachineData> machineDataList = businessData.getMachineDataList();
         for (MachineData data : machineDataList) {
-            if (data.getFlag().equals("申请")) {
+            if (data.getState().equals("已审核") || data.getState().equals("可领用")) {
                 Machine machine = new Machine();
                 machine.setDataId(data.getId());
                 machine.setId(data.getNo());
@@ -99,9 +124,9 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
                 machine.setUnit(data.getUnit());
                 machine.setNum(data.getNum());
                 machine.setState(data.getState());
-                applyingList.add(machine);
+                approvalList.add(machine);
             }
-            if (data.getFlag().equals("领用")) {
+            if (data.getState().equals("已领用")) {
                 Machine machine = new Machine();
                 machine.setDataId(data.getId());
                 machine.setId(data.getNo());
@@ -113,7 +138,8 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
                 machine.setReturnType(data.getReturnType());
                 receivedList.add(machine);
             }
-            if (data.getFlag().equals("退回")) {
+
+            if (data.getState().equals("退回申请中") || data.getState().equals("退回已批准")) {
                 Machine machine = new Machine();
                 machine.setDataId(data.getId());
                 machine.setId(data.getNo());
@@ -121,9 +147,9 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
                 machine.setSpec(data.getSpec());
                 machine.setUnit(data.getUnit());
                 machine.setNum(data.getNum());
-                machine.setReturnType(data.getReturnType());
                 machine.setState(data.getState());
-                returnList.add(machine);
+                machine.setReturnType(data.getReturnType());
+                returnApplyingList.add(machine);
             }
         }
     }
@@ -146,24 +172,24 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
         et_returnRemarks = (EditText) findViewById(R.id.machine_apply_return_remarks_et);
         btn_return = (Button) findViewById(R.id.machine_apply_return_btn);
 
-        if(returnList.size() > 0){
-            btn_returnEdit.setVisibility(View.GONE);
-            btn_return.setText("退回");
-            btn_return.setVisibility(View.VISIBLE);
-        }
-
         lv_created = (MyListView) findViewById(R.id.machine_apply_created_lv);
         createdAdapter = new MachineApplyCreatedAdapter(this, createdList);
         lv_created.setAdapter(createdAdapter);
         lv_received = (MyListView) findViewById(R.id.machine_apply_received_lv);
+        lv_applying = (MyListView) findViewById(R.id.machine_apply_applying_lv);
+        applyingAdapter = new MachineApplyApplyingAdapter(this, applyingList);
+        lv_applying.setAdapter(applyingAdapter);
         receivedAdapter = new MachineApplyReceivedAdapter(this, receivedList);
         lv_received.setAdapter(receivedAdapter);
-        lv_applying = (MyListView) findViewById(R.id.machine_apply_applying_lv);
-        applyingAdapter = new MachineApplyApplyingAdapter(this, applyingList, receivedList, receivedAdapter);
-        lv_applying.setAdapter(applyingAdapter);
-        lv_return = (MyListView) findViewById(R.id.machine_apply_return_lv);
-        returnAdapter = new MachineApplyReturnAdapter(this, returnList);
-        lv_return.setAdapter(returnAdapter);
+        lv_approval = (MyListView) findViewById(R.id.machine_apply_approval_lv);
+        approvalAdapter = new MachineApplyApprovalAdapter(this, approvalList, receivedList, receivedAdapter);
+        lv_approval.setAdapter(approvalAdapter);
+        lv_returnCreated = (MyListView) findViewById(R.id.machine_apply_return_lv);
+        returnCreatedAdapter = new MachineApplyReturnCreatedAdapter(this, returnCreatedList);
+        lv_returnCreated.setAdapter(returnCreatedAdapter);
+        lv_returnApplying = (MyListView) findViewById(R.id.machine_apply_return_applying_lv);
+        returnApplyingAdapter = new MachineApplyReturnApplyingAdapter(this, returnApplyingList);
+        lv_returnApplying.setAdapter(returnApplyingAdapter);
     }
 
     private void setListeners() {
@@ -175,6 +201,86 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
         tv_returnReTime.setOnClickListener(this);
         btn_return.setOnClickListener(this);
 
+        lv_applying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String applyId = applyingList.get(position).getApplyId();
+                if (applyId.equals("重新申请单00Y")) {
+                    List<MachineData> machineDataList = DataSupport.where("applyId = ?", applyId).find(MachineData.class);
+                    for (MachineData data : machineDataList) {
+                        Machine machine = new Machine();
+                        machine.setDataId(data.getId());
+                        machine.setId(data.getNo());
+                        machine.setName(data.getName());
+                        machine.setSpec(data.getSpec());
+                        machine.setUnit(data.getUnit());
+                        machine.setNum(data.getNum());
+                        machine.setState("已审核");
+                        approvalList.add(machine);
+                    }
+                    ContentValues values = new ContentValues();
+                    values.put("state", "已审核");
+                    DataSupport.updateAll(MachineData.class, values, "applyId = ?", applyId);
+                    DataSupport.deleteAll(MachineNoData.class, "applyId = ?", applyId);
+                    applyingList.remove(position);
+                    applyingAdapter.notifyDataSetChanged();
+                    approvalAdapter.notifyDataSetChanged();
+                } else {
+                    Intent intent = new Intent(MachineApplyActivity.this, MachineApplyingActivity.class);
+                    intent.putExtra("machineNo", (Parcelable) applyingList.get(position));
+                    intent.putExtra("position", position);
+                    intent.putExtra("userName", userName);
+                    intent.putExtra("orderId", orderId);
+                    startActivityForResult(intent, 20);
+                }
+            }
+        });
+
+        lv_approval.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String state = approvalList.get(position).getState();
+                if (state.equals("已审核")) {
+                    ContentValues values = new ContentValues();
+                    values.put("state", "可领用");
+                    DataSupport.update(MachineData.class, values, approvalList.get(position).getDataId());
+                    approvalList.get(position).setState("可领用");
+                    approvalAdapter.notifyDataSetChanged();
+                }
+
+                if (state.equals("可领用")) {
+                    ContentValues values = new ContentValues();
+                    values.put("state", "已领用");
+                    values.put("returnType", "正常");
+                    DataSupport.update(MachineData.class, values, approvalList.get(position).getDataId());
+                    approvalList.get(position).setReturnType("正常");
+                    receivedList.add(approvalList.get(position));
+                    receivedAdapter.notifyDataSetChanged();
+                    approvalList.remove(position);
+                    approvalAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        lv_returnApplying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String state = returnApplyingList.get(position).getState();
+                if(state.equals("退回申请中")){
+                    ContentValues values = new ContentValues();
+                    values.put("state", "退回已批准");
+                    DataSupport.update(MachineData.class, values, returnApplyingList.get(position).getDataId());
+                    returnApplyingList.get(position).setState("退回已批准");
+                    returnApplyingAdapter.notifyDataSetChanged();
+                }
+                if(state.equals("退回已批准")){
+                    DataSupport.delete(MachineData.class, returnApplyingList.get(position).getDataId());
+                    returnApplyingList.remove(position);
+                    returnApplyingAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -182,8 +288,6 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
         switch (v.getId()) {
             case R.id.machine_apply_apply_edit_btn:
                 Intent intent1 = new Intent(this, MachineApplyEditActivity.class);
-                intent1.putExtra("userName", userName);
-                intent1.putExtra("orderId", orderId);
                 intent1.putExtra("machineList", (Serializable) createdList);
                 startActivityForResult(intent1, 10);
                 break;
@@ -202,9 +306,8 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
 
             case R.id.machine_apply_return_edit_btn:
                 Intent intent2 = new Intent(this, MachineReturnEditActivity.class);
-                intent2.putExtra("orderId", orderId);
                 intent2.putExtra("machineList", (Serializable) receivedList);
-                startActivityForResult(intent2, 20);
+                startActivityForResult(intent2, 30);
                 break;
 
             case R.id.machine_apply_return_return_time_tv:
@@ -212,19 +315,16 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.machine_apply_return_btn:
-                if(btn_return.getText().toString().equals("申请")){
-                    returnApply();
-                    break;
-                }
-                if(btn_return.getText().toString().equals("退回")){
-                    returnConfirm();
-                    break;
-                }
+                returnApply();
+                break;
         }
     }
 
     private void apply() {
-        if (tv_useTime.getText().toString().equals("")) {
+        String useTime = tv_useTime.getText().toString();
+        String returnTime = tv_returnTime.getText().toString();
+        String useAddress = et_useAddress.getText().toString().trim();
+        if (useTime.equals("")) {
             if (mToast == null) {
                 mToast = Toast.makeText(this, "请选择领用时间", Toast.LENGTH_SHORT);
             } else {
@@ -234,7 +334,7 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
             mToast.show();
             return;
         }
-        if (tv_returnTime.getText().toString().equals("")) {
+        if (returnTime.equals("")) {
             if (mToast == null) {
                 mToast = Toast.makeText(this, "请选择退回时间", Toast.LENGTH_SHORT);
             } else {
@@ -244,7 +344,7 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
             mToast.show();
             return;
         }
-        if (et_useAddress.getText().toString().trim().equals("")) {
+        if (useAddress.equals("")) {
             if (mToast == null) {
                 mToast = Toast.makeText(this, "请填写使用地点", Toast.LENGTH_SHORT);
             } else {
@@ -254,25 +354,47 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
             mToast.show();
             return;
         }
-        ContentValues values = new ContentValues();
-        values.put("flag", "申请");
-        DataSupport.updateAll(MachineData.class, values, "flag = ?", "创建");
+
+        String remarks = et_applyRemarks.getText().toString().trim();
+        String applyId = "申请单00X";
+        Calendar rightNow = Calendar.getInstance();
+        String applyTime = dateFormat.format(rightNow.getTime());
+
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
-        List<MachineData> machineDataList = businessData.getMachineDataList();
-        applyingList.clear();
-        for (MachineData data : machineDataList) {
-            if (data.getFlag().equals("申请")) {
-                Machine machine = new Machine();
-                machine.setDataId(data.getId());
-                machine.setId(data.getNo());
-                machine.setName(data.getName());
-                machine.setSpec(data.getSpec());
-                machine.setUnit(data.getUnit());
-                machine.setNum(data.getNum());
-                machine.setState(data.getState());
-                applyingList.add(machine);
-            }
+        for (int i = 0; i < createdList.size(); i++) {
+            MachineData data = new MachineData();
+            data.setNo(createdList.get(i).getId());
+            data.setApplyId(applyId);
+            data.setName(createdList.get(i).getName());
+            data.setSpec(createdList.get(i).getSpec());
+            data.setUnit(createdList.get(i).getUnit());
+            data.setNum(createdList.get(i).getNum());
+            data.setState("申请中");
+            data.save();
+            businessData.getMachineDataList().add(data);
         }
+        MachineNoData data1 = new MachineNoData();
+        data1.setApplyId(applyId);
+        data1.setApplyTime(applyTime);
+        data1.setUseTime(useTime);
+        data1.setReturnTime(returnTime);
+        data1.setUseAddress(useAddress);
+        data1.setRemarks(remarks);
+        data1.setState("申请中");
+        data1.save();
+        businessData.getMachineNoList().add(data1);
+        businessData.save();
+
+        MachineNo machineNo = new MachineNo();
+        machineNo.setApplyId(applyId);
+        machineNo.setApplyTime(applyTime);
+        machineNo.setUseTime(useTime);
+        machineNo.setReturnTime(returnTime);
+        machineNo.setUseAddress(useAddress);
+        machineNo.setRemarks(remarks);
+        machineNo.setState("申请中");
+        applyingList.add(machineNo);
+
         btn_apply.setVisibility(View.GONE);
         tv_useTime.setText("");
         tv_useTime.setHint("未选择");
@@ -307,15 +429,15 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
             return;
         }
 
-        for(Machine reList : returnList){
+        for (Machine reList : returnCreatedList) {
             MachineData machineData = DataSupport.find(MachineData.class, reList.getDataId());
             int num = machineData.getNum() - reList.getNum();
-            if(num == 0){
+            if (num == 0) {
                 ContentValues values = new ContentValues();
-                values.put("flag", "退回");
+                values.put("returnType", reList.getReturnType());
                 values.put("state", "退回申请中");
                 DataSupport.update(MachineData.class, values, reList.getDataId());
-            }else{
+            } else {
                 ContentValues values = new ContentValues();
                 values.put("num", num);
                 DataSupport.update(MachineData.class, values, reList.getDataId());
@@ -327,7 +449,6 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
                 data.setUnit(reList.getUnit());
                 data.setNum(reList.getNum());
                 data.setReturnType(reList.getReturnType());
-                data.setFlag("退回");
                 data.setState("退回申请中");
                 data.save();
                 BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
@@ -338,10 +459,12 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
         }
 
         receivedList.clear();
+        returnCreatedList.clear();
+        returnApplyingList.clear();
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
         List<MachineData> machineDatas = businessData.getMachineDataList();
-        for(MachineData data : machineDatas){
-            if(data.getFlag().equals("领用")){
+        for (MachineData data : machineDatas) {
+            if (data.getState().equals("已领用")) {
                 Machine machine = new Machine();
                 machine.setDataId(data.getId());
                 machine.setId(data.getNo());
@@ -350,28 +473,31 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
                 machine.setUnit(data.getUnit());
                 machine.setNum(data.getNum());
                 machine.setState(data.getState());
+                machine.setReturnType(data.getReturnType());
                 receivedList.add(machine);
             }
+
+            if (data.getState().equals("退回申请中") || data.getState().equals("退回已批准")) {
+                Machine machine = new Machine();
+                machine.setDataId(data.getId());
+                machine.setId(data.getNo());
+                machine.setName(data.getName());
+                machine.setSpec(data.getSpec());
+                machine.setUnit(data.getUnit());
+                machine.setNum(data.getNum());
+                machine.setState(data.getState());
+                machine.setReturnType(data.getReturnType());
+                returnApplyingList.add(machine);
+            }
         }
-        returnAdapter.notifyDataSetChanged();
         receivedAdapter.notifyDataSetChanged();
-        btn_returnEdit.setVisibility(View.GONE);
-        btn_return.setText("退回");
+        returnCreatedAdapter.notifyDataSetChanged();
+        returnApplyingAdapter.notifyDataSetChanged();
+        btn_return.setVisibility(View.GONE);
         tv_returnReTime.setText("");
         tv_returnReTime.setHint("未选择");
         et_returnAddress.setText("");
         et_returnRemarks.setText("");
-    }
-
-    private void returnConfirm() {
-        for(Machine reList : returnList){
-            DataSupport.delete(MachineData.class, reList.getDataId());
-        }
-        returnList.clear();
-        returnAdapter.notifyDataSetChanged();
-        btn_returnEdit.setVisibility(View.VISIBLE);
-        btn_return.setText("申请");
-        btn_return.setVisibility(View.GONE);
     }
 
     private void getTime(final TextView tv) {
@@ -434,15 +560,25 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
 
         if (requestCode == 20) {
             if (resultCode == 20) {
+                MachineNo machineNo = data.getParcelableExtra("machineNo");
+                int position = data.getIntExtra("position", -1);
+                applyingList.remove(position);
+                applyingList.add(machineNo);
+                applyingAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (requestCode == 30) {
+            if (resultCode == 30) {
                 List<Machine> machines = (List<Machine>) data.getSerializableExtra("machineList");
                 if (machines.size() > 0) {
                     btn_return.setVisibility(View.VISIBLE);
                 } else {
                     btn_return.setVisibility(View.GONE);
                 }
-                returnList.clear();
-                returnList.addAll(machines);
-                returnAdapter.notifyDataSetChanged();
+                returnCreatedList.clear();
+                returnCreatedList.addAll(machines);
+                returnCreatedAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -452,7 +588,6 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            DataSupport.deleteAll(MachineData.class, "flag = ?", "创建");
             finish();
             return true;
         }

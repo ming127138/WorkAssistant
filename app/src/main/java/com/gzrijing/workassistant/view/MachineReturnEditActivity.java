@@ -20,7 +20,6 @@ import java.util.List;
 
 public class MachineReturnEditActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private String orderId;
     private List<Machine> machineList;
     private ImageView iv_checkAll;
     private Button btn_ok;
@@ -40,7 +39,6 @@ public class MachineReturnEditActivity extends AppCompatActivity implements View
 
     private void initData() {
         Intent intent = getIntent();
-        orderId = intent.getStringExtra("orderId");
         machineList = (List<Machine>) intent.getSerializableExtra("machineList");
     }
 
@@ -95,7 +93,7 @@ public class MachineReturnEditActivity extends AppCompatActivity implements View
         }
         Intent intent = getIntent();
         intent.putExtra("machineList", (Serializable) machines);
-        setResult(20, intent);
+        setResult(30, intent);
         finish();
     }
 
