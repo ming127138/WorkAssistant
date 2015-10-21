@@ -5,6 +5,7 @@
     <item
         android:id="@+id/action_apply"
         android:orderInCategory="100"
+        android:icon="@drawable/icon_apply"
         android:title="申请"
         app:showAsAction="always" />
 </menu>

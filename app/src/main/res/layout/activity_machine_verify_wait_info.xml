@@ -7,150 +7,212 @@
 
     <include layout="@layout/toolbar" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/sw_5dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="领用时间："
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_15dp" />
-
-        <TextView
-            android:id="@+id/machine_verify_wait_info_use_time_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textColorHint="@color/grey_text"
-            android:textSize="@dimen/sw_15dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/sw_5dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="退回时间："
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_15dp" />
-
-        <TextView
-            android:id="@+id/machine_verify_wait_info_return_time_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textColorHint="@color/grey_text"
-            android:textSize="@dimen/sw_15dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/sw_5dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="使用地点："
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_15dp" />
-
-        <TextView
-            android:id="@+id/machine_verify_wait_info_use_address_tv"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_15dp" />
-    </LinearLayout>
+            android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/sw_5dp"
-        android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/sw_5dp"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="　备　注："
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_15dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="领用时间："
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
 
-        <TextView
-            android:id="@+id/machine_verify_wait_info_remarks_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_15dp" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/machine_verify_wait_info_use_time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+            </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/sw_5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/sw_5dp"
+                android:orientation="horizontal">
 
-        <ImageView
-        android:id="@+id/machine_verify_wait_info_check_all_iv"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/sw_15dp"
-        android:layout_weight="2"
-        android:src="@drawable/spinner_item_check_off" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="退回时间："
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:gravity="center"
-            android:text="名称"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_12dp" />
+                <TextView
+                    android:id="@+id/machine_verify_wait_info_return_time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grey_text"
+                    android:textSize="@dimen/sw_15dp" />
+            </LinearLayout>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:gravity="center"
-            android:text="规格"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_12dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/sw_5dp"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:gravity="center"
-            android:text="单位"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_12dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="使用地点："
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:gravity="center"
-            android:text="数量"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_12dp" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/machine_verify_wait_info_use_address_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+            </LinearLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/sw_5dp"
+                android:orientation="horizontal">
 
-    <com.gzrijing.workassistant.widget.MyListView
-        android:id="@+id/machine_verify_wait_info_lv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="　备　注："
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
 
+                <TextView
+                    android:id="@+id/machine_verify_wait_info_remarks_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/sw_5dp">
+
+                <ImageView
+                    android:id="@+id/machine_verify_wait_info_check_all_iv"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/sw_15dp"
+                    android:layout_weight="2"
+                    android:src="@drawable/spinner_item_check_off" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:text="名称"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:text="规格"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:text="单位"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:text="数量"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_12dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black" />
+
+            <com.gzrijing.workassistant.widget.MyListView
+                android:id="@+id/machine_verify_wait_info_lv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:padding="@dimen/sw_5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="不批原因："
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp"/>
+
+                <EditText
+                    android:id="@+id/machine_verify_wait_info_reason_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textCursorDrawable="@drawable/edit_cursor_blue"
+                    android:background="@drawable/edit_line_white_blue"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sw_5dp">
+
+                <Button
+                    android:id="@+id/machine_verify_wait_info_yes_btn"
+                    android:layout_width="@dimen/sw_60dp"
+                    android:layout_height="@dimen/sw_30dp"
+                    android:background="@drawable/btn_blue"
+                    android:layout_toLeftOf="@+id/machine_verify_wait_info_no_btn"
+                    android:layout_marginRight="@dimen/sw_20dp"
+                    android:text="批准"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sw_15dp"/>
+
+                <Button
+                    android:id="@+id/machine_verify_wait_info_no_btn"
+                    android:layout_width="@dimen/sw_60dp"
+                    android:layout_height="@dimen/sw_30dp"
+                    android:background="@drawable/btn_blue"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/sw_10dp"
+                    android:text="不批准"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sw_15dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

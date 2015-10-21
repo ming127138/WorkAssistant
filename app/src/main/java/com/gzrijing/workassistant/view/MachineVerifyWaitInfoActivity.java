@@ -1,16 +1,17 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MachineVerifyWaitAdapter;
@@ -28,10 +29,14 @@ public class MachineVerifyWaitInfoActivity extends AppCompatActivity implements 
     private TextView tv_useAddress;
     private TextView tv_remarks;
     private ImageView iv_checkAll;
+    private EditText et_reason;
+    private Button btn_yes;
+    private Button btn_no;
     private boolean isCheckAll;
     private List<MachineVerifyInfo> mvInfoList = new ArrayList<MachineVerifyInfo>();
     private ListView lv_info;
     private MachineVerifyWaitAdapter adapter;
+    private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,10 @@ public class MachineVerifyWaitInfoActivity extends AppCompatActivity implements 
         tv_remarks = (TextView) findViewById(R.id.machine_verify_wait_info_remarks_tv);
         tv_remarks.setText(machineVerify.getRemarks());
         iv_checkAll = (ImageView) findViewById(R.id.machine_verify_wait_info_check_all_iv);
+        et_reason = (EditText) findViewById(R.id.machine_verify_wait_info_reason_et);
+        btn_yes = (Button) findViewById(R.id.machine_verify_wait_info_yes_btn);
+        btn_no = (Button) findViewById(R.id.machine_verify_wait_info_no_btn);
+
         lv_info = (ListView) findViewById(R.id.machine_verify_wait_info_lv);
         adapter = new MachineVerifyWaitAdapter(this, mvInfoList, iv_checkAll, isCheckAll);
         lv_info.setAdapter(adapter);
@@ -74,6 +83,8 @@ public class MachineVerifyWaitInfoActivity extends AppCompatActivity implements 
 
     private void setListeners() {
         iv_checkAll.setOnClickListener(this);
+        btn_yes.setOnClickListener(this);
+        btn_no.setOnClickListener(this);
     }
 
     @Override
@@ -94,13 +105,25 @@ public class MachineVerifyWaitInfoActivity extends AppCompatActivity implements 
                 adapter.notifyDataSetChanged();
                 isCheckAll = !isCheckAll;
                 break;
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_machine_verify_wait_info, menu);
-        return true;
+            case R.id.machine_verify_wait_info_yes_btn:
+
+                break;
+
+            case R.id.machine_verify_wait_info_no_btn:
+                String reason = et_reason.getText().toString().trim();
+                if(reason.equals("")){
+                    if (mToast == null) {
+                        mToast = Toast.makeText(this, "请填写不批原因", Toast.LENGTH_SHORT);
+                    } else {
+                        mToast.setText("请填写不批原因");
+                        mToast.setDuration(Toast.LENGTH_SHORT);
+                    }
+                    mToast.show();
+                    return;
+                }
+                break;
+        }
     }
 
     @Override
@@ -110,10 +133,6 @@ public class MachineVerifyWaitInfoActivity extends AppCompatActivity implements 
         if (id == android.R.id.home) {
             finish();
             return true;
-        }
-
-        if (id == R.id.action_sure) {
-
         }
 
         return super.onOptionsItemSelected(item);
