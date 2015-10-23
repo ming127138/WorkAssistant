@@ -19,6 +19,7 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.data.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.view.MachineApplyActivity;
+import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
 import com.gzrijing.workassistant.view.ReportActivity;
 import com.gzrijing.workassistant.view.SuppliesApplyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
@@ -94,6 +95,12 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         v.type.setText(orderList.get(position).getType());
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
+
+        if(orderList.get(position).getType().equals("供水管网维护")){
+            v.info.setVisibility(View.GONE);
+            v.machineApply.setVisibility(View.GONE);
+            v.suppliesApply.setVisibility(View.GONE);
+        }
         if (orderList.get(position).isUrgent()) {
             v.urgent.setVisibility(View.VISIBLE);
         } else {
@@ -160,11 +167,23 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    orderList.get(position).setFlag("汇报");
-                                    ContentValues values = new ContentValues();
-                                    values.put("flag", "汇报");
-                                    DataSupport.updateAll(BusinessData.class, values,
-                                            "orderId = ?", orderList.get(position).getOrderId());
+                                    if (orderList.get(position).getType().equals("供水管网维护")) {
+                                        orderList.get(position).setFlag("巡检");
+                                        orderList.get(position).setState("正在处理");
+                                        ContentValues values = new ContentValues();
+                                        values.put("flag", "巡检");
+                                        values.put("state", "正在处理");
+                                        DataSupport.updateAll(BusinessData.class, values,
+                                                "orderId = ?", orderList.get(position).getOrderId());
+                                    } else {
+                                        orderList.get(position).setFlag("汇报");
+                                        orderList.get(position).setState("正在处理");
+                                        ContentValues values = new ContentValues();
+                                        values.put("flag", "汇报");
+                                        values.put("state", "正在处理");
+                                        DataSupport.updateAll(BusinessData.class, values,
+                                                "orderId = ?", orderList.get(position).getOrderId());
+                                    }
                                     notifyDataSetChanged();
                                 }
                             })
@@ -174,6 +193,12 @@ public class BusinessWorkerAdapter extends BaseAdapter {
 
                 if (flag.equals("汇报")) {
                     Intent intent = new Intent(context, ReportActivity.class);
+                    intent.putExtra("orderId", orderList.get(position).getOrderId());
+                    context.startActivity(intent);
+                }
+
+                if(flag.equals("巡检")){
+                    Intent intent = new Intent(context, PipeInspectionMapActivity.class);
                     intent.putExtra("orderId", orderList.get(position).getOrderId());
                     context.startActivity(intent);
                 }

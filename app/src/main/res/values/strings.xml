@@ -7,12 +7,11 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_pipe_inspection_map">管网维护</string>
     <string name="title_activity_download_offline_map">离线地图管理</string>
     <string name="title_activity_pipe_inspection_form">巡检表格</string>
-    <string name="title_activity_pipe_inspection_report">问题上报</string>
     <string name="title_activity_subordinate">下属列表</string>
     <string name="title_activity_subordinate_location">下属实时位置</string>
-    <string name="title_activity_pipe_repair_report">管网维修汇报</string>
     <string name="title_activity_supplies_apply_edit">材料查询</string>
     <string name="title_activity_distribute">工程派发</string>
 

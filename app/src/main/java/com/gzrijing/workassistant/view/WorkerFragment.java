@@ -61,10 +61,10 @@ public class WorkerFragment extends Fragment {
         for (BusinessData data : list) {
             BusinessByWorker order = new BusinessByWorker();
             order.setOrderId(data.getOrderId());
-            order.setTemInfo(data.isTemInfo());
             order.setUrgent(data.isUrgent());
             order.setType(data.getType());
             order.setState(data.getState());
+            order.setDeadline(data.getDeadline());
             order.setFlag(data.getFlag());
             orderList.add(order);
         }
@@ -138,7 +138,6 @@ public class WorkerFragment extends Fragment {
         for (BusinessData data : list) {
             BusinessByWorker order = new BusinessByWorker();
             order.setOrderId(data.getOrderId());
-            order.setTemInfo(data.isTemInfo());
             order.setUrgent(data.isUrgent());
             order.setType(data.getType());
             order.setState(data.getState());

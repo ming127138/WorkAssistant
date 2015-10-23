@@ -14,10 +14,6 @@ import com.gzrijing.workassistant.data.DetailedInfoData;
 
 import org.litepal.crud.DataSupport;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class BusinessFragment extends Fragment {
 
     private View layoutView;
@@ -40,9 +36,9 @@ public class BusinessFragment extends Fragment {
         layoutView = inflater.inflate(R.layout.fragment_business, container, false);
 
         if (savedInstanceState == null) {
-            Fragment fragment = getChildFragmentManager().findFragmentByTag(0 + "");
+            Fragment fragment = getChildFragmentManager().findFragmentByTag(1 + "");
             if (fragment == null) {
-                setTabSelection(0);
+                setTabSelection(1);
             }
         }
 
@@ -74,6 +70,16 @@ public class BusinessFragment extends Fragment {
             data.getDetailedInfoList().add(data1);
         }
         data.save();
+
+        BusinessData data2 = new BusinessData();
+        data2.setUser(userName);
+        data2.setOrderId("工单009");
+        data2.setUrgent(false);
+        data2.setType("供水管网维护");
+        data2.setState("未处理");
+        data2.setDeadline("2015-10-31");
+        data2.setFlag("确认收到");
+        data2.save();
     }
 
     private void setTabSelection(int index) {
@@ -111,6 +117,5 @@ public class BusinessFragment extends Fragment {
             transaction.hide(workerFragment);
         }
     }
-
 
 }

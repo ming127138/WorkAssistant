@@ -4,34 +4,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.PipeInspectionParameterAdapter;
 import com.gzrijing.workassistant.adapter.PipeInspectionStandardAdapter;
-import com.gzrijing.workassistant.entity.InspectionParameter;
 import com.gzrijing.workassistant.entity.InspectionStandard;
 import com.gzrijing.workassistant.widget.MyListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PipeInspectionFormActivity extends AppCompatActivity {
+public class PipeInspectionFormActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private MyListView lv_standard;
-    private MyListView lv_parameter;
+    private String id;
+    private String type;
     private ImageView iv_checkAll;
-    public static boolean isCheck;
-    private List<InspectionStandard> standards;
-    private List<InspectionParameter> parameters;
+    private EditText et_problem;
+    private Button btn_ok;
+    private Button btn_problem;
+    private MyListView lv_standard;
+    private boolean isCheckAll;
+    private List<InspectionStandard> standards = new ArrayList<InspectionStandard>();
     private PipeInspectionStandardAdapter standardAdapter;
-    private PipeInspectionParameterAdapter parameterAdapter;
-    private String number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,66 +43,95 @@ public class PipeInspectionFormActivity extends AppCompatActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        number = intent.getStringExtra("number");
+        id = intent.getStringExtra("id");
+        type = intent.getStringExtra("type");
 
-        standards = new ArrayList<InspectionStandard>();
-        for (int i = 1; i < 6; i++) {
-            InspectionStandard standard = new InspectionStandard();
-            standard.setIsCheck(false);
-            standard.setStandard("标准" + i);
-            standards.add(standard);
+        if(type.equals("供水阀门井")){
+            String[] data = {"井体","井内杂物","井盖","阀门性能","阀门型号","阀门井型号"};
+            for (int i = 0; i < data.length; i++) {
+                InspectionStandard standard = new InspectionStandard();
+                standard.setIsCheck(false);
+                standard.setStandard(data[i]);
+                standards.add(standard);
+            }
         }
-
-        parameters = new ArrayList<InspectionParameter>();
-        for (int i = 1; i < 3; i++) {
-            InspectionParameter parameter = new InspectionParameter();
-            parameter.setKey("参数" + i + "：");
-            parameters.add(parameter);
+        if(type.equals("供水消防栓")){
+            String[] data = {"外观","开关","出水口","出水压力","消防栓型号","阀门型号","阀门性能","阀门井型号"};
+            for (int i = 0; i < data.length; i++) {
+                InspectionStandard standard = new InspectionStandard();
+                standard.setIsCheck(false);
+                standard.setStandard(data[i]);
+                standards.add(standard);
+            }
+        }
+        if(type.equals("污水井")){
+            String[] data = {"井体尺寸","井内批灰情况","井内杂物","井盖","安全网"};
+            for (int i = 0; i < data.length; i++) {
+                InspectionStandard standard = new InspectionStandard();
+                standard.setIsCheck(false);
+                standard.setStandard(data[i]);
+                standards.add(standard);
+            }
         }
 
     }
 
     private void initViews() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(number);
+        mToolbar.setTitle(id);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         iv_checkAll = (ImageView) findViewById(R.id.pipe_inspection_form_check_all_iv);
+        et_problem = (EditText) findViewById(R.id.pipe_inspection_form_problem_et);
+        btn_ok = (Button) findViewById(R.id.pipe_inspection_form_ok_btn);
+        btn_problem = (Button) findViewById(R.id.pipe_inspection_form_problem_btn);
         lv_standard = (MyListView) findViewById(R.id.pipe_inspection_form_standard_lv);
-        standardAdapter = new PipeInspectionStandardAdapter(this, standards, iv_checkAll);
+        standardAdapter = new PipeInspectionStandardAdapter(this, standards, iv_checkAll, isCheckAll);
         lv_standard.setAdapter(standardAdapter);
-        lv_parameter = (MyListView) findViewById(R.id.pipe_inspection_form_parameter_lv);
-        parameterAdapter = new PipeInspectionParameterAdapter(this, parameters);
-        lv_parameter.setAdapter(parameterAdapter);
     }
 
     private void setListeners() {
-        iv_checkAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isCheck) {
-                    for (InspectionStandard standard : standards) {
-                        standard.setIsCheck(false);
-                    }
-                    iv_checkAll.setImageResource(R.drawable.login_checkbox_off);
-                } else {
-                    for (InspectionStandard standard : standards) {
-                        standard.setIsCheck(true);
-                    }
-                    iv_checkAll.setImageResource(R.drawable.login_checkbox_on);
-                }
-                standardAdapter.notifyDataSetChanged();
-                isCheck = !isCheck;
-            }
-        });
+        iv_checkAll.setOnClickListener(this);
+        btn_ok.setOnClickListener(this);
+        btn_problem.setOnClickListener(this);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_pipe_inspection_form, menu);
-        return true;
+    public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.pipe_inspection_form_check_all_iv:
+            if (isCheckAll) {
+                for (InspectionStandard standard : standards) {
+                    standard.setIsCheck(false);
+                }
+                iv_checkAll.setImageResource(R.drawable.login_checkbox_off);
+            } else {
+                for (InspectionStandard standard : standards) {
+                    standard.setIsCheck(true);
+                }
+                iv_checkAll.setImageResource(R.drawable.login_checkbox_on);
+            }
+            standardAdapter.notifyDataSetChanged();
+            isCheckAll = !isCheckAll;
+            break;
+
+            case R.id.pipe_inspection_form_ok_btn:
+                submitOk();
+                break;
+
+            case R.id.pipe_inspection_form_problem_btn:
+                submitProblem();
+                break;
+        }
+    }
+
+    private void submitOk() {
+
+    }
+
+    private void submitProblem() {
+
     }
 
     @Override
@@ -116,12 +143,6 @@ public class PipeInspectionFormActivity extends AppCompatActivity {
             return true;
         }
 
-        if(id == R.id.action_submit){
-            for(InspectionParameter parameter : parameters){
-                Toast.makeText(this, parameter.getKey()+parameter.getValue(), Toast.LENGTH_LONG).show();
-            }
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 }

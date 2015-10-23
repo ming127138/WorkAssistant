@@ -4,18 +4,20 @@ public class Marker {
     private String id;
     private double latitude;
     private double longitude;
-    private int tag;
-    private String info;
+    private String type;    //管网维护四种类型：供水阀门井，供水消防栓，供水管刷油，污水井
+    private String area;
+    private String address;
 
     public Marker() {
     }
 
-    public Marker(String id, double latitude, double longitude, int tag, String info) {
+    public Marker(String id, double latitude, double longitude, String type, String area, String address) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.tag = tag;
-        this.info = info;
+        this.type = type;
+        this.area = area;
+        this.address = address;
     }
 
     public String getId() {
@@ -42,19 +44,27 @@ public class Marker {
         this.longitude = longitude;
     }
 
-    public int getTag() {
-        return tag;
+    public String getType() {
+        return type;
     }
 
-    public void setTag(int tag) {
-        this.tag = tag;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getInfo() {
-        return info;
+    public String getArea() {
+        return area;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

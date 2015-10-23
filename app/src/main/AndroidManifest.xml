@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gzrijing.workassistant" >
+    package="com.gzrijing.workassistant">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,7 +17,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/MyAppTheme" >
+        android:theme="@style/MyAppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="55GGDSEHicXHKpf2FaLYiinD" />
@@ -25,7 +25,7 @@
         <activity
             android:name=".view.LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,7 +36,9 @@
             android:name=".view.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.PipeInspectionMapActivity" />
+        <activity
+            android:name=".view.PipeInspectionMapActivity"
+            android:label="@string/title_activity_pipe_inspection_map" />
         <activity
             android:name=".view.DownloadOfflineMapActivity"
             android:label="@string/title_activity_download_offline_map"
@@ -46,134 +48,104 @@
             android:label="@string/title_activity_pipe_inspection_form"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.PipeInspectionReportActivity"
-            android:label="@string/title_activity_pipe_inspection_report"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".view.SubordinateActivity"
             android:label="@string/title_activity_subordinate"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.SubordinateLocationActivity"
-            android:label="@string/title_activity_subordinate_location" >
-        </activity>
+            android:label="@string/title_activity_subordinate_location" />
         <activity
             android:name=".view.SuppliesApplyEditActivity"
             android:label="@string/title_activity_supplies_apply_edit"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.DistributeActivity"
             android:label="@string/title_activity_distribute"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.ProgressActivity"
             android:label="@string/title_activity_progress"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.SuppliesApplyActivity"
             android:label="@string/title_activity_supplies_apply"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.MachineApplyActivity"
             android:label="@string/title_activity_machine_apply"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.MachineApplyEditActivity"
             android:label="@string/title_activity_machine_apply_edit"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.MachineReturnEditActivity"
             android:label="@string/title_activity_machine_return_edit"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.SuppliesReturnEditActivity"
             android:label="@string/title_activity_supplies_return_edit"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.DetailedInfoActivity"
             android:label="@string/title_activity_detailed_info"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.MachineVerifyActivity"
             android:label="@string/title_activity_machine_verify"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.MachineVerifyWaitInfoActivity"
             android:label="@string/title_activity_machine_verify_wait_info"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.MachineVerifyOkInfoActivity"
             android:label="@string/title_activity_machine_verify_ok_info"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.SuppliesVerifyActivity"
             android:label="@string/title_activity_supplies_verify"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.SuppliesVerifyWaitInfoActivity"
             android:label="@string/title_activity_supplies_verify_wait_info"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.SuppliesVerifyOkInfoActivity"
             android:label="@string/title_activity_supplies_verify_ok_info"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.TemInfoActivity"
             android:label="@string/title_activity_tem_info"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.TemInfoContentActivity"
             android:label="@string/title_activity_tem_info_content"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.ReportActivity"
             android:label="@string/title_activity_report"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.ReportInfoActivity"
             android:label="@string/title_activity_report_info"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.ReportInfoProblemActivity"
             android:label="@string/title_activity_report_info_problem"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.ReportInfoCompleteActivity"
             android:label="@string/title_activity_report_info_complete"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.SuppliesApplyingActivity"
             android:label="@string/title_activity_supplies_applying"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.MachineApplyingActivity"
             android:label="@string/title_activity_machine_applying"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

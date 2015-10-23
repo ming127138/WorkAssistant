@@ -51,6 +51,9 @@ public class DownloadOfflineMapActivity extends AppCompatActivity implements MKO
                     if(city.cityID == 187){
                         localMaps.add(new LocalMap(187, "中山市", city.size, 0));
                     }
+                    if(city.cityID == 257){
+                        localMaps.add(new LocalMap(257, "广州市", city.size, 0));
+                    }
                 }
             }
         }
@@ -69,6 +72,10 @@ public class DownloadOfflineMapActivity extends AppCompatActivity implements MKO
             if (e.cityID == 187) {
                 localMaps.get(1).setRatio(e.ratio);
                 localMaps.get(1).setSize(e.serversize);
+            }
+            if (e.cityID == 257) {
+                localMaps.get(2).setRatio(e.ratio);
+                localMaps.get(2).setSize(e.serversize);
             }
         }
 

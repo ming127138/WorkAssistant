@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.InspectionStandard;
-import com.gzrijing.workassistant.view.PipeInspectionFormActivity;
 
 import java.util.List;
 
@@ -20,12 +19,14 @@ public class PipeInspectionStandardAdapter extends BaseAdapter {
     private LayoutInflater listContainer;
     private List<InspectionStandard> standards;
     private ImageView iv_checkAll;
+    private boolean isCheckAll;
 
     public PipeInspectionStandardAdapter(
-            Context context, List<InspectionStandard> standards, ImageView iv_checkAll) {
+            Context context, List<InspectionStandard> standards, ImageView iv_checkAll, boolean isCheckAll) {
         listContainer = LayoutInflater.from(context);
         this.standards = standards;
         this.iv_checkAll = iv_checkAll;
+        this.isCheckAll = isCheckAll;
     }
 
     @Override
@@ -49,10 +50,10 @@ public class PipeInspectionStandardAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_inspection_standard, parent, false);
-            v.ll = (LinearLayout) convertView.findViewById(R.id.listview_item_inspection_standard_ll);
-            v.checkBox = (ImageView) convertView.findViewById(R.id.listview_item_inspection_standard_checkbox_iv);
-            v.standard = (TextView) convertView.findViewById(R.id.listview_item_inspection_standard_content_tv);
+                    R.layout.listview_item_pipe_inspection_standard, parent, false);
+            v.ll = (LinearLayout) convertView.findViewById(R.id.listview_item_pipe_inspection_standard_ll);
+            v.checkBox = (ImageView) convertView.findViewById(R.id.listview_item_pipe_inspection_standard_checkbox_iv);
+            v.standard = (TextView) convertView.findViewById(R.id.listview_item_pipe_inspection_standard_content_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -82,12 +83,12 @@ public class PipeInspectionStandardAdapter extends BaseAdapter {
         for(InspectionStandard standard : standards){
             if(!standard.isCheck()){
                 iv_checkAll.setImageResource(R.drawable.login_checkbox_off);
-                PipeInspectionFormActivity.isCheck = false;
+                isCheckAll = false;
                 return convertView;
             }
         }
         iv_checkAll.setImageResource(R.drawable.login_checkbox_on);
-        PipeInspectionFormActivity.isCheck = true;
+        isCheckAll = true;
         return convertView;
     }
 

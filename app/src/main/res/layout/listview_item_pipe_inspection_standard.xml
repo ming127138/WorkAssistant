@@ -4,26 +4,26 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/listview_item_inspection_standard_ll"
+        android:id="@+id/listview_item_pipe_inspection_standard_ll"
         android:layout_width="match_parent"
         android:layout_height="@dimen/sw_40dp"
         android:padding="@dimen/sw_5dp"
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/listview_item_inspection_standard_checkbox_iv"
+            android:id="@+id/listview_item_pipe_inspection_standard_checkbox_iv"
             android:layout_width="@dimen/sw_20dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/sw_5dp"
             android:src="@drawable/login_checkbox_on" />
 
         <TextView
-            android:id="@+id/listview_item_inspection_standard_content_tv"
+            android:id="@+id/listview_item_pipe_inspection_standard_content_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/sw_5dp"
             android:textColor="@color/black"
-            android:textSize="@dimen/sw_12dp" />
+            android:textSize="@dimen/sw_15dp" />
     </LinearLayout>
 </LinearLayout>

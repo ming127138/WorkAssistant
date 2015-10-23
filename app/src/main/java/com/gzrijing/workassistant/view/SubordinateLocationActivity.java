@@ -88,7 +88,7 @@ public class SubordinateLocationActivity extends AppCompatActivity {
                 // 构建Marker图标
                 bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_red_dot);
             }else{
-                bitmap = BitmapDescriptorFactory.fromResource(R.drawable.map_valve);
+                bitmap = BitmapDescriptorFactory.fromResource(R.drawable.map_flag_blue);
             }
             // 构建MarkerOption，用于在地图上添加Marker
             OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);

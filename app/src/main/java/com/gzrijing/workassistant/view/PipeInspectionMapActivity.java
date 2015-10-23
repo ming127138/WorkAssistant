@@ -2,7 +2,6 @@ package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -37,7 +36,6 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
     private BaiduMap mBaiduMap;
     private MapView mMapView;
     private List<Marker> markers;
-    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +49,14 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mMapView = (MapView) findViewById(R.id.bmapView);
     }
 
     private void initData() {
-        Intent intent = getIntent();
-        String title = intent.getStringExtra("title");
-        getSupportActionBar().setTitle(title);
-
         initMap();
         initMarker();
     }
@@ -86,24 +79,25 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
 
     private void initMarker() {
         markers = getMarker();
-        for (int i = 0; i < markers.size(); i++) {
-            LatLng point = new LatLng(markers.get(i).getLatitude(), markers
-                    .get(i).getLongitude());
+        for (Marker marker : markers) {
+            LatLng point = new LatLng(marker.getLatitude(), marker.getLongitude());
             BitmapDescriptor bitmap = null;
-            if (markers.get(i).getTag() == 0) {
+            if (marker.getType().equals("供水阀门井")) {
                 // 构建Marker图标
                 bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.map_valve);
+                        .fromResource(R.drawable.map_flag_blue);
             }
-            if (markers.get(i).getTag() == 1) {
-                // 构建Marker图标
+            if (marker.getType().equals("供水消防栓")) {
                 bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.map_fireplug);
+                        .fromResource(R.drawable.map_flag_green);
             }
-            if (markers.get(i).getTag() == 2) {
-                // 构建Marker图标
+            if (marker.getType().equals("供水管刷油")) {
                 bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.icon_red_dot);
+                        .fromResource(R.drawable.map_flag_orange);
+            }
+            if (marker.getType().equals("污水井")) {
+                bitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.map_flag_black);
             }
             // 构建MarkerOption，用于在地图上添加Marker
             OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
@@ -113,19 +107,21 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
     }
 
     private List<Marker> getMarker() {
-        String[] ids = {"", "ET001", "ET002", "ET003"};
+        String[] ids = {"BH001", "BH002", "BH003", "BH004"};
+        String[] types = {"供水阀门井","供水消防栓","供水管刷油","污水井"};
+        String[] areas = {"A片区","A片区","A片区","A片区"};
+        String[] addrs = {"XXX市XXX区XXX街XXX号","XXX市XXX区XXX街XXX号","XXX市XXX区XXX街XXX号","XXX市XXX区XXX街XXX号"};
         double[] latitudes = {23.044807, 23.043248, 23.045206, 23.044973};
         double[] longitudes = {113.314668, 113.315723, 113.31403, 113.316671};
-        int[] tags = {2, 0, 1, 0};
-        String[] infos = {"", "信息001", "信息002", "信息003"};
         List<Marker> markers = new ArrayList<Marker>();
         for (int i = 0; i < ids.length; i++) {
             Marker marker = new Marker();
             marker.setId(ids[i]);
             marker.setLatitude(latitudes[i]);
             marker.setLongitude(longitudes[i]);
-            marker.setTag(tags[i]);
-            marker.setInfo(infos[i]);
+            marker.setType(types[i]);
+            marker.setArea(areas[i]);
+            marker.setAddress(addrs[i]);
             markers.add(marker);
         }
         return markers;
@@ -136,32 +132,28 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
             @Override
             public boolean onMarkerClick(final com.baidu.mapapi.map.Marker markerInfo) {
                 LayoutInflater inflater = getLayoutInflater();
-                View view = inflater.inflate(R.layout.listview_item_map_marker_info, mMapView, false);
-                TextView tv_number = (TextView) view.findViewById(R.id.listview_item_map_marker_info_number_tv);
-                TextView tv_info = (TextView) view.findViewById(R.id.listview_item_map_marker_info_info_tv);
-                Button btn_inspection = (Button) view.findViewById(R.id.listview_item_map_marker_info_inspection_btn);
-                Button btn_report = (Button) view.findViewById(R.id.listview_item_map_marker_info_report_btn);
+                View view = inflater.inflate(R.layout.listview_item_pipe_inspection_map_marker, mMapView, false);
+                TextView tv_id = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_id_tv);
+                TextView tv_type = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_type_tv);
+                TextView tv_area = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_area_tv);
+                TextView tv_address = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_address_tv);
+                Button btn_inspection = (Button) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_inspection_btn);
                 LatLng point = markerInfo.getPosition();
                 for (int i = 0; i < markers.size(); i++) {
                     if (point.latitude == markers.get(i).getLatitude()
                             && point.longitude == markers.get(i).getLongitude()) {
-                        tv_number.setText("编号：" + markers.get(i).getId());
-                        tv_info.setText(markers.get(i).getInfo());
+                        tv_id.setText(markers.get(i).getId());
+                        tv_type.setText(markers.get(i).getType());
+                        tv_area.setText(markers.get(i).getArea());
+                        tv_address.setText(markers.get(i).getAddress());
                         final int index = i;
                         btn_inspection.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionFormActivity.class);
-                                intent.putExtra("number", markers.get(index).getId());
-                                startActivity(intent);
-                            }
-                        });
-                        btn_report.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionReportActivity.class);
-                                intent.putExtra("number", markers.get(index).getId());
-                                startActivity(intent);
+                                    Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionFormActivity.class);
+                                    intent.putExtra("id", markers.get(index).getId());
+                                    intent.putExtra("type", markers.get(index).getType());
+                                    startActivity(intent);
                             }
                         });
                     }
