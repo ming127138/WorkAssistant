@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical|right"
+    android:padding="@dimen/sw_5dp">
+
+    <Button
+        android:id="@+id/listview_item_fragment_report_complete_submit_need_btn"
+        android:layout_width="@dimen/sw_60dp"
+        android:layout_height="@dimen/sw_30dp"
+        android:background="@drawable/btn_blue"
+        android:layout_marginRight="@dimen/sw_20dp"
+        android:text="要审核"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sw_15dp"/>
+
+    <Button
+        android:id="@+id/listview_item_fragment_report_complete_submit_wait_btn"
+        android:layout_width="@dimen/sw_60dp"
+        android:layout_height="@dimen/sw_30dp"
+        android:background="@drawable/btn_blue"
+        android:text="待审核"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sw_15dp"/>
+</LinearLayout>

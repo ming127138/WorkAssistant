@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.adapter;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -108,6 +109,13 @@ public class SuppliesAdapter extends BaseAdapter {
     private void delete(int position) {
         suppliesList.remove(position);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+        if (observer != null) {
+            super.unregisterDataSetObserver(observer);
+        }
     }
 
     class ViewHolder {

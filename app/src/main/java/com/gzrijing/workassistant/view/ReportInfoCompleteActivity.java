@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ReportCompleteAdapter;
+import com.gzrijing.workassistant.adapter.ReportInfoApprovalAdapter;
 import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
@@ -31,9 +31,9 @@ public class ReportInfoCompleteActivity extends AppCompatActivity {
 
     private List<ReportComplete> infos = new ArrayList<ReportComplete>();
     private ListView lv_info;
-    private ReportCompleteAdapter adapter;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private ReportInfoApprovalAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class ReportInfoCompleteActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv_info = (ListView) findViewById(R.id.report_info_complete_info_lv);
-        adapter = new ReportCompleteAdapter(this, infos);
+        adapter = new ReportInfoApprovalAdapter(this, infos);
         lv_info.setAdapter(adapter);
     }
 

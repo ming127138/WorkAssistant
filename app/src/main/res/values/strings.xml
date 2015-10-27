@@ -65,5 +65,6 @@
     <string name="title_activity_report_info_complete">汇报内容</string>
     <string name="title_activity_supplies_applying">材料修改</string>
     <string name="title_activity_machine_applying">机械修改</string>
+    <string name="title_activity_print">打印预览</string>
 
 </resources>

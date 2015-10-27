@@ -3,7 +3,9 @@ package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,13 +38,13 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     private View layoutView;
     private String orderId;
     private ListView lv_info;
-    private List<ReportComplete> infos = new ArrayList<ReportComplete>();
+    private ArrayList<ReportComplete> infos = new ArrayList<ReportComplete>();
     private ReportCompleteAdapter adapter;
     private LinearLayout ll_water;
     private ImageView iv_water;
     private LinearLayout ll_customer;
     private ImageView iv_customer;
-    private Button btn_report;
+    private Button btn_print;
     private boolean isCheck = false;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -69,7 +71,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     private void initData() {
         orderId = getArguments().getString("orderId");
 
-        String[] key = {"表身编号", "水表产地", "水表有效日期", "排水口径", "排水时间", "施工日期", "完工日期", "验收日期", "施工内容", "土建项目", "　　备注"};
+        String[] key = {"表身编号", "水表产地", "排水口径", "施工内容", "土建项目", "　　备注", "水表有效日期", "排水时间", "施工日期", "完工日期", "验收日期", "", ""};
         for (int i = 0; i < key.length; i++) {
             ReportComplete info = new ReportComplete();
             info.setKey(key[i]);
@@ -82,17 +84,17 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
         iv_water = (ImageView) layoutView.findViewById(R.id.fragment_report_complete_water_iv);
         ll_customer = (LinearLayout) layoutView.findViewById(R.id.fragment_report_complete_customer_ll);
         iv_customer = (ImageView) layoutView.findViewById(R.id.fragment_report_complete_customer_iv);
-        btn_report = (Button) layoutView.findViewById(R.id.fragment_report_complete_report_btn);
+        btn_print = (Button) layoutView.findViewById(R.id.fragment_report_complete_print_btn);
 
         lv_info = (ListView) layoutView.findViewById(R.id.report_complete_info_lv);
-        adapter = new ReportCompleteAdapter(getActivity(), infos);
+        adapter = new ReportCompleteAdapter(getActivity(), infos, btn_print);
         lv_info.setAdapter(adapter);
     }
 
     private void setListeners() {
         ll_water.setOnClickListener(this);
         ll_customer.setOnClickListener(this);
-        btn_report.setOnClickListener(this);
+        btn_print.setOnClickListener(this);
 
         lv_info.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -168,18 +170,13 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
                 }
                 break;
 
-            case R.id.fragment_report_complete_report_btn:
-                report();
+            case R.id.fragment_report_complete_print_btn:
+                Intent intent = new Intent(getActivity(), PrintActivity.class);
+                intent.putParcelableArrayListExtra("infos", infos);
+                intent.putExtra("isCheck", isCheck);
+                startActivity(intent);
                 break;
         }
     }
 
-    private void report() {
-        Log.e("1111111:", infos.get(0).getValue() + infos.get(1).getValue() + infos.get(2).getValue()
-                + infos.get(3).getValue() + infos.get(4).getValue() + infos.get(5).getValue() + infos.get(6).getValue()
-                + infos.get(7).getValue());
-        Toast.makeText(getActivity(), infos.get(0).getValue() + infos.get(1).getValue() + infos.get(2).getValue()
-                + infos.get(3).getValue() + infos.get(4).getValue() + infos.get(5).getValue() + infos.get(6).getValue()
-                + infos.get(7).getValue(), Toast.LENGTH_LONG).show();
-    }
 }

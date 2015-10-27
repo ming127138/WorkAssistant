@@ -71,11 +71,12 @@
             android:gravity="right">
 
             <Button
-                android:id="@+id/fragment_report_complete_report_btn"
+                android:id="@+id/fragment_report_complete_print_btn"
                 android:layout_width="@dimen/sw_50dp"
                 android:layout_height="@dimen/sw_25dp"
                 android:background="@drawable/btn_blue"
-                android:text="汇报"
+                android:visibility="gone"
+                android:text="打印"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sw_15dp"/>
         </RelativeLayout>

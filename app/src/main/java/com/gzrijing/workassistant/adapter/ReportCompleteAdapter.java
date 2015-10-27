@@ -9,16 +9,25 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.ReportComplete;
+import com.gzrijing.workassistant.entity.Supplies;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ReportCompleteAdapter extends BaseAdapter {
 
+    private HashMap<Integer, View> lmap = new HashMap<Integer, View>();
+    private List<Supplies> suppliesList;
+    private Button btn_print;
     private Context context;
     private LayoutInflater listContainer;
     private List<ReportComplete> infos;
@@ -26,12 +35,24 @@ public class ReportCompleteAdapter extends BaseAdapter {
     private KeyEvent UnknownKey = new KeyEvent(KeyEvent.ACTION_DOWN,
             KeyEvent.KEYCODE_UNKNOWN);
     private int index = -1;
+    private SuppliesAdapter adapter;
 
     public ReportCompleteAdapter(
-            Context context, List<ReportComplete> infos) {
+            Context context, List<ReportComplete> infos, Button btn_print) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.infos = infos;
+        this.btn_print = btn_print;
+
+        suppliesList = new ArrayList<Supplies>();
+        for (int i = 1; i < 5; i++) {
+            Supplies supplies = new Supplies();
+            supplies.setName("名称" + i);
+            supplies.setSpec("规格" + i);
+            supplies.setUnit("单位" + i);
+            supplies.setNum(i);
+            suppliesList.add(supplies);
+        }
     }
 
     @Override
@@ -52,34 +73,75 @@ public class ReportCompleteAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         String key = infos.get(position).getKey();
-        if (key.equals("排水口径")) {
-            if (infos.get(position).getValue() == null || infos.get(position).getValue().equals("")) {
-                infos.get(position).setValue("DN");
-            }
-        }
-
         if (key.equals("水表有效日期") || key.equals("排水时间") || key.equals("施工日期") || key.equals("完工日期") || key.equals("验收日期")) {
-            convertView = listContainer.inflate(
-                    R.layout.listview_item_fragment_report_complete_date, parent, false);
-            TextView tv_key = (TextView) convertView.findViewById(
-                    R.id.listview_item_fragment_report_complete_date_key_tv);
-            TextView tv_value = (TextView) convertView.findViewById(
-                    R.id.listview_item_fragment_report_complete_date_value_tv);
-            tv_key.setText(key);
-            if(tv_value != null){
-                tv_value.setText(infos.get(position).getValue());
+            if (lmap.get(position) == null) {
+                convertView = listContainer.inflate(
+                        R.layout.listview_item_fragment_report_complete_date, parent, false);
+                TextView tv_key = (TextView) convertView.findViewById(
+                        R.id.listview_item_fragment_report_complete_date_key_tv);
+                TextView tv_value = (TextView) convertView.findViewById(
+                        R.id.listview_item_fragment_report_complete_date_value_tv);
+                tv_key.setText(key);
+                if (tv_value != null) {
+                    tv_value.setText(infos.get(position).getValue());
+                }
+                lmap.put(position, convertView);
+            } else {
+                convertView = lmap.get(position);
             }
             return convertView;
-        }
+        } else if (position == infos.size() - 2) {
+            if (lmap.get(position) == null) {
+                convertView = listContainer.inflate(
+                        R.layout.listview_item_fragment_report_complete_supplies, parent, false);
+                ListView lv_supplies = (ListView) convertView.findViewById(R.id.listview_item_fragment_report_complete_supplies_lv);
+                adapter = new SuppliesAdapter(context, suppliesList);
+                lv_supplies.setAdapter(adapter);
+                lmap.put(position, convertView);
+            } else {
+                convertView = lmap.get(position);
+            }
+            return convertView;
+        } else if (position + 1 == infos.size()) {
+            if (lmap.get(position) == null) {
+                convertView = listContainer.inflate(
+                        R.layout.listview_item_fragment_report_complete_submit, parent, false);
+                Button btn_need = (Button) convertView.findViewById(R.id.listview_item_fragment_report_complete_submit_need_btn);
+                Button btn_wait = (Button) convertView.findViewById(R.id.listview_item_fragment_report_complete_submit_wait_btn);
+                btn_need.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "汇报成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                btn_wait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "汇报成功", Toast.LENGTH_SHORT).show();
+                        btn_print.setVisibility(View.VISIBLE);
+                    }
+                });
+                lmap.put(position, convertView);
+            } else {
+                convertView = lmap.get(position);
+            }
+            return convertView;
+        } else {
+            if (key.equals("排水口径")) {
+                if (infos.get(position).getValue() == null || infos.get(position).getValue().equals("")) {
+                    infos.get(position).setValue("DN");
+                }
+            }
 
-        convertView = listContainer.inflate(
-                R.layout.listview_item_fragment_report_complete_edittext, parent, false);
-        TextView tv_key = (TextView) convertView.findViewById(
-                R.id.listview_item_fragment_report_complete_edittext_key_tv);
-        EditText et_value = (EditText) convertView.findViewById(
-                R.id.listview_item_fragment_report_complete_edittext_value_et);
-        getET(position, tv_key, et_value);
-        return convertView;
+            convertView = listContainer.inflate(
+                    R.layout.listview_item_fragment_report_complete_edittext, parent, false);
+            TextView tv_key = (TextView) convertView.findViewById(
+                    R.id.listview_item_fragment_report_complete_edittext_key_tv);
+            EditText et_value = (EditText) convertView.findViewById(
+                    R.id.listview_item_fragment_report_complete_edittext_value_et);
+            getET(position, tv_key, et_value);
+            return convertView;
+        }
     }
 
     private void getET(final int position, TextView tv_key, EditText et_value) {
@@ -135,6 +197,7 @@ public class ReportCompleteAdapter extends BaseAdapter {
             if (!programmaticalTextChange)
                 editText.dispatchKeyEvent(UnknownKey);
         }
+
     }
 
 }
