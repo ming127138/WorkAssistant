@@ -66,5 +66,6 @@
     <string name="title_activity_supplies_applying">材料修改</string>
     <string name="title_activity_machine_applying">机械修改</string>
     <string name="title_activity_print">打印预览</string>
+    <string name="title_activity_entrust">委托功能</string>
 
 </resources>

@@ -62,24 +62,36 @@ public class PrintActivity extends AppCompatActivity implements View.OnClickList
 
     private void initData() {
         Intent intent = getIntent();
-        List<ReportComplete> datas = intent.getParcelableArrayListExtra("infos");
-        boolean isCheck = intent.getBooleanExtra("isCheck", false);
-        DetailedInfo info = new DetailedInfo();
-        info.setKey("收款性质");
-        if (isCheck) {
-            info.setValue("用户");
+        int flag = intent.getIntExtra("flag", -1);
+        if (flag == 1) {
+            String[] keys = {"收款性质", "表身编号", "水表产地", "排水口径", "施工内容", "土建项目", "　　备注", "排水时间", "施工日期", "完工日期", "验收日期", "水表有效日期"};
+            String[] values = {"用户", "NO4747", "XXX市XXX区XXX镇", "DN36", "XXXXXX施工内容XXXXXXX", "XXXXX土建项目XXXXX", "XXXX备注XXXXX", "2015-10-27 9:00", "2015-10-27 10:00", "2015-10-27 11:00", "2015-10-27 14:00", "2018-10-27 15:00"};
+            for (int i = 0; i < keys.length; i++) {
+                DetailedInfo info = new DetailedInfo();
+                info.setKey(keys[i]);
+                info.setValue(values[i]);
+                infos.add(info);
+            }
         } else {
-            info.setValue("水务");
+            List<ReportComplete> datas = intent.getParcelableArrayListExtra("infos");
+            boolean isCheck = intent.getBooleanExtra("isCheck", false);
+            DetailedInfo info = new DetailedInfo();
+            info.setKey("收款性质");
+            if (isCheck) {
+                info.setValue("用户");
+            } else {
+                info.setValue("水务");
+            }
+            infos.add(info);
+            for (ReportComplete data : datas) {
+                DetailedInfo info1 = new DetailedInfo();
+                info1.setKey(data.getKey());
+                info1.setValue(data.getValue());
+                infos.add(info1);
+            }
+            infos.remove(infos.size() - 1);
+            infos.remove(infos.size() - 1);
         }
-        infos.add(info);
-        for (ReportComplete data : datas) {
-            DetailedInfo info1 = new DetailedInfo();
-            info1.setKey(data.getKey());
-            info1.setValue(data.getValue());
-            infos.add(info1);
-        }
-        infos.remove(infos.size() - 1);
-        infos.remove(infos.size() - 1);
         for (int i = 1; i < 5; i++) {
             Supplies supplies = new Supplies();
             supplies.setName("名称" + i);
@@ -218,15 +230,15 @@ public class PrintActivity extends AppCompatActivity implements View.OnClickList
             if (isConnect) {
                 mService.sendMessage("中山市润丰水业有限公司工程施工作业单\n", "GBK");
                 StringBuilder sb = new StringBuilder();
-                for(DetailedInfo info : infos){
-                    sb.append(info.getKey()+"："+info.getValue()+"\n");
+                for (DetailedInfo info : infos) {
+                    sb.append(info.getKey() + "：" + info.getValue() + "\n");
                 }
                 sb.append("\n耗材列表：\n");
                 sb.append("　　名称　　　规格　　　单位　　　数量\n");
                 sb.append("————————————————————————\n");
-                for(Supplies supplies : suppliesList){
-                    sb.append(" 　"+supplies.getName()+"　　"+supplies.getSpec()+"　　"+supplies.getUnit()
-                                    +"　　"+supplies.getNum()+"\n");
+                for (Supplies supplies : suppliesList) {
+                    sb.append(" 　" + supplies.getName() + "　　" + supplies.getSpec() + "　　" + supplies.getUnit()
+                            + "　　" + supplies.getNum() + "\n");
                 }
                 sb.append("\n　　用户签字:_________　　日期:_________");
                 sb.append("\n\n\n");

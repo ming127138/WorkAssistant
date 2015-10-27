@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.view.EntrustActivity;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
 
 import java.util.Calendar;
@@ -64,7 +65,10 @@ public class ManageGridViewAdapter extends BaseAdapter {
         v.ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(position == 1){
+                    Intent intent = new Intent(context, EntrustActivity.class);
+                    context.startActivity(intent);
+                }
             }
         });
         return convertView;

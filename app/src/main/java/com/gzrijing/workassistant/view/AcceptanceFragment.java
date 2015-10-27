@@ -10,8 +10,6 @@ import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.AcceptanceAdapter;
-import com.gzrijing.workassistant.adapter.ManageGridViewAdapter;
-import com.gzrijing.workassistant.entity.AcceptanceList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ public class AcceptanceFragment extends Fragment {
 
     private View layoutView;
     private ListView lv_accList;
-    private List<AcceptanceList> accList;
+    private List<String> accList = new ArrayList<String>();
     private AcceptanceAdapter adapter;
 
     public AcceptanceFragment() {
@@ -44,11 +42,7 @@ public class AcceptanceFragment extends Fragment {
     }
 
     private void initData() {
-        accList = new ArrayList<AcceptanceList>();
-        for (int i = 1; i < 4; i++) {
-            AcceptanceList info = new AcceptanceList("验收工单" + i);
-            accList.add(info);
-        }
+            accList.add("工单007");
     }
 
     private void initViews() {
