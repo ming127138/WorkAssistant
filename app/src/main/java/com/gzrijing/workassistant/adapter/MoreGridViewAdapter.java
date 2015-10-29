@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.view.NoticeActivity;
 
 public class MoreGridViewAdapter extends BaseAdapter {
     private Context context;
@@ -59,7 +61,10 @@ public class MoreGridViewAdapter extends BaseAdapter {
         v.ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(position == 0){
+                    Intent intent = new Intent(context, NoticeActivity.class);
+                    context.startActivity(intent);
+                }
             }
         });
         return convertView;

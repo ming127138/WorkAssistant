@@ -167,6 +167,9 @@
         <activity
             android:name=".view.ReportInfoProgressActivity"
             android:label="@string/title_activity_report_info_progress"
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.NoticeContentActivity"
+            android:label="@string/title_activity_notice_content"
             android:screenOrientation="portrait"/>
     </application>
 
