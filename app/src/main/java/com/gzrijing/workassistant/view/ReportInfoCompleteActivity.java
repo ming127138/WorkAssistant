@@ -46,9 +46,9 @@ public class ReportInfoCompleteActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        String[] key = {"表身编号", "水表产地", "水表有效日期", "排水口径", "排水时间", "施工日期", "完工日期", "验收日期", "施工内容", "土建项目", "　　备注"};
-        String[] value = {"SBBH007", "XXXX产地", "2020-10-15 13:00", "DN36", "2015-10-15 13:00", "2015-10-15 10:10", "2015-10-15 12:00", "2015-10-15 14:00",
-                                    "XXXXXX施工内容", "XXXXXXXXXXXXXXXXXX土建项目", "XXXXXX备注"};
+        String[] key = {"表身编号", "水表产地", "排水口径", "施工内容", "土建项目", "　　备注", "排水时间", "施工日期", "完工日期", "验收日期", "水表有效日期", ""};
+        String[] value = {"SBBH007", "XXXX产地", "DN36", "DN36", "XXXXXX施工内容", "XXXXXXXXXXXXXXXXXX土建项目", "XXXXXX备注", "2015-10-15 10:10",
+                "2015-10-15 11:00", "2015-10-15 14:00", "2015-10-15 15:00","2018-10-15 16:00", ""};
         for (int i = 0; i < key.length; i++) {
             ReportComplete info = new ReportComplete();
             info.setKey(key[i]);
@@ -138,7 +138,7 @@ public class ReportInfoCompleteActivity extends AppCompatActivity {
             return true;
         }
 
-        if(id == R.id.action_sure){
+        if (id == R.id.action_sure) {
             setResult(10);
             finish();
             return true;

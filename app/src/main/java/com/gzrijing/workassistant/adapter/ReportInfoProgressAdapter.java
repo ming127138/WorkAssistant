@@ -12,12 +12,12 @@ import com.gzrijing.workassistant.entity.ReportInfo;
 
 import java.util.List;
 
-public class ReportInfoCompleteAdapter extends BaseAdapter {
+public class ReportInfoProgressAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
     private List<ReportInfo> list;
 
-    public ReportInfoCompleteAdapter(Context context, List<ReportInfo> list) {
+    public ReportInfoProgressAdapter(Context context, List<ReportInfo> list) {
         listContainer = LayoutInflater.from(context);
         this.list = list;
     }
@@ -45,7 +45,6 @@ public class ReportInfoCompleteAdapter extends BaseAdapter {
             convertView = listContainer.inflate(
                     R.layout.listview_item_report_info_problem, parent, false);
             v.content = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_content_tv);
-            v.flag = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_flag_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -56,16 +55,10 @@ public class ReportInfoCompleteAdapter extends BaseAdapter {
         } else {
             v.content.setText((position + 1) + "." + list.get(position).getContent());
         }
-        if(list.get(position).isFlag()){
-            v.flag.setText("已审批");
-        }else{
-            v.flag.setText("未审批");
-        }
         return convertView;
     }
 
     class ViewHolder {
         private TextView content;
-        private TextView flag;
     }
 }

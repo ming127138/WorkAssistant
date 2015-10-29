@@ -1,13 +1,13 @@
 package com.gzrijing.workassistant.entity;
 
-public class ReportInfoProblem {
+public class ReportInfo {
     private String content;
-    private boolean flag;       //true:已解决，false:未解决
+    private boolean flag;           //true:已审批，false:未审批
 
-    public ReportInfoProblem() {
+    public ReportInfo() {
     }
 
-    public ReportInfoProblem(String content, boolean flag) {
+    public ReportInfo(String content, boolean flag) {
         this.content = content;
         this.flag = flag;
     }

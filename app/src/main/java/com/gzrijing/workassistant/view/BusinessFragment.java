@@ -51,8 +51,8 @@ public class BusinessFragment extends Fragment {
                 "saveUserInfo", getActivity().MODE_PRIVATE);
         userName = app.getString("userName", "");
 
-        String[] keys = {"　　性质", "水表编号", "用户名称", "用户地址", "联系电话", "水表口径", "　　备注"};
-        String[] values = {"报装","SBBH007","李XX","XXXXXX地址","135XXXXXXXX","DN36","XXXX备注"};
+        String[] keys = {"　　性质", "水表编号", "用户名称", "用户地址", "联系电话", "水表口径", "　　备注", "任务内容"};
+        String[] values = {"报装","SBBH007","李XX","XXXXXX地址","135XXXXXXXX","DN36","XXXX备注", "水表定位"};
 
         BusinessData data = new BusinessData();
         data.setUser(userName);

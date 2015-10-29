@@ -111,6 +111,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void login() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                LoginService service = new LoginService();
+//                service.login("00004", "123456");
+//            }
+//        }).start();
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("fragId", "0");
         startActivity(intent);

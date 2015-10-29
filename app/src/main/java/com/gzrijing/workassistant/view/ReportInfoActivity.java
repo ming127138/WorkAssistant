@@ -12,8 +12,8 @@ import android.widget.ListView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportInfoCompleteAdapter;
 import com.gzrijing.workassistant.adapter.ReportInfoProblemAdapter;
-import com.gzrijing.workassistant.entity.ReportInfoComplete;
-import com.gzrijing.workassistant.entity.ReportInfoProblem;
+import com.gzrijing.workassistant.adapter.ReportInfoProgressAdapter;
+import com.gzrijing.workassistant.entity.ReportInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +22,13 @@ public class ReportInfoActivity extends AppCompatActivity {
 
     private String orderId;
     private ListView lv_problem;
+    private ListView lv_progress;
     private ListView lv_complete;
-    private List<ReportInfoProblem> problemList = new ArrayList<ReportInfoProblem>();
-    private List<ReportInfoComplete> completeList = new ArrayList<ReportInfoComplete>();
+    private List<ReportInfo> problemList = new ArrayList<ReportInfo>();
+    private List<ReportInfo> progressList = new ArrayList<ReportInfo>();
+    private List<ReportInfo> completeList = new ArrayList<ReportInfo>();
     private ReportInfoProblemAdapter problemAdapter;
+    private ReportInfoProgressAdapter progressAdapter;
     private ReportInfoCompleteAdapter completeAdapter;
 
     @Override
@@ -44,14 +47,21 @@ public class ReportInfoActivity extends AppCompatActivity {
 
         for (int i = 0; i < 3; i++) {
             if (i % 2 == 0) {
-                ReportInfoProblem problemInfo = new ReportInfoProblem("XXXXXXXXXXX问题" + i, false);
+                ReportInfo problemInfo = new ReportInfo("XXXXXXXXXXX问题" + i, false);
                 problemList.add(problemInfo);
             } else {
-                ReportInfoProblem problemInfo = new ReportInfoProblem("XXXXXXXXXXX问题" + i, true);
+                ReportInfo problemInfo = new ReportInfo("XXXXXXXXXXX问题" + i, true);
                 problemList.add(problemInfo);
             }
         }
-        ReportInfoComplete completeInfo = new ReportInfoComplete("XXXXXXXX施工内容", false);
+
+        for (int i = 0; i < 2; i++) {
+            ReportInfo progressInfo = new ReportInfo("XXXXXXX进度汇报" + i, false);
+            progressList.add(progressInfo);
+        }
+
+
+        ReportInfo completeInfo = new ReportInfo("XXXXXXXX施工内容", false);
         completeList.add(completeInfo);
     }
 
@@ -63,6 +73,10 @@ public class ReportInfoActivity extends AppCompatActivity {
         lv_problem = (ListView) findViewById(R.id.report_info_problem_lv);
         problemAdapter = new ReportInfoProblemAdapter(this, problemList);
         lv_problem.setAdapter(problemAdapter);
+
+        lv_progress = (ListView) findViewById(R.id.report_info_progress_lv);
+        progressAdapter = new ReportInfoProgressAdapter(this, progressList);
+        lv_progress.setAdapter(progressAdapter);
 
         lv_complete = (ListView) findViewById(R.id.report_info_complete_lv);
         completeAdapter = new ReportInfoCompleteAdapter(this, completeList);
@@ -80,6 +94,14 @@ public class ReportInfoActivity extends AppCompatActivity {
             }
         });
 
+        lv_progress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(ReportInfoActivity.this, ReportInfoProgressActivity.class);
+                startActivity(intent);
+            }
+        });
+
         lv_complete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,8 +114,8 @@ public class ReportInfoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 10){
-            if(resultCode == 10){
+        if (requestCode == 10) {
+            if (resultCode == 10) {
                 completeList.get(0).setFlag(true);
                 completeAdapter.notifyDataSetChanged();
             }

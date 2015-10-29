@@ -8,16 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.entity.ReportInfoProblem;
+import com.gzrijing.workassistant.entity.ReportInfo;
 
 import java.util.List;
 
 public class ReportInfoProblemAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<ReportInfoProblem> list;
+    private List<ReportInfo> list;
 
-    public ReportInfoProblemAdapter(Context context, List<ReportInfoProblem> list) {
+    public ReportInfoProblemAdapter(Context context, List<ReportInfo> list) {
         listContainer = LayoutInflater.from(context);
         this.list = list;
     }

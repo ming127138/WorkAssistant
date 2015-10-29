@@ -32,7 +32,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="完成汇报："
+                android:text="进度汇报："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp"/>
+
+            <com.gzrijing.workassistant.widget.MyListView
+                android:id="@+id/report_info_progress_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工程量汇报："
                 android:textColor="@color/black"
                 android:textSize="@dimen/sw_15dp"/>
 

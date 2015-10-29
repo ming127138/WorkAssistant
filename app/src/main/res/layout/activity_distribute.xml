@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/sw_200dp"
         android:layout_margin="@dimen/sw_10dp"
-        android:hint="填写工程备注"
+        android:hint="请填写任务内容"
         android:gravity="top"
         android:background="@drawable/bg_text"
         android:textColor="@color/black"

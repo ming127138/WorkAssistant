@@ -62,10 +62,12 @@
     <string name="title_activity_report">工程汇报</string>
     <string name="title_activity_report_info">汇报信息</string>
     <string name="title_activity_report_info_problem">汇报内容</string>
+    <string name="title_activity_report_info_progress">汇报内容</string>
     <string name="title_activity_report_info_complete">汇报内容</string>
     <string name="title_activity_supplies_applying">材料修改</string>
     <string name="title_activity_machine_applying">机械修改</string>
     <string name="title_activity_print">打印预览</string>
     <string name="title_activity_entrust">委托功能</string>
+    <string name="title_activity_notice">通知公告</string>
 
 </resources>

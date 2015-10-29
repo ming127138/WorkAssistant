@@ -12,12 +12,14 @@ import android.widget.Button;
 
 import com.gzrijing.workassistant.R;
 
-public class ReportActivity extends AppCompatActivity implements View.OnClickListener{
+public class ReportActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private Button btn_progress;
     private Button btn_complete;
     private Button btn_problem;
     private String orderId;
     private FragmentManager fragmentManager;
+    private ReportProgressFragment reportProgress;
     private ReportCompleteFragment reportComplete;
     private ReportProblemFragment reportProblem;
 
@@ -36,6 +38,7 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        btn_progress = (Button) findViewById(R.id.report_progress_btn);
         btn_complete = (Button) findViewById(R.id.report_complete_btn);
         btn_problem = (Button) findViewById(R.id.report_problem_btn);
     }
@@ -49,6 +52,7 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setListeners() {
+        btn_progress.setOnClickListener(this);
         btn_complete.setOnClickListener(this);
         btn_problem.setOnClickListener(this);
     }
@@ -56,13 +60,17 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        case R.id.report_complete_btn:
-            setTabSelection(0);
-            break;
+            case R.id.report_progress_btn:
+                setTabSelection(0);
+                break;
 
-        case R.id.report_problem_btn:
-            setTabSelection(1);
-            break;
+            case R.id.report_complete_btn:
+                setTabSelection(1);
+                break;
+
+            case R.id.report_problem_btn:
+                setTabSelection(2);
+                break;
         }
     }
 
@@ -71,7 +79,27 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
         hideFragments(transaction);
         switch (index) {
             case 0:
-                btn_complete.setBackgroundResource(R.drawable.btn_paging_left_on);
+                btn_progress.setBackgroundResource(R.drawable.btn_paging_left_on);
+                btn_progress.setTextColor(getResources().getColor(R.color.white));
+                btn_complete.setBackgroundResource(R.drawable.btn_paging_middle_off);
+                btn_complete.setTextColor(getResources().getColor(R.color.blue));
+                btn_problem.setBackgroundResource(R.drawable.btn_paging_right_off);
+                btn_problem.setTextColor(getResources().getColor(R.color.blue));
+                if (reportProgress == null) {
+                    reportProgress = new ReportProgressFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("orderId", orderId);
+                    reportProgress.setArguments(bundle);
+                    transaction.add(R.id.fragment_report, reportProgress);
+                } else {
+                    transaction.show(reportProgress);
+                }
+                break;
+
+            case 1:
+                btn_progress.setBackgroundResource(R.drawable.btn_paging_left_off);
+                btn_progress.setTextColor(getResources().getColor(R.color.blue));
+                btn_complete.setBackgroundResource(R.drawable.btn_paging_middle_on);
                 btn_complete.setTextColor(getResources().getColor(R.color.white));
                 btn_problem.setBackgroundResource(R.drawable.btn_paging_right_off);
                 btn_problem.setTextColor(getResources().getColor(R.color.blue));
@@ -85,8 +113,11 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
                     transaction.show(reportComplete);
                 }
                 break;
-            case 1:
-                btn_complete.setBackgroundResource(R.drawable.btn_paging_left_off);
+
+            case 2:
+                btn_progress.setBackgroundResource(R.drawable.btn_paging_left_off);
+                btn_progress.setTextColor(getResources().getColor(R.color.blue));
+                btn_complete.setBackgroundResource(R.drawable.btn_paging_middle_off);
                 btn_complete.setTextColor(getResources().getColor(R.color.blue));
                 btn_problem.setBackgroundResource(R.drawable.btn_paging_right_on);
                 btn_problem.setTextColor(getResources().getColor(R.color.white));
@@ -106,6 +137,9 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void hideFragments(FragmentTransaction transaction) {
+        if (reportProgress != null) {
+            transaction.hide(reportProgress);
+        }
         if (reportComplete != null) {
             transaction.hide(reportComplete);
         }
