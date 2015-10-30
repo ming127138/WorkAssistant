@@ -41,41 +41,29 @@ public class DownloadOfflineMapActivity extends AppCompatActivity implements MKO
 
         localMaps = new ArrayList<LocalMap>();
         ArrayList<MKOLSearchRecord> cityList = mOffline.getOfflineCityList();
-        for(MKOLSearchRecord province : cityList){
-            if(province.cityID == 1){
+        for (MKOLSearchRecord province : cityList) {
+            if (province.cityID == 1) {
                 localMaps.add(new LocalMap(1, "全国概略图", province.size, 0));
             }
-            if(province.cityID == 8){
+            if (province.cityID == 8) {
                 ArrayList<MKOLSearchRecord> citys = province.childCities;
-                for(MKOLSearchRecord city : citys){
-                    if(city.cityID == 187){
+                for (MKOLSearchRecord city : citys) {
+                    if (city.cityID == 187) {
                         localMaps.add(new LocalMap(187, "中山市", city.size, 0));
                     }
-                    if(city.cityID == 257){
+                    if (city.cityID == 257) {
                         localMaps.add(new LocalMap(257, "广州市", city.size, 0));
                     }
                 }
             }
         }
-
-        // 获取已下过的离线地图信息
-        localMapList = mOffline.getAllUpdateInfo();
-        if (localMapList == null) {
-            localMapList = new ArrayList<MKOLUpdateElement>();
-        }
-
-        for (MKOLUpdateElement e : localMapList) {
-            if (e.cityID == 1) {
-                localMaps.get(0).setRatio(e.ratio);
-                localMaps.get(0).setSize(e.serversize);
-            }
-            if (e.cityID == 187) {
-                localMaps.get(1).setRatio(e.ratio);
-                localMaps.get(1).setSize(e.serversize);
-            }
-            if (e.cityID == 257) {
-                localMaps.get(2).setRatio(e.ratio);
-                localMaps.get(2).setSize(e.serversize);
+        //导入本地离线地图
+        for (LocalMap localMap : localMaps) {
+            //返回指定城市ID离线地图更新信息
+            MKOLUpdateElement e = mOffline.getUpdateInfo(localMap.getCityId());
+            if(e != null){
+                localMap.setSize(e.serversize);
+                localMap.setRatio(e.ratio);
             }
         }
 
@@ -103,8 +91,8 @@ public class DownloadOfflineMapActivity extends AppCompatActivity implements MKO
                 MKOLUpdateElement update = mOffline.getUpdateInfo(cityId);
                 // 处理下载进度更新提示
                 if (update != null) {
-                    for(LocalMap city : localMaps){
-                        if(city.getCityId() == cityId){
+                    for (LocalMap city : localMaps) {
+                        if (city.getCityId() == cityId) {
                             city.setRatio(update.ratio);
                         }
                     }

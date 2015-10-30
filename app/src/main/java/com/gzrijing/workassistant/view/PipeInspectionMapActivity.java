@@ -91,10 +91,6 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
                 bitmap = BitmapDescriptorFactory
                         .fromResource(R.drawable.map_flag_green);
             }
-            if (marker.getType().equals("供水管刷油")) {
-                bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.map_flag_orange);
-            }
             if (marker.getType().equals("污水井")) {
                 bitmap = BitmapDescriptorFactory
                         .fromResource(R.drawable.map_flag_black);
@@ -108,7 +104,7 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
 
     private List<Marker> getMarker() {
         String[] ids = {"BH001", "BH002", "BH003", "BH004"};
-        String[] types = {"供水阀门井","供水消防栓","供水管刷油","污水井"};
+        String[] types = {"供水阀门井","供水消防栓","供水阀门井","污水井"};
         String[] areas = {"A片区","A片区","A片区","A片区"};
         String[] addrs = {"XXX市XXX区XXX街XXX号","XXX市XXX区XXX街XXX号","XXX市XXX区XXX街XXX号","XXX市XXX区XXX街XXX号"};
         double[] latitudes = {23.044807, 23.043248, 23.045206, 23.044973};
@@ -167,7 +163,6 @@ public class PipeInspectionMapActivity extends AppCompatActivity {
         mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
             @Override
             public boolean onMapPoiClick(MapPoi arg0) {
-                // TODO Auto-generated method stub
                 return false;
             }
 

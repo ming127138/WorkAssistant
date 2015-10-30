@@ -70,5 +70,6 @@
     <string name="title_activity_entrust">委托功能</string>
     <string name="title_activity_notice">通知公告</string>
     <string name="title_activity_notice_content">通知内容</string>
+    <string name="title_activity_trajectory_query">轨迹查询</string>
 
 </resources>

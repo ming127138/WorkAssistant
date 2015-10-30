@@ -13,10 +13,12 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.LocalMap;
 import com.gzrijing.workassistant.widget.MyProgressBar;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class DownloadOfflineMapAdapter extends BaseAdapter {
 
+    private HashMap<Integer, View> lmap = new HashMap<Integer, View>();
     private LayoutInflater listContainer;
     private List<LocalMap> localMaps;
     private final MKOfflineMap mOffline;
@@ -45,7 +47,7 @@ public class DownloadOfflineMapAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder v = null;
-        if (convertView == null) {
+        if (lmap.get(position) == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
                     R.layout.listview_item_download_offline_map, parent, false);
@@ -56,7 +58,9 @@ public class DownloadOfflineMapAdapter extends BaseAdapter {
             v.delete = (Button) convertView.findViewById(R.id.download_offline_map_delete_btn);
             v.mProgressBar = (MyProgressBar) convertView.findViewById(R.id.download_offline_map_progressbar);
             convertView.setTag(v);
+            lmap.put(position, convertView);
         } else {
+            convertView = lmap.get(position);
             v = (ViewHolder) convertView.getTag();
         }
         final LocalMap city = (LocalMap) getItem(position);
@@ -114,6 +118,7 @@ public class DownloadOfflineMapAdapter extends BaseAdapter {
         return convertView;
     }
 
+    //离线包大小转换成M单位
     public String formatDataSize(int size) {
         String ret = "";
         if (size < (1024 * 1024)) {
