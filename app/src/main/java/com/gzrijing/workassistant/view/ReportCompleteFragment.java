@@ -71,7 +71,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     private void initData() {
         orderId = getArguments().getString("orderId");
 
-        String[] key = {"表身编号", "水表产地", "排水口径", "施工内容", "土建项目", "　　备注", "水表有效日期", "排水时间", "施工日期", "完工日期", "验收日期", "", ""};
+        String[] key = {"表身编号", "水表产地", "排水口径", "施工内容", "土建项目", "　　备注", "排水时间", "施工日期", "完工日期", "验收日期", "水表有效日期", "", ""};
         for (int i = 0; i < key.length; i++) {
             ReportComplete info = new ReportComplete();
             info.setKey(key[i]);

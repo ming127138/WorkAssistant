@@ -52,7 +52,7 @@ public class BusinessFragment extends Fragment {
         userName = app.getString("userName", "");
 
         String[] keys = {"　　性质", "水表编号", "用户名称", "用户地址", "联系电话", "水表口径", "　　备注", "任务内容"};
-        String[] values = {"报装","SBBH007","李XX","XXXXXX地址","135XXXXXXXX","DN36","XXXX备注", "水表定位"};
+        String[] values = {"报装", "SBBH007", "李XX", "XXXXXX地址", "135XXXXXXXX", "DN36", "XXXX备注", "水表定位"};
 
         BusinessData data = new BusinessData();
         data.setUser(userName);
@@ -62,7 +62,7 @@ public class BusinessFragment extends Fragment {
         data.setState("未处理");
         data.setDeadline("2015-10-1");
         data.setFlag("确认收到");
-        for(int i=0;i<keys.length;i++){
+        for (int i = 0; i < keys.length; i++) {
             DetailedInfoData data1 = new DetailedInfoData();
             data1.setKey(keys[i]);
             data1.setValue(values[i]);
@@ -75,7 +75,7 @@ public class BusinessFragment extends Fragment {
         data2.setUser(userName);
         data2.setOrderId("工单009");
         data2.setUrgent(false);
-        data2.setType("供水管网维护");
+        data2.setType("供水管网巡检");
         data2.setState("未处理");
         data2.setDeadline("2015-10-31");
         data2.setFlag("确认收到");

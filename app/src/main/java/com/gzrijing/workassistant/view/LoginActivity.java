@@ -5,14 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.entity.User;
 import com.gzrijing.workassistant.service.LoginService;
-
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
@@ -26,6 +29,34 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private String isMemory; // isMemory变量用来判断SharedPreferences有没有数据
     private String file = "saveUserAndPwd";// 用于保存SharedPreferences的文件
     private SharedPreferences sp; // 声明一个SharedPreferences
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            User user = (User) msg.obj;
+            if (user != null) {
+                String userNo = user.getUserNo();
+                if(userNo != null && !userNo.equals("Error")){
+                    SharedPreferences app = getSharedPreferences("saveUser", MODE_PRIVATE);
+                    Editor edit = app.edit();
+                    edit.putString("userNo", user.getUserNo());
+                    edit.putString("userName", user.getUserName());
+                    edit.commit();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("fragId", "0");
+                    startActivity(intent);
+                    Toast.makeText(LoginActivity.this, "欢迎" + user.getUserName() + "登录",
+                            Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(LoginActivity.this, "用户账号与密码不匹配",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(LoginActivity.this, "与服务器断开连接",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,16 +142,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void login() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                LoginService service = new LoginService();
-//                service.login("00004", "123456");
-//            }
-//        }).start();
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("fragId", "0");
-        startActivity(intent);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String userName = et_user.getText().toString().trim();
+                String password = et_pwd.getText().toString().trim();
+                LoginService service = new LoginService();
+                User user = service.login(userName, password);
+                Message msg = handler.obtainMessage();
+                msg.obj = user;
+                handler.sendMessage(msg);
+            }
+        }).start();
     }
 
     @Override

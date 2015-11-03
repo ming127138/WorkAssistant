@@ -168,7 +168,24 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String applyId = applyingList.get(position).getApplyId();
-                if (applyId.equals("重新申请单00Y")) {
+                String state = applyingList.get(position).getState();
+
+                if (applyId.equals("申请单00X") && state.equals("申请中")) {
+                    applyingList.get(position).setState("不批准");
+                    applyingAdapter.notifyDataSetChanged();
+                }
+
+                if (applyId.equals("申请单00X") && state.equals("不批准")){
+                    Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesApplyingActivity.class);
+                    intent.putExtra("suppliesNo", (Parcelable) applyingList.get(position));
+                    intent.putExtra("position", position);
+                    intent.putExtra("userName", userName);
+                    intent.putExtra("orderId", orderId);
+                    startActivityForResult(intent, 20);
+                }
+
+
+                if (applyId.equals("重新申请单00Y") && state.equals("申请中")) {
                     List<SuppliesData> suppliesDataList = DataSupport.where("applyId = ?", applyId).find(SuppliesData.class);
                     for (SuppliesData data : suppliesDataList) {
                         Supplies supplies = new Supplies();
@@ -188,13 +205,6 @@ public class SuppliesApplyActivity extends AppCompatActivity implements View.OnC
                     applyingList.remove(position);
                     applyingAdapter.notifyDataSetChanged();
                     approvalAdapter.notifyDataSetChanged();
-                } else {
-                    Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesApplyingActivity.class);
-                    intent.putExtra("suppliesNo", (Parcelable) applyingList.get(position));
-                    intent.putExtra("position", position);
-                    intent.putExtra("userName", userName);
-                    intent.putExtra("orderId", orderId);
-                    startActivityForResult(intent, 20);
                 }
             }
         });

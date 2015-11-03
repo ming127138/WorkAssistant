@@ -47,7 +47,7 @@ public class ReportCompleteAdapter extends BaseAdapter {
         suppliesList = new ArrayList<Supplies>();
         for (int i = 1; i < 5; i++) {
             Supplies supplies = new Supplies();
-            supplies.setName("名称" + i);
+            supplies.setName("材料" + i);
             supplies.setSpec("规格" + i);
             supplies.setUnit("单位" + i);
             supplies.setNum(i);

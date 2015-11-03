@@ -9,7 +9,6 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -205,7 +204,23 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String applyId = applyingList.get(position).getApplyId();
-                if (applyId.equals("重新申请单00Y")) {
+                String state = applyingList.get(position).getState();
+
+                if (applyId.equals("申请单00X") && state.equals("申请中")) {
+                    applyingList.get(position).setState("不批准");
+                    applyingAdapter.notifyDataSetChanged();
+                }
+
+                if (applyId.equals("申请单00X") && state.equals("不批准")) {
+                    Intent intent = new Intent(MachineApplyActivity.this, MachineApplyingActivity.class);
+                    intent.putExtra("machineNo", (Parcelable) applyingList.get(position));
+                    intent.putExtra("position", position);
+                    intent.putExtra("userName", userName);
+                    intent.putExtra("orderId", orderId);
+                    startActivityForResult(intent, 20);
+                }
+
+                if (applyId.equals("重新申请单00Y") && state.equals("申请中")) {
                     List<MachineData> machineDataList = DataSupport.where("applyId = ?", applyId).find(MachineData.class);
                     for (MachineData data : machineDataList) {
                         Machine machine = new Machine();
@@ -225,13 +240,6 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
                     applyingList.remove(position);
                     applyingAdapter.notifyDataSetChanged();
                     approvalAdapter.notifyDataSetChanged();
-                } else {
-                    Intent intent = new Intent(MachineApplyActivity.this, MachineApplyingActivity.class);
-                    intent.putExtra("machineNo", (Parcelable) applyingList.get(position));
-                    intent.putExtra("position", position);
-                    intent.putExtra("userName", userName);
-                    intent.putExtra("orderId", orderId);
-                    startActivityForResult(intent, 20);
                 }
             }
         });
@@ -266,14 +274,14 @@ public class MachineApplyActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String state = returnApplyingList.get(position).getState();
-                if(state.equals("退回申请中")){
+                if (state.equals("退回申请中")) {
                     ContentValues values = new ContentValues();
                     values.put("state", "退回已批准");
                     DataSupport.update(MachineData.class, values, returnApplyingList.get(position).getDataId());
                     returnApplyingList.get(position).setState("退回已批准");
                     returnApplyingAdapter.notifyDataSetChanged();
                 }
-                if(state.equals("退回已批准")){
+                if (state.equals("退回已批准")) {
                     DataSupport.delete(MachineData.class, returnApplyingList.get(position).getDataId());
                     returnApplyingList.remove(position);
                     returnApplyingAdapter.notifyDataSetChanged();

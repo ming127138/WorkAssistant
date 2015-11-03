@@ -96,7 +96,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
 
-        if(orderList.get(position).getType().equals("供水管网维护")){
+        if(orderList.get(position).getType().equals("供水管网巡检")){
             v.info.setVisibility(View.GONE);
             v.machineApply.setVisibility(View.GONE);
             v.suppliesApply.setVisibility(View.GONE);
@@ -167,7 +167,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    if (orderList.get(position).getType().equals("供水管网维护")) {
+                                    if (orderList.get(position).getType().equals("供水管网巡检")) {
                                         orderList.get(position).setFlag("巡检");
                                         orderList.get(position).setState("正在处理");
                                         ContentValues values = new ContentValues();

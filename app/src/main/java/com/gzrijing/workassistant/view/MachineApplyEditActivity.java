@@ -179,7 +179,7 @@ public class MachineApplyEditActivity extends AppCompatActivity implements View.
         for (int i = 1; i < 5; i++) {
             Machine query = new Machine();
             query.setId("SQ00" + i);
-            query.setName("名称" + i);
+            query.setName("机械" + i);
             query.setSpec("规格" + i);
             query.setUnit("单位" + i);
             machineQueries.add(query);
@@ -192,7 +192,7 @@ public class MachineApplyEditActivity extends AppCompatActivity implements View.
         for (int i = 1; i < 5; i++) {
             Machine query = new Machine();
             query.setId("SQ00" + i);
-            query.setName("名称" + i);
+            query.setName("机械" + i);
             query.setSpec("规格" + i);
             query.setUnit("单位" + i);
             machineQueries.add(query);

@@ -7,6 +7,8 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class HttpUtil {
 
@@ -37,6 +39,27 @@ public class HttpUtil {
             e.printStackTrace();
         }
 
+        return result;
+    }
+
+    public static String httpGetLeaderBusiness(String userNo, String time) {
+        String result = null;
+        String url = null;
+        try {
+            url = URLPath+"?cmd=getconstruction&userno="+userNo+"&begindate="+  URLEncoder.encode(time, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Request request = new Request.Builder().url(url).build();
+            Response response = mOkHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                result = response.body().string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 }

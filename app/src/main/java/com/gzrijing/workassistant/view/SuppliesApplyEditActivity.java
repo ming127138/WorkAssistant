@@ -132,7 +132,7 @@ public class SuppliesApplyEditActivity extends AppCompatActivity implements View
         for (int i = 1; i < 5; i++) {
             Supplies query = new Supplies();
             query.setId("SQ00" + i);
-            query.setName("名称" + i);
+            query.setName("材料" + i);
             query.setSpec("规格" + i);
             query.setUnit("单位" + i);
             suppliesQueries.add(query);
@@ -145,7 +145,7 @@ public class SuppliesApplyEditActivity extends AppCompatActivity implements View
         for (int i = 1; i < 5; i++) {
             Supplies query = new Supplies();
             query.setId("SQ00" + i);
-            query.setName("名称" + i);
+            query.setName("材料" + i);
             query.setSpec("规格" + i);
             query.setUnit("单位" + i);
             suppliesQueries.add(query);
