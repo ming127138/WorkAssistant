@@ -5,15 +5,17 @@ public class User {
     private String userName;
     private String userDept;
     private String userSit;
+    private String userRank;
 
     public User() {
     }
 
-    public User(String userNo, String userName, String userDept, String userSit) {
+    public User(String userNo, String userName, String userDept, String userSit, String userRank) {
         this.userNo = userNo;
         this.userName = userName;
         this.userDept = userDept;
         this.userSit = userSit;
+        this.userRank = userRank;
     }
 
     public String getUserNo() {
@@ -46,5 +48,13 @@ public class User {
 
     public void setUserSit(String userSit) {
         this.userSit = userSit;
+    }
+
+    public String getUserRank() {
+        return userRank;
+    }
+
+    public void setUserRank(String userRank) {
+        this.userRank = userRank;
     }
 }

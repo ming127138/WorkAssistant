@@ -1,16 +1,16 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Notice;
 
-public class NoticeContentActivity extends AppCompatActivity {
+public class NoticeContentActivity extends BaseActivity {
 
     private TextView tv_title;
     private TextView tv_content;

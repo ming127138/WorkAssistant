@@ -1,14 +1,11 @@
 package com.gzrijing.workassistant.view;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -25,13 +22,13 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.LocationMarker;
-import com.gzrijing.workassistant.entity.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubordinateLocationActivity extends AppCompatActivity {
+public class SubordinateLocationActivity extends BaseActivity {
 
     private MapView mMapView;
     private BaiduMap mBaiduMap;

@@ -2,7 +2,6 @@ package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportInfoApprovalAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class ReportInfoCompleteActivity extends AppCompatActivity {
+public class ReportInfoCompleteActivity extends BaseActivity {
 
     private List<ReportComplete> infos = new ArrayList<ReportComplete>();
     private ListView lv_info;

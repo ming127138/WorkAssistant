@@ -1,7 +1,6 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,13 +14,14 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MachineVerifyWaitAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.entity.MachineVerifyInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MachineVerifyWaitInfoActivity extends AppCompatActivity implements View.OnClickListener {
+public class MachineVerifyWaitInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private MachineVerify machineVerify;
     private TextView tv_useTime;

@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,7 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.data.BusinessData;
+import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class DistributeActivity extends AppCompatActivity implements View.OnClickListener {
+public class DistributeActivity extends BaseActivity implements View.OnClickListener {
 
     private String userName;
     private String orderId;

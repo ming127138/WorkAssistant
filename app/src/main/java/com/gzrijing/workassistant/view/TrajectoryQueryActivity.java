@@ -2,7 +2,6 @@ package com.gzrijing.workassistant.view;
 
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -27,12 +26,13 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.SubordinateLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrajectoryQueryActivity extends AppCompatActivity implements View.OnClickListener {
+public class TrajectoryQueryActivity extends BaseActivity implements View.OnClickListener {
 
     private MapView mMapView;
     private BaiduMap mBaiduMap;

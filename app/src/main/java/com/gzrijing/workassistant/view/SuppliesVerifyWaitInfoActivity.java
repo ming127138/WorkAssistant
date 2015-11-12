@@ -1,10 +1,8 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,13 +14,14 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesVerifyWaitAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
 import com.gzrijing.workassistant.entity.SuppliesVerifyInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuppliesVerifyWaitInfoActivity extends AppCompatActivity implements View.OnClickListener {
+public class SuppliesVerifyWaitInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private SuppliesVerify suppliesVerify;
     private TextView tv_useTime;

@@ -1,7 +1,6 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -11,12 +10,13 @@ import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesVerifyAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuppliesVerifyActivity extends AppCompatActivity {
+public class SuppliesVerifyActivity extends BaseActivity {
 
     private ListView lv_wait;
     private ListView lv_ok;

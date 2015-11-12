@@ -2,7 +2,6 @@ package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
@@ -25,7 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class EntrustActivity extends AppCompatActivity implements View.OnClickListener{
+public class EntrustActivity extends BaseActivity implements View.OnClickListener{
 
     private LinearLayout ll_onDuty;
     private ImageView iv_onDuty;

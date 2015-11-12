@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.view;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.data.DetailedInfoData;
+import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.db.DetailedInfoData;
 
 import org.litepal.crud.DataSupport;
 
@@ -19,7 +20,8 @@ public class BusinessFragment extends Fragment {
     private View layoutView;
     private LeaderFragment leaderFragment;
     private WorkerFragment workerFragment;
-    private String userName;
+    private String userNo;
+    private String userRank;
 
     public BusinessFragment() {
     }
@@ -36,9 +38,9 @@ public class BusinessFragment extends Fragment {
         layoutView = inflater.inflate(R.layout.fragment_business, container, false);
 
         if (savedInstanceState == null) {
-            Fragment fragment = getChildFragmentManager().findFragmentByTag(1 + "");
+            Fragment fragment = getChildFragmentManager().findFragmentByTag(userRank);
             if (fragment == null) {
-                setTabSelection(1);
+                setTabSelection(Integer.valueOf(userRank));
             }
         }
 
@@ -47,15 +49,16 @@ public class BusinessFragment extends Fragment {
 
     private void initData() {
         DataSupport.deleteAll(BusinessData.class);
-        SharedPreferences app = getActivity().getSharedPreferences(
-                "saveUserInfo", getActivity().MODE_PRIVATE);
-        userName = app.getString("userName", "");
+        SharedPreferences sp = getActivity().getSharedPreferences(
+                "saveUser", Context.MODE_PRIVATE);
+        userNo = sp.getString("userNo", "");
+        userRank = sp.getString("userRank", "");
 
         String[] keys = {"　　性质", "水表编号", "用户名称", "用户地址", "联系电话", "水表口径", "　　备注", "任务内容"};
         String[] values = {"报装", "SBBH007", "李XX", "XXXXXX地址", "135XXXXXXXX", "DN36", "XXXX备注", "水表定位"};
 
         BusinessData data = new BusinessData();
-        data.setUser(userName);
+        data.setUser(userNo);
         data.setOrderId("工单007");
         data.setUrgent(true);
         data.setType("水表工程");
@@ -72,7 +75,7 @@ public class BusinessFragment extends Fragment {
         data.save();
 
         BusinessData data2 = new BusinessData();
-        data2.setUser(userName);
+        data2.setUser(userNo);
         data2.setOrderId("工单009");
         data2.setUrgent(false);
         data2.setType("供水管网巡检");
@@ -87,19 +90,19 @@ public class BusinessFragment extends Fragment {
         hideFragments(transaction);
         switch (index) {
             case 0:
-                if (leaderFragment == null) {
-                    leaderFragment = new LeaderFragment();
-                    transaction.add(R.id.fragment_business, leaderFragment);
+                if (workerFragment == null) {
+                    workerFragment = new WorkerFragment();
+                    transaction.add(R.id.fragment_business, workerFragment, "0");
                 } else {
-                    transaction.show(leaderFragment);
+                    transaction.show(workerFragment);
                 }
                 break;
             case 1:
-                if (workerFragment == null) {
-                    workerFragment = new WorkerFragment();
-                    transaction.add(R.id.fragment_business, workerFragment);
+                if (leaderFragment == null) {
+                    leaderFragment = new LeaderFragment();
+                    transaction.add(R.id.fragment_business, leaderFragment, "1");
                 } else {
-                    transaction.show(workerFragment);
+                    transaction.show(leaderFragment);
                 }
                 break;
         }

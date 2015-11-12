@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,6 +19,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.DetailedInfoAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReceivedAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.entity.Supplies;
@@ -28,7 +28,7 @@ import com.zj.btsdk.BluetoothService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrintActivity extends AppCompatActivity implements View.OnClickListener {
+public class PrintActivity extends BaseActivity implements View.OnClickListener {
 
     private Button btn_connect;
     private ListView lv_info;

@@ -1,7 +1,6 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,13 +16,14 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MachineApplyAdapter;
 import com.gzrijing.workassistant.adapter.MachineQueryAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Machine;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MachineApplyEditActivity extends AppCompatActivity implements View.OnClickListener{
+public class MachineApplyEditActivity extends BaseActivity implements View.OnClickListener{
 
     private ImageView iv_delAll;
     private Button btn_add;

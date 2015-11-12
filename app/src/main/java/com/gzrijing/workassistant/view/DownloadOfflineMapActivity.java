@@ -1,7 +1,6 @@
 package com.gzrijing.workassistant.view;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -12,12 +11,13 @@ import com.baidu.mapapi.map.offline.MKOfflineMap;
 import com.baidu.mapapi.map.offline.MKOfflineMapListener;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.DownloadOfflineMapAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.LocalMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadOfflineMapActivity extends AppCompatActivity implements MKOfflineMapListener {
+public class DownloadOfflineMapActivity extends BaseActivity implements MKOfflineMapListener {
 
     private MKOfflineMap mOffline;
     private ListView lv_Package;

@@ -7,16 +7,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.BaseActivity;
 
 import org.litepal.tablemanager.Connector;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private Toolbar mToolbar;
     private ImageView iv_business;
@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initData() {
-        SQLiteDatabase db = Connector.getDatabase();
         Intent intent = getIntent();
         int id = Integer.parseInt(intent.getStringExtra("fragId"));
         if (id == 0) {

@@ -1,16 +1,15 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.BaseActivity;
 
-public class TemInfoContentActivity extends AppCompatActivity {
+public class TemInfoContentActivity extends BaseActivity {
 
     private TextView tv_content;
     private String content;

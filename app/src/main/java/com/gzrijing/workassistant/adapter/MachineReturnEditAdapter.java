@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.data.MachineData;
+import com.gzrijing.workassistant.db.MachineData;
 import com.gzrijing.workassistant.entity.Machine;
 
 import org.litepal.crud.DataSupport;

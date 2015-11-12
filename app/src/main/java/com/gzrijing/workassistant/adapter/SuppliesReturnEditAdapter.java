@@ -1,24 +1,19 @@
 package com.gzrijing.workassistant.adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.data.SuppliesData;
+import com.gzrijing.workassistant.db.SuppliesData;
 import com.gzrijing.workassistant.entity.Supplies;
 
 import org.litepal.crud.DataSupport;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class SuppliesReturnEditAdapter extends BaseAdapter {

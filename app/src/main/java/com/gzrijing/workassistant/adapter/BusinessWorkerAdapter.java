@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.data.BusinessData;
+import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.view.MachineApplyActivity;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;

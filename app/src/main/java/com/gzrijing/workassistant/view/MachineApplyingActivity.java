@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,9 +17,10 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MachineApplyingAdapter;
-import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.data.MachineData;
-import com.gzrijing.workassistant.data.MachineNoData;
+import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.db.MachineData;
+import com.gzrijing.workassistant.db.MachineNoData;
 import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.MachineNo;
 import com.gzrijing.workassistant.util.JudgeDate;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MachineApplyingActivity extends AppCompatActivity implements View.OnClickListener{
+public class MachineApplyingActivity extends BaseActivity implements View.OnClickListener{
 
     private int position;
     private String userName;

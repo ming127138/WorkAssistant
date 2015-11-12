@@ -1,6 +1,5 @@
 package com.gzrijing.workassistant.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -14,11 +13,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.User;
-import com.gzrijing.workassistant.service.LoginService;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtil;
+import com.gzrijing.workassistant.util.JsonParseUtil;
+import com.gzrijing.workassistant.util.MD5Encryptor;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
-public class LoginActivity extends Activity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
+    private String user;
+    private String pwd = "";
     private EditText et_user;
     private EditText et_pwd;
     private Button btn_login;
@@ -27,36 +34,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private ImageView iv_memory;
     private boolean flag;
     private String isMemory; // isMemory变量用来判断SharedPreferences有没有数据
-    private String file = "saveUserAndPwd";// 用于保存SharedPreferences的文件
+    private String file = "saveUserAndPwd";// 用于保存账号密码的SharedPreferences的文件
     private SharedPreferences sp; // 声明一个SharedPreferences
-
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            User user = (User) msg.obj;
-            if (user != null) {
-                String userNo = user.getUserNo();
-                if(userNo != null && !userNo.equals("Error")){
-                    SharedPreferences app = getSharedPreferences("saveUser", MODE_PRIVATE);
-                    Editor edit = app.edit();
-                    edit.putString("userNo", user.getUserNo());
-                    edit.putString("userName", user.getUserName());
-                    edit.commit();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("fragId", "0");
-                    startActivity(intent);
-                    Toast.makeText(LoginActivity.this, "欢迎" + user.getUserName() + "登录",
-                            Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(LoginActivity.this, "用户账号与密码不匹配",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }else{
-                Toast.makeText(LoginActivity.this, "与服务器断开连接",
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +47,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         setListeners();
     }
 
+
     private void initData() {
         getUserNamePwd();
     }
@@ -78,8 +58,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         // 进入界面时，这个if用来判断SharedPreferences里面user和pwd有没有数据，
         // 有的话则直接打在EditText上面
         if (isMemory.equals("yes")) {
-            String user = sp.getString("user", "");
-            String pwd = sp.getString("pwd", "");
+            user = sp.getString("user", "");
+            pwd = sp.getString("pwd", "");
             et_user.setText(user);
             et_pwd.setText(pwd);
             iv_memory.setImageResource(R.drawable.login_checkbox_on);
@@ -142,19 +122,75 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void login() {
-        new Thread(new Runnable() {
+        String userName = et_user.getText().toString().trim();
+        String password = et_pwd.getText().toString().trim().toLowerCase();
+        if (password.equals(pwd)) {
+            password = pwd;
+        } else {
+            String md5 = MD5Encryptor.getMD5(password.substring(0, password.length() - 2));
+            password = md5.substring(0, md5.length() - 2)
+                    + password.substring(password.length() - 2);
+        }
+
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "login")
+                .add("userno", userName)
+                .add("pwd", password)
+                .build();
+        final String finalPWD = password;
+        HttpUtil.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
-            public void run() {
-                String userName = et_user.getText().toString().trim();
-                String password = et_pwd.getText().toString().trim();
-                LoginService service = new LoginService();
-                User user = service.login(userName, password);
-                Message msg = handler.obtainMessage();
-                msg.obj = user;
+            public void onFinish(String response) {
+                Message msg = null;
+                if (response.substring(0, 5).equals("Error")) {
+                    msg = handler.obtainMessage(1);
+                } else {
+                    pwd = finalPWD;
+                    User user = JsonParseUtil.getUser(response);
+                    msg = handler.obtainMessage(2);
+                    msg.obj = user;
+                }
                 handler.sendMessage(msg);
             }
-        }).start();
+
+            @Override
+            public void onError(Exception e) {
+                Message msg = handler.obtainMessage(0);
+                handler.sendMessage(msg);
+            }
+        });
     }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    Toast.makeText(LoginActivity.this, "与服务器断开连接",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Toast.makeText(LoginActivity.this, "用户账号与密码不匹配",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    User user = (User) msg.obj;
+                    SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
+                    Editor edit = sp.edit();
+                    edit.putString("userNo", user.getUserNo());
+                    edit.putString("userName", user.getUserName());
+                    edit.putString("rank", user.getUserRank());
+                    edit.commit();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("fragId", "0");
+                    startActivity(intent);
+                    Toast.makeText(LoginActivity.this, "欢迎" + user.getUserName() + "登录",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onStop() {
@@ -162,26 +198,19 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         super.onStop();
     }
 
-    // remember方法用于判断是否记住密码，checkBox选中时，提取出EditText里面的内容，
-    // 放到SharedPreferences里面的user和pwd中
     private void remember() {
-        if (flag) {
-            if (sp == null) {
-                sp = getSharedPreferences(file, MODE_PRIVATE);
-            }
-            Editor edit = sp.edit();
-            edit.putString("user", et_user.getText().toString().trim());
-            edit.putString("pwd", et_pwd.getText().toString().trim());
-            edit.putString("isMemory", "yes");
-            edit.commit();
-        } else {
-            if (sp == null) {
-                sp = getSharedPreferences(file, MODE_PRIVATE);
-            }
-            SharedPreferences.Editor edit = sp.edit();
-            edit.putString("isMemory", "no");
-            edit.commit();
+        if (sp == null) {
+            sp = getSharedPreferences(file, MODE_PRIVATE);
         }
+        Editor edit = sp.edit();
+        if (flag) {
+            edit.putString("user", et_user.getText().toString().trim().toLowerCase());
+            edit.putString("pwd", pwd);
+            edit.putString("isMemory", "yes");
+        } else {
+            edit.putString("isMemory", "no");
+        }
+        edit.commit();
     }
 
 }

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -24,9 +23,10 @@ import com.gzrijing.workassistant.adapter.SuppliesApplyApprovalAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyCreatedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReceivedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReturnAdapter;
-import com.gzrijing.workassistant.data.BusinessData;
-import com.gzrijing.workassistant.data.SuppliesData;
-import com.gzrijing.workassistant.data.SuppliesNoData;
+import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.db.SuppliesData;
+import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.util.JudgeDate;
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class SuppliesApplyActivity extends AppCompatActivity implements View.OnClickListener {
+public class SuppliesApplyActivity extends BaseActivity implements View.OnClickListener {
 
     private String userName;
     private String orderId;

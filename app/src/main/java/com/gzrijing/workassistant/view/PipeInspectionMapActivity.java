@@ -2,7 +2,6 @@ package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,13 +24,14 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class PipeInspectionMapActivity extends AppCompatActivity {
+public class PipeInspectionMapActivity extends BaseActivity {
 
     private BaiduMap mBaiduMap;
     private MapView mMapView;

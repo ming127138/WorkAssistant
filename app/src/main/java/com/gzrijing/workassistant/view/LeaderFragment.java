@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessLeaderAdapter;
-import com.gzrijing.workassistant.data.BusinessData;
+import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 
 import org.litepal.crud.DataSupport;
@@ -61,7 +61,6 @@ public class LeaderFragment extends Fragment {
         for (BusinessData data : list) {
             BusinessByLeader order = new BusinessByLeader();
             order.setOrderId(data.getOrderId());
-            order.setTemInfo(data.isTemInfo());
             order.setUrgent(data.isUrgent());
             order.setType(data.getType());
             order.setState(data.getState());
@@ -69,7 +68,6 @@ public class LeaderFragment extends Fragment {
             order.setFlag(data.getFlag());
             orderList.add(order);
         }
-
     }
 
     private void initViews() {
@@ -140,7 +138,6 @@ public class LeaderFragment extends Fragment {
         for (BusinessData data : list) {
             BusinessByLeader order = new BusinessByLeader();
             order.setOrderId(data.getOrderId());
-            order.setTemInfo(data.isTemInfo());
             order.setUrgent(data.isUrgent());
             order.setType(data.getType());
             order.setState(data.getState());

@@ -1,4 +1,4 @@
-package com.gzrijing.workassistant.data;
+package com.gzrijing.workassistant.db;
 
 import org.litepal.crud.DataSupport;
 

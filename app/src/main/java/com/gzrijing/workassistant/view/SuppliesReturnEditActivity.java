@@ -1,7 +1,6 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -11,6 +10,7 @@ import android.widget.ImageView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesReturnEditAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.widget.MyListView;
 
@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuppliesReturnEditActivity extends AppCompatActivity implements View.OnClickListener{
+public class SuppliesReturnEditActivity extends BaseActivity implements View.OnClickListener{
 
     private String orderId;
     private List<Supplies> suppliesList;

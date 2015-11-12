@@ -1,6 +1,5 @@
 package com.gzrijing.workassistant.adapter;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.data.SuppliesData;
 import com.gzrijing.workassistant.entity.Supplies;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
