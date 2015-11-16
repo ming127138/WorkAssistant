@@ -95,9 +95,11 @@
     <orderEntry type="library" exported="" name="btsdk" level="project" />
     <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="GetuiExt-2.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="okhttp-2.5.0" level="project" />
     <orderEntry type="library" exported="" name="BaiduLBS_Android" level="project" />
+    <orderEntry type="library" exported="" name="GetuiSDK2.6.1.0" level="project" />
     <orderEntry type="library" exported="" name="design-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.1" level="project" />
   </component>

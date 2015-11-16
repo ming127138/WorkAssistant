@@ -3,18 +3,18 @@ package com.gzrijing.workassistant.view;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
-
-import org.litepal.tablemanager.Connector;
+import com.igexin.sdk.PushManager;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -28,6 +28,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private ManageFragment manageFragment;
     private AcceptanceFragment acceptanceFragment;
     private MoreFragment moreFragment;
+    private long firstTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initData() {
+        //关闭个推服务
+        PushManager.getInstance().stopService(getApplicationContext());
+        //开启个推服务
+        PushManager.getInstance().initialize(getApplicationContext());
         Intent intent = getIntent();
         int id = Integer.parseInt(intent.getStringExtra("fragId"));
         if (id == 0) {
@@ -184,6 +189,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (moreFragment != null) {
             transaction.hide(moreFragment);
         }
+    }
+
+    /**
+     * 按两次back键退出程序
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                long secondTime = System.currentTimeMillis();
+                if (secondTime - firstTime > 2000) {    //如果两次按键时间间隔大于2秒，则不退出
+                    Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                    firstTime = secondTime;//更新firstTime
+                    return true;
+                } else {   //两次按键小于2秒时，退出应用
+                    System.exit(0);
+                }
+                break;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
 }

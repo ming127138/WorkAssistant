@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.User;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtil;
@@ -22,7 +23,9 @@ import com.gzrijing.workassistant.util.MD5Encryptor;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+import org.litepal.crud.DataSupport;
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String user;
     private String pwd = "";
@@ -49,6 +52,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
 
     private void initData() {
+        DataSupport.deleteAll(BusinessData.class);
         getUserNamePwd();
     }
 
@@ -180,13 +184,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     Editor edit = sp.edit();
                     edit.putString("userNo", user.getUserNo());
                     edit.putString("userName", user.getUserName());
-                    edit.putString("rank", user.getUserRank());
+                    edit.putString("userRank", user.getUserRank());
                     edit.commit();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("fragId", "0");
                     startActivity(intent);
                     Toast.makeText(LoginActivity.this, "欢迎" + user.getUserName() + "登录",
                             Toast.LENGTH_SHORT).show();
+                    finish();
                     break;
             }
         }

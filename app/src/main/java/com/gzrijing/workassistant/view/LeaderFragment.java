@@ -23,14 +23,14 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeaderFragment extends Fragment {
+public class LeaderFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    private String userName;
+    private String userNo;
     private View layoutView;
     private Spinner sp_business;
     private Spinner sp_state;
     private ListView lv_order;
-    public static List<BusinessByLeader> orderList;
+    public static List<BusinessByLeader> orderList = new ArrayList<BusinessByLeader>();
     public static BusinessLeaderAdapter adapter;
 
     public LeaderFragment() {
@@ -54,20 +54,8 @@ public class LeaderFragment extends Fragment {
 
     private void initData() {
         SharedPreferences app = getActivity().getSharedPreferences(
-                "saveUserInfo", getActivity().MODE_PRIVATE);
-        userName = app.getString("userName", "");
-        orderList = new ArrayList<BusinessByLeader>();
-        List<BusinessData> list = DataSupport.where("user = ?", userName).find(BusinessData.class);
-        for (BusinessData data : list) {
-            BusinessByLeader order = new BusinessByLeader();
-            order.setOrderId(data.getOrderId());
-            order.setUrgent(data.isUrgent());
-            order.setType(data.getType());
-            order.setState(data.getState());
-            order.setDeadline(data.getDeadline());
-            order.setFlag(data.getFlag());
-            orderList.add(order);
-        }
+                "saveUser", getActivity().MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
     }
 
     private void initViews() {
@@ -91,29 +79,8 @@ public class LeaderFragment extends Fragment {
     }
 
     private void setListeners() {
-        sp_business.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                select(view);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        sp_state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                select(view);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        sp_business.setOnItemSelectedListener(this);
+        sp_state.setOnItemSelectedListener(this);
     }
 
     private void select(View view){
@@ -123,15 +90,15 @@ public class LeaderFragment extends Fragment {
         String state = sp_state.getSelectedItem().toString();
         List<BusinessData> list = null;
         if (type.equals("全部") && state.equals("全部")) {
-            list = DataSupport.where("user = ?", userName).find(BusinessData.class);
+            list = DataSupport.where("user = ?", userNo).find(BusinessData.class);
         } else if (type.equals("全部") && !state.equals("全部")) {
-            list = DataSupport.where("user = ? and state = ?", userName, state)
+            list = DataSupport.where("user = ? and state = ?", userNo, state)
                     .find(BusinessData.class);
         } else if (!type.equals("全部") && state.equals("全部")) {
-            list = DataSupport.where("user = ? and type = ?", userName, type)
+            list = DataSupport.where("user = ? and type = ?", userNo, type)
                     .find(BusinessData.class);
         } else {
-            list = DataSupport.where("user = ? and type = ? and state = ?", userName, type, state)
+            list = DataSupport.where("user = ? and type = ? and state = ?", userNo, type, state)
                     .find(BusinessData.class);
         }
         orderList.clear();
@@ -149,4 +116,13 @@ public class LeaderFragment extends Fragment {
         list = null;
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        select(view);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

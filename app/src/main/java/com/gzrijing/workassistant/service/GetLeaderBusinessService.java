@@ -8,15 +8,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.NotificationCompat;
 
-import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.receiver.NotificationReceiver;
 import com.gzrijing.workassistant.util.HttpUtil;
 import com.gzrijing.workassistant.util.JsonParseUtil;
-import com.gzrijing.workassistant.view.MainActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -83,17 +82,16 @@ public class GetLeaderBusinessService extends IntentService{
 
     private void sendNotification(){
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent intent = new Intent(MyApplication.getContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(MyApplication.getContext(), 0, intent, 0);
-        Notification notification = new NotificationCompat.Builder(
-                MyApplication.getContext())
-                .setTicker("你有一条任务").setContentInfo("contentInfo")
-                .setContentTitle("日京管理通知")
-                .setContentText("有临时任务，请赶紧查看")
-                .setAutoCancel(true).setContentIntent(pendingIntent)
-                .setDefaults(Notification.DEFAULT_ALL).build();
-        notification.flags = Notification.FLAG_INSISTENT;
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("这就是通知的头")
+                .setTicker("这是通知的ticker")
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(android.R.drawable.ic_notification_clear_all)
+                .build();
+
         manager.notify(0, notification);
     }
-
 }

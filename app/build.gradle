@@ -28,4 +28,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile files('libs/btsdk.jar')
+    compile files('libs/GetuiExt-2.0.3.jar')
+    compile files('libs/GetuiSDK2.6.1.0.jar')
 }
