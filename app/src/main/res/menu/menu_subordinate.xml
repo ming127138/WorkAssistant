@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.gzrijing.workassistant.view.SubordinateActivity">
     <item
-        android:id="@+id/action_location"
+        android:id="@+id/action_sure"
         android:orderInCategory="100"
-        android:icon="@drawable/icon_location"
+        android:icon="@drawable/icon_sure"
         android:title="实时位置"
         app:showAsAction="always" />
 </menu>

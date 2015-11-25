@@ -110,7 +110,7 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
         btn_connect = (Button) findViewById(R.id.print_connect_btn);
 
         lv_info = (ListView) findViewById(R.id.print_info_lv);
-        adapter = new DetailedInfoAdapter(this, infos);
+//        adapter = new DetailedInfoAdapter(this, infos);
         lv_info.setAdapter(adapter);
         lv_supplies = (ListView) findViewById(R.id.print_supplies_lv);
         receivedAdapter = new SuppliesApplyReceivedAdapter(this, suppliesList);

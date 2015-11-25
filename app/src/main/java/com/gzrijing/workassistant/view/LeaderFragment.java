@@ -32,6 +32,7 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
     private ListView lv_order;
     public static List<BusinessByLeader> orderList = new ArrayList<BusinessByLeader>();
     public static BusinessLeaderAdapter adapter;
+    public static List<BusinessByLeader> orderListByLeader = new ArrayList<BusinessByLeader>();
 
     public LeaderFragment() {
     }
@@ -56,6 +57,19 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
         SharedPreferences app = getActivity().getSharedPreferences(
                 "saveUser", getActivity().MODE_PRIVATE);
         userNo = app.getString("userNo", "");
+
+        orderListByLeader.clear();
+        List<BusinessData> list = DataSupport.where("user = ?", userNo).find(BusinessData.class);
+        for (BusinessData data : list) {
+            BusinessByLeader order = new BusinessByLeader();
+            order.setOrderId(data.getOrderId());
+            order.setUrgent(data.isUrgent());
+            order.setType(data.getType());
+            order.setState(data.getState());
+            order.setDeadline(data.getDeadline());
+            order.setFlag(data.getFlag());
+            orderListByLeader.add(order);
+        }
     }
 
     private void initViews() {
@@ -74,7 +88,7 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
         sp_state.setAdapter(stateAdater);
 
         lv_order = (ListView) layoutView.findViewById(R.id.fragment_leader_order_lv);
-        adapter = new BusinessLeaderAdapter(getActivity(), orderList);
+        adapter = new BusinessLeaderAdapter(getActivity(), orderList, userNo);
         lv_order.setAdapter(adapter);
     }
 
@@ -88,32 +102,30 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
         tv.setTextColor(getResources().getColor(R.color.black));
         String type = sp_business.getSelectedItem().toString();
         String state = sp_state.getSelectedItem().toString();
-        List<BusinessData> list = null;
-        if (type.equals("全部") && state.equals("全部")) {
-            list = DataSupport.where("user = ?", userNo).find(BusinessData.class);
-        } else if (type.equals("全部") && !state.equals("全部")) {
-            list = DataSupport.where("user = ? and state = ?", userNo, state)
-                    .find(BusinessData.class);
-        } else if (!type.equals("全部") && state.equals("全部")) {
-            list = DataSupport.where("user = ? and type = ?", userNo, type)
-                    .find(BusinessData.class);
-        } else {
-            list = DataSupport.where("user = ? and type = ? and state = ?", userNo, type, state)
-                    .find(BusinessData.class);
-        }
+
         orderList.clear();
-        for (BusinessData data : list) {
-            BusinessByLeader order = new BusinessByLeader();
-            order.setOrderId(data.getOrderId());
-            order.setUrgent(data.isUrgent());
-            order.setType(data.getType());
-            order.setState(data.getState());
-            order.setDeadline(data.getDeadline());
-            order.setFlag(data.getFlag());
-            orderList.add(order);
+        if (type.equals("全部") && state.equals("全部")) {
+            orderList.addAll(orderListByLeader);
+        } else if (type.equals("全部") && !state.equals("全部")) {
+            for(BusinessByLeader order : orderListByLeader){
+                if(order.getState().equals(state)){
+                    orderList.add(order);
+                }
+            }
+        } else if (!type.equals("全部") && state.equals("全部")) {
+            for(BusinessByLeader order : orderListByLeader){
+                if(order.getType().equals(type)){
+                    orderList.add(order);
+                }
+            }
+        } else {
+            for(BusinessByLeader order : orderListByLeader){
+                if(order.getType().equals(type) && order.getState().equals(state)){
+                    orderList.add(order);
+                }
+            }
         }
         adapter.notifyDataSetChanged();
-        list = null;
     }
 
     @Override
@@ -125,4 +137,5 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
 }

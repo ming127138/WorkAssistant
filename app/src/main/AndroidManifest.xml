@@ -25,13 +25,14 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- 自定义权限 -->
     <uses-permission android:name="getui.permission.GetuiService.com.gzrijing.workassistant" />
+
     <permission
         android:name="getui.permission.GetuiService.com.gzrijing.workassistant"
-        android:protectionLevel="normal"></permission>
-    <!-- 个推SDK权限配置结束 -->
+        android:protectionLevel="normal" />
 
+    <!-- 个推SDK权限配置结束 -->
     <application
-        android:name="com.gzrijing.workassistant.base.MyApplication"
+        android:name=".base.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -39,7 +40,6 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="v4lD7SCrzGfDnezaGEoFjvuq" />
-
 
         <!-- app activity -->
         <activity
@@ -52,7 +52,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".base.BaseActivity"/>
+        <activity android:name=".base.BaseActivity" />
         <activity
             android:name=".view.MainActivity"
             android:label="@string/title_activity_main"
@@ -195,18 +195,19 @@
             android:name=".view.TrajectoryQueryActivity"
             android:label="@string/title_activity_trajectory_query"
             android:screenOrientation="portrait" />
-
+        <activity android:name=".view.ImageBrowserActivity"></activity>
+        <activity android:name=".view.ImageSelectorActivity"></activity>
         <!-- app activity -->
 
 
         <!-- app service -->
-        <service android:name=".service.GetLeaderBusinessService"/>
+        <service android:name=".service.GetLeaderBusinessService" />
 
         <!-- app service -->
 
 
         <!-- app receiver -->
-        <receiver android:name=".receiver.NotificationReceiver"/>
+        <receiver android:name=".receiver.NotificationReceiver" />
 
         <!-- app receiver -->
 
@@ -216,18 +217,18 @@
         <meta-data
             android:name="PUSH_APPID"
             android:value="JHJk2GTlf762hrxIcFUNr" />
-        <!--替换为应用的APPID-->
+        <!-- 替换为应用的APPID -->
         <meta-data
             android:name="PUSH_APPKEY"
             android:value="gCr0DLhequ8vwvLOYUwpH5" />
-        <!--替换为应用的APPKEY-->
+        <!-- 替换为应用的APPKEY -->
         <meta-data
             android:name="PUSH_APPSECRET"
             android:value="hNmKFN1uVc66G0K4UpE9F4" />
-        <!--替换为应用的APPSECRET-->
+        <!-- 替换为应用的APPSECRET -->
         <!-- 配置第三方Receiver 用来接收ClientId和透传消息 -->
         <receiver
-            android:name="com.gzrijing.workassistant.receiver.MainReceiver"
+            android:name=".receiver.MainReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.igexin.sdk.action.JHJk2GTlf762hrxIcFUNr" />
@@ -238,12 +239,12 @@
             android:name="com.igexin.sdk.PushService"
             android:exported="true"
             android:label="NotificationCenter"
-            android:process=":pushservice"></service>
+            android:process=":pushservice" />
         <!-- SDK　2.6.1.0版本新增配置项 -->
         <service
             android:name="com.igexin.sdk.PushServiceUser"
             android:exported="true"
-            android:label="NotificationCenterUser"></service>
+            android:label="NotificationCenterUser" />
 
         <receiver android:name="com.igexin.sdk.PushReceiver">
             <intent-filter>
@@ -257,7 +258,6 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name="com.igexin.sdk.PushManagerReceiver"
             android:exported="false">
@@ -272,7 +272,7 @@
             android:exported="false"
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service
             android:name="com.igexin.download.DownloadService"
@@ -307,6 +307,7 @@
                 <action android:name="com.igexin.sdk.action.JHJk2GTlf762hrxIcFUNr" />
             </intent-filter>
         </receiver>
+
         <service
             android:name="com.igexin.getuiext.service.GetuiExtService"
             android:process=":pushservice" />

@@ -6,27 +6,54 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.NotificationCompat;
+import android.view.View;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
+import com.gzrijing.workassistant.db.ImageData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.DetailedInfo;
+import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
-import com.gzrijing.workassistant.util.HttpUtil;
-import com.gzrijing.workassistant.util.JsonParseUtil;
+import com.gzrijing.workassistant.util.ActivityManagerUtil;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.ImageUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
+import com.gzrijing.workassistant.view.LeaderFragment;
+import com.gzrijing.workassistant.view.SubordinateActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
-public class GetLeaderBusinessService extends IntentService{
+public class GetLeaderBusinessService extends IntentService {
 
     private String userNo;
+    private ImageLoader mImageLoader;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            List<BusinessByLeader> list = (List<BusinessByLeader>) msg.obj;
+            LeaderFragment.orderList.addAll(list);
+            LeaderFragment.orderListByLeader.addAll(list);
+            LeaderFragment.adapter.notifyDataSetChanged();
+        }
+    };
+
 
     public GetLeaderBusinessService() {
         super("GetLeaderBusinessService");
+        mImageLoader = ImageLoader.getInstance();
     }
 
     @Override
@@ -42,7 +69,7 @@ public class GetLeaderBusinessService extends IntentService{
             e.printStackTrace();
         }
 
-        HttpUtil.sendHttpGetRequest(url, new HttpCallbackListener() {
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
                 saveData(response);
@@ -51,15 +78,20 @@ public class GetLeaderBusinessService extends IntentService{
 
             @Override
             public void onError(Exception e) {
-
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(GetLeaderBusinessService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
             }
         });
     }
 
 
-    private void saveData(String data){
-        List<BusinessByLeader> list = JsonParseUtil.getLeaderBusiness(data);
-        for(BusinessByLeader order : list){
+    private void saveData(String data) {
+        List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(data);
+        for (BusinessByLeader order : list) {
             BusinessData data1 = new BusinessData();
             data1.setUser(userNo);
             data1.setOrderId(order.getOrderId());
@@ -76,11 +108,36 @@ public class GetLeaderBusinessService extends IntentService{
                 data2.save();
                 data1.getDetailedInfoList().add(data2);
             }
+            List<PicUrl> picUrls = order.getPicUrls();
+            for (final PicUrl picUrl : picUrls) {
+                mImageLoader.loadImage(HttpUtils.imageURLPath + picUrl.getPicUrl(), new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        super.onLoadingComplete(imageUri, view, loadedImage);
+                        try {
+                            ImageUtils.saveFile(GetLeaderBusinessService.this, loadedImage, picUrl.getPicUrl());
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                ImageData data3 = new ImageData();
+                data3.setUrl(picUrl.getPicUrl());
+                data3.save();
+                data1.getImageDataList().add(data3);
+            }
             data1.save();
+        }
+
+        if (ActivityManagerUtil.activities.size() != 0) {
+            Message msg = handler.obtainMessage();
+            msg.obj = list;
+            handler.sendMessage(msg);
         }
     }
 
-    private void sendNotification(){
+    private void sendNotification() {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, NotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -91,7 +148,7 @@ public class GetLeaderBusinessService extends IntentService{
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();
-
+        notification.flags = Notification.FLAG_AUTO_CANCEL;
         manager.notify(0, notification);
     }
 }

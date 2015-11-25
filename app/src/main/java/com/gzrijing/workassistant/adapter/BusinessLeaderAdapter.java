@@ -3,6 +3,7 @@ package com.gzrijing.workassistant.adapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.view.MachineVerifyActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.DistributeActivity;
@@ -23,6 +28,8 @@ import com.gzrijing.workassistant.view.ReportInfoActivity;
 import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
 import org.litepal.crud.DataSupport;
 
@@ -32,11 +39,14 @@ public class BusinessLeaderAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater listContainer;
     private List<BusinessByLeader> orderList;
+    private String userNo;
+    private Handler handler = new Handler();
 
-    public BusinessLeaderAdapter(Context context, List<BusinessByLeader> orderList) {
+    public BusinessLeaderAdapter(Context context, List<BusinessByLeader> orderList, String userNo) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.orderList = orderList;
+        this.userNo = userNo;
     }
 
     @Override
@@ -171,17 +181,12 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (flag.equals("确认收到")) {
-                    orderList.get(position).setFlag("派发");
-                    ContentValues values = new ContentValues();
-                    values.put("flag", "派发");
-                    DataSupport.updateAll(BusinessData.class, values,
-                            "orderId = ?", orderList.get(position).getOrderId());
-                    notifyDataSetChanged();
+                    sendSure(position);
                 }
-
-                if (flag.equals("派发")) {
+                if (flag.equals("派工")) {
                     Intent intent = new Intent(context, DistributeActivity.class);
                     intent.putExtra("orderId", orderList.get(position).getOrderId());
+                    intent.putExtra("deadline", orderList.get(position).getDeadline());
                     intent.putExtra("position", position);
                     context.startActivity(intent);
                 }
@@ -189,6 +194,40 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+
+    private void sendSure(final int position) {
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "doreceive")
+                .add("userno", userNo)
+                .add("fileno", orderList.get(position).getOrderId())
+                .build();
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                orderList.get(position).setFlag("派工");
+                ContentValues values = new ContentValues();
+                values.put("flag", "派工");
+                DataSupport.updateAll(BusinessData.class, values,
+                        "orderId = ?", orderList.get(position).getOrderId());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
     }
 
     class ViewHolder {

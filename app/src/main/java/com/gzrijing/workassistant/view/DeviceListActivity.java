@@ -19,7 +19,6 @@ package com.gzrijing.workassistant.view;
 import java.util.Set;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.base.BaseActivity;
 import com.zj.btsdk.BluetoothService;
 
 import android.app.Activity;
@@ -47,7 +46,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * by the user, the MAC address of the device is sent back to the parent
  * Activity in the result Intent.
  */
-public class DeviceListActivity extends BaseActivity {
+public class DeviceListActivity extends Activity {
     // Return Intent extra
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
 

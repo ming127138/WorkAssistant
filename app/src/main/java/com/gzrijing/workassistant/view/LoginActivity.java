@@ -17,8 +17,8 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.User;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
-import com.gzrijing.workassistant.util.HttpUtil;
-import com.gzrijing.workassistant.util.JsonParseUtil;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.MD5Encryptor;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void initData() {
-        DataSupport.deleteAll(BusinessData.class);
+//        DataSupport.deleteAll(BusinessData.class);
         getUserNamePwd();
     }
 
@@ -111,6 +111,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_login_btn:
+//                SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
+//                Editor edit = sp.edit();
+//                edit.putString("userNo", "00004");
+//                edit.commit();
+//                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                intent.putExtra("fragId", "0");
+//                startActivity(intent);
                 login();
                 break;
 
@@ -142,7 +149,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .add("pwd", password)
                 .build();
         final String finalPWD = password;
-        HttpUtil.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
                 Message msg = null;
@@ -150,7 +157,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     msg = handler.obtainMessage(1);
                 } else {
                     pwd = finalPWD;
-                    User user = JsonParseUtil.getUser(response);
+                    User user = JsonParseUtils.getUser(response);
                     msg = handler.obtainMessage(2);
                     msg.obj = user;
                 }

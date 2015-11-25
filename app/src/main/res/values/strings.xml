@@ -13,7 +13,7 @@
     <string name="title_activity_subordinate">下属列表</string>
     <string name="title_activity_subordinate_location">下属实时位置</string>
     <string name="title_activity_supplies_apply_edit">材料查询</string>
-    <string name="title_activity_distribute">工程派发</string>
+    <string name="title_activity_distribute">工程派工</string>
 
 
     <string-array name="business_item">

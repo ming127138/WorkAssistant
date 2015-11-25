@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="workassistant"></dbname>
-    <version value="22"></version>
+    <version value="24"></version>
     <list>
         <mapping class="com.gzrijing.workassistant.db.BusinessData"></mapping>
         <mapping class="com.gzrijing.workassistant.db.MachineData"></mapping>
@@ -9,5 +9,6 @@
         <mapping class="com.gzrijing.workassistant.db.SuppliesData"></mapping>
         <mapping class="com.gzrijing.workassistant.db.SuppliesNoData"></mapping>
         <mapping class="com.gzrijing.workassistant.db.DetailedInfoData"></mapping>
+        <mapping class="com.gzrijing.workassistant.db.ImageData"></mapping>
     </list>
 </litepal>

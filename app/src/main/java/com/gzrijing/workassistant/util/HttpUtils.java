@@ -8,10 +8,19 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
-public class HttpUtil {
-
+public class HttpUtils {
+    /**
+     * get请求路径
+     */
     private static final String URLPath = "http://120.24.62.15:90/main.ashx";
+    /**
+     * post请求路径
+     */
     private static final String postURLPath = "http://120.24.62.15:90/mainpost.ashx";
+    /**
+     * 图片请求路径
+     */
+    public static final String imageURLPath = "http://120.24.62.15:90/Pic/";
 
     private static OkHttpClient mOkHttpClient = new OkHttpClient();
 
@@ -56,51 +65,4 @@ public class HttpUtil {
             }
         }).start();
     }
-
-
-//    public static String httpLogin(String userName, String password) {
-//        String result = null;
-//        RequestBody formBody = new FormEncodingBuilder()
-//                .add("cmd", "login")
-//                .add("userno", userName)
-//                .add("pwd", password)
-//                .build();
-//
-//        Request request = new Request.Builder()
-//                .url(postURLPath)
-//                .post(formBody)
-//                .build();
-//
-//        try {
-//            Response response = mOkHttpClient.newCall(request).execute();
-//            if (response.isSuccessful()) {
-//                result = response.body().string();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return result;
-//    }
-
-//    public static String httpGetLeaderBusiness(String userNo, String time) {
-//        String result = null;
-//        String url = null;
-//        try {
-//            url = URLPath+"?cmd=getconstruction&userno="+userNo+"&begindate="+  URLEncoder.encode(time, "UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            Request request = new Request.Builder().url(url).build();
-//            Response response = mOkHttpClient.newCall(request).execute();
-//            if (response.isSuccessful()) {
-//                result = response.body().string();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
 }

@@ -1,6 +1,5 @@
 package com.gzrijing.workassistant.db;
 
-
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ public class BusinessData extends DataSupport{
     private List<SuppliesData> suppliesDataList = new ArrayList<SuppliesData>();//材料清单
     private List<MachineData> machineDataList = new ArrayList<MachineData>();   //机械清单
     private List<DetailedInfoData> detailedInfoList = new ArrayList<DetailedInfoData>();//工程详细信息
+    private List<ImageData> imageDataList = new ArrayList<ImageData>();     //工程图片
 
     public int getId() {
         return id;
@@ -132,5 +132,13 @@ public class BusinessData extends DataSupport{
 
     public void setDetailedInfoList(List<DetailedInfoData> detailedInfoList) {
         this.detailedInfoList = detailedInfoList;
+    }
+
+    public List<ImageData> getImageDataList() {
+        return imageDataList;
+    }
+
+    public void setImageDataList(List<ImageData> imageDataList) {
+        this.imageDataList = imageDataList;
     }
 }

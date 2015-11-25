@@ -2,6 +2,8 @@ package com.gzrijing.workassistant.util;
 
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.DetailedInfo;
+import com.gzrijing.workassistant.entity.PicUrl;
+import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.entity.User;
 
 import org.json.JSONArray;
@@ -14,7 +16,7 @@ import java.util.List;
 /**
  * 解析和处理服务器返回的数据
  */
-public class JsonParseUtil {
+public class JsonParseUtils {
     /**
      * 登录解析
      *
@@ -61,10 +63,10 @@ public class JsonParseUtil {
                 businessByLeader.setState(state);
                 businessByLeader.setDeadline(deadline);
                 businessByLeader.setUrgent(urgent);
-                if (state.equals("未派发")) {
+                if (state.equals("未派工")) {
                     businessByLeader.setFlag("确认收到");
                 } else {
-                    businessByLeader.setFlag("派发");
+                    businessByLeader.setFlag("派工");
                 }
 
                 List<DetailedInfo> infos = new ArrayList<DetailedInfo>();
@@ -76,6 +78,21 @@ public class JsonParseUtil {
                     DetailedInfo detailedInfo = new DetailedInfo(key, value);
                     infos.add(detailedInfo);
                 }
+                String str = jsonObject.getString("PicUri");
+                if(!str.equals("")){
+                    ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
+                    JSONArray jsonArray2 = jsonObject.getJSONArray("PicUri");
+                    for (int k = 0; k < jsonArray2.length(); k++) {
+                        JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
+                        String url = jsonObject2.getString("PicUri");
+                        int index = url.lastIndexOf("/");
+                        url = url.substring(index+1);
+                        PicUrl picUrl = new PicUrl();
+                        picUrl.setPicUrl(url);
+                        picUrls.add(picUrl);
+                    }
+                    businessByLeader.setPicUrls(picUrls);
+                }
                 businessByLeader.setDetailedInfos(infos);
                 list.add(businessByLeader);
             }
@@ -85,5 +102,26 @@ public class JsonParseUtil {
         return list;
     }
 
+    /**
+     * 获取被派工岗位的人员列表
+     */
+    public static List<Subordinate> getSubordinate(String jsonData){
+        List<Subordinate> subList = new ArrayList<Subordinate>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String userNo = jsonObject.getString("UserNo");
+                String userName = jsonObject.getString("UserName");
+                Subordinate subordinate = new Subordinate();
+                subordinate.setUserNo(userNo);
+                subordinate.setName(userName);
+                subList.add(subordinate);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return subList;
+    }
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 
@@ -12,7 +13,9 @@ import com.gzrijing.workassistant.adapter.DetailedInfoAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
+import com.gzrijing.workassistant.db.ImageData;
 import com.gzrijing.workassistant.entity.DetailedInfo;
+import com.gzrijing.workassistant.entity.PicUrl;
 
 import org.litepal.crud.DataSupport;
 
@@ -21,11 +24,12 @@ import java.util.List;
 
 public class DetailedInfoActivity extends BaseActivity {
 
-    private String userName;
+    private String userNo;
     private String orderId;
     private BusinessData businessData;
     private ListView lv_info;
     private List<DetailedInfo> infos = new ArrayList<DetailedInfo>();
+    private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
     private DetailedInfoAdapter adapter;
 
     @Override
@@ -39,17 +43,29 @@ public class DetailedInfoActivity extends BaseActivity {
 
     private void initData() {
         SharedPreferences app = getSharedPreferences(
-                "saveUserInfo", MODE_PRIVATE);
-        userName = app.getString("userName", "");
+                "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
-        businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
-        List<DetailedInfoData> datas = businessData.getDetailedInfoList();
-        for(DetailedInfoData data : datas){
+        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
+                .find(BusinessData.class, true).get(0);
+        List<DetailedInfoData> detailedDatas = businessData.getDetailedInfoList();
+        for (DetailedInfoData data : detailedDatas) {
             DetailedInfo info = new DetailedInfo();
             info.setKey(data.getKey());
             info.setValue(data.getValue());
+            infos.add(info);
+        }
+        List<ImageData> imageDatas = businessData.getImageDataList();
+        for (ImageData data : imageDatas) {
+            PicUrl picUrl = new PicUrl();
+            picUrl.setPicUrl(data.getUrl());
+            picUrls.add(picUrl);
+        }
+
+        if (picUrls.size() > 0) {
+            DetailedInfo info = new DetailedInfo();
             infos.add(info);
         }
     }
@@ -60,7 +76,7 @@ public class DetailedInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv_info = (ListView) findViewById(R.id.detailed_info_lv);
-        adapter = new DetailedInfoAdapter(this, infos);
+        adapter = new DetailedInfoAdapter(this, infos, picUrls);
         lv_info.setAdapter(adapter);
     }
 

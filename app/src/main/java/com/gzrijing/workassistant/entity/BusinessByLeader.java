@@ -12,11 +12,12 @@ public class BusinessByLeader {
     private boolean urgent;                 //工程是否紧急
     private String flag;
     private List<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();   //详细信息
+    private List<PicUrl> picUrls = new ArrayList<PicUrl>();     //图片URL
 
     public BusinessByLeader() {
     }
 
-    public BusinessByLeader(String orderId, String type, String state, String deadline, boolean urgent, String flag, List<DetailedInfo> detailedInfos) {
+    public BusinessByLeader(String orderId, String type, String state, String deadline, boolean urgent, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls) {
         this.orderId = orderId;
         this.type = type;
         this.state = state;
@@ -24,6 +25,7 @@ public class BusinessByLeader {
         this.urgent = urgent;
         this.flag = flag;
         this.detailedInfos = detailedInfos;
+        this.picUrls = picUrls;
     }
 
     public String getOrderId() {
@@ -80,5 +82,13 @@ public class BusinessByLeader {
 
     public void setDetailedInfos(List<DetailedInfo> detailedInfos) {
         this.detailedInfos = detailedInfos;
+    }
+
+    public List<PicUrl> getPicUrls() {
+        return picUrls;
+    }
+
+    public void setPicUrls(List<PicUrl> picUrls) {
+        this.picUrls = picUrls;
     }
 }
