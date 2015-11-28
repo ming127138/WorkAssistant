@@ -2,6 +2,8 @@ package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +20,14 @@ import com.gzrijing.workassistant.adapter.SuppliesAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesQueryAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,17 +38,32 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
     private EditText et_name;
     private EditText et_spec;
     private EditText et_unit;
-    private EditText et_id;
-    private Button btn_id;
     private EditText et_keyword;
     private Button btn_keyword;
     private ListView lv_supplies;
     private ListView lv_query;
     private List<Supplies> suppliesQueries;
-    private List<Supplies> suppliesList;
+    private ArrayList<Supplies> suppliesList;
     private SuppliesAdapter adapter;
     private SuppliesQueryAdapter queryAdapter;
-    private Toast mToast;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    suppliesQueries.clear();
+                    List<Supplies> SQList = (List<Supplies>) msg.obj;
+                    suppliesQueries.addAll(SQList);
+                    queryAdapter.notifyDataSetChanged();
+                    break;
+
+                case 1:
+                    ToastUtil.showToast(SuppliesApplyEditActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +77,7 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
 
     private void initData() {
         Intent intent = getIntent();
-        suppliesList = (List<Supplies>) intent.getSerializableExtra("suppliesList");
+        suppliesList = intent.getParcelableArrayListExtra("suppliesList");
         suppliesQueries = new ArrayList<Supplies>();
 
     }
@@ -69,10 +92,9 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
         et_name = (EditText) findViewById(R.id.supplies_name_et);
         et_spec = (EditText) findViewById(R.id.supplies_spec_et);
         et_unit = (EditText) findViewById(R.id.supplies_unit_et);
-        et_id = (EditText) findViewById(R.id.supplies_query_id_et);
-        btn_id = (Button) findViewById(R.id.supplies_query_id_btn);
         et_keyword = (EditText) findViewById(R.id.supplies_query_keyword_et);
         btn_keyword = (Button) findViewById(R.id.supplies_query_keyword_btn);
+
         lv_supplies = (ListView) findViewById(R.id.supplies_supplies_lv);
         adapter = new SuppliesAdapter(this, suppliesList);
         lv_supplies.setAdapter(adapter);
@@ -85,7 +107,6 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
     private void setListeners() {
         iv_delAll.setOnClickListener(this);
         btn_add.setOnClickListener(this);
-        btn_id.setOnClickListener(this);
         btn_keyword.setOnClickListener(this);
 
         lv_query.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -97,8 +118,7 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
                 supplies.setName(query.getName());
                 supplies.setSpec(query.getSpec());
                 supplies.setUnit(query.getUnit());
-                supplies.setNum(1);
-                supplies.setState("新添加");
+                supplies.setNum(query.getNum());
                 suppliesList.add(supplies);
                 adapter.notifyDataSetChanged();
             }
@@ -117,40 +137,40 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
                 addCustomSupplies();
                 break;
 
-            case R.id.supplies_query_id_btn:
-                queryId();
-                break;
-
             case R.id.supplies_query_keyword_btn:
                 queryKeyword();
                 break;
         }
     }
 
-    private void queryId() {
-        suppliesQueries.clear();
-        for (int i = 1; i < 5; i++) {
-            Supplies query = new Supplies();
-            query.setId("SQ00" + i);
-            query.setName("材料" + i);
-            query.setSpec("规格" + i);
-            query.setUnit("单位" + i);
-            suppliesQueries.add(query);
-        }
-        queryAdapter.notifyDataSetChanged();
-    }
-
     private void queryKeyword() {
-        suppliesQueries.clear();
-        for (int i = 1; i < 5; i++) {
-            Supplies query = new Supplies();
-            query.setId("SQ00" + i);
-            query.setName("材料" + i);
-            query.setSpec("规格" + i);
-            query.setUnit("单位" + i);
-            suppliesQueries.add(query);
+        String keyWork = et_keyword.getText().toString().trim();
+        if (keyWork.equals("")) {
+            ToastUtil.showToast(this, "请填上关键字", Toast.LENGTH_SHORT);
+            return;
         }
-        queryAdapter.notifyDataSetChanged();
+        String url = null;
+        try {
+            url = "?cmd=getmaking&makingno=&makingname=" + URLEncoder.encode(keyWork, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                List<Supplies> SQList = JsonParseUtils.getSuppliesQueries(response);
+
+                Message msg = handler.obtainMessage(0);
+                msg.obj = SQList;
+                handler.sendMessage(msg);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Message msg = handler.obtainMessage(1);
+                handler.sendMessage(msg);
+            }
+        });
     }
 
     private void addCustomSupplies() {
@@ -158,33 +178,15 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
         String spec = et_spec.getText().toString().trim();
         String unit = et_unit.getText().toString().trim();
         if (name.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请填写名称", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请填写名称");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(this, "请填写名称", Toast.LENGTH_SHORT);
             return;
         }
         if (spec.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请填写规格", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请填写规格");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(this, "请填写规格", Toast.LENGTH_SHORT);
             return;
         }
         if (unit.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请填写单位", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请填写单位");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(this, "请填写单位", Toast.LENGTH_SHORT);
             return;
         }
         Supplies supplies = new Supplies();
@@ -192,7 +194,6 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
         supplies.setSpec(spec);
         supplies.setUnit(unit);
         supplies.setNum(1);
-        supplies.setState("新添加");
         suppliesList.add(supplies);
         adapter.notifyDataSetChanged();
         et_name.setText("");
@@ -217,7 +218,7 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
 
         if (id == R.id.action_save) {
             Intent intent = getIntent();
-            intent.putExtra("suppliesList", (Serializable) suppliesList);
+            intent.putParcelableArrayListExtra("suppliesList", suppliesList);
             setResult(10, intent);
             finish();
             return true;

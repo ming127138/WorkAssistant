@@ -29,7 +29,10 @@ import com.gzrijing.workassistant.db.SuppliesData;
 import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
+import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.MyListView;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
@@ -46,7 +49,7 @@ import java.util.List;
 
 public class SuppliesApplyActivity extends BaseActivity implements View.OnClickListener {
 
-    private String userName;
+    private String userNo;
     private String orderId;
     private Button btn_edit;
     private Button btn_apply;
@@ -59,7 +62,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
     private MyListView lv_approval;
     private MyListView lv_received;
     private MyListView lv_return;
-    private List<Supplies> createdList = new ArrayList<Supplies>();
+    private ArrayList<Supplies> createdList = new ArrayList<Supplies>();
     private List<SuppliesNo> applyingList = new ArrayList<SuppliesNo>();
     private List<Supplies> approvalList = new ArrayList<Supplies>();
     private List<Supplies> receivedList = new ArrayList<Supplies>();
@@ -71,7 +74,6 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
     private SuppliesApplyReturnAdapter returnAdapter;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +87,12 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
 
     private void initData() {
         SharedPreferences app = getSharedPreferences(
-                "saveUserInfo", MODE_PRIVATE);
-        userName = app.getString("userName", "");
+                "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         List<SuppliesNoData> suppliesNoData = businessData.getSuppliesNoList();
         for (SuppliesNoData data : suppliesNoData) {
             SuppliesNo suppliesNo = new SuppliesNo();
@@ -179,7 +181,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                     Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesApplyingActivity.class);
                     intent.putExtra("suppliesNo", (Parcelable) applyingList.get(position));
                     intent.putExtra("position", position);
-                    intent.putExtra("userName", userName);
+                    intent.putExtra("userNo", userNo);
                     intent.putExtra("orderId", orderId);
                     startActivityForResult(intent, 20);
                 }
@@ -239,7 +241,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.supplies_apply_edit_btn:
                 Intent intent1 = new Intent(this, SuppliesApplyEditActivity.class);
-                intent1.putExtra("suppliesList", (Serializable) createdList);
+                intent1.putParcelableArrayListExtra("suppliesList", createdList);
                 startActivityForResult(intent1, 10);
                 break;
 
@@ -267,21 +269,30 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
     private void apply() {
         String useTime = tv_useTime.getText().toString();
         if (useTime.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请选择领用时间", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请选择领用时间");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(this, "请选择领用时间", Toast.LENGTH_SHORT);
             return;
         }
         String remarks = et_remarks.getText().toString().trim();
+
+//        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+//            @Override
+//            public void onFinish(String response) {
+//
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//
+//            }
+//        });
+
+
+
         String applyId = "申请单00X";
         Calendar rightNow = Calendar.getInstance();
         String applyTime = dateFormat.format(rightNow.getTime());
 
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         for (int i = 0; i < createdList.size(); i++) {
             SuppliesData data = new SuppliesData();
             data.setNo(createdList.get(i).getId());
@@ -335,7 +346,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         }
 
         receivedList.clear();
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         List<SuppliesData> suppliesDatas = businessData.getSuppliesDataList();
         for (SuppliesData data : suppliesDatas) {
             if (data.getState().equals("已领用")) {
@@ -402,14 +413,14 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == 10) {
-                List<Supplies> suppliess = (List<Supplies>) data.getSerializableExtra("suppliesList");
-                if (suppliess.size() > 0) {
+                List<Supplies> supplies = data.getParcelableArrayListExtra("suppliesList");
+                if (supplies.size() > 0) {
                     btn_apply.setVisibility(View.VISIBLE);
                 } else {
                     btn_apply.setVisibility(View.GONE);
                 }
                 createdList.clear();
-                createdList.addAll(suppliess);
+                createdList.addAll(supplies);
                 createdAdapter.notifyDataSetChanged();
             }
         }

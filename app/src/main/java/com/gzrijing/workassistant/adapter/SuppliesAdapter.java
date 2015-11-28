@@ -1,12 +1,16 @@
 package com.gzrijing.workassistant.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.DataSetObserver;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,12 +23,14 @@ import java.util.List;
 
 public class SuppliesAdapter extends BaseAdapter {
 
+    private Context context;
     private LayoutInflater listContainer;
     private List<Supplies> suppliesList;
 
     public SuppliesAdapter(Context context, List<Supplies> suppliesList) {
         listContainer = LayoutInflater.from(context);
         this.suppliesList = suppliesList;
+        this.context = context;
     }
 
     @Override
@@ -54,8 +60,6 @@ public class SuppliesAdapter extends BaseAdapter {
             v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_spec_tv);
             v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_unit_tv);
             v.num = (TextView) convertView.findViewById(R.id.listview_item_supplies_supplies_num_tv);
-            v.up = (ImageView) convertView.findViewById(R.id.listview_item_supplies_supplies_num_up_iv);
-            v.down = (ImageView) convertView.findViewById(R.id.listview_item_supplies_supplies_num_down_iv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -66,6 +70,34 @@ public class SuppliesAdapter extends BaseAdapter {
         v.unit.setText(suppliesList.get(position).getUnit());
         v.num.setText(suppliesList.get(position).getNum() + "");
 
+        v.num.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText et = new EditText(context);
+                et.setTextColor(context.getResources().getColor(R.color.black));
+                et.setInputType(InputType.TYPE_CLASS_NUMBER);
+               final AlertDialog dialog = new AlertDialog.Builder(context)
+                        .setTitle("请输入数量")
+                        .setView(et)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                suppliesList.get(position).setNum(Integer.valueOf(et.getText().toString().trim()));
+                                notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("取消", null).show();
+                et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus) {
+                            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        }
+                    }
+                });
+            }
+        });
+
         v.del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,37 +105,7 @@ public class SuppliesAdapter extends BaseAdapter {
             }
         });
 
-        v.up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                up(position);
-            }
-        });
-
-        v.down.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                down(position);
-            }
-        });
-
         return convertView;
-    }
-
-    private void down(int position) {
-        int num = suppliesList.get(position).getNum();
-        if (num > 1) {
-            num--;
-            suppliesList.get(position).setNum(num);
-            notifyDataSetChanged();
-        }
-    }
-
-    private void up(int position) {
-        int num = suppliesList.get(position).getNum();
-        num++;
-        suppliesList.get(position).setNum(num);
-        notifyDataSetChanged();
     }
 
     private void delete(int position) {
@@ -124,7 +126,5 @@ public class SuppliesAdapter extends BaseAdapter {
         private TextView spec;
         private TextView unit;
         private TextView num;
-        private ImageView up;
-        private ImageView down;
     }
 }

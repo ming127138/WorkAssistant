@@ -185,43 +185,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/sw_40dp"
-                android:layout_marginTop="1dp"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="　编号："
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sw_15dp" />
-
-                <EditText
-                    android:id="@+id/machine_apply_edit_query_id_et"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/edit_frame_gray_blue"
-                    android:textColor="@color/black"
-                    android:textCursorDrawable="@drawable/edit_cursor_blue"
-                    android:textSize="@dimen/sw_15dp" />
-
-                <Button
-                    android:id="@+id/machine_apply_edit_query_id_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/sw_30dp"
-                    android:layout_marginLeft="@dimen/sw_5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_blue"
-                    android:text="查询"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sw_15dp" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -270,16 +233,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="编码"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sw_12dp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="3"
                     android:gravity="center"
                     android:text="名称"
                     android:textColor="@color/black"
@@ -288,7 +242,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="3"
                     android:gravity="center"
                     android:text="规格"
                     android:textColor="@color/black"
@@ -297,7 +251,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="center"
                     android:text="单位"
                     android:textColor="@color/black"

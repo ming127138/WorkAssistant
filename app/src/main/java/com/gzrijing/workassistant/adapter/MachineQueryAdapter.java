@@ -44,7 +44,6 @@ public class MachineQueryAdapter extends BaseAdapter {
             v = new ViewHolder();
             convertView = listContainer.inflate(
                     R.layout.listview_item_machine_query, parent, false);
-            v.id = (TextView) convertView.findViewById(R.id.listview_item_machine_query_id_tv);
             v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_query_name_tv);
             v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_query_spec_tv);
             v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_query_unit_tv);
@@ -53,7 +52,6 @@ public class MachineQueryAdapter extends BaseAdapter {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.id.setText(machineQueries.get(position).getId());
         v.name.setText(machineQueries.get(position).getName());
         v.spec.setText(machineQueries.get(position).getSpec());
         v.unit.setText(machineQueries.get(position).getUnit());
@@ -62,7 +60,6 @@ public class MachineQueryAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        private TextView id;
         private TextView name;
         private TextView spec;
         private TextView unit;

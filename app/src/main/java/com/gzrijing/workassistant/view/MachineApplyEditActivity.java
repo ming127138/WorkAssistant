@@ -2,6 +2,8 @@ package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +20,15 @@ import com.gzrijing.workassistant.adapter.MachineApplyAdapter;
 import com.gzrijing.workassistant.adapter.MachineQueryAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Machine;
+import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,17 +39,32 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
     private EditText et_name;
     private EditText et_spec;
     private EditText et_unit;
-    private EditText et_id;
-    private Button btn_id;
     private EditText et_keyword;
     private Button btn_keyword;
     private ListView lv_apply;
     private ListView lv_query;
-    private List<Machine> machineList;
+    private ArrayList<Machine> machineList;
     private List<Machine> machineQueries;
     private MachineApplyAdapter applyAdapter;
     private MachineQueryAdapter queryAdapter;
-    private Toast mToast;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    machineQueries.clear();
+                    List<Machine> MQList = (List<Machine>) msg.obj;
+                    machineQueries.addAll(MQList);
+                    queryAdapter.notifyDataSetChanged();
+                    break;
+
+                case 1:
+                    ToastUtil.showToast(MachineApplyEditActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +78,7 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
 
     private void initData() {
         Intent intent = getIntent();
-        machineList = (List<Machine>) intent.getSerializableExtra("machineList");
+        machineList = intent.getParcelableArrayListExtra("machineList");
         machineQueries = new ArrayList<Machine>();
 
     }
@@ -69,10 +93,9 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
         et_name = (EditText) findViewById(R.id.machine_apply_edit_name_et);
         et_spec = (EditText) findViewById(R.id.machine_apply_edit_spec_et);
         et_unit = (EditText) findViewById(R.id.machine_apply_edit_unit_et);
-        et_id = (EditText) findViewById(R.id.machine_apply_edit_query_id_et);
-        btn_id = (Button) findViewById(R.id.machine_apply_edit_query_id_btn);
         et_keyword = (EditText) findViewById(R.id.machine_apply_edit_query_keyword_et);
         btn_keyword = (Button) findViewById(R.id.machine_apply_edit_query_keyword_btn);
+
         lv_apply = (ListView) findViewById(R.id.machine_apply_edit_apply_lv);
         applyAdapter = new MachineApplyAdapter(this, machineList);
         lv_apply.setAdapter(applyAdapter);
@@ -85,7 +108,6 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
     private void setListeners() {
         iv_delAll.setOnClickListener(this);
         btn_add.setOnClickListener(this);
-        btn_id.setOnClickListener(this);
         btn_keyword.setOnClickListener(this);
 
         lv_query.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -117,10 +139,6 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
                 addCustomMachine();
                 break;
 
-            case R.id.machine_apply_edit_query_id_btn:
-                queryId();
-                break;
-
             case R.id.machine_apply_edit_query_keyword_btn:
                 queryKeyword();
                 break;
@@ -132,33 +150,15 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
         String spec = et_spec.getText().toString().trim();
         String unit = et_unit.getText().toString().trim();
         if (name.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请填写名称", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请填写名称");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(this, "请填写名称", Toast.LENGTH_SHORT);
             return;
         }
         if (spec.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请填写规格", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请填写规格");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(this, "请填写规格", Toast.LENGTH_SHORT);
             return;
         }
         if (unit.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请填写单位", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请填写单位");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(this, "请填写单位", Toast.LENGTH_SHORT);
             return;
         }
         Machine machine = new Machine();
@@ -174,20 +174,36 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
         et_unit.setText("");
     }
 
-    private void queryId() {
-        machineQueries.clear();
-        for (int i = 1; i < 5; i++) {
-            Machine query = new Machine();
-            query.setId("SQ00" + i);
-            query.setName("机械" + i);
-            query.setSpec("规格" + i);
-            query.setUnit("单位" + i);
-            machineQueries.add(query);
-        }
-        queryAdapter.notifyDataSetChanged();
-    }
-
     private void queryKeyword() {
+        String keyWork = et_keyword.getText().toString().trim();
+        if (keyWork.equals("")) {
+            ToastUtil.showToast(this, "请填上关键字", Toast.LENGTH_SHORT);
+            return;
+        }
+//        String url = null;
+//        try {
+//            url = "?cmd=getmaking&makingno=&makingname=" + URLEncoder.encode(keyWork, "UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+//            @Override
+//            public void onFinish(String response) {
+//                List<Supplies> SQList = JsonParseUtils.getSuppliesQueries(response);
+//
+//                Message msg = handler.obtainMessage(0);
+//                msg.obj = SQList;
+//                handler.sendMessage(msg);
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//                Message msg = handler.obtainMessage(1);
+//                handler.sendMessage(msg);
+//            }
+//        });
+
+
         machineQueries.clear();
         for (int i = 1; i < 5; i++) {
             Machine query = new Machine();
@@ -217,7 +233,7 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
 
         if (id == R.id.action_save) {
             Intent intent = getIntent();
-            intent.putExtra("machineList", (Serializable) machineList);
+            intent.putParcelableArrayListExtra("machineList", machineList);
             setResult(10, intent);
             finish();
             return true;

@@ -47,7 +47,7 @@ import java.util.List;
 
 public class MachineApplyActivity extends BaseActivity implements View.OnClickListener {
 
-    private String userName;
+    private String userNo;
     private String orderId;
     private Button btn_applyEdit;
     private TextView tv_useTime;
@@ -66,7 +66,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
     private MyListView lv_approval;
     private MyListView lv_returnCreated;
     private MyListView lv_returnApplying;
-    private List<Machine> createdList = new ArrayList<Machine>();
+    private ArrayList<Machine> createdList = new ArrayList<Machine>();
     private List<MachineNo> applyingList = new ArrayList<MachineNo>();
     private List<Machine> receivedList = new ArrayList<Machine>();
     private List<Machine> approvalList = new ArrayList<Machine>();
@@ -94,12 +94,12 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
 
     private void initData() {
         SharedPreferences app = getSharedPreferences(
-                "saveUserInfo", MODE_PRIVATE);
-        userName = app.getString("userName", "");
+                "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         List<MachineNoData> machineNoData = businessData.getMachineNoList();
         for (MachineNoData data : machineNoData) {
             MachineNo machineNo = new MachineNo();
@@ -215,7 +215,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                     Intent intent = new Intent(MachineApplyActivity.this, MachineApplyingActivity.class);
                     intent.putExtra("machineNo", (Parcelable) applyingList.get(position));
                     intent.putExtra("position", position);
-                    intent.putExtra("userName", userName);
+                    intent.putExtra("userNo", userNo);
                     intent.putExtra("orderId", orderId);
                     startActivityForResult(intent, 20);
                 }
@@ -296,7 +296,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.machine_apply_apply_edit_btn:
                 Intent intent1 = new Intent(this, MachineApplyEditActivity.class);
-                intent1.putExtra("machineList", (Serializable) createdList);
+                intent1.putParcelableArrayListExtra("machineList", createdList);
                 startActivityForResult(intent1, 10);
                 break;
 
@@ -368,7 +368,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         Calendar rightNow = Calendar.getInstance();
         String applyTime = dateFormat.format(rightNow.getTime());
 
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         for (int i = 0; i < createdList.size(); i++) {
             MachineData data = new MachineData();
             data.setNo(createdList.get(i).getId());
@@ -459,7 +459,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                 data.setReturnType(reList.getReturnType());
                 data.setState("退回申请中");
                 data.save();
-                BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+                BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
                 businessData.getMachineDataList().add(data);
                 businessData.save();
             }
@@ -469,7 +469,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         receivedList.clear();
         returnCreatedList.clear();
         returnApplyingList.clear();
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         List<MachineData> machineDatas = businessData.getMachineDataList();
         for (MachineData data : machineDatas) {
             if (data.getState().equals("已领用")) {
@@ -554,7 +554,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == 10) {
-                List<Machine> machines = (List<Machine>) data.getSerializableExtra("machineList");
+                ArrayList<Machine> machines = data.getParcelableArrayListExtra("machineList");
                 if (machines.size() > 0) {
                     btn_apply.setVisibility(View.VISIBLE);
                 } else {

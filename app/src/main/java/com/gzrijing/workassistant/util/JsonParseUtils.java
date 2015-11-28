@@ -1,9 +1,11 @@
 package com.gzrijing.workassistant.util;
 
 import com.gzrijing.workassistant.entity.BusinessByLeader;
+import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Subordinate;
+import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.User;
 
 import org.json.JSONArray;
@@ -124,4 +126,98 @@ public class JsonParseUtils {
         return subList;
     }
 
+    /**
+     * Worker获取工程解析
+     *
+     * @param jsonData
+     * @return List<BusinessByWorker>
+     */
+    public static List<BusinessByWorker> getWorkerBusiness(String jsonData) {
+        List<BusinessByWorker> list = new ArrayList<BusinessByWorker>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String orderId = jsonObject.getString("FileNo");
+                String type = jsonObject.getString("ConsTypeName");
+                String state = jsonObject.getString("Accident");
+                if(state.equals("")){
+                    state = "正常";
+                }
+                String deadline = jsonObject.getString("EstimateFinishDate").replace("/", "-");
+                boolean urgent = jsonObject.getBoolean("IsUrgent");
+
+                BusinessByWorker businessByWorker = new BusinessByWorker();
+                businessByWorker.setOrderId(orderId);
+                businessByWorker.setType(type);
+                businessByWorker.setState(state);
+                businessByWorker.setDeadline(deadline);
+                businessByWorker.setUrgent(urgent);
+                if (state.equals("正常")) {
+                    businessByWorker.setFlag("确认收到");
+                } else {
+                    businessByWorker.setFlag(state);
+                }
+
+                List<DetailedInfo> infos = new ArrayList<DetailedInfo>();
+                JSONArray jsonArray1 = jsonObject.getJSONArray("Detail");
+                for (int j = 0; j < jsonArray1.length(); j++) {
+                    JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                    String key = jsonObject1.getString("key");
+                    String value = jsonObject1.getString("value");
+                    DetailedInfo detailedInfo = new DetailedInfo(key, value);
+                    infos.add(detailedInfo);
+                }
+                String str = jsonObject.getString("PicUri");
+                if(!str.equals("")){
+                    ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
+                    JSONArray jsonArray2 = jsonObject.getJSONArray("PicUri");
+                    for (int k = 0; k < jsonArray2.length(); k++) {
+                        JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
+                        String url = jsonObject2.getString("PicUri");
+                        int index = url.lastIndexOf("/");
+                        url = url.substring(index+1);
+                        PicUrl picUrl = new PicUrl();
+                        picUrl.setPicUrl(url);
+                        picUrls.add(picUrl);
+                    }
+                    businessByWorker.setPicUrls(picUrls);
+                }
+                businessByWorker.setDetailedInfos(infos);
+                list.add(businessByWorker);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取关键字查询材料列表
+     * @param jsonDate
+     * @return List<Supplies>
+     */
+    public static List<Supplies> getSuppliesQueries(String jsonDate){
+        List<Supplies> suppliesList = new ArrayList<Supplies>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonDate);
+            for(int i=0; i<jsonArray.length();i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.getString("MakingNo");
+                String name = jsonObject.getString("MakingName");
+                String spec = jsonObject.getString("MakingSpace");
+                String unit = jsonObject.getString("MakingUnit");
+                Supplies supplies = new Supplies();
+                supplies.setId(id);
+                supplies.setName(name);
+                supplies.setSpec(spec);
+                supplies.setUnit(unit);
+                supplies.setNum(1);
+                suppliesList.add(supplies);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return suppliesList;
+    }
 }

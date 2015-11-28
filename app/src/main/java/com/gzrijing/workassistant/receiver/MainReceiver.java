@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.service.GetLeaderBusinessService;
+import com.gzrijing.workassistant.service.GetWorkerBusinessService;
 import com.igexin.sdk.PushConsts;
 
 public class MainReceiver extends BroadcastReceiver {
@@ -28,9 +29,17 @@ public class MainReceiver extends BroadcastReceiver {
                     if (data.equals("0")) {
                         GetLeaderBusiness();
                     }
+                    if(data.equals("1")){
+                        GetWorkerBusiness();
+                    }
                 }
                 break;
         }
+    }
+
+    private void GetWorkerBusiness() {
+        Intent intent = new Intent(MyApplication.getContext(), GetWorkerBusinessService.class);
+        MyApplication.getContext().startService(intent);
     }
 
     private void GetLeaderBusiness() {

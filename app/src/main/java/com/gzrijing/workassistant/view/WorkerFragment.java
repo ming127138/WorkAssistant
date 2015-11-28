@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessWorkerAdapter;
+import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 
@@ -22,16 +23,17 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkerFragment extends Fragment {
+public class WorkerFragment extends Fragment implements AdapterView.OnItemSelectedListener{
 
 
     private View layoutView;
     private Spinner sp_business;
     private Spinner sp_state;
-    private String userName;
-    private List<BusinessByWorker> orderList;
+    private String userNo;
     private ListView lv_order;
-    private BusinessWorkerAdapter adapter;
+    public static List<BusinessByWorker> orderList = new ArrayList<BusinessByWorker>();
+    public static BusinessWorkerAdapter adapter;
+    public static List<BusinessByWorker> orderListByWorker = new ArrayList<BusinessByWorker>();
 
     public WorkerFragment() {
     }
@@ -54,10 +56,11 @@ public class WorkerFragment extends Fragment {
 
     private void initData() {
         SharedPreferences app = getActivity().getSharedPreferences(
-                "saveUserInfo", getActivity().MODE_PRIVATE);
-        userName = app.getString("userName", "");
-        orderList = new ArrayList<BusinessByWorker>();
-        List<BusinessData> list = DataSupport.where("user = ?", userName).find(BusinessData.class);
+                "saveUser", getActivity().MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
+
+        orderListByWorker.clear();
+        List<BusinessData> list = DataSupport.where("user = ?", userNo).find(BusinessData.class);
         for (BusinessData data : list) {
             BusinessByWorker order = new BusinessByWorker();
             order.setOrderId(data.getOrderId());
@@ -66,8 +69,9 @@ public class WorkerFragment extends Fragment {
             order.setState(data.getState());
             order.setDeadline(data.getDeadline());
             order.setFlag(data.getFlag());
-            orderList.add(order);
+            orderListByWorker.add(order);
         }
+
     }
 
     private void initViews() {
@@ -91,62 +95,48 @@ public class WorkerFragment extends Fragment {
     }
 
     private void setListeners() {
-        sp_business.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                select(view);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        sp_state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                select(view);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        sp_business.setOnItemSelectedListener(this);
+        sp_state.setOnItemSelectedListener(this);
     }
 
     private void select(View view){
         TextView tv = (TextView) view;
-        tv.setTextColor(getResources().getColor(R.color.black));
+        tv.setTextColor(MyApplication.getContext().getResources().getColor(R.color.black));
         String type = sp_business.getSelectedItem().toString();
         String state = sp_state.getSelectedItem().toString();
-        List<BusinessData> list = null;
-        if (type.equals("全部") && state.equals("全部")) {
-            list = DataSupport.where("user = ?", userName).find(BusinessData.class);
-        } else if (type.equals("全部") && !state.equals("全部")) {
-            list = DataSupport.where("user = ? and state = ?", userName, state)
-                    .find(BusinessData.class);
-        } else if (!type.equals("全部") && state.equals("全部")) {
-            list = DataSupport.where("user = ? and type = ?", userName, type)
-                    .find(BusinessData.class);
-        } else {
-            list = DataSupport.where("user = ? and type = ? and state = ?", userName, type, state)
-                    .find(BusinessData.class);
-        }
+
         orderList.clear();
-        for (BusinessData data : list) {
-            BusinessByWorker order = new BusinessByWorker();
-            order.setOrderId(data.getOrderId());
-            order.setUrgent(data.isUrgent());
-            order.setType(data.getType());
-            order.setState(data.getState());
-            order.setDeadline(data.getDeadline());
-            order.setFlag(data.getFlag());
-            orderList.add(order);
+        if (type.equals("全部") && state.equals("全部")) {
+            orderList.addAll(orderListByWorker);
+        } else if (type.equals("全部") && !state.equals("全部")) {
+            for(BusinessByWorker order : orderListByWorker){
+                if(order.getState().equals(state)){
+                    orderList.add(order);
+                }
+            }
+        } else if (!type.equals("全部") && state.equals("全部")) {
+            for(BusinessByWorker order : orderListByWorker){
+                if(order.getType().equals(type)){
+                    orderList.add(order);
+                }
+            }
+        } else {
+            for(BusinessByWorker order : orderListByWorker){
+                if(order.getType().equals(type) && order.getState().equals(state)){
+                    orderList.add(order);
+                }
+            }
         }
         adapter.notifyDataSetChanged();
-        list = null;
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        select(view);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

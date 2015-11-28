@@ -1,8 +1,9 @@
 package com.gzrijing.workassistant.entity;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Machine implements Serializable{
+public class Machine implements Parcelable {
     private int dataId;         //数据库id
     private String id;          //机械编号
     private String name;        //机械名称
@@ -99,4 +100,44 @@ public class Machine implements Serializable{
     public void setReturnType(String returnType) {
         this.returnType = returnType;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.dataId);
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.spec);
+        dest.writeString(this.unit);
+        dest.writeInt(this.num);
+        dest.writeString(this.state);
+        dest.writeByte(isCheck ? (byte) 1 : (byte) 0);
+        dest.writeString(this.returnType);
+    }
+
+    protected Machine(Parcel in) {
+        this.dataId = in.readInt();
+        this.id = in.readString();
+        this.name = in.readString();
+        this.spec = in.readString();
+        this.unit = in.readString();
+        this.num = in.readInt();
+        this.state = in.readString();
+        this.isCheck = in.readByte() != 0;
+        this.returnType = in.readString();
+    }
+
+    public static final Parcelable.Creator<Machine> CREATOR = new Parcelable.Creator<Machine>() {
+        public Machine createFromParcel(Parcel source) {
+            return new Machine(source);
+        }
+
+        public Machine[] newArray(int size) {
+            return new Machine[size];
+        }
+    };
 }

@@ -44,7 +44,6 @@ public class SuppliesQueryAdapter extends BaseAdapter {
             v = new ViewHolder();
             convertView = listContainer.inflate(
                     R.layout.listview_item_supplies_query, parent, false);
-            v.id = (TextView) convertView.findViewById(R.id.listview_item_supplies_query_id_tv);
             v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_query_name_tv);
             v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_query_spec_tv);
             v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_query_unit_tv);
@@ -53,7 +52,6 @@ public class SuppliesQueryAdapter extends BaseAdapter {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.id.setText(suppliesQueries.get(position).getId());
         v.name.setText(suppliesQueries.get(position).getName());
         v.spec.setText(suppliesQueries.get(position).getSpec());
         v.unit.setText(suppliesQueries.get(position).getUnit());
@@ -62,7 +60,6 @@ public class SuppliesQueryAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        private TextView id;
         private TextView name;
         private TextView spec;
         private TextView unit;

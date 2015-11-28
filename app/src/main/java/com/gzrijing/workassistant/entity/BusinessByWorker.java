@@ -1,26 +1,31 @@
 package com.gzrijing.workassistant.entity;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BusinessByWorker {
     private String orderId;                 //工程编码
     private String type;                    //工程类型
     private String state;                   //工程状态
     private String deadline;                //工程期限
     private boolean urgent;                 //工程是否紧急
-    private boolean temInfo;                //是否有临时信息
     private String flag;
+    private List<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();   //详细信息
+    private List<PicUrl> picUrls = new ArrayList<PicUrl>();     //图片URL
 
     public BusinessByWorker() {
     }
 
-    public BusinessByWorker(String orderId, String type, String state, String deadline, boolean urgent, boolean temInfo, String flag) {
+    public BusinessByWorker(String orderId, String type, String state, String deadline, boolean urgent, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls) {
         this.orderId = orderId;
         this.type = type;
         this.state = state;
         this.deadline = deadline;
         this.urgent = urgent;
-        this.temInfo = temInfo;
         this.flag = flag;
+        this.detailedInfos = detailedInfos;
+        this.picUrls = picUrls;
     }
 
     public String getOrderId() {
@@ -63,19 +68,27 @@ public class BusinessByWorker {
         this.urgent = urgent;
     }
 
-    public boolean isTemInfo() {
-        return temInfo;
-    }
-
-    public void setTemInfo(boolean temInfo) {
-        this.temInfo = temInfo;
-    }
-
     public String getFlag() {
         return flag;
     }
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public List<DetailedInfo> getDetailedInfos() {
+        return detailedInfos;
+    }
+
+    public void setDetailedInfos(List<DetailedInfo> detailedInfos) {
+        this.detailedInfos = detailedInfos;
+    }
+
+    public List<PicUrl> getPicUrls() {
+        return picUrls;
+    }
+
+    public void setPicUrls(List<PicUrl> picUrls) {
+        this.picUrls = picUrls;
     }
 }
