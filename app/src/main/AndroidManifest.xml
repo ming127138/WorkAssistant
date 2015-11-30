@@ -203,6 +203,15 @@
         <!-- app service -->
         <service android:name=".service.GetLeaderBusinessService" />
         <service android:name=".service.GetWorkerBusinessService" />
+        <service
+            android:name=".service.ReportProgressService"
+            android:exported="false"></service>
+        <service
+            android:name=".service.ReportProblemService"
+            android:exported="false"></service>
+        <service
+            android:name=".service.ReportCompleteService"
+            android:exported="false"></service>
 
         <!-- app service -->
 
@@ -314,9 +323,6 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
-        <service
-            android:name=".service.ReportProgressService"
-            android:exported="false"></service>
     </application>
 
 </manifest>

@@ -33,10 +33,11 @@ public class ReportProgressService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        ArrayList<PicUrl> picUrls = intent.getParcelableArrayListExtra("picUrls");
-        String userNo = intent.getStringExtra("userNo");
+        final ArrayList<PicUrl> picUrls = intent.getParcelableArrayListExtra("picUrls");
+        picUrls.remove(0);
+        final String userNo = intent.getStringExtra("userNo");
         String orderId = intent.getStringExtra("orderId");
-        String content = intent.getStringExtra("content");
+        final String content = intent.getStringExtra("content");
 
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "doconsreport")
@@ -57,8 +58,57 @@ public class ReportProgressService extends IntentService {
                         }
                     });
                 }else{
+                    Log.e("id", response);
                     id = response;
-                }
+
+                    String[] key = {"cmd", "userno", "relationid", "picdescription"};
+                    String[] value = {"uploadconstaskpic", userNo, id, content};
+
+                    MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+                    for (int i = 0; i < key.length; i++) {
+                        Log.e("key", key[i]);
+                        Log.e("value", value[i]);
+                        builder.addFormDataPart(key[i], value[i]);
+                    }
+
+                    for(PicUrl picUrl : picUrls){
+                        File file = new File(picUrl.getPicUrl());
+                        if(file != null){
+                            String fileName = file.getName();
+                            Log.e("fileName", fileName);
+                            RequestBody fileBody = RequestBody.create(MediaType.parse(guessMimeType(fileName)), file);
+                            builder.addFormDataPart("constaskpic", fileName, fileBody);
+                        }
+                    }
+
+                    HttpUtils.sendHttpPostRequest(builder.build(), new HttpCallbackListener() {
+                        @Override
+                        public void onFinish(String response) {
+                            Log.e("res", response);
+                            if(response.equals("Error")){
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.showToast(ReportProgressService.this, "上传图片失败", Toast.LENGTH_SHORT);
+                                        Log.e("no", "no");
+                                    }
+                                });
+                            }else {
+                                Log.e("yes", "yes");
+                            }
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.showToast(ReportProgressService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                                }
+                            });
+                        }
+                    });
+               }
             }
 
             @Override
@@ -68,48 +118,6 @@ public class ReportProgressService extends IntentService {
                     public void run() {
                         ToastUtil.showToast(ReportProgressService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                         stopSelf();
-                    }
-                });
-            }
-        });
-
-        String[] key = {"cmd", "userno", "relationid", "picdescription"};
-        String[] value = {"uploadconstaskpic", userNo, id, ""};
-
-        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
-        for (int i = 0; i < key.length; i++) {
-            builder.addFormDataPart(key[i], value[i]);
-        }
-
-        for(PicUrl picUrl : picUrls){
-            File file = new File(picUrl.getPicUrl());
-            if(file != null){
-                String fileName = file.getName();
-                Log.e("fileName", fileName);
-                RequestBody fileBody = RequestBody.create(MediaType.parse(guessMimeType(fileName)), file);
-                builder.addFormDataPart("constaskpic", fileName, fileBody);
-            }
-        }
-
-        HttpUtils.sendHttpPostRequest(builder.build(), new HttpCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                if(response.equals("Error")){
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ToastUtil.showToast(ReportProgressService.this, "上传图片失败", Toast.LENGTH_SHORT);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtil.showToast(ReportProgressService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }

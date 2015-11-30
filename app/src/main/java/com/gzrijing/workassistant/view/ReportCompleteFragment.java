@@ -5,9 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportCompleteAdapter;
@@ -31,7 +28,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class ReportCompleteFragment extends Fragment implements View.OnClickListener {
 
@@ -71,7 +67,8 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     private void initData() {
         orderId = getArguments().getString("orderId");
 
-        String[] key = {"表身编号", "水表产地", "排水口径", "施工内容", "土建项目", "　　备注", "排水时间", "施工日期", "完工日期", "验收日期", "水表有效日期", "", ""};
+        String[] key = getResources().getStringArray(R.array.reportComplete_form1);
+//        String[] key = {"表身编号", "水表产地", "排水口径", "施工内容", "土建项目", "　　备注", "排水时间", "施工日期", "完工日期", "验收日期", "水表有效日期", "", ""};
         for (int i = 0; i < key.length; i++) {
             ReportComplete info = new ReportComplete();
             info.setKey(key[i]);
@@ -87,7 +84,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
         btn_print = (Button) layoutView.findViewById(R.id.fragment_report_complete_print_btn);
 
         lv_info = (ListView) layoutView.findViewById(R.id.report_complete_info_lv);
-        adapter = new ReportCompleteAdapter(getActivity(), infos, btn_print);
+        adapter = new ReportCompleteAdapter(getActivity(), infos, btn_print, orderId);
         lv_info.setAdapter(adapter);
     }
 

@@ -45,6 +45,21 @@
         <item>完成</item>
     </string-array>
 
+    <string-array name="reportComplete_form1">
+        <item>表身编号</item>
+        <item>水表产地</item>
+        <item>排水口径</item>
+        <item>施工内容</item>
+        <item>土建项目</item>
+        <item>　　备注</item>
+        <item>排水时间</item>
+        <item>施工日期</item>
+        <item>完工日期</item>
+        <item>验收日期</item>
+        <item>材料列表</item>
+        <item>汇报按钮</item>
+    </string-array>
+
     <string name="title_activity_progress">工程进度</string>
     <string name="title_activity_supplies_apply">材料申请</string>
     <string name="title_activity_machine_apply">机械申请</string>

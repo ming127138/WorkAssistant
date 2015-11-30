@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.MachineVerify;
-import com.gzrijing.workassistant.entity.Supplies;
 
 import java.util.List;
 

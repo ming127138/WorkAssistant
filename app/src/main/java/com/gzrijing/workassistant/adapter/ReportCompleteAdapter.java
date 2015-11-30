@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -13,11 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.service.ReportCompleteService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,19 +31,21 @@ public class ReportCompleteAdapter extends BaseAdapter {
     private Button btn_print;
     private Context context;
     private LayoutInflater listContainer;
-    private List<ReportComplete> infos;
+    private ArrayList<ReportComplete> infos;
     private boolean programmaticalTextChange = false;
     private KeyEvent UnknownKey = new KeyEvent(KeyEvent.ACTION_DOWN,
             KeyEvent.KEYCODE_UNKNOWN);
     private int index = -1;
     private SuppliesAdapter adapter;
+    private String orderId;
 
     public ReportCompleteAdapter(
-            Context context, List<ReportComplete> infos, Button btn_print) {
+            Context context, ArrayList<ReportComplete> infos, Button btn_print, String orderId) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.infos = infos;
         this.btn_print = btn_print;
+        this.orderId = orderId;
 
         suppliesList = new ArrayList<Supplies>();
         for (int i = 1; i < 5; i++) {
@@ -111,14 +114,21 @@ public class ReportCompleteAdapter extends BaseAdapter {
                 btn_need.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context, "汇报成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context, ReportCompleteService.class);
+                        intent.putExtra("orderId", orderId);
+                        intent.putExtra("isCheck", "true");
+                        intent.putParcelableArrayListExtra("reportComplete", infos);
+                        context.startService(intent);
                     }
                 });
                 btn_wait.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context, "汇报成功", Toast.LENGTH_SHORT).show();
-                        btn_print.setVisibility(View.VISIBLE);
+                        Intent intent = new Intent(context, ReportCompleteService.class);
+                        intent.putExtra("orderId", orderId);
+                        intent.putExtra("isCheck", "false");
+                        intent.putParcelableArrayListExtra("reportComplete", infos);
+                        context.startService(intent);
                     }
                 });
                 lmap.put(position, convertView);

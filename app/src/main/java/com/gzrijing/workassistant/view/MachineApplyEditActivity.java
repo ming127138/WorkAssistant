@@ -20,15 +20,8 @@ import com.gzrijing.workassistant.adapter.MachineApplyAdapter;
 import com.gzrijing.workassistant.adapter.MachineQueryAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Machine;
-import com.gzrijing.workassistant.entity.Supplies;
-import com.gzrijing.workassistant.listener.HttpCallbackListener;
-import com.gzrijing.workassistant.util.HttpUtils;
-import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -111,14 +111,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_login_btn:
-                SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
-                Editor edit = sp.edit();
-                edit.putString("userNo", "00004");
-                edit.commit();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("fragId", "0");
-                startActivity(intent);
-//                login();
+//                SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
+//                Editor edit = sp.edit();
+//                edit.putString("userNo", "00004");
+//                edit.commit();
+//                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                intent.putExtra("fragId", "0");
+//                startActivity(intent);
+                login();
                 break;
 
             case R.id.login_checkbox_iv:

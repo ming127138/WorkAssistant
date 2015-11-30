@@ -182,7 +182,7 @@ public class ReportProgressFragment extends Fragment implements View.OnClickList
                 intent.putExtra("userNo", userNo);
                 intent.putExtra("orderId", orderId);
                 intent.putExtra("content", content);
-                startActivityForResult(intent, 10);
+                getActivity().startService(intent);
                 break;
         }
     }
