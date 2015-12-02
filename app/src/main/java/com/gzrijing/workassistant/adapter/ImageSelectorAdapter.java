@@ -51,7 +51,7 @@ public class ImageSelectorAdapter extends PagerAdapter{
         final ImageView select = (ImageView) view.findViewById(R.id.viewpage_item_image_selector_select_iv);
 
         String imageUrl = imageUrls.get(position).getPicUrl();
-        ImageUtils.displayImage(context, imageUrl, image);
+        ImageUtils.getHttpImage(context, imageUrl, image);
 
         if(imageUrls.get(position).isCheck()){
             select.setImageResource(R.drawable.login_checkbox_on);

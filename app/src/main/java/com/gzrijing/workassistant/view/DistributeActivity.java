@@ -1,9 +1,12 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,11 +28,15 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.DistributeGriViewAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.db.BusinessHaveSendData;
 import com.gzrijing.workassistant.db.ImageData;
+import com.gzrijing.workassistant.entity.BusinessHaveSend;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.service.DownLoadImageService;
 import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
@@ -37,6 +44,9 @@ import com.gzrijing.workassistant.widget.selectdate.WheelMain;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
 import java.text.DateFormat;
@@ -50,8 +60,6 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
 
     private String userNo;
     private String orderId;
-    private String deadline;
-    private int position;
     private EditText et_remarks;
     private TextView tv_executor;
     private LinearLayout ll_executor;
@@ -62,8 +70,10 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private GridView gv_image;
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>(); //选中的图片
-    private ArrayList<PicUrl> imageUrls; //这个工程的所有图片
+    private ArrayList<PicUrl> imageUrls = new ArrayList<PicUrl>(); //这个工程的所有图片
     private DistributeGriViewAdapter adapter;
+    private BusinessData businessData;
+    private Intent imageIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,27 +91,21 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         userNo = app.getString("userNo", "");
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
-        deadline = intent.getStringExtra("deadline");
-        position = intent.getIntExtra("position", -1);
 
         PicUrl picUrl = new PicUrl();
         picUrls.add(picUrl);
 
-        imageUrls = initImageUrl();
+        IntentFilter mIntentFilter = new IntentFilter("action.com.gzrijing.workassistant.Distribute");
+        registerReceiver(mBroadcastReceiver, mIntentFilter);
+
+        initImageUrl();
+
     }
 
-    private ArrayList<PicUrl> initImageUrl() {
-        imageUrls = new ArrayList<PicUrl>();
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
-                .find(BusinessData.class, true).get(0);
-        List<ImageData> imageDatas = businessData.getImageDataList();
-        for (ImageData data : imageDatas) {
-            PicUrl picUrl = new PicUrl();
-            picUrl.setPicUrl(data.getUrl());
-            imageUrls.add(picUrl);
-        }
-
-        return imageUrls;
+    private void initImageUrl() {
+        imageIntent = new Intent(this, DownLoadImageService.class);
+        imageIntent.putExtra("orderId", orderId);
+        startService(imageIntent);
     }
 
 
@@ -114,12 +118,9 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         tv_executor = (TextView) findViewById(R.id.distribute_executor_tv);
         ll_executor = (LinearLayout) findViewById(R.id.distribute_executor_ll);
         tv_deadline = (TextView) findViewById(R.id.distribute_deadline_tv);
-        tv_deadline.setText(deadline);
         ll_deadline = (LinearLayout) findViewById(R.id.distribute_deadline_ll);
 
         gv_image = (GridView) findViewById(R.id.distribute_image_gv);
-        adapter = new DistributeGriViewAdapter(this, picUrls, imageUrls);
-        gv_image.setAdapter(adapter);
     }
 
     private void setListeners() {
@@ -185,8 +186,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deadline = wheelMain.getTime();
-                        tv_deadline.setText(deadline);
+                        tv_deadline.setText(wheelMain.getTime());
                         tv_deadline.setTextColor(getResources().getColor(
                                 R.color.black));
                     }
@@ -213,7 +213,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
             if (resultCode == 20) {
                 imageUrls.clear();
                 picUrls.clear();
-                List<PicUrl> imageUrlList = data.getParcelableArrayListExtra("picUrls");
+                ArrayList<PicUrl> imageUrlList = data.getParcelableArrayListExtra("picUrls");
                 imageUrls.addAll(imageUrlList);
                 for (PicUrl picUrl : imageUrls) {
                     if (picUrl.isCheck()) {
@@ -222,6 +222,8 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
                 }
                 PicUrl picUrl = new PicUrl();
                 picUrls.add(picUrl);
+                Log.e("pic", picUrls.size() + "");
+                Log.e("image", imageUrls.size() + "");
                 adapter.notifyDataSetChanged();
             }
         }
@@ -269,31 +271,38 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         String executors = sb.toString().substring(0, sb.toString().length() - 1);
         Log.e("executors", executors);
 
-        sb.delete(0, sb.toString().length());
-        Log.e("sb", sb.toString());
-        for (int i = 0; i < picUrls.size()-1; i++) {
-            sb.append(picUrls.get(position).getPicUrl()+",");
+
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < picUrls.size() - 1; i++) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("PicUri", picUrls.get(i).getPicUrl());
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        String urls = sb.toString().substring(0, sb.toString().length() - 1);
-        Log.e("urls", sb.toString());
+
+        Log.e("json", jsonArray.toString());
 
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "doappoint")
                 .add("fileno", orderId)
                 .add("installuserno", executors)
                 .add("installcontent", et_remarks.getText().toString().trim())
-                .add("estimatefinishdate", deadline)
-                .add("picuri", urls)
+                .add("estimatefinishdate", tv_deadline.getText().toString())
+                .add("picuri", jsonArray.toString())
                 .build();
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
                 Log.e("response", response);
                 Message msg;
-                if (response.equals("ok")) {
-                    msg = handler.obtainMessage(0);
-                } else {
+                if (response.length() >= 5 && response.substring(0, 5).equals("Error")) {
                     msg = handler.obtainMessage(1);
+                } else {
+                    msg = handler.obtainMessage(0);
+                    msg.obj = response;
                 }
                 handler.sendMessage(msg);
             }
@@ -305,22 +314,13 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    ContentValues values = new ContentValues();
-                    values.put("deadline", deadline);
-                    values.put("state", "已派工");
-                    DataSupport.updateAll(BusinessData.class, values, "user = ? and orderId = ?", userNo, orderId);
-                    LeaderFragment.orderList.get(position).setState("已派工");
-                    LeaderFragment.orderListByLeader.get(position).setState("已派工");
-                    LeaderFragment.orderList.get(position).setDeadline(deadline);
-                    LeaderFragment.orderListByLeader.get(position).setDeadline(deadline);
-                    LeaderFragment.adapter.notifyDataSetChanged();
-                    ToastUtil.showToast(DistributeActivity.this, "派工成功", Toast.LENGTH_SHORT);
-                    finish();
+                    String id = (String) msg.obj;
+                    saveInfo(id);
                     break;
 
                 case 1:
@@ -330,4 +330,45 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         }
     };
 
+    private void saveInfo(String id) {
+        BusinessHaveSendData data = new BusinessHaveSendData();
+        data.setOrderId(id);
+        data.setContent(et_remarks.getText().toString().trim());
+        data.setState("未接受");
+        data.setExecutors(tv_executor.getText().toString());
+        data.setDeadline(tv_deadline.getText().toString());
+        data.save();
+        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
+                .find(BusinessData.class, true).get(0);
+        List<BusinessHaveSendData> dataList = businessData.getBusinessHaveSendDataList();
+        dataList.add(data);
+        businessData.save();
+        ToastUtil.showToast(DistributeActivity.this, "派工成功", Toast.LENGTH_SHORT);
+        finish();
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("action.com.gzrijing.workassistant.Distribute")) {
+                String result = intent.getStringExtra("result");
+                if (result.equals("与服务器断开连接")) {
+                    ToastUtil.showToast(DistributeActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                } else {
+                    String response = intent.getStringExtra("response");
+                    imageUrls = JsonParseUtils.getAllImageUrl(response);
+                    adapter = new DistributeGriViewAdapter(DistributeActivity.this, picUrls, imageUrls);
+                    gv_image.setAdapter(adapter);
+                }
+
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        stopService(imageIntent);
+        unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
+    }
 }

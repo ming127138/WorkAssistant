@@ -220,4 +220,21 @@ public class JsonParseUtils {
         }
         return suppliesList;
     }
+
+    public static ArrayList<PicUrl> getAllImageUrl(String jsonData){
+        ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for(int i=0; i<jsonArray.length();i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String url = jsonObject.getString("PicUri");
+                PicUrl picUrl = new PicUrl();
+                picUrl.setPicUrl(url);
+                picUrls.add(picUrl);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return picUrls;
+    }
 }

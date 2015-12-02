@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +28,14 @@ public class DistributeGriViewAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater listContainer;
     private List<PicUrl> picUrls;
-    private List<PicUrl> imageUrls;
+    private ArrayList<PicUrl> imageUrls;
 
-    public DistributeGriViewAdapter(Context context, List<PicUrl> picUrls, List<PicUrl> imageUrls) {
+    public DistributeGriViewAdapter(Context context, List<PicUrl> picUrls, ArrayList<PicUrl> imageUrls) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.picUrls = picUrls;
         this.imageUrls = imageUrls;
+
     }
 
     @Override
@@ -83,7 +85,7 @@ public class DistributeGriViewAdapter extends BaseAdapter {
             v.image.setImageResource(R.drawable.upload_photo);
             v.delete.setVisibility(View.GONE);
         } else {
-            ImageUtils.displayImage(context, picUrls.get(position).getPicUrl(), v.image);
+            ImageUtils.getHttpImage(context, picUrls.get(position).getPicUrl(), v.image);
 
             v.delete.setVisibility(View.VISIBLE);
             v.delete.setOnClickListener(new View.OnClickListener() {

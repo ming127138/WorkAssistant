@@ -36,6 +36,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
     private void initData() {
         Intent intent = getIntent();
         imageUrls = intent.getParcelableArrayListExtra("picUrls");
+        Log.e("imageUrl", "ac---"+imageUrls.size());
     }
 
     private void initViews() {

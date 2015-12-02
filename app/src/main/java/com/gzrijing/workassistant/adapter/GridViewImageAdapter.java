@@ -68,7 +68,7 @@ public class GridViewImageAdapter extends BaseAdapter {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
         v.image.setLayoutParams(params);
 
-        ImageUtils.displayImage(context, picUrls.get(position).getPicUrl(), v.image);
+        ImageUtils.getLocaImage(context, picUrls.get(position).getPicUrl(), v.image);
         return convertView;
     }
 

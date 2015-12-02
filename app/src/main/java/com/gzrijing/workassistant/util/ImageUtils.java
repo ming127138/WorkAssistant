@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -79,15 +80,23 @@ public class ImageUtils {
     }
 
     /**
-     * 获取指定图片并显示
+     * 获取本地图片并显示
      */
-    public static void displayImage(Context context, String picUrl, ImageView imageView){
+    public static void getLocaImage(Context context, String picUrl, ImageView imageView){
         File path = ImageUtils.getImagePath(context);
         if(path==null){
             return;
         }
         String url = path.getPath() + "/" + picUrl;
         String imageUrl = ImageDownloader.Scheme.FILE.wrap(url);
+        imageLoader.displayImage(imageUrl, imageView, ImageOptHelper.getImgOptions());
+    }
+
+    /**
+     * 加载网络图片并显示
+     */
+    public static void getHttpImage(Context context, String picUrl, ImageView imageView){
+        String imageUrl = HttpUtils.imageURLPath + picUrl;
         imageLoader.displayImage(imageUrl, imageView, ImageOptHelper.getImgOptions());
     }
 

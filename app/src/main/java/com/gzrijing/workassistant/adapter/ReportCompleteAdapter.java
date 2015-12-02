@@ -116,9 +116,9 @@ public class ReportCompleteAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         Intent intent = new Intent(context, ReportCompleteService.class);
                         intent.putExtra("orderId", orderId);
-                        intent.putExtra("isCheck", "true");
                         intent.putParcelableArrayListExtra("reportComplete", infos);
                         context.startService(intent);
+
                     }
                 });
                 btn_wait.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +126,6 @@ public class ReportCompleteAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         Intent intent = new Intent(context, ReportCompleteService.class);
                         intent.putExtra("orderId", orderId);
-                        intent.putExtra("isCheck", "false");
                         intent.putParcelableArrayListExtra("reportComplete", infos);
                         context.startService(intent);
                     }

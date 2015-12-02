@@ -197,6 +197,10 @@
             android:screenOrientation="portrait" />
         <activity android:name=".view.ImageBrowserActivity" />
         <activity android:name=".view.ImageSelectorActivity" />
+        <activity
+            android:name=".view.BusinessHaveSendActivity"
+            android:label="@string/title_activity_business_have_send"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -205,13 +209,16 @@
         <service android:name=".service.GetWorkerBusinessService" />
         <service
             android:name=".service.ReportProgressService"
-            android:exported="false"></service>
+            android:exported="false" />
         <service
             android:name=".service.ReportProblemService"
-            android:exported="false"></service>
+            android:exported="false" />
         <service
             android:name=".service.ReportCompleteService"
-            android:exported="false"></service>
+            android:exported="false" />
+        <service
+            android:name=".service.DownLoadImageService"
+            android:exported="false" />
 
         <!-- app service -->
 

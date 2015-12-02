@@ -37,9 +37,9 @@ public class BusinessFragment extends Fragment {
         layoutView = inflater.inflate(R.layout.fragment_business, container, false);
 
         if (savedInstanceState == null) {
-            Fragment fragment = getChildFragmentManager().findFragmentByTag("0");
+            Fragment fragment = getChildFragmentManager().findFragmentByTag("1");
             if (fragment == null) {
-                setTabSelection(Integer.valueOf("0"));
+                setTabSelection(Integer.valueOf("1"));
             }
         }
 

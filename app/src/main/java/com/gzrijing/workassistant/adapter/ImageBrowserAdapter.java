@@ -50,7 +50,7 @@ public class ImageBrowserAdapter extends PagerAdapter{
         ImageView mImageView = (ImageView) view.findViewById(R.id.viewpage_item_image_browser_image_iv);
         String picUrl = picUrls.get(position).getPicUrl();
 
-        ImageUtils.displayImage(context, picUrl, mImageView);
+        ImageUtils.getLocaImage(context, picUrl, mImageView);
 
         container.addView(view);
         return view;

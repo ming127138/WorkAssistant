@@ -2,8 +2,11 @@ package com.gzrijing.workassistant.view;
 
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,11 +18,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportCompleteAdapter;
 import com.gzrijing.workassistant.entity.ReportComplete;
+import com.gzrijing.workassistant.service.ReportCompleteService;
 import com.gzrijing.workassistant.util.JudgeDate;
+import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
 
@@ -74,6 +80,12 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
             info.setKey(key[i]);
             infos.add(info);
         }
+
+        IntentFilter mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction("action.com.gzrijing.workassistant.ReportComplete");
+        //注册广播
+        getActivity().registerReceiver(mBroadcastReceiver, mIntentFilter);
+
     }
 
     private void initViews() {
@@ -176,4 +188,29 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
         }
     }
 
+    BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.ReportComplete")){
+                String result = intent.getStringExtra("result");
+                if(result.equals("汇报成功")){
+                    btn_print.setVisibility(View.VISIBLE);
+                    ToastUtil.showToast(context, "汇报成功", Toast.LENGTH_SHORT);
+                }
+                if(result.equals("汇报失败")){
+                    ToastUtil.showToast(context, "汇报失败", Toast.LENGTH_SHORT);
+                }
+                if(result.equals("与服务器断开连接")){
+                    ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
+    }
 }

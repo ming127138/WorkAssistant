@@ -3,17 +3,11 @@ package com.gzrijing.workassistant.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
-import com.gzrijing.workassistant.util.ToastUtil;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 
@@ -23,7 +17,6 @@ public class ReportCompleteService extends IntentService {
 
     private String orderId;
     private String userNo;
-    private String isCheck;
     private String supervision;
     private String supervisionname;
     private String supervisiontel;
@@ -40,36 +33,12 @@ public class ReportCompleteService extends IntentService {
     private String conscontent;
     private String earthworkcontent;
 
-    private Button btn_print;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    ToastUtil.showToast(ReportCompleteService.this, "汇报成功", Toast.LENGTH_SHORT);
-                    if (isCheck.equals("true")) {
-                        btn_print.setVisibility(View.GONE);
-                    } else {
-                        btn_print.setVisibility(View.VISIBLE);
-                    }
-                    break;
-                case 1:
-                    ToastUtil.showToast(ReportCompleteService.this, "汇报失败", Toast.LENGTH_SHORT);
-                    break;
-                case 2:
-                    ToastUtil.showToast(ReportCompleteService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
-                    break;
-            }
-
-        }
-    };
-
     public ReportCompleteService() {
         super("ReportCompleteService");
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(final Intent intent) {
         initData(intent);
 
         RequestBody requestBody = getRequestBody(intent);
@@ -78,19 +47,22 @@ public class ReportCompleteService extends IntentService {
             @Override
             public void onFinish(String response) {
                 Log.e("response", response);
-                Message msg = null;
                 if (response.equals("ok")) {
-                    msg = handler.obtainMessage(0);
+                    Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportComplete");
+                    intent1.putExtra("result", "汇报成功");
+                    sendBroadcast(intent1);
                 } else {
-                    msg = handler.obtainMessage(1);
+                    Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportComplete");
+                    intent1.putExtra("result", "汇报失败");
+                    sendBroadcast(intent1);
                 }
-                handler.sendMessage(msg);
             }
 
             @Override
             public void onError(Exception e) {
-                Message msg = handler.obtainMessage(2);
-                handler.sendMessage(msg);
+                Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportComplete");
+                intent1.putExtra("result", "与服务器断开连接");
+                sendBroadcast(intent1);
             }
         });
 
@@ -117,7 +89,6 @@ public class ReportCompleteService extends IntentService {
         conscontent = "noc";
         earthworkcontent = "noc";
 
-        isCheck = intent.getStringExtra("isCheck");
         orderId = intent.getStringExtra("orderId");
     }
 

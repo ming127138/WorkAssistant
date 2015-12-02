@@ -1,5 +1,7 @@
 package com.gzrijing.workassistant.util;
 
+import android.util.Log;
+
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -20,7 +22,7 @@ public class HttpUtils {
     /**
      * 图片请求路径
      */
-    public static final String imageURLPath = "http://120.24.62.15:90/Pic/";
+    public static final String imageURLPath = "http://120.24.62.15:90";
 
     private static OkHttpClient mOkHttpClient = new OkHttpClient();
 
