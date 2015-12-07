@@ -2,6 +2,7 @@ package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -10,6 +11,9 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ProgressAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Progress;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +22,9 @@ public class ProgressActivity extends BaseActivity {
 
     private String orderId;
     private ListView lv_progress;
-    private List<Progress> proInfos;
+    private List<Progress> proInfos = new ArrayList<Progress>();
+    private ProgressAdapter adapter;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,19 +33,36 @@ public class ProgressActivity extends BaseActivity {
 
         initData();
         initViews();
-        setListeners();
     }
 
     private void initData() {
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
-        proInfos = new ArrayList<Progress>();
-        for (int i = 15; i > 10; i--) {
-            Progress proInfo = new Progress("2015-8-14"+"\n    "+i+":00",
-                    "进度"+i);
-            proInfos.add(proInfo);
-        }
+        getData();
+    }
+
+    private void getData() {
+        String url = "?cmd=getconstask&fileno="+orderId;
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                final List<Progress> list = JsonParseUtils.getProgress(response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        proInfos.clear();
+                        proInfos.addAll(list);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
 
     }
 
@@ -50,12 +73,8 @@ public class ProgressActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv_progress = (ListView) findViewById(R.id.progress_lv);
-        ProgressAdapter adapter = new ProgressAdapter(this, proInfos);
+        adapter = new ProgressAdapter(this, proInfos);
         lv_progress.setAdapter(adapter);
-
-    }
-
-    private void setListeners() {
 
     }
 

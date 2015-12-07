@@ -18,14 +18,17 @@ import java.util.List;
 
 public class MachineVerifyOkInfoActivity extends BaseActivity {
 
-    private MachineVerify machineVerify;
     private TextView tv_useTime;
     private TextView tv_reTime;
     private TextView tv_useAddress;
     private TextView tv_remarks;
-    private List<MachineVerifyInfo> mvInfoList = new ArrayList<MachineVerifyInfo>();
+    private List<MachineVerifyInfo> mvInfoList;
     private ListView lv_info;
     private MachineVerifyOkAdapter adapter;
+    private String userTime;
+    private String returnTime;
+    private String useAdress;
+    private String remarks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +41,13 @@ public class MachineVerifyOkInfoActivity extends BaseActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        machineVerify = (MachineVerify) intent.getParcelableExtra("machineVerify");
 
-        for (int i = 1; i < 5; i++) {
-            MachineVerifyInfo mvInfo = new MachineVerifyInfo("名称" + i, "规格" + i, "单位" + i, i, true);
-            mvInfoList.add(mvInfo);
-        }
+        mvInfoList = intent.getParcelableArrayListExtra("machineVerifyInfoList");
+        userTime = intent.getStringExtra("userTime");
+        returnTime = intent.getStringExtra("returnTime");
+        useAdress = intent.getStringExtra("useAdress");
+        remarks = intent.getStringExtra("remarks");
+
     }
 
     private void initViews() {
@@ -52,13 +56,14 @@ public class MachineVerifyOkInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tv_useTime = (TextView) findViewById(R.id.machine_verify_ok_info_use_time_tv);
-        tv_useTime.setText(machineVerify.getUseTime());
+        tv_useTime.setText(userTime);
         tv_reTime = (TextView) findViewById(R.id.machine_verify_ok_info_return_time_tv);
-        tv_reTime.setText(machineVerify.getReturnTime());
+        tv_reTime.setText(returnTime);
         tv_useAddress = (TextView) findViewById(R.id.machine_verify_ok_info_use_address_tv);
-        tv_useAddress.setText(machineVerify.getUseAdress());
+        tv_useAddress.setText(useAdress);
         tv_remarks = (TextView) findViewById(R.id.machine_verify_ok_info_remarks_tv);
-        tv_remarks.setText(machineVerify.getRemarks());
+        tv_remarks.setText(remarks);
+
         lv_info = (ListView) findViewById(R.id.machine_verify_ok_info_lv);
         adapter = new MachineVerifyOkAdapter(this, mvInfoList);
         lv_info.setAdapter(adapter);

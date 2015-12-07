@@ -17,15 +17,16 @@ import com.gzrijing.workassistant.util.ImageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReportProgressGriViewAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater listContainer;
-    private List<PicUrl> picUrls;
+    private ArrayList<PicUrl> picUrls;
 
-    public ReportProgressGriViewAdapter(Context context, List<PicUrl> picUrls) {
+    public ReportProgressGriViewAdapter(Context context, ArrayList<PicUrl> picUrls) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.picUrls = picUrls;

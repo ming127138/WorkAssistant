@@ -108,6 +108,53 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/sw_10dp"
+            android:paddingRight="@dimen/sw_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="机械审核："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/listview_item_business_leader_machine_verify_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0条新机械申请"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_15dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/sw_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="材料审核："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/listview_item_business_leader_supplies_verify_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0条新材料申请"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_15dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/sw_10dp"
             android:paddingRight="@dimen/sw_10dp"
             android:paddingBottom="@dimen/sw_10dp">
 
@@ -163,7 +210,6 @@
                 android:text="已派任务"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
-
         </RelativeLayout>
 
         <ImageView

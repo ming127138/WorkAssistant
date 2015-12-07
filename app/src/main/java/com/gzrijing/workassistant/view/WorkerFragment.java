@@ -1,8 +1,13 @@
 package com.gzrijing.workassistant.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +22,9 @@ import com.gzrijing.workassistant.adapter.BusinessWorkerAdapter;
 import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
+import com.gzrijing.workassistant.service.GetInspectionService;
+import com.gzrijing.workassistant.service.GetSewageWellsService;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -72,6 +80,24 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
             orderListByWorker.add(order);
         }
 
+        getInspectionOrder();
+
+//        getSewageWellsOrder();
+//
+    }
+
+    private void getInspectionOrder() {
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.WorkerFragment");
+        getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
+        Intent serviceIntent = new Intent(getActivity(), GetInspectionService.class);
+        serviceIntent.putExtra("userNo", userNo);
+        getActivity().startService(serviceIntent);
+    }
+
+    private void getSewageWellsOrder() {
+        Intent serviceIntent = new Intent(getActivity(), GetSewageWellsService.class);
+        serviceIntent.putExtra("userNo", userNo);
+        getActivity().startService(serviceIntent);
     }
 
     private void initViews() {
@@ -90,7 +116,7 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
         sp_state.setAdapter(stateAdater);
 
         lv_order = (ListView) layoutView.findViewById(R.id.fragment_worker_order_lv);
-        adapter = new BusinessWorkerAdapter(getActivity(), orderList);
+        adapter = new BusinessWorkerAdapter(getActivity(), orderList, userNo);
         lv_order.setAdapter(adapter);
     }
 
@@ -138,5 +164,29 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.WorkerFragment")){
+                Log.e("ok", "asdf");
+                String jsonData = intent.getStringExtra("jsonData");
+                Log.e("ok", jsonData);
+                List<BusinessByWorker> list = JsonParseUtils.getInspection(jsonData);
+                for(BusinessByWorker businessByWorker: list){
+                    orderListByWorker.add(businessByWorker);
+                    orderList.add(businessByWorker);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
     }
 }

@@ -88,6 +88,10 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.id.listview_item_business_leader_state_tv);
             v.deadline = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_deadline_tv);
+            v.machineVerify = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_leader_machine_verify_tv);
+            v.suppliesVerify = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_leader_supplies_verify_tv);
             v.temInfo = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_tem_info_tv);
             v.flag = (TextView) convertView.findViewById(
@@ -111,6 +115,24 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         } else {
             v.urgent.setVisibility(View.GONE);
         }
+
+        v.machineVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MachineVerifyActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
+        v.suppliesVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SuppliesVerifyActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
 
         v.info.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,7 +208,7 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                 ContentValues values = new ContentValues();
                 values.put("flag", "派工");
                 DataSupport.updateAll(BusinessData.class, values,
-                        "orderId = ?", orderList.get(position).getOrderId());
+                        "user = ? and orderId = ?", userNo, orderList.get(position).getOrderId());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -212,6 +234,8 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         private ImageView urgent;
         private TextView type;
         private TextView state;
+        private TextView machineVerify;
+        private TextView suppliesVerify;
         private TextView deadline;
         private TextView temInfo;
         private Button progress;

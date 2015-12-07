@@ -116,20 +116,12 @@
             android:label="@string/title_activity_machine_verify"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.MachineVerifyWaitInfoActivity"
-            android:label="@string/title_activity_machine_verify_wait_info"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.MachineVerifyOkInfoActivity"
             android:label="@string/title_activity_machine_verify_ok_info"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.SuppliesVerifyActivity"
             android:label="@string/title_activity_supplies_verify"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.SuppliesVerifyWaitInfoActivity"
-            android:label="@string/title_activity_supplies_verify_wait_info"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.SuppliesVerifyOkInfoActivity"
@@ -218,6 +210,18 @@
             android:exported="false" />
         <service
             android:name=".service.DownLoadImageService"
+            android:exported="false" />
+        <service
+            android:name=".service.GetInspectionService"
+            android:exported="false" />
+        <service
+            android:name=".service.GetSewageWellsService"
+            android:exported="false" />
+        <service
+            android:name=".service.PipeInspectionFormService"
+            android:exported="false" />
+        <service
+            android:name=".service.GetMachineVerifyService"
             android:exported="false" />
 
         <!-- app service -->

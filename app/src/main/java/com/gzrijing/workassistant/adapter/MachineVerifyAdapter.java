@@ -10,14 +10,14 @@ import android.widget.TextView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.MachineVerify;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class MachineVerifyAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<MachineVerify> mvList;
+    private ArrayList<MachineVerify> mvList;
 
-    public MachineVerifyAdapter(Context context, List<MachineVerify> mvList) {
+    public MachineVerifyAdapter(Context context, ArrayList<MachineVerify> mvList) {
         listContainer = LayoutInflater.from(context);
         this.mvList = mvList;
     }

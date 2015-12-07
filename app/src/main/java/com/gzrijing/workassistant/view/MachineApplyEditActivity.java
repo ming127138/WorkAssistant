@@ -20,8 +20,13 @@ import com.gzrijing.workassistant.adapter.MachineApplyAdapter;
 import com.gzrijing.workassistant.adapter.MachineQueryAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Machine;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,28 +178,28 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
             ToastUtil.showToast(this, "请填上关键字", Toast.LENGTH_SHORT);
             return;
         }
-//        String url = null;
-//        try {
-//            url = "?cmd=getmaking&makingno=&makingname=" + URLEncoder.encode(keyWork, "UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
-//            @Override
-//            public void onFinish(String response) {
-//                List<Supplies> SQList = JsonParseUtils.getSuppliesQueries(response);
-//
-//                Message msg = handler.obtainMessage(0);
-//                msg.obj = SQList;
-//                handler.sendMessage(msg);
-//            }
-//
-//            @Override
-//            public void onError(Exception e) {
-//                Message msg = handler.obtainMessage(1);
-//                handler.sendMessage(msg);
-//            }
-//        });
+        String url = null;
+        try {
+            url = "?cmd=getmachinenamelist&machinename=" + URLEncoder.encode(keyWork, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                List<Machine> MQList = JsonParseUtils.getMachineQueries(response);
+
+                Message msg = handler.obtainMessage(0);
+                msg.obj = MQList;
+                handler.sendMessage(msg);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Message msg = handler.obtainMessage(1);
+                handler.sendMessage(msg);
+            }
+        });
 
 
         machineQueries.clear();

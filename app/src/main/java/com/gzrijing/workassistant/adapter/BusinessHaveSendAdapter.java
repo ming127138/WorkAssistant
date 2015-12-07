@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
@@ -60,10 +59,6 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
                     R.id.listview_item_business_have_send_deadline_tv);
             v.reportInfo = (TextView) convertView.findViewById(
                     R.id.listview_item_business_have_send_report_info_tv);
-            v.machine = (Button) convertView.findViewById(
-                    R.id.listview_item_business_have_send_machine_verify_btn);
-            v.supplies = (Button) convertView.findViewById(
-                    R.id.listview_item_business_have_send_supplies_verify_btn);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -92,7 +87,5 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
         private TextView executors;
         private TextView deadline;
         private TextView reportInfo;
-        private Button machine;
-        private Button supplies;
     }
 }

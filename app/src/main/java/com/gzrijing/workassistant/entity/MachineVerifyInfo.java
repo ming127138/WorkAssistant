@@ -1,21 +1,20 @@
 package com.gzrijing.workassistant.entity;
 
-public class MachineVerifyInfo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class MachineVerifyInfo implements Parcelable {
     private String name;
-    private String spec;
-    private String unit;
-    private int num;
-    private boolean isCheck;
+    private String applyNum;
+    private String sendNum;
 
     public MachineVerifyInfo() {
     }
 
-    public MachineVerifyInfo(String name, String spec, String unit, int num, boolean isCheck) {
+    public MachineVerifyInfo(String name, String applyNum, String sendNum) {
         this.name = name;
-        this.spec = spec;
-        this.unit = unit;
-        this.num = num;
-        this.isCheck = isCheck;
+        this.applyNum = applyNum;
+        this.sendNum = sendNum;
     }
 
     public String getName() {
@@ -26,35 +25,47 @@ public class MachineVerifyInfo {
         this.name = name;
     }
 
-    public String getSpec() {
-        return spec;
+    public String getApplyNum() {
+        return applyNum;
     }
 
-    public void setSpec(String spec) {
-        this.spec = spec;
+    public void setApplyNum(String applyNum) {
+        this.applyNum = applyNum;
     }
 
-    public String getUnit() {
-        return unit;
+    public String getSendNum() {
+        return sendNum;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setSendNum(String sendNum) {
+        this.sendNum = sendNum;
     }
 
-    public int getNum() {
-        return num;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.applyNum);
+        dest.writeString(this.sendNum);
     }
 
-    public boolean isCheck() {
-        return isCheck;
+    protected MachineVerifyInfo(Parcel in) {
+        this.name = in.readString();
+        this.applyNum = in.readString();
+        this.sendNum = in.readString();
     }
 
-    public void setIsCheck(boolean isCheck) {
-        this.isCheck = isCheck;
-    }
+    public static final Creator<MachineVerifyInfo> CREATOR = new Creator<MachineVerifyInfo>() {
+        public MachineVerifyInfo createFromParcel(Parcel source) {
+            return new MachineVerifyInfo(source);
+        }
+
+        public MachineVerifyInfo[] newArray(int size) {
+            return new MachineVerifyInfo[size];
+        }
+    };
 }

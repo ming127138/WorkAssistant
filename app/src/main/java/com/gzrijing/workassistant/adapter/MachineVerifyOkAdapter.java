@@ -46,34 +46,23 @@ public class MachineVerifyOkAdapter extends BaseAdapter {
             convertView = listContainer.inflate(
                     R.layout.listview_item_machine_verify_ok_info, parent, false);
             v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_verify_ok_info_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_verify_ok_info_spec_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_verify_ok_info_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_verify_ok_info_num_tv);
-            v.isAgree = (ImageView) convertView.findViewById(R.id.listview_item_machine_verify_ok_info_yes_or_no_iv);
+            v.applyNum = (TextView) convertView.findViewById(R.id.listview_item_machine_verify_ok_info_apply_num_tv);
+            v.sendNum = (TextView) convertView.findViewById(R.id.listview_item_machine_verify_ok_info_send_num_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
         v.name.setText(mvInfoList.get(position).getName());
-        v.spec.setText(mvInfoList.get(position).getSpec());
-        v.unit.setText(mvInfoList.get(position).getUnit());
-        v.num.setText(mvInfoList.get(position).getNum() + "");
-
-        if(mvInfoList.get(position).isCheck()){
-            v.isAgree.setImageResource(R.drawable.icon_ok);
-        }else {
-            v.isAgree.setImageResource(R.drawable.icon_delete);
-        }
+        v.applyNum.setText(mvInfoList.get(position).getApplyNum());
+        v.sendNum.setText(mvInfoList.get(position).getSendNum());
 
         return convertView;
     }
 
     class ViewHolder {
         private TextView name;
-        private TextView spec;
-        private TextView unit;
-        private TextView num;
-        private ImageView isAgree;
+        private TextView applyNum;
+        private TextView sendNum;
     }
 }

@@ -25,5 +25,6 @@
             android:layout_marginLeft="@dimen/sw_5dp"
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp" />
+
     </LinearLayout>
 </LinearLayout>

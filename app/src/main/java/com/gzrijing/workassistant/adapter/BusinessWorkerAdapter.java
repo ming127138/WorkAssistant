@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +15,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.view.MachineApplyActivity;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
 import com.gzrijing.workassistant.view.ReportActivity;
 import com.gzrijing.workassistant.view.SuppliesApplyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
 import org.litepal.crud.DataSupport;
 
@@ -33,11 +40,14 @@ public class BusinessWorkerAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater listContainer;
     private List<BusinessByWorker> orderList;
+    private String userNo;
+    private Handler handler = new Handler();
 
-    public BusinessWorkerAdapter(Context context, List<BusinessByWorker> orderList) {
+    public BusinessWorkerAdapter(Context context, List<BusinessByWorker> orderList, String userNo) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.orderList = orderList;
+        this.userNo = userNo;
     }
 
     @Override
@@ -96,7 +106,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
 
-        if(orderList.get(position).getType().equals("供水管网巡检")){
+        if (orderList.get(position).getType().equals("供水管网巡查")) {
             v.info.setVisibility(View.GONE);
             v.machineApply.setVisibility(View.GONE);
             v.suppliesApply.setVisibility(View.GONE);
@@ -154,12 +164,13 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (flag.equals("确认收到")) {
-                    orderList.get(position).setFlag("处理");
-                    ContentValues values = new ContentValues();
-                    values.put("flag", "处理");
-                    DataSupport.updateAll(BusinessData.class, values,
-                            "orderId = ?", orderList.get(position).getOrderId());
-                    notifyDataSetChanged();
+                    sendSure(position);
+//                    orderList.get(position).setFlag("处理");
+//                    ContentValues values = new ContentValues();
+//                    values.put("flag", "处理");
+//                    DataSupport.updateAll(BusinessData.class, values,
+//                            "orderId = ?", orderList.get(position).getOrderId());
+//                    notifyDataSetChanged();
                 }
 
                 if (flag.equals("处理")) {
@@ -167,24 +178,25 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    if (orderList.get(position).getType().equals("供水管网巡检")) {
-                                        orderList.get(position).setFlag("巡检");
-                                        orderList.get(position).setState("正在处理");
-                                        ContentValues values = new ContentValues();
-                                        values.put("flag", "巡检");
-                                        values.put("state", "正在处理");
-                                        DataSupport.updateAll(BusinessData.class, values,
-                                                "orderId = ?", orderList.get(position).getOrderId());
-                                    } else {
-                                        orderList.get(position).setFlag("汇报");
-                                        orderList.get(position).setState("正在处理");
-                                        ContentValues values = new ContentValues();
-                                        values.put("flag", "汇报");
-                                        values.put("state", "正在处理");
-                                        DataSupport.updateAll(BusinessData.class, values,
-                                                "orderId = ?", orderList.get(position).getOrderId());
-                                    }
-                                    notifyDataSetChanged();
+                                    sendDone(position);
+//                                    if (orderList.get(position).getType().equals("供水管网巡检")) {
+//                                        orderList.get(position).setFlag("巡检");
+//                                        orderList.get(position).setState("正在处理");
+//                                        ContentValues values = new ContentValues();
+//                                        values.put("flag", "巡检");
+//                                        values.put("state", "正在处理");
+//                                        DataSupport.updateAll(BusinessData.class, values,
+//                                                "orderId = ?", orderList.get(position).getOrderId());
+//                                    } else {
+//                                        orderList.get(position).setFlag("汇报");
+//                                        orderList.get(position).setState("正在处理");
+//                                        ContentValues values = new ContentValues();
+//                                        values.put("flag", "汇报");
+//                                        values.put("state", "正在处理");
+//                                        DataSupport.updateAll(BusinessData.class, values,
+//                                                "orderId = ?", orderList.get(position).getOrderId());
+//                                    }
+//                                    notifyDataSetChanged();
                                 }
                             })
                             .setNegativeButton("取消", null)
@@ -197,15 +209,113 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                     context.startActivity(intent);
                 }
 
-                if(flag.equals("巡检")){
+                if (flag.equals("巡检")) {
                     Intent intent = new Intent(context, PipeInspectionMapActivity.class);
-                    intent.putExtra("orderId", orderList.get(position).getOrderId());
+                    intent.putParcelableArrayListExtra("inspectionList", orderList.get(position).getInspectionInfos());
                     context.startActivity(intent);
                 }
             }
         });
 
         return convertView;
+    }
+
+    private void sendSure(final int position) {
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "doreceive")
+                .add("userno", userNo)
+                .add("fileno", orderList.get(position).getOrderId())
+                .build();
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                if (response.equals("ok")) {
+                    orderList.get(position).setFlag("处理");
+                    ContentValues values = new ContentValues();
+                    values.put("flag", "处理");
+                    DataSupport.updateAll(BusinessData.class, values,
+                            "user = ? and orderId = ?", userNo, orderList.get(position).getOrderId());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataSetChanged();
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showToast(context, response, Toast.LENGTH_SHORT);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+    }
+
+    private void sendDone(final int position) {
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "doinstallreceive")
+                .add("userno", userNo)
+                .add("fileno", orderList.get(position).getOrderId())
+                .build();
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                if (response.equals("ok")) {
+                    if (orderList.get(position).getType().equals("供水管网巡查")) {
+                        orderList.get(position).setFlag("巡检");
+                        orderList.get(position).setState("正在处理");
+                        ContentValues values = new ContentValues();
+                        values.put("flag", "巡检");
+                        values.put("state", "正在处理");
+                        DataSupport.updateAll(BusinessData.class, values,
+                                "user = ? and orderId = ?", userNo, orderList.get(position).getOrderId());
+                    } else {
+                        orderList.get(position).setFlag("汇报");
+                        orderList.get(position).setState("正在处理");
+                        ContentValues values = new ContentValues();
+                        values.put("flag", "汇报");
+                        values.put("state", "正在处理");
+                        DataSupport.updateAll(BusinessData.class, values,
+                                "user = ? and orderId = ?", userNo, orderList.get(position).getOrderId());
+                    }
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataSetChanged();
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showToast(context, response, Toast.LENGTH_SHORT);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
     }
 
     class ViewHolder {

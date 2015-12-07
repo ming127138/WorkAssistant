@@ -1,6 +1,5 @@
 package com.gzrijing.workassistant.entity;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +12,12 @@ public class BusinessByWorker {
     private String flag;
     private List<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();   //详细信息
     private List<PicUrl> picUrls = new ArrayList<PicUrl>();     //图片URL
+    private ArrayList<Inspection> InspectionInfos = new ArrayList<Inspection>(); //巡查任务点
 
     public BusinessByWorker() {
     }
 
-    public BusinessByWorker(String orderId, String type, String state, String deadline, boolean urgent, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls) {
+    public BusinessByWorker(String orderId, String type, String state, String deadline, boolean urgent, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls, ArrayList<Inspection> inspectionInfos) {
         this.orderId = orderId;
         this.type = type;
         this.state = state;
@@ -26,6 +26,7 @@ public class BusinessByWorker {
         this.flag = flag;
         this.detailedInfos = detailedInfos;
         this.picUrls = picUrls;
+        InspectionInfos = inspectionInfos;
     }
 
     public String getOrderId() {
@@ -90,5 +91,13 @@ public class BusinessByWorker {
 
     public void setPicUrls(List<PicUrl> picUrls) {
         this.picUrls = picUrls;
+    }
+
+    public ArrayList<Inspection> getInspectionInfos() {
+        return InspectionInfos;
+    }
+
+    public void setInspectionInfos(ArrayList<Inspection> inspectionInfos) {
+        InspectionInfos = inspectionInfos;
     }
 }

@@ -138,41 +138,5 @@
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_15dp" />
         </LinearLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/sw_10dp"
-            android:layout_marginRight="@dimen/sw_10dp"
-            android:layout_marginBottom="@dimen/sw_10dp"
-            android:background="@color/grey" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/sw_10dp"
-            android:layout_marginRight="@dimen/sw_10dp">
-            <Button
-                android:id="@+id/listview_item_business_have_send_supplies_verify_btn"
-                android:layout_width="@dimen/sw_60dp"
-                android:layout_height="@dimen/sw_25dp"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/btn_blue_frame"
-                android:text="材料审核"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/sw_12dp"/>
-
-            <Button
-                android:id="@+id/listview_item_business_have_send_machine_verify_btn"
-                android:layout_width="@dimen/sw_60dp"
-                android:layout_height="@dimen/sw_25dp"
-                android:layout_toLeftOf="@+id/listview_item_business_have_send_supplies_verify_btn"
-                android:layout_marginRight="@dimen/sw_10dp"
-                android:background="@drawable/btn_blue_frame"
-                android:text="机械审核"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/sw_12dp"/>
-
-        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

@@ -34,12 +34,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="类型："
+            android:text="名称："
             android:textColor="@color/black"
             android:textSize="@dimen/sw_12dp" />
 
         <TextView
-            android:id="@+id/listview_item_pipe_inspection_map_marker_type_tv"
+            android:id="@+id/listview_item_pipe_inspection_map_marker_name_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
@@ -55,14 +55,58 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="片区："
+            android:text="型号："
             android:textColor="@color/black"
             android:textSize="@dimen/sw_12dp" />
 
         <TextView
-            android:id="@+id/listview_item_pipe_inspection_map_marker_area_tv"
+            android:id="@+id/listview_item_pipe_inspection_map_marker_model_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_12dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sw_5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="阀门型号："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_12dp" />
+
+        <TextView
+            android:id="@+id/listview_item_pipe_inspection_map_marker_valveNo_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/sw_200dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_12dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sw_5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="阀门井型号："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_12dp" />
+
+        <TextView
+            android:id="@+id/listview_item_pipe_inspection_map_marker_valveGNo_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/sw_200dp"
             android:textColor="@color/black"
             android:textSize="@dimen/sw_12dp" />
     </LinearLayout>
