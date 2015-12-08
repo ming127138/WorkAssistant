@@ -31,27 +31,31 @@
         android:id="@+id/listview_item_supplies_verify_ok_info_unit_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:gravity="center"
         android:text="单位"
         android:textColor="@color/black"
         android:textSize="@dimen/sw_12dp" />
 
     <TextView
-        android:id="@+id/listview_item_supplies_verify_ok_info_num_tv"
+        android:id="@+id/listview_item_supplies_verify_ok_info_apply_num_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
         android:gravity="center"
-        android:text="数量"
+        android:text="申请数量"
         android:textColor="@color/black"
         android:textSize="@dimen/sw_12dp" />
-    
-    <ImageView
-        android:id="@+id/listview_item_supplies_verify_ok_info_yes_or_no_iv"
+
+    <TextView
+        android:id="@+id/listview_item_supplies_verify_ok_info_send_num_tv"
         android:layout_width="0dp"
-        android:layout_height="@dimen/sw_15dp"
-        android:layout_weight="5"
-        android:src="@drawable/icon_ok" />
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:text="发放数量"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sw_12dp" />
+
 
 </LinearLayout>

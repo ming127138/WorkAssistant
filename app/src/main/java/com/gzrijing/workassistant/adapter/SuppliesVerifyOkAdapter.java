@@ -48,8 +48,8 @@ public class SuppliesVerifyOkAdapter extends BaseAdapter {
             v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_ok_info_name_tv);
             v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_ok_info_spec_tv);
             v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_ok_info_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_ok_info_num_tv);
-            v.isAgree = (ImageView) convertView.findViewById(R.id.listview_item_supplies_verify_ok_info_yes_or_no_iv);
+            v.applyNum = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_ok_info_apply_num_tv);
+            v.sendNum = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_ok_info_send_num_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -58,13 +58,8 @@ public class SuppliesVerifyOkAdapter extends BaseAdapter {
         v.name.setText(svInfoList.get(position).getName());
         v.spec.setText(svInfoList.get(position).getSpec());
         v.unit.setText(svInfoList.get(position).getUnit());
-        v.num.setText(svInfoList.get(position).getNum() + "");
-
-        if(svInfoList.get(position).isCheck()){
-            v.isAgree.setImageResource(R.drawable.icon_ok);
-        }else {
-            v.isAgree.setImageResource(R.drawable.icon_delete);
-        }
+        v.applyNum.setText(svInfoList.get(position).getApplyNum());
+        v.sendNum.setText(svInfoList.get(position).getSendNum());
 
         return convertView;
     }
@@ -73,7 +68,7 @@ public class SuppliesVerifyOkAdapter extends BaseAdapter {
         private TextView name;
         private TextView spec;
         private TextView unit;
-        private TextView num;
-        private ImageView isAgree;
+        private TextView applyNum;
+        private TextView sendNum;
     }
 }

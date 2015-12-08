@@ -11,14 +11,15 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SuppliesVerifyAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<SuppliesVerify> svList;
+    private ArrayList<SuppliesVerify> svList;
 
-    public SuppliesVerifyAdapter(Context context, List<SuppliesVerify> svList) {
+    public SuppliesVerifyAdapter(Context context, ArrayList<SuppliesVerify> svList) {
         listContainer = LayoutInflater.from(context);
         this.svList = svList;
     }
@@ -45,7 +46,7 @@ public class SuppliesVerifyAdapter extends BaseAdapter {
             v = new ViewHolder();
             convertView = listContainer.inflate(
                     R.layout.listview_item_supplies_verify, parent, false);
-            v.id = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_id_tv);
+            v.No = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_id_tv);
             v.applicant = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_applicant_tv);
             v.time = (TextView) convertView.findViewById(R.id.listview_item_supplies_verify_time_tv);
             convertView.setTag(v);
@@ -53,7 +54,7 @@ public class SuppliesVerifyAdapter extends BaseAdapter {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.id.setText(svList.get(position).getId());
+        v.No.setText(svList.get(position).getNo());
         v.applicant.setText(svList.get(position).getApplicant());
         v.time.setText(svList.get(position).getUseTime());
 
@@ -61,7 +62,7 @@ public class SuppliesVerifyAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        private TextView id;
+        private TextView No;
         private TextView applicant;
         private TextView time;
     }

@@ -1,22 +1,27 @@
 package com.gzrijing.workassistant.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.ArrayList;
 
-public class SuppliesVerify implements Parcelable {
-    private String id;          //材料申请单号
+public class SuppliesVerify {
+    private String id;
+    private String No;          //单号
     private String applicant;   //申请人
     private String useTime;     //领用时间
     private String remarks;     //备注
+    private String state;       //状态
+    private ArrayList<SuppliesVerifyInfo> suppliesVerifyInfoList = new ArrayList<SuppliesVerifyInfo>();
 
     public SuppliesVerify() {
     }
 
-    public SuppliesVerify(String id, String applicant, String useTime, String remarks) {
+    public SuppliesVerify(String id, String no, String applicant, String useTime, String remarks, String state, ArrayList<SuppliesVerifyInfo> suppliesVerifyInfoList) {
         this.id = id;
+        No = no;
         this.applicant = applicant;
         this.useTime = useTime;
         this.remarks = remarks;
+        this.state = state;
+        this.suppliesVerifyInfoList = suppliesVerifyInfoList;
     }
 
     public String getId() {
@@ -25,6 +30,14 @@ public class SuppliesVerify implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getNo() {
+        return No;
+    }
+
+    public void setNo(String no) {
+        No = no;
     }
 
     public String getApplicant() {
@@ -51,33 +64,19 @@ public class SuppliesVerify implements Parcelable {
         this.remarks = remarks;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getState() {
+        return state;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
-        dest.writeString(this.applicant);
-        dest.writeString(this.useTime);
-        dest.writeString(this.remarks);
+    public void setState(String state) {
+        this.state = state;
     }
 
-    protected SuppliesVerify(Parcel in) {
-        this.id = in.readString();
-        this.applicant = in.readString();
-        this.useTime = in.readString();
-        this.remarks = in.readString();
+    public ArrayList<SuppliesVerifyInfo> getSuppliesVerifyInfoList() {
+        return suppliesVerifyInfoList;
     }
 
-    public static final Parcelable.Creator<SuppliesVerify> CREATOR = new Parcelable.Creator<SuppliesVerify>() {
-        public SuppliesVerify createFromParcel(Parcel source) {
-            return new SuppliesVerify(source);
-        }
-
-        public SuppliesVerify[] newArray(int size) {
-            return new SuppliesVerify[size];
-        }
-    };
+    public void setSuppliesVerifyInfoList(ArrayList<SuppliesVerifyInfo> suppliesVerifyInfoList) {
+        this.suppliesVerifyInfoList = suppliesVerifyInfoList;
+    }
 }

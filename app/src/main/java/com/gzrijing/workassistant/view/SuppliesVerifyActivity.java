@@ -1,6 +1,10 @@
 package com.gzrijing.workassistant.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -12,19 +16,22 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesVerifyAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
+import com.gzrijing.workassistant.service.GetSuppliesVerifyService;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SuppliesVerifyActivity extends BaseActivity {
 
     private ListView lv_wait;
     private ListView lv_ok;
     private String orderId;
-    private List<SuppliesVerify> waitList = new ArrayList<SuppliesVerify>();
-    private List<SuppliesVerify> okList = new ArrayList<SuppliesVerify>();
+    private ArrayList<SuppliesVerify> waitList = new ArrayList<SuppliesVerify>();
+    private ArrayList<SuppliesVerify> okList = new ArrayList<SuppliesVerify>();
     private SuppliesVerifyAdapter waitAdapter;
     private SuppliesVerifyAdapter okAdapter;
+    private String userNo;
+    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +44,23 @@ public class SuppliesVerifyActivity extends BaseActivity {
     }
 
     private void initData() {
+        SharedPreferences app = getSharedPreferences(
+                "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
+
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
-        for (int i = 1; i < 5; i++) {
-            SuppliesVerify suppliesVerify = new SuppliesVerify("工单" + i, "申请人" + i, "2015-10-8 10:00", "备注" + i);
-            if (i % 2 == 0) {
-                waitList.add(suppliesVerify);
-            } else {
-                okList.add(suppliesVerify);
-            }
-        }
+        getSuppliesVerify();
+    }
+
+    private void getSuppliesVerify() {
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.SuppliesVerify");
+        registerReceiver(mBroadcastReceiver, intentFilter);
+        serviceIntent = new Intent(this, GetSuppliesVerifyService.class);
+        serviceIntent.putExtra("userNo", userNo);
+        serviceIntent.putExtra("orderId", orderId);
+        startService(serviceIntent);
     }
 
     private void initViews() {
@@ -68,7 +81,11 @@ public class SuppliesVerifyActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(SuppliesVerifyActivity.this, SuppliesVerifyWaitInfoActivity.class);
-                intent.putExtra("suppliesVerify", waitList.get(position));
+                intent.putParcelableArrayListExtra("suppliesVerifyInfoList", waitList.get(position).getSuppliesVerifyInfoList());
+                intent.putExtra("id", waitList.get(position).getId());
+                intent.putExtra("userTime", waitList.get(position).getUseTime());
+                intent.putExtra("remarks", waitList.get(position).getRemarks());
+                intent.putExtra("position", position);
                 startActivityForResult(intent, 10);
             }
         });
@@ -77,10 +94,53 @@ public class SuppliesVerifyActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(SuppliesVerifyActivity.this, SuppliesVerifyOkInfoActivity.class);
-                intent.putExtra("suppliesVerify", okList.get(position));
-                startActivityForResult(intent, 20);
+                intent.putParcelableArrayListExtra("suppliesVerifyInfoList", okList.get(position).getSuppliesVerifyInfoList());
+                intent.putExtra("userTime", okList.get(position).getUseTime());
+                intent.putExtra("remarks", okList.get(position).getRemarks());
+                startActivity(intent);
             }
         });
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.SuppliesVerify")){
+                String jsonData = intent.getStringExtra("jsonData");
+                ArrayList<SuppliesVerify> SuppliesVerifyList = JsonParseUtils.getSuppliesVerify(jsonData);
+                for(SuppliesVerify SuppliesVerify : SuppliesVerifyList){
+                    if(SuppliesVerify.getState().equals("审核")){
+                        okList.add(SuppliesVerify);
+                    }
+                    if(SuppliesVerify.getState().equals("保存")){
+                        waitList.add(SuppliesVerify);
+                    }
+                }
+                okAdapter.notifyDataSetChanged();
+                waitAdapter.notifyDataSetChanged();
+            }
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 10){
+            if(resultCode == 10){
+                int position = data.getIntExtra("position", -1);
+                String isPass = data.getStringExtra("isPass");
+                if(isPass.equals("1")){
+                    okList.add(waitList.get(position));
+                    waitList.remove(position);
+                }
+                if(isPass.equals("0")){
+                    waitList.remove(position);
+                }
+                waitAdapter.notifyDataSetChanged();
+                okAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -93,5 +153,12 @@ public class SuppliesVerifyActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(serviceIntent);
+        unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
     }
 }

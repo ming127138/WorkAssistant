@@ -10,20 +10,19 @@ import android.widget.TextView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesVerifyOkAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.SuppliesVerify;
 import com.gzrijing.workassistant.entity.SuppliesVerifyInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SuppliesVerifyOkInfoActivity extends BaseActivity {
 
-    private SuppliesVerify suppliesVerify;
     private TextView tv_useTime;
     private TextView tv_remarks;
     private ListView lv_info;
-    private List<SuppliesVerifyInfo> svInfoList = new ArrayList<SuppliesVerifyInfo>();
+    private List<SuppliesVerifyInfo> svInfoList;
     private SuppliesVerifyOkAdapter adapter;
+    private String userTime;
+    private String remarks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +35,10 @@ public class SuppliesVerifyOkInfoActivity extends BaseActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        suppliesVerify = (SuppliesVerify) intent.getParcelableExtra("suppliesVerify");
+        svInfoList = intent.getParcelableArrayListExtra("suppliesVerifyInfoList");
+        userTime = intent.getStringExtra("userTime");
+        remarks = intent.getStringExtra("remarks");
 
-        for (int i = 1; i < 5; i++) {
-            SuppliesVerifyInfo svInfo = new SuppliesVerifyInfo("名称" + i, "规格" + i, "单位" + i, i, true);
-            svInfoList.add(svInfo);
-        }
     }
 
     private void initViews() {
@@ -50,9 +47,10 @@ public class SuppliesVerifyOkInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tv_useTime = (TextView) findViewById(R.id.supplies_verify_ok_info_use_time_tv);
-        tv_useTime.setText(suppliesVerify.getUseTime());
+        tv_useTime.setText(userTime);
         tv_remarks = (TextView) findViewById(R.id.supplies_verify_ok_info_remarks_tv);
-        tv_remarks.setText(suppliesVerify.getRemarks());
+        tv_remarks.setText(remarks);
+
         lv_info = (ListView) findViewById(R.id.supplies_verify_ok_info_lv);
         adapter = new SuppliesVerifyOkAdapter(this, svInfoList);
         lv_info.setAdapter(adapter);

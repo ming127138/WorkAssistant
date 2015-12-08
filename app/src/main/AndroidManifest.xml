@@ -128,6 +128,10 @@
             android:label="@string/title_activity_supplies_verify_ok_info"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".view.SuppliesVerifyWaitInfoActivity"
+            android:label="@string/title_activity_supplies_verify_wait_info"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".view.TemInfoActivity"
             android:label="@string/title_activity_tem_info"
             android:screenOrientation="portrait" />
@@ -222,6 +226,9 @@
             android:exported="false" />
         <service
             android:name=".service.GetMachineVerifyService"
+            android:exported="false" />
+        <service
+            android:name=".service.GetSuppliesVerifyService"
             android:exported="false" />
 
         <!-- app service -->

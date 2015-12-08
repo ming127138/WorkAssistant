@@ -55,7 +55,6 @@ public class MachineVerifyActivity extends BaseActivity {
     }
 
     private void getMachineVerify() {
-
         IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.MachineVerify");
         registerReceiver(mBroadcastReceiver, intentFilter);
         serviceIntent = new Intent(this, GetMachineVerifyService.class);
@@ -115,7 +114,8 @@ public class MachineVerifyActivity extends BaseActivity {
                 for(MachineVerify machineVerify : machineVerifyList){
                     if(machineVerify.getState().equals("审核")){
                         okList.add(machineVerify);
-                    }else{
+                    }
+                    if(machineVerify.getState().equals("保存")){
                         waitList.add(machineVerify);
                     }
                 }
@@ -141,6 +141,7 @@ public class MachineVerifyActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         stopService(serviceIntent);
+        unregisterReceiver(mBroadcastReceiver);
         super.onDestroy();
     }
 }
