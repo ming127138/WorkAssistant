@@ -15,12 +15,11 @@
         android:textSize="@dimen/sw_15dp"/>
 
     <TextView
-        android:id="@+id/listview_item_report_info_problem_flag_tv"
+        android:id="@+id/listview_item_report_info_problem_state_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="right"
-        android:text="未解决"
         android:textColor="@color/blue"
         android:textSize="@dimen/sw_15dp" />
 </LinearLayout>

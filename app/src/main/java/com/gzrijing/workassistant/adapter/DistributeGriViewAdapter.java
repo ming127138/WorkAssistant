@@ -2,10 +2,7 @@ package com.gzrijing.workassistant.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +14,6 @@ import android.widget.RelativeLayout;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.util.ImageUtils;
-import com.gzrijing.workassistant.view.ImageBrowserActivity;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;

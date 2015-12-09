@@ -1,7 +1,6 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ImageBrowserAdapter;
 import com.gzrijing.workassistant.adapter.ImageSelectorAdapter;
 import com.gzrijing.workassistant.entity.PicUrl;
 

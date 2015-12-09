@@ -13,8 +13,7 @@ import android.widget.TextView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
-import com.gzrijing.workassistant.view.DistributeActivity;
-import com.gzrijing.workassistant.view.ImageBrowserActivity;
+import com.gzrijing.workassistant.view.ImageBrowserForLocationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,7 @@ public class DetailedInfoAdapter extends BaseAdapter {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (picUrls.size() > 0) {
-                        Intent intent = new Intent(context, ImageBrowserActivity.class);
+                        Intent intent = new Intent(context, ImageBrowserForLocationActivity.class);
                         intent.putExtra("position", position);
                         intent.putParcelableArrayListExtra("picUrls", picUrls);
                         context.startActivity(intent);

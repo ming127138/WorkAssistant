@@ -9,6 +9,7 @@ import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.entity.MachineVerifyInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Progress;
+import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
@@ -261,7 +262,7 @@ public class JsonParseUtils {
      * @param jsonData
      * @return
      */
-    public static ArrayList<PicUrl> getAllImageUrl(String jsonData) {
+    public static ArrayList<PicUrl> getImageUrl(String jsonData) {
         ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
@@ -367,6 +368,7 @@ public class JsonParseUtils {
 
     /**
      * 获取机械审核信息
+     *
      * @param jsonData
      * @return
      */
@@ -420,6 +422,7 @@ public class JsonParseUtils {
 
     /**
      * 获取材料审核信息
+     *
      * @param jsonData
      * @return
      */
@@ -470,6 +473,81 @@ public class JsonParseUtils {
             e.printStackTrace();
         }
 
+        return list;
+    }
+
+    /**
+     * 获取问题汇报信息
+     * @param jsonData
+     * @return
+     */
+    public static List<ReportInfo> getProblemReportInfo(String jsonData) {
+        List<ReportInfo> list = new ArrayList<ReportInfo>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.getString("id");
+                String fileNo = jsonObject.getString("FileNo");
+                String content = jsonObject.getString("Reason");
+                String state = jsonObject.getString("FileState").trim();
+                String picNum = jsonObject.getString("PicQty");
+                String reportor = jsonObject.getString("SaveName");
+                String reportTime = jsonObject.getString("SaveDate");
+
+                ReportInfo info = new ReportInfo();
+                info.setId(id);
+                info.setFileNo(fileNo);
+                info.setContent(content);
+                info.setPicNum(picNum);
+                info.setReportor(reportor);
+                info.setReportTime(reportTime);
+                if(state.equals("停止")){
+                    info.setState("0");
+                }
+                if(state.equals("继续")){
+                    info.setState("1");
+                }
+
+                list.add(info);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取进度汇报信息
+     * @param jsonData
+     * @return
+     */
+    public static List<ReportInfo> getProgressReportInfo(String jsonData) {
+        List<ReportInfo> list = new ArrayList<ReportInfo>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.getString("id");
+                String fileNo = jsonObject.getString("FileNo");
+                String content = jsonObject.getString("TaskDetail");
+                String picNum = jsonObject.getString("PicQty");
+                String reportor = jsonObject.getString("SaveName");
+                String reportTime = jsonObject.getString("SaveDate");
+
+                ReportInfo info = new ReportInfo();
+                info.setId(id);
+                info.setFileNo(fileNo);
+                info.setContent(content);
+                info.setPicNum(picNum);
+                info.setReportor(reportor);
+                info.setReportTime(reportTime);
+
+                list.add(info);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return list;
     }
 

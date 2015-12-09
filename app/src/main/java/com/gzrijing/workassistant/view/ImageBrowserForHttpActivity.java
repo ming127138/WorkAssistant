@@ -3,23 +3,23 @@ package com.gzrijing.workassistant.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ImageBrowserAdapter;
+import com.gzrijing.workassistant.adapter.ImageBrowserForHttpAdapter;
+import com.gzrijing.workassistant.adapter.ImageBrowserForLocationAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.PicUrl;
 
 import java.util.List;
 
-public class ImageBrowserActivity extends BaseActivity {
+public class ImageBrowserForHttpActivity extends BaseActivity {
 
     private TextView tv_topNum;
     private ViewPager vp_image;
     private int position;
     private List<PicUrl> picUrls;
-    private ImageBrowserAdapter adapter;
+    private ImageBrowserForHttpAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +39,11 @@ public class ImageBrowserActivity extends BaseActivity {
 
     private void initViews() {
         tv_topNum = (TextView) findViewById(R.id.image_browser_top_num_tv);
-        tv_topNum.setText((position+1) + " / " + picUrls.size());
+        if (picUrls.size() > 0) {
+            tv_topNum.setText(1 + " / " + picUrls.size());
+        }
         vp_image = (ViewPager) findViewById(R.id.image_browser_vp);
-        adapter = new ImageBrowserAdapter(this, picUrls);
+        adapter = new ImageBrowserForHttpAdapter(this, picUrls);
         vp_image.setAdapter(adapter);
         vp_image.setCurrentItem(position);
 

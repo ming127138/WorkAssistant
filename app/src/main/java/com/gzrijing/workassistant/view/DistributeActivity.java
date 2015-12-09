@@ -2,7 +2,6 @@ package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,12 +28,10 @@ import com.gzrijing.workassistant.adapter.DistributeGriViewAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.BusinessHaveSendData;
-import com.gzrijing.workassistant.db.ImageData;
-import com.gzrijing.workassistant.entity.BusinessHaveSend;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
-import com.gzrijing.workassistant.service.DownLoadImageService;
+import com.gzrijing.workassistant.service.DownLoadAllImageService;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
@@ -103,7 +100,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initImageUrl() {
-        imageIntent = new Intent(this, DownLoadImageService.class);
+        imageIntent = new Intent(this, DownLoadAllImageService.class);
         imageIntent.putExtra("orderId", orderId);
         startService(imageIntent);
     }
@@ -351,15 +348,10 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("action.com.gzrijing.workassistant.Distribute")) {
-                String result = intent.getStringExtra("result");
-                if (result.equals("与服务器断开连接")) {
-                    ToastUtil.showToast(DistributeActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
-                } else {
-                    String response = intent.getStringExtra("response");
-                    imageUrls = JsonParseUtils.getAllImageUrl(response);
-                    adapter = new DistributeGriViewAdapter(DistributeActivity.this, picUrls, imageUrls);
-                    gv_image.setAdapter(adapter);
-                }
+                String response = intent.getStringExtra("response");
+                imageUrls = JsonParseUtils.getImageUrl(response);
+                adapter = new DistributeGriViewAdapter(DistributeActivity.this, picUrls, imageUrls);
+                gv_image.setAdapter(adapter);
 
             }
         }

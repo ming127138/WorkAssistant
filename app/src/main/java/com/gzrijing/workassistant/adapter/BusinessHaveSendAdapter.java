@@ -73,6 +73,7 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ReportInfoActivity.class);
+                intent.putExtra("id", BHSList.get(position).getOrderId());
                 context.startActivity(intent);
             }
         });

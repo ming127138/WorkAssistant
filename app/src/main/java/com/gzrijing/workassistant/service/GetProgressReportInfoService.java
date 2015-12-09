@@ -4,43 +4,33 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-public class GetSuppliesVerifyService extends Service{
-
+public class GetProgressReportInfoService extends Service {
     private Handler handler = new Handler();
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public GetProgressReportInfoService() {
     }
 
     @Override
-    public int onStartCommand(final Intent intent, int flags, int startId) {
-        String userNo = intent.getStringExtra("userNo");
-        String orderId = intent.getStringExtra("orderId");
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
-        String url = null;
-        try {
-            url = "?cmd=getmaterialneedlist&userno="+URLEncoder.encode(userNo, "UTF-8")+"&savedate=&mainid=&fileno="
-                    + URLEncoder.encode(orderId, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String id = intent.getStringExtra("id");
+        String url = "?cmd=getsomeinstalltask&togetherid="+id+"&savedate=";
 
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                Intent intent1 = new Intent("action.com.gzrijing.workassistant.SuppliesVerify");
+                Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.progress");
                 intent1.putExtra("jsonData", response);
                 sendBroadcast(intent1);
             }
@@ -50,7 +40,7 @@ public class GetSuppliesVerifyService extends Service{
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(GetSuppliesVerifyService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(GetProgressReportInfoService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }

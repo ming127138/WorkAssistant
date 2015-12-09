@@ -13,13 +13,13 @@ import com.gzrijing.workassistant.util.ImageUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageBrowserAdapter extends PagerAdapter{
+public class ImageBrowserForLocationAdapter extends PagerAdapter{
 
     private Context context;
     private List<PicUrl> picUrls;
     private List<View> picViews;
 
-    public ImageBrowserAdapter (Context context, List<PicUrl> picUrls){
+    public ImageBrowserForLocationAdapter(Context context, List<PicUrl> picUrls){
         this.context = context;
         this.picUrls = picUrls;
         initViews();

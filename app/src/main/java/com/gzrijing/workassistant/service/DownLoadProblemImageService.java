@@ -14,8 +14,7 @@ import com.gzrijing.workassistant.util.ToastUtil;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class GetSuppliesVerifyService extends Service{
-
+public class DownLoadProblemImageService extends Service {
     private Handler handler = new Handler();
 
     @Nullable
@@ -25,14 +24,13 @@ public class GetSuppliesVerifyService extends Service{
     }
 
     @Override
-    public int onStartCommand(final Intent intent, int flags, int startId) {
-        String userNo = intent.getStringExtra("userNo");
-        String orderId = intent.getStringExtra("orderId");
-
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String fileNo = intent.getStringExtra("fileNo");
+        String id = intent.getStringExtra("id");
         String url = null;
         try {
-            url = "?cmd=getmaterialneedlist&userno="+URLEncoder.encode(userNo, "UTF-8")+"&savedate=&mainid=&fileno="
-                    + URLEncoder.encode(orderId, "UTF-8");
+            url = "?cmd=getconspic&fileno=" + URLEncoder.encode(fileNo, "UTF-8")
+                    + "relationid=" + id + "&pictype=WnW_ConsAccidentPic";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -40,8 +38,8 @@ public class GetSuppliesVerifyService extends Service{
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                Intent intent1 = new Intent("action.com.gzrijing.workassistant.SuppliesVerify");
-                intent1.putExtra("jsonData", response);
+                Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfoProblem");
+                intent1.putExtra("response", response);
                 sendBroadcast(intent1);
             }
 
@@ -50,7 +48,7 @@ public class GetSuppliesVerifyService extends Service{
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(GetSuppliesVerifyService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(DownLoadProblemImageService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }

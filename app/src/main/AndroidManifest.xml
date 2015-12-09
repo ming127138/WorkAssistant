@@ -39,7 +39,7 @@
         android:theme="@style/MyAppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="v4lD7SCrzGfDnezaGEoFjvuq" />
+            android:value="usHHwzjX4di1HX2Hwz85xRtg" />
 
         <!-- app activity -->
         <activity
@@ -191,7 +191,8 @@
             android:name=".view.TrajectoryQueryActivity"
             android:label="@string/title_activity_trajectory_query"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.ImageBrowserActivity" />
+        <activity android:name=".view.ImageBrowserForLocationActivity" />
+        <activity android:name=".view.ImageBrowserForHttpActivity" />
         <activity android:name=".view.ImageSelectorActivity" />
         <activity
             android:name=".view.BusinessHaveSendActivity"
@@ -213,7 +214,13 @@
             android:name=".service.ReportCompleteService"
             android:exported="false" />
         <service
-            android:name=".service.DownLoadImageService"
+            android:name=".service.DownLoadAllImageService"
+            android:exported="false" />
+        <service
+            android:name=".service.DownLoadProblemImageService"
+            android:exported="false" />
+        <service
+            android:name=".service.DownLoadProgressImageService"
             android:exported="false" />
         <service
             android:name=".service.GetInspectionService"
@@ -230,6 +237,15 @@
         <service
             android:name=".service.GetSuppliesVerifyService"
             android:exported="false" />
+        <service
+            android:name=".service.GetProblemReportInfoService"
+            android:exported="false"/>
+        <service
+            android:name=".service.GetProgressReportInfoService"
+            android:exported="false"/>
+        <service
+            android:name=".service.GetCompleteReportInfoService"
+            android:exported="false"/>
 
         <!-- app service -->
 

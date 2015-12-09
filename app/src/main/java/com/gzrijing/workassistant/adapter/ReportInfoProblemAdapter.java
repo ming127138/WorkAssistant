@@ -45,7 +45,7 @@ public class ReportInfoProblemAdapter extends BaseAdapter {
             convertView = listContainer.inflate(
                     R.layout.listview_item_report_info_problem, parent, false);
             v.content = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_content_tv);
-            v.flag = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_flag_tv);
+            v.state = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_state_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -56,16 +56,17 @@ public class ReportInfoProblemAdapter extends BaseAdapter {
             v.content.setText((position + 1) + "." + list.get(position).getContent());
         }
 
-        if(list.get(position).isFlag()){
-            v.flag.setText("已解决");
-        }else {
-            v.flag.setText("未解决");
+        if(list.get(position).getState().equals("0")){
+            v.state.setText("未解决");
+        }
+        if(list.get(position).getState().equals("0")){
+            v.state.setText("已解决");
         }
         return convertView;
     }
 
     class ViewHolder {
         private TextView content;
-        private TextView flag;
+        private TextView state;
     }
 }

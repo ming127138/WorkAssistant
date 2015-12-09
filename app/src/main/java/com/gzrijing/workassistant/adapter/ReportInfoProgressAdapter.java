@@ -45,6 +45,7 @@ public class ReportInfoProgressAdapter extends BaseAdapter {
             convertView = listContainer.inflate(
                     R.layout.listview_item_report_info_problem, parent, false);
             v.content = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_content_tv);
+            v.state = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_state_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -55,10 +56,13 @@ public class ReportInfoProgressAdapter extends BaseAdapter {
         } else {
             v.content.setText((position + 1) + "." + list.get(position).getContent());
         }
+
+        v.state.setVisibility(View.GONE);
         return convertView;
     }
 
     class ViewHolder {
         private TextView content;
+        private TextView state;
     }
 }
