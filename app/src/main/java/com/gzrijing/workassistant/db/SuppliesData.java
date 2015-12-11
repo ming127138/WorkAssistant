@@ -4,13 +4,14 @@ import org.litepal.crud.DataSupport;
 
 public class SuppliesData extends DataSupport {
     private int id;
-    private String No;          //材料编号
     private String applyId;     //材料申请单号
+    private String receivedId;  //材料发放单号
+    private String returnId;    //材料退回单号
+    private String No;          //材料编号
     private String name;        //材料名称
     private String spec;        //材料规格
     private String unit;        //材料单位
     private int num;            //数量
-    private String state;       //申请材料状态（申请中，已审批，领用）
     private BusinessData businessData;
 
     public int getId() {
@@ -21,20 +22,36 @@ public class SuppliesData extends DataSupport {
         this.id = id;
     }
 
-    public String getNo() {
-        return No;
-    }
-
-    public void setNo(String no) {
-        No = no;
-    }
-
     public String getApplyId() {
         return applyId;
     }
 
     public void setApplyId(String applyId) {
         this.applyId = applyId;
+    }
+
+    public String getReceivedId() {
+        return receivedId;
+    }
+
+    public void setReceivedId(String receivedId) {
+        this.receivedId = receivedId;
+    }
+
+    public String getReturnId() {
+        return returnId;
+    }
+
+    public void setReturnId(String returnId) {
+        this.returnId = returnId;
+    }
+
+    public String getNo() {
+        return No;
+    }
+
+    public void setNo(String no) {
+        No = no;
     }
 
     public String getName() {
@@ -67,14 +84,6 @@ public class SuppliesData extends DataSupport {
 
     public void setNum(int num) {
         this.num = num;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public BusinessData getBusinessData() {

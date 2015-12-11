@@ -198,6 +198,18 @@
             android:name=".view.BusinessHaveSendActivity"
             android:label="@string/title_activity_business_have_send"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SuppliesApprovalActivity"
+            android:label="材料列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SuppliesReceivedActivity"
+            android:label="领料列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SuppliesReturnActivity"
+            android:label="退料列表"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -239,13 +251,13 @@
             android:exported="false" />
         <service
             android:name=".service.GetProblemReportInfoService"
-            android:exported="false"/>
+            android:exported="false" />
         <service
             android:name=".service.GetProgressReportInfoService"
-            android:exported="false"/>
+            android:exported="false" />
         <service
             android:name=".service.GetCompleteReportInfoService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!-- app service -->
 

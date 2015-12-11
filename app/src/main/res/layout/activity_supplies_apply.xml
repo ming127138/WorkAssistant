@@ -246,36 +246,18 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:gravity="center"
-                        android:text="名称"
+                        android:text="申请单ID"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_12dp" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:gravity="center"
-                        android:text="规格"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sw_12dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="单位"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sw_12dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="数量"
+                        android:text="审批时间"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_12dp" />
 
@@ -308,12 +290,28 @@
                 android:background="@drawable/bg_text"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="材料已领出："
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sw_15dp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="材料发放单："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_15dp" />
+
+                    <Button
+                        android:id="@+id/supplies_apply_received_btn"
+                        android:layout_width="@dimen/sw_50dp"
+                        android:layout_height="@dimen/sw_25dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/btn_blue_frame"
+                        android:text="领取"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/sw_12dp" />
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -325,9 +323,27 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:gravity="center"
-                        android:text="名称"
+                        android:text="申请单ID"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_12dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="发放单ID"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sw_12dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="领料时间"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_12dp" />
 
@@ -336,25 +352,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="规格"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sw_12dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="单位"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sw_12dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="数量"
+                        android:text="状态"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_12dp" />
                 </LinearLayout>
@@ -386,7 +384,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="材料退回列表："
+                        android:text="材料退回单："
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_15dp" />
 
@@ -399,6 +397,17 @@
                         android:text="编辑"
                         android:textColor="@color/blue"
                         android:textSize="@dimen/sw_12dp" />
+
+                    <Button
+                        android:id="@+id/supplies_apply_return_btn"
+                        android:layout_width="@dimen/sw_50dp"
+                        android:layout_height="@dimen/sw_25dp"
+                        android:layout_marginRight="@dimen/sw_10dp"
+                        android:background="@drawable/btn_blue_frame"
+                        android:layout_toLeftOf="@+id/supplies_apply_return_edit_btn"
+                        android:text="退回"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/sw_12dp"/>
                 </RelativeLayout>
 
                 <LinearLayout
@@ -411,36 +420,18 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:gravity="center"
-                        android:text="名称"
+                        android:text="退回单ID"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_12dp" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:gravity="center"
-                        android:text="规格"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sw_12dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="单位"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sw_12dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="数量"
+                        android:text="申请时间"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sw_12dp" />
 
@@ -463,18 +454,6 @@
                     android:id="@+id/supplies_apply_return_lv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
-
-                <Button
-                    android:id="@+id/supplies_apply_return_btn"
-                    android:layout_width="@dimen/sw_50dp"
-                    android:layout_height="@dimen/sw_25dp"
-                    android:background="@drawable/btn_blue_frame"
-                    android:layout_marginTop="@dimen/sw_10dp"
-                    android:layout_gravity="right"
-                    android:visibility="gone"
-                    android:text="退回"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/sw_12dp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

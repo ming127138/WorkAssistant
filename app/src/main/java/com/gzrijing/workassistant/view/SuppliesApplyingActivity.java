@@ -3,6 +3,7 @@ package com.gzrijing.workassistant.view;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
@@ -23,13 +25,20 @@ import com.gzrijing.workassistant.db.SuppliesData;
 import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
+import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,10 +49,10 @@ import java.util.List;
 public class SuppliesApplyingActivity extends BaseActivity implements View.OnClickListener {
 
     private int position;
-    private String userName;
+    private String userNo;
     private String orderId;
     private SuppliesNo suppliesNo;
-    private List<Supplies> suppliesList = new ArrayList<Supplies>();
+    private ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
     private TextView tv_reason;
     private TextView tv_useTime;
     private EditText et_remarks;
@@ -52,6 +61,7 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private SuppliesApplyingAdapter adapter;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,18 +75,17 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
 
     private void initData() {
         Intent intent = getIntent();
-        userName = intent.getStringExtra("userName");
+        userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
         position = intent.getIntExtra("position", -1);
-        suppliesNo = (SuppliesNo)intent.getParcelableExtra("suppliesNo");
-        List<SuppliesData> suppliesDataList  = DataSupport.where("applyId = ?", suppliesNo.getApplyId()).find(SuppliesData.class);
-        for(SuppliesData data : suppliesDataList){
+        suppliesNo = (SuppliesNo) intent.getParcelableExtra("suppliesNo");
+        List<SuppliesData> suppliesDataList = DataSupport.where("applyId = ?", suppliesNo.getApplyId()).find(SuppliesData.class);
+        for (SuppliesData data : suppliesDataList) {
             Supplies supplies = new Supplies();
             supplies.setName(data.getName());
             supplies.setSpec(data.getSpec());
             supplies.setUnit(data.getUnit());
             supplies.setNum(data.getNum());
-            supplies.setState(data.getState());
             suppliesList.add(supplies);
         }
     }
@@ -113,7 +122,7 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
 
             case R.id.supplies_applying_edit_btn:
                 Intent intent = new Intent(this, SuppliesApplyEditActivity.class);
-                intent.putExtra("suppliesList", (Serializable) suppliesList);
+                intent.putParcelableArrayListExtra("suppliesList", suppliesList);
                 startActivityForResult(intent, 10);
                 break;
         }
@@ -165,7 +174,7 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == 10) {
-                List<Supplies> suppliess = (List<Supplies>) data.getSerializableExtra("suppliesList");
+                ArrayList<Supplies> suppliess = data.getParcelableArrayListExtra("suppliesList");
                 suppliesList.clear();
                 suppliesList.addAll(suppliess);
                 adapter.notifyDataSetChanged();
@@ -189,29 +198,89 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
         }
 
         if (id == R.id.action_apply) {
-            SuppliesNo suppliesNo = apply();
-            Intent intent = getIntent();
-            intent.putExtra("position", position);
-            intent.putExtra("suppliesNo", (Parcelable) suppliesNo);
-            setResult(20, intent);
-            finish();
+            apply();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private SuppliesNo apply() {
+    private void apply() {
         String useTime = tv_useTime.getText().toString();
         String remarks = et_remarks.getText().toString().trim();
-        String applyId = "重新申请单00Y";
+        JSONArray jsonArray = new JSONArray();
+        for (Supplies supplies : suppliesList) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("MakingNo", supplies.getId());
+                jsonObject.put("MakingName", supplies.getName());
+                jsonObject.put("MakingSpace", supplies.getSpec());
+                jsonObject.put("MakingUnit", supplies.getSpec());
+                jsonObject.put("Qty", supplies.getNum());
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "dosavematerialneedmain")
+                .add("mainid", suppliesNo.getApplyId())
+                .add("fileno", orderId)
+                .add("billtype", "工程材料")
+                .add("usedatetime", useTime)
+                .add("remark", remarks)
+                .add("userno", userNo)
+                .add("makingjson", jsonArray.toString())
+                .build();
+
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                if (response.substring(0, 1).equals("E")) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showToast(SuppliesApplyingActivity.this, "申请失败", Toast.LENGTH_SHORT);
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            SuppliesNo suppliesNo = savaSuppliesNo(response);
+                            Intent intent = getIntent();
+                            intent.putExtra("position", position);
+                            intent.putExtra("suppliesNo", (Parcelable) suppliesNo);
+                            setResult(20, intent);
+                            finish();
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(SuppliesApplyingActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+
+    }
+
+    private SuppliesNo savaSuppliesNo(String applyId) {
         Calendar rightNow = Calendar.getInstance();
         String applyTime = dateFormat.format(rightNow.getTime());
 
         DataSupport.deleteAll(SuppliesData.class, "applyId = ?", suppliesNo.getApplyId());
         DataSupport.deleteAll(SuppliesNoData.class, "applyId = ?", suppliesNo.getApplyId());
 
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         for (int i = 0; i < suppliesList.size(); i++) {
             SuppliesData data = new SuppliesData();
             data.setNo(suppliesList.get(i).getId());
@@ -220,16 +289,15 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
             data.setSpec(suppliesList.get(i).getSpec());
             data.setUnit(suppliesList.get(i).getUnit());
             data.setNum(suppliesList.get(i).getNum());
-            data.setState("申请中");
             data.save();
             businessData.getSuppliesDataList().add(data);
         }
         SuppliesNoData data1 = new SuppliesNoData();
         data1.setApplyId(applyId);
         data1.setApplyTime(applyTime);
-        data1.setUseTime(useTime);
-        data1.setRemarks(remarks);
-        data1.setState("申请中");
+        data1.setUseTime(tv_useTime.getText().toString());
+        data1.setRemarks(et_remarks.getText().toString().trim());
+        data1.setApplyState("申请中");
         data1.save();
         businessData.getSuppliesNoList().add(data1);
         businessData.save();
@@ -237,9 +305,10 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
         SuppliesNo suppliesNo = new SuppliesNo();
         suppliesNo.setApplyId(applyId);
         suppliesNo.setApplyTime(applyTime);
-        suppliesNo.setUseTime(useTime);
-        suppliesNo.setRemarks(remarks);
-        suppliesNo.setState("申请中");
+        suppliesNo.setUseTime(tv_useTime.getText().toString());
+        suppliesNo.setRemarks(et_remarks.getText().toString().trim());
+        suppliesNo.setApplyState("申请中");
+
         return suppliesNo;
     }
 

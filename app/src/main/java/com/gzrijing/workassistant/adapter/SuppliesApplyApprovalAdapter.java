@@ -9,22 +9,18 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.entity.SuppliesNo;
 
 import java.util.List;
 
 public class SuppliesApplyApprovalAdapter extends BaseAdapter {
 
-    private List<Supplies> receivedList;
-    private SuppliesApplyReceivedAdapter receivedAdapter;
     private LayoutInflater listContainer;
-    private List<Supplies> approvalList;
+    private List<SuppliesNo> approvalList;
 
-    public SuppliesApplyApprovalAdapter(Context context, List<Supplies> approvalList,
-                                        List<Supplies> receivedList, SuppliesApplyReceivedAdapter receivedAdapter) {
+    public SuppliesApplyApprovalAdapter(Context context, List<SuppliesNo> approvalList) {
         listContainer = LayoutInflater.from(context);
         this.approvalList = approvalList;
-        this.receivedList = receivedList;
-        this.receivedAdapter = receivedAdapter;
     }
 
     @Override
@@ -49,30 +45,24 @@ public class SuppliesApplyApprovalAdapter extends BaseAdapter {
             v = new ViewHolder();
             convertView = listContainer.inflate(
                     R.layout.listview_item_supplies_apply_approval, parent, false);
-            v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_spec_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_num_tv);
+            v.id = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_id_tv);
+            v.time = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_time_tv);
             v.state = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_state_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.name.setText(approvalList.get(position).getName());
-        v.spec.setText(approvalList.get(position).getSpec());
-        v.unit.setText(approvalList.get(position).getUnit());
-        v.num.setText(approvalList.get(position).getNum() + "");
-        v.state.setText(approvalList.get(position).getState());
+        v.id.setText(approvalList.get(position).getApplyId());
+        v.time.setText(approvalList.get(position).getApprovalTime());
+        v.state.setText(approvalList.get(position).getApplyState());
 
         return convertView;
     }
 
     class ViewHolder {
-        private TextView name;
-        private TextView spec;
-        private TextView unit;
-        private TextView num;
+        private TextView id;
+        private TextView time;
         private TextView state;
     }
 }

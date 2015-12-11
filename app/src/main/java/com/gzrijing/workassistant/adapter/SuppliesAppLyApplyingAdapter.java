@@ -52,7 +52,7 @@ public class SuppliesApplyApplyingAdapter extends BaseAdapter {
         }
         v.applyId.setText(applyingList.get(position).getApplyId());
         v.applyTime.setText(applyingList.get(position).getApplyTime());
-        v.state.setText(applyingList.get(position).getState());
+        v.state.setText(applyingList.get(position).getApplyState());
 
         return convertView;
     }

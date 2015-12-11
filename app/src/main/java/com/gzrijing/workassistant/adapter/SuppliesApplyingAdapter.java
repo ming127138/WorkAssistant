@@ -10,14 +10,14 @@ import android.widget.TextView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.Supplies;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class SuppliesApplyingAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<Supplies> applyingList;
+    private ArrayList<Supplies> applyingList;
 
-    public SuppliesApplyingAdapter(Context context, List<Supplies> applyingList) {
+    public SuppliesApplyingAdapter(Context context, ArrayList<Supplies> applyingList) {
         listContainer = LayoutInflater.from(context);
         this.applyingList = applyingList;
     }
@@ -43,12 +43,11 @@ public class SuppliesApplyingAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_supplies_apply_approval, parent, false);
-            v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_spec_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_num_tv);
-            v.state = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_approval_state_tv);
+                    R.layout.listview_item_supplies_applying, parent, false);
+            v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_applying_name_tv);
+            v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_applying_spec_tv);
+            v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_applying_unit_tv);
+            v.num = (TextView) convertView.findViewById(R.id.listview_item_supplies_applying_num_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -58,7 +57,6 @@ public class SuppliesApplyingAdapter extends BaseAdapter {
         v.spec.setText(applyingList.get(position).getSpec());
         v.unit.setText(applyingList.get(position).getUnit());
         v.num.setText(applyingList.get(position).getNum() + "");
-        v.state.setText(applyingList.get(position).getState());
         return convertView;
     }
 
@@ -67,6 +65,5 @@ public class SuppliesApplyingAdapter extends BaseAdapter {
         private TextView spec;
         private TextView unit;
         private TextView num;
-        private TextView state;
     }
 }

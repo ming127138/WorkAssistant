@@ -9,15 +9,16 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.entity.SuppliesNo;
 
 import java.util.List;
 
 public class SuppliesApplyReceivedAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<Supplies> suppliesList;
+    private List<SuppliesNo> suppliesList;
 
-    public SuppliesApplyReceivedAdapter(Context context, List<Supplies> suppliesList) {
+    public SuppliesApplyReceivedAdapter(Context context, List<SuppliesNo> suppliesList) {
         listContainer = LayoutInflater.from(context);
         this.suppliesList = suppliesList;
     }
@@ -44,27 +45,27 @@ public class SuppliesApplyReceivedAdapter extends BaseAdapter {
             v = new ViewHolder();
             convertView = listContainer.inflate(
                     R.layout.listview_item_supplies_apply_received, parent, false);
-            v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_received_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_received_spec_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_received_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_received_num_tv);
+            v.applyId = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_received_apply_id_tv);
+            v.receivedId = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_received_id_tv);
+            v.time = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_received_time_tv);
+            v.state = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_received_state_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.name.setText(suppliesList.get(position).getName());
-        v.spec.setText(suppliesList.get(position).getSpec());
-        v.unit.setText(suppliesList.get(position).getUnit());
-        v.num.setText(suppliesList.get(position).getNum() + "");
+        v.applyId.setText(suppliesList.get(position).getApplyId());
+        v.receivedId.setText(suppliesList.get(position).getReceivedId());
+        v.time.setText(suppliesList.get(position).getReceivedTime());
+        v.state.setText(suppliesList.get(position).getReceivedState());
 
         return convertView;
     }
 
     class ViewHolder {
-        private TextView name;
-        private TextView spec;
-        private TextView unit;
-        private TextView num;
+        private TextView applyId;
+        private TextView receivedId;
+        private TextView time;
+        private TextView state;
     }
 }

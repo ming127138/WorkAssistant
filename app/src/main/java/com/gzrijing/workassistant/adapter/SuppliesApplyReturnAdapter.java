@@ -9,15 +9,16 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.entity.SuppliesNo;
 
 import java.util.List;
 
 public class SuppliesApplyReturnAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<Supplies> suppliesList;
+    private List<SuppliesNo> suppliesList;
 
-    public SuppliesApplyReturnAdapter(Context context, List<Supplies> suppliesList) {
+    public SuppliesApplyReturnAdapter(Context context, List<SuppliesNo> suppliesList) {
         listContainer = LayoutInflater.from(context);
         this.suppliesList = suppliesList;
     }
@@ -44,30 +45,24 @@ public class SuppliesApplyReturnAdapter extends BaseAdapter {
             v = new ViewHolder();
             convertView = listContainer.inflate(
                     R.layout.listview_item_supplies_apply_return, parent, false);
-            v.name = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_return_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_return_spec_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_return_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_return_num_tv);
-            v.returnState = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_return_state_tv);
+            v.id = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_return_id_tv);
+            v.time = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_return_time_tv);
+            v.state = (TextView) convertView.findViewById(R.id.listview_item_supplies_apply_return_state_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.name.setText(suppliesList.get(position).getName());
-        v.spec.setText(suppliesList.get(position).getSpec());
-        v.unit.setText(suppliesList.get(position).getUnit());
-        v.num.setText(suppliesList.get(position).getNum() + "");
-        v.returnState.setText(suppliesList.get(position).getState());
+        v.id.setText(suppliesList.get(position).getReturnId());
+        v.time.setText(suppliesList.get(position).getReturnTime());
+        v.state.setText(suppliesList.get(position).getReturnState());
 
         return convertView;
     }
 
     class ViewHolder {
-        private TextView name;
-        private TextView spec;
-        private TextView unit;
-        private TextView num;
-        private TextView returnState;
+        private TextView id;
+        private TextView time;
+        private TextView state;
     }
 }
