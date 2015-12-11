@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- 个推SDK权限配置开始 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -209,6 +210,9 @@
         <activity
             android:name=".view.SuppliesReturnActivity"
             android:label="退料列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".zxing.view.MipcaActivityCapture"
             android:screenOrientation="portrait" />
         <!-- app activity -->
 
