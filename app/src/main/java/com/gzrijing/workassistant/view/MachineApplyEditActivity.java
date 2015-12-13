@@ -115,10 +115,8 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
                 Machine apply = new Machine();
                 apply.setId(query.getId());
                 apply.setName(query.getName());
-                apply.setSpec(query.getSpec());
                 apply.setUnit(query.getUnit());
                 apply.setNum(1);
-                apply.setState("新添加");
                 machineList.add(apply);
                 applyAdapter.notifyDataSetChanged();
             }
@@ -151,20 +149,18 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
             ToastUtil.showToast(this, "请填写名称", Toast.LENGTH_SHORT);
             return;
         }
-        if (spec.equals("")) {
-            ToastUtil.showToast(this, "请填写规格", Toast.LENGTH_SHORT);
-            return;
-        }
         if (unit.equals("")) {
             ToastUtil.showToast(this, "请填写单位", Toast.LENGTH_SHORT);
             return;
         }
         Machine machine = new Machine();
-        machine.setName(name);
-        machine.setSpec(spec);
+        if(spec.equals("")){
+            machine.setName(name);
+        }else{
+            machine.setName(name+"_"+spec);
+        }
         machine.setUnit(unit);
         machine.setNum(1);
-        machine.setState("新添加");
         machineList.add(machine);
         applyAdapter.notifyDataSetChanged();
         et_name.setText("");
@@ -180,7 +176,7 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
         }
         String url = null;
         try {
-            url = "?cmd=getmachinenamelist&machinename=" + URLEncoder.encode(keyWork, "UTF-8");
+            url = "?cmd=getmachinelist&savedate=&machinename=" + URLEncoder.encode(keyWork, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -188,7 +184,6 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
             @Override
             public void onFinish(String response) {
                 List<Machine> MQList = JsonParseUtils.getMachineQueries(response);
-
                 Message msg = handler.obtainMessage(0);
                 msg.obj = MQList;
                 handler.sendMessage(msg);
@@ -201,17 +196,6 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
             }
         });
 
-
-        machineQueries.clear();
-        for (int i = 1; i < 5; i++) {
-            Machine query = new Machine();
-            query.setId("SQ00" + i);
-            query.setName("机械" + i);
-            query.setSpec("规格" + i);
-            query.setUnit("单位" + i);
-            machineQueries.add(query);
-        }
-        queryAdapter.notifyDataSetChanged();
     }
 
     @Override

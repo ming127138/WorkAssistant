@@ -1,10 +1,16 @@
 package com.gzrijing.workassistant.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.database.DataSetObserver;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,10 +21,12 @@ import java.util.List;
 
 public class MachineApplyAdapter extends BaseAdapter {
 
+    private Context context;
     private LayoutInflater listContainer;
     private List<Machine> machineList;
 
     public MachineApplyAdapter(Context context, List<Machine> machineList) {
+        this.context = context;
         listContainer = LayoutInflater.from(context);
         this.machineList = machineList;
     }
@@ -47,20 +55,44 @@ public class MachineApplyAdapter extends BaseAdapter {
                     R.layout.listview_item_machine_apply, parent, false);
             v.del = (ImageView) convertView.findViewById(R.id.listview_item_machine_apply_del_iv);
             v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_spec_tv);
             v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_unit_tv);
             v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_num_tv);
-            v.up = (ImageView) convertView.findViewById(R.id.listview_item_machine_apply_num_up_iv);
-            v.down = (ImageView) convertView.findViewById(R.id.listview_item_machine_apply_num_down_iv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
         v.name.setText(machineList.get(position).getName());
-        v.spec.setText(machineList.get(position).getSpec());
         v.unit.setText(machineList.get(position).getUnit());
         v.num.setText(machineList.get(position).getNum() + "");
+
+        v.num.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText et = new EditText(context);
+                et.setTextColor(context.getResources().getColor(R.color.black));
+                et.setInputType(InputType.TYPE_CLASS_NUMBER);
+                final AlertDialog dialog = new AlertDialog.Builder(context)
+                        .setTitle("请输入数量")
+                        .setView(et)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                machineList.get(position).setNum(Integer.valueOf(et.getText().toString().trim()));
+                                notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("取消", null).show();
+                et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus) {
+                            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        }
+                    }
+                });
+            }
+        });
 
         v.del.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,37 +101,7 @@ public class MachineApplyAdapter extends BaseAdapter {
             }
         });
 
-        v.up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                up(position);
-            }
-        });
-
-        v.down.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                down(position);
-            }
-        });
-
         return convertView;
-    }
-
-    private void down(int position) {
-        int num = machineList.get(position).getNum();
-        if (num > 1) {
-            num--;
-            machineList.get(position).setNum(num);
-            notifyDataSetChanged();
-        }
-    }
-
-    private void up(int position) {
-        int num = machineList.get(position).getNum();
-        num++;
-        machineList.get(position).setNum(num);
-        notifyDataSetChanged();
     }
 
     private void delete(int position) {
@@ -107,13 +109,17 @@ public class MachineApplyAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+        if (observer != null) {
+            super.unregisterDataSetObserver(observer);
+        }
+    }
+
     class ViewHolder {
         private ImageView del;
         private TextView name;
-        private TextView spec;
         private TextView unit;
         private TextView num;
-        private ImageView up;
-        private ImageView down;
     }
 }

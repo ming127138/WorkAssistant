@@ -5,9 +5,11 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,22 +24,31 @@ import com.gzrijing.workassistant.adapter.MachineApplyApplyingAdapter;
 import com.gzrijing.workassistant.adapter.MachineApplyApprovalAdapter;
 import com.gzrijing.workassistant.adapter.MachineApplyCreatedAdapter;
 import com.gzrijing.workassistant.adapter.MachineApplyReceivedAdapter;
-import com.gzrijing.workassistant.adapter.MachineApplyReturnApplyingAdapter;
-import com.gzrijing.workassistant.adapter.MachineApplyReturnCreatedAdapter;
+import com.gzrijing.workassistant.adapter.MachineApplyReturnAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.MachineData;
 import com.gzrijing.workassistant.db.MachineNoData;
+import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.MachineNo;
+import com.gzrijing.workassistant.entity.SuppliesNo;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
+import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.MyListView;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
+import com.gzrijing.workassistant.zxing.view.MipcaActivityCapture;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +58,8 @@ import java.util.List;
 
 public class MachineApplyActivity extends BaseActivity implements View.OnClickListener {
 
+    private final static int MACHINE_RECEIVED = 2001;
+    private final static int MACHINE_RETURN = 2002;
     private String userNo;
     private String orderId;
     private Button btn_applyEdit;
@@ -55,32 +68,28 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
     private EditText et_useAddress;
     private EditText et_applyRemarks;
     private Button btn_apply;
+    private Button btn_received;
     private Button btn_returnEdit;
-    private TextView tv_returnReTime;
-    private EditText et_returnAddress;
-    private EditText et_returnRemarks;
     private Button btn_return;
     private MyListView lv_created;
     private MyListView lv_applying;
     private MyListView lv_received;
     private MyListView lv_approval;
-    private MyListView lv_returnCreated;
-    private MyListView lv_returnApplying;
+    private MyListView lv_return;
     private ArrayList<Machine> createdList = new ArrayList<Machine>();
     private List<MachineNo> applyingList = new ArrayList<MachineNo>();
-    private List<Machine> receivedList = new ArrayList<Machine>();
-    private List<Machine> approvalList = new ArrayList<Machine>();
-    private List<Machine> returnCreatedList = new ArrayList<Machine>();
-    private List<Machine> returnApplyingList = new ArrayList<Machine>();
+    private List<MachineNo> approvalList = new ArrayList<MachineNo>();
+    private ArrayList<Machine> receivedList = new ArrayList<Machine>();
+    private List<MachineNo> returnList = new ArrayList<MachineNo>();
     private MachineApplyCreatedAdapter createdAdapter;
     private MachineApplyApplyingAdapter applyingAdapter;
     private MachineApplyReceivedAdapter receivedAdapter;
     private MachineApplyApprovalAdapter approvalAdapter;
-    private MachineApplyReturnCreatedAdapter returnCreatedAdapter;
-    private MachineApplyReturnApplyingAdapter returnApplyingAdapter;
+    private MachineApplyReturnAdapter returnAdapter;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    private Toast mToast;
+    private Handler handler = new Handler();
+    private BusinessData businessData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,58 +108,63 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
-        List<MachineNoData> machineNoData = businessData.getMachineNoList();
-        for (MachineNoData data : machineNoData) {
-            MachineNo machineNo = new MachineNo();
-            machineNo.setApplyId(data.getApplyId());
-            machineNo.setApplyTime(data.getApplyTime());
-            machineNo.setUseTime(data.getUseTime());
-            machineNo.setReturnTime(data.getReturnTime());
-            machineNo.setUseAddress(data.getUseAddress());
-            machineNo.setState(data.getState());
-            applyingList.add(machineNo);
+        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
+        List<MachineNoData> machineNoDataList = businessData.getMachineNoList();
+        for(MachineNoData data : machineNoDataList){
+            if(!data.getApplyId().equals("")){
+                if(data.getApplyState().equals("申请中") || data.getApplyState().equals("不批准")){
+                    MachineNo applying = new MachineNo();
+                    applying.setApplyId(data.getApplyId());
+                    applying.setApplyTime(data.getApplyTime());
+                    applying.setApplyState(data.getApplyState());
+                    applying.setUseTime(data.getUseTime());
+                    applying.setReturnTime(data.getReturnTime());
+                    applying.setUseAddress(data.getUseAddress());
+                    applying.setRemarks(data.getRemarks());
+                    applyingList.add(applying);
+                }
+
+                if(data.getApplyState().equals("已审批")){
+                    MachineNo approval = new MachineNo();
+                    approval.setApplyId(data.getApplyId());
+                    approval.setApprovalTime(data.getApprovalTime());
+                    approval.setApplyState(data.getApplyState());
+                    approval.setUseTime(data.getUseTime());
+                    approval.setReturnTime(data.getReturnTime());
+                    approval.setUseAddress(data.getUseAddress());
+                    approval.setRemarks(data.getRemarks());
+                    approvalList.add(approval);
+                }
+            }else{
+                if(!data.getReturnId().equals("")){
+                    MachineNo returnNo = new MachineNo();
+                    returnNo.setReturnId(data.getReturnId());
+                    returnNo.setReturnApplyTime(data.getReturnApplyTime());
+                    returnNo.setReturnType(data.getReturnType());
+                    returnNo.setReturnState(data.getReturnState());
+                    returnNo.setReturnTime(data.getReturnTime());
+                    returnNo.setReturnAddress(data.getReturnAddress());
+                    returnNo.setRemarks(data.getRemarks());
+                    returnList.add(returnNo);
+                }
+            }
         }
 
         List<MachineData> machineDataList = businessData.getMachineDataList();
-        for (MachineData data : machineDataList) {
-            if (data.getState().equals("已审核") || data.getState().equals("可领用")) {
+        for(MachineData machineData : machineDataList){
+            if(machineData.getReceivedState().equals("已安排") || machineData.getReceivedState().equals("已领出")){
                 Machine machine = new Machine();
-                machine.setDataId(data.getId());
-                machine.setId(data.getNo());
-                machine.setName(data.getName());
-                machine.setSpec(data.getSpec());
-                machine.setUnit(data.getUnit());
-                machine.setNum(data.getNum());
-                machine.setState(data.getState());
-                approvalList.add(machine);
-            }
-            if (data.getState().equals("已领用")) {
-                Machine machine = new Machine();
-                machine.setDataId(data.getId());
-                machine.setId(data.getNo());
-                machine.setName(data.getName());
-                machine.setSpec(data.getSpec());
-                machine.setUnit(data.getUnit());
-                machine.setNum(data.getNum());
-                machine.setState(data.getState());
-                machine.setReturnType(data.getReturnType());
+                machine.setId(machineData.getNo());
+                machine.setName(machineData.getName());
+                machine.setUnit(machineData.getUnit());
+                machine.setNum(machineData.getNum());
+                machine.setState(machineData.getReceivedState());
                 receivedList.add(machine);
             }
-
-            if (data.getState().equals("退回申请中") || data.getState().equals("退回已批准")) {
-                Machine machine = new Machine();
-                machine.setDataId(data.getId());
-                machine.setId(data.getNo());
-                machine.setName(data.getName());
-                machine.setSpec(data.getSpec());
-                machine.setUnit(data.getUnit());
-                machine.setNum(data.getNum());
-                machine.setState(data.getState());
-                machine.setReturnType(data.getReturnType());
-                returnApplyingList.add(machine);
-            }
         }
+
+
+
     }
 
     private void initViews() {
@@ -165,30 +179,31 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         et_applyRemarks = (EditText) findViewById(R.id.machine_apply_apply_remarks_et);
         btn_apply = (Button) findViewById(R.id.machine_apply_apply_btn);
 
+        btn_received = (Button) findViewById(R.id.machine_apply_received_btn);
+
         btn_returnEdit = (Button) findViewById(R.id.machine_apply_return_edit_btn);
-        tv_returnReTime = (TextView) findViewById(R.id.machine_apply_return_return_time_tv);
-        et_returnAddress = (EditText) findViewById(R.id.machine_apply_return_address_et);
-        et_returnRemarks = (EditText) findViewById(R.id.machine_apply_return_remarks_et);
         btn_return = (Button) findViewById(R.id.machine_apply_return_btn);
 
         lv_created = (MyListView) findViewById(R.id.machine_apply_created_lv);
         createdAdapter = new MachineApplyCreatedAdapter(this, createdList);
         lv_created.setAdapter(createdAdapter);
-        lv_received = (MyListView) findViewById(R.id.machine_apply_received_lv);
+
         lv_applying = (MyListView) findViewById(R.id.machine_apply_applying_lv);
         applyingAdapter = new MachineApplyApplyingAdapter(this, applyingList);
         lv_applying.setAdapter(applyingAdapter);
+
+        lv_approval = (MyListView) findViewById(R.id.machine_apply_approval_lv);
+        approvalAdapter = new MachineApplyApprovalAdapter(this, approvalList);
+        lv_approval.setAdapter(approvalAdapter);
+
+        lv_received = (MyListView) findViewById(R.id.machine_apply_received_lv);
         receivedAdapter = new MachineApplyReceivedAdapter(this, receivedList);
         lv_received.setAdapter(receivedAdapter);
-        lv_approval = (MyListView) findViewById(R.id.machine_apply_approval_lv);
-        approvalAdapter = new MachineApplyApprovalAdapter(this, approvalList, receivedList, receivedAdapter);
-        lv_approval.setAdapter(approvalAdapter);
-        lv_returnCreated = (MyListView) findViewById(R.id.machine_apply_return_lv);
-        returnCreatedAdapter = new MachineApplyReturnCreatedAdapter(this, returnCreatedList);
-        lv_returnCreated.setAdapter(returnCreatedAdapter);
-        lv_returnApplying = (MyListView) findViewById(R.id.machine_apply_return_applying_lv);
-        returnApplyingAdapter = new MachineApplyReturnApplyingAdapter(this, returnApplyingList);
-        lv_returnApplying.setAdapter(returnApplyingAdapter);
+
+        lv_return = (MyListView) findViewById(R.id.machine_apply_return_lv);
+        returnAdapter = new MachineApplyReturnAdapter(this, returnList);
+        lv_return.setAdapter(returnAdapter);
+
     }
 
     private void setListeners() {
@@ -196,50 +211,25 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         tv_useTime.setOnClickListener(this);
         tv_returnTime.setOnClickListener(this);
         btn_apply.setOnClickListener(this);
+        btn_received.setOnClickListener(this);
         btn_returnEdit.setOnClickListener(this);
-        tv_returnReTime.setOnClickListener(this);
         btn_return.setOnClickListener(this);
 
         lv_applying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String applyId = applyingList.get(position).getApplyId();
-                String state = applyingList.get(position).getState();
-
-                if (applyId.equals("申请单00X") && state.equals("申请中")) {
-                    applyingList.get(position).setState("不批准");
-                    applyingAdapter.notifyDataSetChanged();
-                }
-
-                if (applyId.equals("申请单00X") && state.equals("不批准")) {
+                String state = applyingList.get(position).getApplyState();
+                if (state.equals("不批准")) {
                     Intent intent = new Intent(MachineApplyActivity.this, MachineApplyingActivity.class);
                     intent.putExtra("machineNo", (Parcelable) applyingList.get(position));
                     intent.putExtra("position", position);
                     intent.putExtra("userNo", userNo);
                     intent.putExtra("orderId", orderId);
                     startActivityForResult(intent, 20);
-                }
-
-                if (applyId.equals("重新申请单00Y") && state.equals("申请中")) {
-                    List<MachineData> machineDataList = DataSupport.where("applyId = ?", applyId).find(MachineData.class);
-                    for (MachineData data : machineDataList) {
-                        Machine machine = new Machine();
-                        machine.setDataId(data.getId());
-                        machine.setId(data.getNo());
-                        machine.setName(data.getName());
-                        machine.setSpec(data.getSpec());
-                        machine.setUnit(data.getUnit());
-                        machine.setNum(data.getNum());
-                        machine.setState("已审核");
-                        approvalList.add(machine);
-                    }
-                    ContentValues values = new ContentValues();
-                    values.put("state", "已审核");
-                    DataSupport.updateAll(MachineData.class, values, "applyId = ?", applyId);
-                    DataSupport.deleteAll(MachineNoData.class, "applyId = ?", applyId);
-                    applyingList.remove(position);
-                    applyingAdapter.notifyDataSetChanged();
-                    approvalAdapter.notifyDataSetChanged();
+                }else{
+                    Intent intent = new Intent(MachineApplyActivity.this, MachineApplyingScanActivity.class);
+                    intent.putExtra("machineNo", (Parcelable) applyingList.get(position));
+                    startActivity(intent);
                 }
             }
         });
@@ -247,47 +237,21 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         lv_approval.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String state = approvalList.get(position).getState();
-                if (state.equals("已审核")) {
-                    ContentValues values = new ContentValues();
-                    values.put("state", "可领用");
-                    DataSupport.update(MachineData.class, values, approvalList.get(position).getDataId());
-                    approvalList.get(position).setState("可领用");
-                    approvalAdapter.notifyDataSetChanged();
-                }
-
-                if (state.equals("可领用")) {
-                    ContentValues values = new ContentValues();
-                    values.put("state", "已领用");
-                    values.put("returnType", "正常");
-                    DataSupport.update(MachineData.class, values, approvalList.get(position).getDataId());
-                    approvalList.get(position).setReturnType("正常");
-                    receivedList.add(approvalList.get(position));
-                    receivedAdapter.notifyDataSetChanged();
-                    approvalList.remove(position);
-                    approvalAdapter.notifyDataSetChanged();
-                }
+                Intent intent = new Intent(MachineApplyActivity.this, MachineApprovalActivity.class);
+                intent.putExtra("machineNo", (Parcelable) approvalList.get(position));
+                startActivity(intent);
             }
         });
 
-        lv_returnApplying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lv_return.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String state = returnApplyingList.get(position).getState();
-                if (state.equals("退回申请中")) {
-                    ContentValues values = new ContentValues();
-                    values.put("state", "退回已批准");
-                    DataSupport.update(MachineData.class, values, returnApplyingList.get(position).getDataId());
-                    returnApplyingList.get(position).setState("退回已批准");
-                    returnApplyingAdapter.notifyDataSetChanged();
-                }
-                if (state.equals("退回已批准")) {
-                    DataSupport.delete(MachineData.class, returnApplyingList.get(position).getDataId());
-                    returnApplyingList.remove(position);
-                    returnApplyingAdapter.notifyDataSetChanged();
-                }
+                Intent intent = new Intent(MachineApplyActivity.this, MachineReturnActivity.class);
+                intent.putExtra("machineNo", (Parcelable) returnList.get(position));
+                startActivity(intent);
             }
         });
+
 
     }
 
@@ -312,18 +276,24 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                 apply();
                 break;
 
-            case R.id.machine_apply_return_edit_btn:
-                Intent intent2 = new Intent(this, MachineReturnEditActivity.class);
-                intent2.putExtra("machineList", (Serializable) receivedList);
-                startActivityForResult(intent2, 30);
+            case R.id.machine_apply_received_btn:
+                Intent intent2 = new Intent();
+                intent2.setClass(this, MipcaActivityCapture.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(intent2, MACHINE_RECEIVED);
                 break;
 
-            case R.id.machine_apply_return_return_time_tv:
-                getTime(tv_returnReTime);
+            case R.id.machine_apply_return_edit_btn:
+                Intent intent3 = new Intent(this, MachineReturnEditActivity.class);
+                intent3.putParcelableArrayListExtra("machineList", receivedList);
+                startActivityForResult(intent3, 30);
                 break;
 
             case R.id.machine_apply_return_btn:
-                returnApply();
+                Intent intent4 = new Intent();
+                intent4.setClass(this, MipcaActivityCapture.class);
+                intent4.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(intent4, MACHINE_RETURN);
                 break;
         }
     }
@@ -332,63 +302,104 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         String useTime = tv_useTime.getText().toString();
         String returnTime = tv_returnTime.getText().toString();
         String useAddress = et_useAddress.getText().toString().trim();
+        String remarks = et_applyRemarks.getText().toString().trim();
         if (useTime.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请选择领用时间", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请选择领用时间");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(MachineApplyActivity.this, "请选择领用时间", Toast.LENGTH_SHORT);
             return;
         }
         if (returnTime.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请选择退回时间", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请选择退回时间");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(MachineApplyActivity.this, "请选择退回时间", Toast.LENGTH_SHORT);
             return;
         }
         if (useAddress.equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请填写使用地点", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请填写使用地点");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
+            ToastUtil.showToast(MachineApplyActivity.this, "请填写使用地点", Toast.LENGTH_SHORT);
             return;
         }
 
-        String remarks = et_applyRemarks.getText().toString().trim();
-        String applyId = "申请单00X";
+        JSONArray jsonArray = new JSONArray();
+        for (Machine machine : createdList) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", "");
+                jsonObject.put("MachineName", machine.getName());
+                jsonObject.put("Qty", machine.getNum());
+                jsonObject.put("BeginDate", useTime);
+                jsonObject.put("EstimateFinishDate", returnTime);
+                jsonObject.put("Remark", remarks);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.e("json", jsonArray.toString());
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "dosavemachineneed")
+                .add("billno", "")
+                .add("billtype", "工程机械申请")
+                .add("fileno", orderId)
+                .add("proaddress", useAddress)
+                .add("userno", userNo)
+                .add("machinedetailjson", jsonArray.toString())
+                .build();
+
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                if (response.substring(0, 1).equals("E")) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showToast(MachineApplyActivity.this, "申请失败", Toast.LENGTH_SHORT);
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            savaMachineNo(response);
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(MachineApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+    }
+
+    private void savaMachineNo(String applyId) {
         Calendar rightNow = Calendar.getInstance();
         String applyTime = dateFormat.format(rightNow.getTime());
 
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         for (int i = 0; i < createdList.size(); i++) {
             MachineData data = new MachineData();
-            data.setNo(createdList.get(i).getId());
             data.setApplyId(applyId);
+            data.setNo(createdList.get(i).getId());
             data.setName(createdList.get(i).getName());
-            data.setSpec(createdList.get(i).getSpec());
             data.setUnit(createdList.get(i).getUnit());
             data.setNum(createdList.get(i).getNum());
-            data.setState("申请中");
             data.save();
             businessData.getMachineDataList().add(data);
         }
+
         MachineNoData data1 = new MachineNoData();
         data1.setApplyId(applyId);
         data1.setApplyTime(applyTime);
-        data1.setUseTime(useTime);
-        data1.setReturnTime(returnTime);
-        data1.setUseAddress(useAddress);
-        data1.setRemarks(remarks);
-        data1.setState("申请中");
+        data1.setUseTime(tv_useTime.getText().toString());
+        data1.setReturnTime(tv_returnTime.getText().toString());
+        data1.setUseAddress(et_useAddress.getText().toString().trim());
+        data1.setRemarks(et_applyRemarks.getText().toString().trim());
+        data1.setApplyState("申请中");
         data1.save();
         businessData.getMachineNoList().add(data1);
         businessData.save();
@@ -396,11 +407,11 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         MachineNo machineNo = new MachineNo();
         machineNo.setApplyId(applyId);
         machineNo.setApplyTime(applyTime);
-        machineNo.setUseTime(useTime);
-        machineNo.setReturnTime(returnTime);
-        machineNo.setUseAddress(useAddress);
-        machineNo.setRemarks(remarks);
-        machineNo.setState("申请中");
+        machineNo.setUseTime(tv_useTime.getText().toString());
+        machineNo.setReturnTime(tv_returnTime.getText().toString());
+        machineNo.setUseAddress(et_useAddress.getText().toString().trim());
+        machineNo.setRemarks(et_applyRemarks.getText().toString().trim());
+        machineNo.setApplyState("申请中");
         applyingList.add(machineNo);
 
         btn_apply.setVisibility(View.GONE);
@@ -413,99 +424,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         createdList.clear();
         createdAdapter.notifyDataSetChanged();
         applyingAdapter.notifyDataSetChanged();
-    }
 
-    private void returnApply() {
-        if (tv_returnReTime.getText().toString().equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请选择退回时间", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请选择退回时间");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
-            return;
-        }
-        if (et_returnAddress.getText().toString().trim().equals("")) {
-            if (mToast == null) {
-                mToast = Toast.makeText(this, "请选择退回地点", Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText("请选择退回地点");
-                mToast.setDuration(Toast.LENGTH_SHORT);
-            }
-            mToast.show();
-            return;
-        }
-
-        for (Machine reList : returnCreatedList) {
-            MachineData machineData = DataSupport.find(MachineData.class, reList.getDataId());
-            int num = machineData.getNum() - reList.getNum();
-            if (num == 0) {
-                ContentValues values = new ContentValues();
-                values.put("returnType", reList.getReturnType());
-                values.put("state", "退回申请中");
-                DataSupport.update(MachineData.class, values, reList.getDataId());
-            } else {
-                ContentValues values = new ContentValues();
-                values.put("num", num);
-                DataSupport.update(MachineData.class, values, reList.getDataId());
-
-                MachineData data = new MachineData();
-                data.setNo(reList.getId());
-                data.setSpec(reList.getSpec());
-                data.setName(reList.getName());
-                data.setUnit(reList.getUnit());
-                data.setNum(reList.getNum());
-                data.setReturnType(reList.getReturnType());
-                data.setState("退回申请中");
-                data.save();
-                BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
-                businessData.getMachineDataList().add(data);
-                businessData.save();
-            }
-            reList.setState("退回申请中");
-        }
-
-        receivedList.clear();
-        returnCreatedList.clear();
-        returnApplyingList.clear();
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
-        List<MachineData> machineDatas = businessData.getMachineDataList();
-        for (MachineData data : machineDatas) {
-            if (data.getState().equals("已领用")) {
-                Machine machine = new Machine();
-                machine.setDataId(data.getId());
-                machine.setId(data.getNo());
-                machine.setName(data.getName());
-                machine.setSpec(data.getSpec());
-                machine.setUnit(data.getUnit());
-                machine.setNum(data.getNum());
-                machine.setState(data.getState());
-                machine.setReturnType(data.getReturnType());
-                receivedList.add(machine);
-            }
-
-            if (data.getState().equals("退回申请中") || data.getState().equals("退回已批准")) {
-                Machine machine = new Machine();
-                machine.setDataId(data.getId());
-                machine.setId(data.getNo());
-                machine.setName(data.getName());
-                machine.setSpec(data.getSpec());
-                machine.setUnit(data.getUnit());
-                machine.setNum(data.getNum());
-                machine.setState(data.getState());
-                machine.setReturnType(data.getReturnType());
-                returnApplyingList.add(machine);
-            }
-        }
-        receivedAdapter.notifyDataSetChanged();
-        returnCreatedAdapter.notifyDataSetChanged();
-        returnApplyingAdapter.notifyDataSetChanged();
-        btn_return.setVisibility(View.GONE);
-        tv_returnReTime.setText("");
-        tv_returnReTime.setHint("未选择");
-        et_returnAddress.setText("");
-        et_returnRemarks.setText("");
     }
 
     private void getTime(final TextView tv) {
@@ -578,17 +497,128 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
 
         if (requestCode == 30) {
             if (resultCode == 30) {
-                List<Machine> machines = (List<Machine>) data.getSerializableExtra("machineList");
-                if (machines.size() > 0) {
-                    btn_return.setVisibility(View.VISIBLE);
-                } else {
-                    btn_return.setVisibility(View.GONE);
-                }
-                returnCreatedList.clear();
-                returnCreatedList.addAll(machines);
-                returnCreatedAdapter.notifyDataSetChanged();
+                MachineNo machineNo = (MachineNo)data.getParcelableExtra("machineNo");
+                returnList.add(machineNo);
+                returnAdapter.notifyDataSetChanged();
             }
         }
+
+        if (requestCode == MACHINE_RECEIVED) {
+            if (resultCode == RESULT_OK) {
+                Bundle bundle = data.getExtras();
+                // 显示扫描到的内容
+                String id = bundle.getString("result");
+                receivedConfirm(id);
+            }
+        }
+
+        if (requestCode == MACHINE_RECEIVED) {
+            if (resultCode == RESULT_OK) {
+                Bundle bundle = data.getExtras();
+                // 显示扫描到的内容
+                String id = bundle.getString("result");
+                returnConfirm(id);
+            }
+        }
+    }
+
+    private void receivedConfirm(final String id) {
+        final String applyId = id.split(",")[0];
+        final String machineNo = id.split(",")[1];
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("PicType", "WnW_MachineSend");
+            jsonObject.put("FileNo", orderId);
+            jsonObject.put("BillNo", "");
+            jsonObject.put("MachineNo", machineNo);
+            jsonArray.put(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "doreceivematerialandmachine")
+                .add("userno", userNo)
+                .add("detail", jsonArray.toString())
+                .build();
+
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.equals("ok")) {
+                            ContentValues values = new ContentValues();
+                            values.put("receivedState", "已领出");
+                            DataSupport.updateAll(MachineData.class, values, "applyId = ? and No = ?", applyId, machineNo);
+                            for (Machine machine : receivedList) {
+                                if (machine.getId().equals(machineNo)) {
+                                    machine.setState("已领出");
+                                    receivedAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        } else {
+                            ToastUtil.showToast(MachineApplyActivity.this, "领出失败", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(MachineApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+    }
+
+    private void returnConfirm(final String id) {
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "domachineback")
+                .add("userno", userNo)
+                .add("id", id)
+                .build();
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.equals("ok")) {
+                            ContentValues values = new ContentValues();
+                            values.put("returnState", "已退回");
+                            DataSupport.updateAll(MachineNoData.class, values, "returnId = ?", id);
+                            for (MachineNo machineNo : returnList) {
+                                if (machineNo.getReturnId().equals(id)) {
+                                    machineNo.setReturnState("已退回");
+                                    returnAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        } else {
+                            ToastUtil.showToast(MachineApplyActivity.this, "退回失败", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(MachineApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+
     }
 
     @Override

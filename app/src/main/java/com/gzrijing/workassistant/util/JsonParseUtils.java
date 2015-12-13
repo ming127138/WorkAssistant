@@ -242,12 +242,15 @@ public class JsonParseUtils {
             JSONArray jsonArray = new JSONArray(jsonDate);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String id = jsonObject.getString("MakingNo");
+                String id = jsonObject.getString("MachineNo");
                 String name = jsonObject.getString("MachineName");
-                String spec = jsonObject.getString("MakingSpace");
-                String unit = jsonObject.getString("MakingUnit");
+                String unit = jsonObject.getString("MachineUnit");
+                String state = jsonObject.getString("State");
                 Machine machine = new Machine();
+                machine.setId(id);
                 machine.setName(name);
+                machine.setUnit(unit);
+                machine.setState(state);
                 machines.add(machine);
             }
         } catch (JSONException e) {

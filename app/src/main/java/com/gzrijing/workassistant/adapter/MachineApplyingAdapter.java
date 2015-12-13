@@ -43,30 +43,24 @@ public class MachineApplyingAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_machine_apply_approval, parent, false);
-            v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_approval_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_approval_spec_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_approval_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_approval_num_tv);
-            v.state = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_approval_state_tv);
+                    R.layout.listview_item_machine_applying, parent, false);
+            v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_applying_name_tv);
+            v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_applying_unit_tv);
+            v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_applying_num_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
         v.name.setText(applyingList.get(position).getName());
-        v.spec.setText(applyingList.get(position).getSpec());
         v.unit.setText(applyingList.get(position).getUnit());
         v.num.setText(applyingList.get(position).getNum() + "");
-        v.state.setText(applyingList.get(position).getState());
         return convertView;
     }
 
     class ViewHolder {
         private TextView name;
-        private TextView spec;
         private TextView unit;
         private TextView num;
-        private TextView state;
     }
 }

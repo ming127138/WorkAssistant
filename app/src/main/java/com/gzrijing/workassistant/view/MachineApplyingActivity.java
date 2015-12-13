@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MachineApplyingAdapter;
@@ -21,12 +24,23 @@ import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.MachineData;
 import com.gzrijing.workassistant.db.MachineNoData;
+import com.gzrijing.workassistant.db.SuppliesData;
+import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.MachineNo;
+import com.gzrijing.workassistant.entity.SuppliesNo;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
+import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
@@ -40,10 +54,10 @@ import java.util.List;
 public class MachineApplyingActivity extends BaseActivity implements View.OnClickListener{
 
     private int position;
-    private String userName;
+    private String userNo;
     private String orderId;
     private MachineNo machineNo;
-    private List<Machine> machineList = new ArrayList<Machine>();
+    private ArrayList<Machine> machineList = new ArrayList<Machine>();
     private TextView tv_reason;
     private TextView tv_useTime;
     private TextView tv_returnTime;
@@ -54,6 +68,7 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private MachineApplyingAdapter adapter;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,18 +82,17 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
 
     private void initData() {
         Intent intent = getIntent();
-        userName = intent.getStringExtra("userName");
+        userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
         position = intent.getIntExtra("position", -1);
         machineNo = (MachineNo)intent.getParcelableExtra("machineNo");
         List<MachineData> machineDataList  = DataSupport.where("applyId = ?", machineNo.getApplyId()).find(MachineData.class);
         for(MachineData data : machineDataList){
             Machine machine = new Machine();
+            machine.setId(data.getNo());
             machine.setName(data.getName());
-            machine.setSpec(data.getSpec());
             machine.setUnit(data.getUnit());
             machine.setNum(data.getNum());
-            machine.setState(data.getState());
             machineList.add(machine);
         }
     }
@@ -124,7 +138,7 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
 
             case R.id.machine_applying_edit_btn:
                 Intent intent = new Intent(this, MachineApplyEditActivity.class);
-                intent.putExtra("machineList", (Serializable) machineList);
+                intent.putParcelableArrayListExtra("machineList", machineList);
                 startActivityForResult(intent, 10);
                 break;
         }
@@ -176,7 +190,7 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == 10) {
-                List<Machine> machines = (List<Machine>) data.getSerializableExtra("machineList");
+                ArrayList<Machine> machines = data.getParcelableArrayListExtra("machineList");
                 machineList.clear();
                 machineList.addAll(machines);
                 adapter.notifyDataSetChanged();
@@ -200,51 +214,116 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
         }
 
         if (id == R.id.action_apply) {
-            MachineNo machineNo = apply();
-            Intent intent = getIntent();
-            intent.putExtra("position", position);
-            intent.putExtra("machineNo", (Parcelable) machineNo);
-            setResult(20, intent);
-            finish();
+            apply();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private MachineNo apply() {
+    private void apply() {
         String useTime = tv_useTime.getText().toString();
         String returnTime = tv_returnTime.getText().toString();
-        String address = et_useAddress.getText().toString().trim();
+        String useAddress = et_useAddress.getText().toString().trim();
         String remarks = et_remarks.getText().toString().trim();
-        String applyId = "重新申请单00Y";
+        if (useAddress.equals("")) {
+            ToastUtil.showToast(MachineApplyingActivity.this, "请填写使用地点", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        JSONArray jsonArray = new JSONArray();
+        for (Machine machine : machineList) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", "");
+                jsonObject.put("MachineName", machine.getName());
+                jsonObject.put("Qty", machine.getNum());
+                jsonObject.put("BeginDate", useTime);
+                jsonObject.put("EstimateFinishDate", returnTime);
+                jsonObject.put("Remark", remarks);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.e("json", jsonArray.toString());
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "dosavemachineneed")
+                .add("billno", "")
+                .add("billtype", "工程机械申请")
+                .add("fileno", orderId)
+                .add("proaddress", useAddress)
+                .add("userno", userNo)
+                .add("machinedetailjson", jsonArray.toString())
+                .build();
+
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                if (response.substring(0, 1).equals("E")) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showToast(MachineApplyingActivity.this, "申请失败", Toast.LENGTH_SHORT);
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MachineNo machineNo = savaMachineNo(response);
+                            Intent intent = getIntent();
+                            intent.putExtra("position", position);
+                            intent.putExtra("machineNo", (Parcelable) machineNo);
+                            setResult(20, intent);
+                            finish();
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(MachineApplyingActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+    }
+
+    private MachineNo savaMachineNo(String applyId) {
         Calendar rightNow = Calendar.getInstance();
         String applyTime = dateFormat.format(rightNow.getTime());
 
         DataSupport.deleteAll(MachineData.class, "applyId = ?", machineNo.getApplyId());
-        DataSupport.deleteAll(MachineNoData.class, "applyId = ?", machineNo.getApplyId());
+        DataSupport.deleteAll(SuppliesNoData.class, "applyId = ?", machineNo.getApplyId());
 
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userName, orderId).find(BusinessData.class, true).get(0);
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         for (int i = 0; i < machineList.size(); i++) {
             MachineData data = new MachineData();
-            data.setNo(machineList.get(i).getId());
             data.setApplyId(applyId);
+            data.setNo(machineList.get(i).getId());
             data.setName(machineList.get(i).getName());
-            data.setSpec(machineList.get(i).getSpec());
             data.setUnit(machineList.get(i).getUnit());
             data.setNum(machineList.get(i).getNum());
-            data.setState("申请中");
             data.save();
             businessData.getMachineDataList().add(data);
         }
+
         MachineNoData data1 = new MachineNoData();
         data1.setApplyId(applyId);
         data1.setApplyTime(applyTime);
-        data1.setUseTime(useTime);
-        data1.setReturnTime(returnTime);
-        data1.setUseAddress(address);
-        data1.setRemarks(remarks);
-        data1.setState("申请中");
+        data1.setUseTime(tv_useTime.getText().toString());
+        data1.setReturnTime(tv_returnTime.getText().toString());
+        data1.setUseAddress(et_useAddress.getText().toString().trim());
+        data1.setRemarks(et_remarks.getText().toString().trim());
+        data1.setApplyState("申请中");
         data1.save();
         businessData.getMachineNoList().add(data1);
         businessData.save();
@@ -252,11 +331,12 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
         MachineNo machineNo = new MachineNo();
         machineNo.setApplyId(applyId);
         machineNo.setApplyTime(applyTime);
-        machineNo.setUseTime(useTime);
-        machineNo.setReturnTime(returnTime);
-        machineNo.setUseAddress(address);
-        machineNo.setRemarks(remarks);
-        machineNo.setState("申请中");
+        machineNo.setUseTime(tv_useTime.getText().toString());
+        machineNo.setReturnTime(tv_returnTime.getText().toString());
+        machineNo.setUseAddress(et_useAddress.getText().toString().trim());
+        machineNo.setRemarks(et_remarks.getText().toString().trim());
+        machineNo.setApplyState("申请中");
+
         return machineNo;
     }
 

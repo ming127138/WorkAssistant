@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.gzrijing.workassistant.view.SuppliesApprovalActivity">
+    tools:context="com.gzrijing.workassistant.view.MachineApplyingScanActivity">
 
     <include layout="@layout/toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/sw_10dp"
+        android:layout_marginTop="@dimen/sw_5dp"
         android:orientation="horizontal">
 
         <TextView
@@ -22,7 +22,7 @@
             android:textSize="@dimen/sw_15dp" />
 
         <TextView
-            android:id="@+id/supplies_approval_use_time_tv"
+            android:id="@+id/machine_applying_scan_use_time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
@@ -32,7 +32,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/sw_10dp"
+        android:layout_marginTop="@dimen/sw_5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="退回时间："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp" />
+
+        <TextView
+            android:id="@+id/machine_applying_scan_return_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sw_5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="使用地点："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp" />
+
+        <TextView
+            android:id="@+id/machine_applying_scan_use_address_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sw_5dp"
         android:orientation="horizontal">
 
         <TextView
@@ -43,7 +85,7 @@
             android:textSize="@dimen/sw_15dp" />
 
         <TextView
-            android:id="@+id/supplies_approval_remark_tv"
+            android:id="@+id/machine_applying_scan_remark_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
@@ -53,8 +95,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/sw_10dp"
-        android:text="已审批材料列表："
+        android:layout_marginTop="@dimen/sw_5dp"
+        android:text="申请中机械列表："
         android:textColor="@color/black"
         android:textSize="@dimen/sw_15dp" />
 
@@ -68,7 +110,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:gravity="center"
             android:text="名称"
             android:textColor="@color/black"
@@ -77,16 +119,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center"
-            android:text="规格"
-            android:textColor="@color/black"
-            android:textSize="@dimen/sw_12dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="单位"
             android:textColor="@color/black"
@@ -95,7 +128,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="数量"
             android:textColor="@color/black"
@@ -109,9 +142,8 @@
         android:background="@color/black" />
 
     <ListView
-        android:id="@+id/supplies_approval_lv"
+        android:id="@+id/machine_applying_scan_lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 
 </LinearLayout>

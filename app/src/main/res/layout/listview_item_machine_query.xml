@@ -11,19 +11,9 @@
         android:id="@+id/listview_item_machine_query_name_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:gravity="center"
         android:text="名称"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sw_12dp" />
-
-    <TextView
-        android:id="@+id/listview_item_machine_query_spec_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:gravity="center"
-        android:text="规格"
         android:textColor="@color/black"
         android:textSize="@dimen/sw_12dp" />
 
@@ -31,10 +21,20 @@
         android:id="@+id/listview_item_machine_query_unit_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="单位"
         android:textColor="@color/black"
+        android:textSize="@dimen/sw_12dp" />
+
+    <TextView
+        android:id="@+id/listview_item_machine_query_state_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="状态"
+        android:textColor="@color/blue"
         android:textSize="@dimen/sw_12dp" />
 
 </LinearLayout>

@@ -200,6 +200,10 @@
             android:label="@string/title_activity_business_have_send"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".view.SuppliesApplyingScanActivity"
+            android:label="材料列表"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".view.SuppliesApprovalActivity"
             android:label="材料列表"
             android:screenOrientation="portrait" />
@@ -373,6 +377,9 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
+        <activity android:name=".view.MachineApplyingScanActivity" />
+        <activity android:name=".view.MachineApprovalActivity" />
+        <activity android:name=".view.MachineReturnActivity"></activity>
     </application>
 
 </manifest>

@@ -44,27 +44,24 @@ public class MachineApplyReceivedAdapter extends BaseAdapter {
             v = new ViewHolder();
             convertView = listContainer.inflate(
                     R.layout.listview_item_machine_apply_received, parent, false);
+            v.id = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_received_id_tv);
             v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_received_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_received_spec_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_received_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_received_num_tv);
+            v.state = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_received_state_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
+        v.id.setText(machineList.get(position).getId());
         v.name.setText(machineList.get(position).getName());
-        v.spec.setText(machineList.get(position).getSpec());
-        v.unit.setText(machineList.get(position).getUnit());
-        v.num.setText(machineList.get(position).getNum() + "");
+        v.state.setText(machineList.get(position).getState());
 
         return convertView;
     }
 
     class ViewHolder {
+        private TextView id;
         private TextView name;
-        private TextView spec;
-        private TextView unit;
-        private TextView num;
+        private TextView state;
     }
 }

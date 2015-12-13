@@ -12,24 +12,24 @@ import com.gzrijing.workassistant.entity.MachineNo;
 
 import java.util.List;
 
-public class MachineApplyApprovalAdapter extends BaseAdapter {
+public class MachineApplyReturnAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<MachineNo> approvalList;
+    private List<MachineNo> machineNoList;
 
-    public MachineApplyApprovalAdapter(Context context, List<MachineNo> approvalList) {
+    public MachineApplyReturnAdapter(Context context, List<MachineNo> machineNoList) {
         listContainer = LayoutInflater.from(context);
-        this.approvalList = approvalList;
+        this.machineNoList = machineNoList;
     }
 
     @Override
     public int getCount() {
-        return approvalList.size();
+        return machineNoList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return approvalList.get(position);
+        return machineNoList.get(position);
     }
 
     @Override
@@ -43,18 +43,20 @@ public class MachineApplyApprovalAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_machine_apply_approval, parent, false);
-            v.id = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_approval_id_tv);
-            v.time = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_approval_time_tv);
-            v.state = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_approval_state_tv);
+                    R.layout.listview_item_machine_apply_return, parent, false);
+            v.id = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_id_tv);
+            v.time = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_apply_time_tv);
+            v.type = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_type_tv);
+            v.state = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_return_state_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.id.setText(approvalList.get(position).getApplyId());
-        v.time.setText(approvalList.get(position).getApprovalTime());
-        v.state.setText(approvalList.get(position).getApplyState());
+        v.id.setText(machineNoList.get(position).getReturnId());
+        v.time.setText(machineNoList.get(position).getReturnApplyTime());
+        v.type.setText(machineNoList.get(position).getReturnType());
+        v.state.setText(machineNoList.get(position).getReturnState());
 
         return convertView;
     }
@@ -62,6 +64,7 @@ public class MachineApplyApprovalAdapter extends BaseAdapter {
     class ViewHolder {
         private TextView id;
         private TextView time;
+        private TextView type;
         private TextView state;
     }
 }

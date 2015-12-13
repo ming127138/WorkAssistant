@@ -8,47 +8,37 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/listview_item_machine_apply_return_applying_name_tv"
+        android:id="@+id/listview_item_machine_apply_return_id_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:gravity="center"
-        android:text="名称"
+        android:text="退回单ID"
         android:textColor="@color/black"
         android:textSize="@dimen/sw_12dp" />
 
     <TextView
-        android:id="@+id/listview_item_machine_apply_return_applying_spec_tv"
+        android:id="@+id/listview_item_machine_apply_return_apply_time_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:gravity="center"
-        android:text="规格"
+        android:text="申请时间"
         android:textColor="@color/black"
         android:textSize="@dimen/sw_12dp" />
 
     <TextView
-        android:id="@+id/listview_item_machine_apply_return_applying_num_tv"
+        android:id="@+id/listview_item_machine_apply_return_type_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="数量"
+        android:text="退回性质"
         android:textColor="@color/black"
         android:textSize="@dimen/sw_12dp" />
 
     <TextView
-        android:id="@+id/listview_item_machine_apply_return_applying_type_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="类型"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sw_12dp" />
-
-    <TextView
-        android:id="@+id/listview_item_machine_apply_return_applying_state_tv"
+        android:id="@+id/listview_item_machine_apply_return_state_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

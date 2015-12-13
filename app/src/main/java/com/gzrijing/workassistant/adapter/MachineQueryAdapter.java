@@ -45,23 +45,23 @@ public class MachineQueryAdapter extends BaseAdapter {
             convertView = listContainer.inflate(
                     R.layout.listview_item_machine_query, parent, false);
             v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_query_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_query_spec_tv);
             v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_query_unit_tv);
+            v.state = (TextView) convertView.findViewById(R.id.listview_item_machine_query_state_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
         v.name.setText(machineQueries.get(position).getName());
-        v.spec.setText(machineQueries.get(position).getSpec());
         v.unit.setText(machineQueries.get(position).getUnit());
+        v.state.setText(machineQueries.get(position).getState());
 
         return convertView;
     }
 
     class ViewHolder {
         private TextView name;
-        private TextView spec;
         private TextView unit;
+        private TextView state;
     }
 }

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Parcelable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -206,6 +205,10 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                     intent.putExtra("userNo", userNo);
                     intent.putExtra("orderId", orderId);
                     startActivityForResult(intent, 20);
+                }else{
+                    Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesApplyingScanActivity.class);
+                    intent.putExtra("suppliesNo", (Parcelable) applyingList.get(position));
+                    startActivity(intent);
                 }
             }
         });
@@ -530,7 +533,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                                 }
                             }
                         } else {
-                            ToastUtil.showToast(SuppliesApplyActivity.this, "退回失败", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(SuppliesApplyActivity.this, "领出失败", Toast.LENGTH_SHORT);
                         }
                     }
                 });

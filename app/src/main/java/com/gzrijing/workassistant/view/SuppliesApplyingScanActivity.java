@@ -19,19 +19,19 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuppliesApprovalActivity extends AppCompatActivity {
+public class SuppliesApplyingScanActivity extends AppCompatActivity {
 
     private ListView lv_list;
     private ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
     private SuppliesApplyingAdapter adapter;
-    private SuppliesNo suppliesNo;
     private TextView tv_useTime;
     private TextView tv_remark;
+    private SuppliesNo suppliesNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_supplies_approval);
+        setContentView(R.layout.activity_supplies_applying_scan);
 
         initData();
         initViews();
@@ -56,12 +56,12 @@ public class SuppliesApprovalActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tv_useTime = (TextView) findViewById(R.id.supplies_approval_use_time_tv);
+        tv_useTime = (TextView) findViewById(R.id.supplies_applying_scan_use_time_tv);
         tv_useTime.setText(suppliesNo.getUseTime());
-        tv_remark = (TextView) findViewById(R.id.supplies_approval_remark_tv);
+        tv_remark = (TextView) findViewById(R.id.supplies_applying_scan_remark_tv);
         tv_remark.setText(suppliesNo.getRemarks());
 
-        lv_list = (ListView) findViewById(R.id.supplies_approval_lv);
+        lv_list = (ListView) findViewById(R.id.supplies_applying_scan_lv);
         adapter = new SuppliesApplyingAdapter(this, suppliesList);
         lv_list.setAdapter(adapter);
     }
