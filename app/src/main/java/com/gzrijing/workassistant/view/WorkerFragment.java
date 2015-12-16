@@ -33,7 +33,6 @@ import java.util.List;
 
 public class WorkerFragment extends Fragment implements AdapterView.OnItemSelectedListener{
 
-
     private View layoutView;
     private Spinner sp_business;
     private Spinner sp_state;

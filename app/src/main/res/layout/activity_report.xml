@@ -17,8 +17,9 @@
 
         <Button
             android:id="@+id/report_progress_btn"
-            android:layout_width="@dimen/sw_100dp"
+            android:layout_width="0dp"
             android:layout_height="@dimen/sw_40dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_paging_left_on"
             android:text="进度汇报"
             android:textColor="@color/white"
@@ -26,8 +27,19 @@
 
         <Button
             android:id="@+id/report_complete_btn"
-            android:layout_width="@dimen/sw_100dp"
+            android:layout_width="0dp"
             android:layout_height="@dimen/sw_40dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_paging_middle_off"
+            android:text="完工汇报"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/sw_15dp" />
+
+        <Button
+            android:id="@+id/report_project_amount_btn"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/sw_40dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_paging_middle_off"
             android:text="工程量汇报"
             android:textColor="@color/blue"
@@ -35,8 +47,9 @@
 
         <Button
             android:id="@+id/report_problem_btn"
-            android:layout_width="@dimen/sw_100dp"
+            android:layout_width="0dp"
             android:layout_height="@dimen/sw_40dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_paging_right_off"
             android:text="问题汇报"
             android:textColor="@color/blue"

@@ -10,11 +10,10 @@ import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
-public class GetProblemReportInfoService extends Service {
-
+public class GetReportInfoProgressService extends Service {
     private Handler handler = new Handler();
 
-    public GetProblemReportInfoService() {
+    public GetReportInfoProgressService() {
     }
 
     @Override
@@ -24,14 +23,14 @@ public class GetProblemReportInfoService extends Service {
     }
 
     @Override
-    public int onStartCommand(final Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         String id = intent.getStringExtra("id");
-        String url = "?cmd=getsomeinstallaccident&togetherid="+id;
+        String url = "?cmd=getsomeinstalltask&togetherid="+id+"&savedate=";
 
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.problem");
+                Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.progress");
                 intent1.putExtra("jsonData", response);
                 sendBroadcast(intent1);
             }
@@ -41,17 +40,13 @@ public class GetProblemReportInfoService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(GetProblemReportInfoService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(GetReportInfoProgressService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }
         });
 
 
-
-
-
         return super.onStartCommand(intent, flags, startId);
-
     }
 }

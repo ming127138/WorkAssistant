@@ -10,10 +10,10 @@ import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
-public class GetCompleteReportInfoService extends Service {
+public class GetReportInfoProjectAmountService extends Service {
     private Handler handler = new Handler();
 
-    public GetCompleteReportInfoService() {
+    public GetReportInfoProjectAmountService() {
     }
 
     @Override
@@ -30,7 +30,7 @@ public class GetCompleteReportInfoService extends Service {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.progress");
+                Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.projectAmount");
                 intent1.putExtra("jsonData", response);
                 sendBroadcast(intent1);
             }
@@ -40,7 +40,7 @@ public class GetCompleteReportInfoService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(GetCompleteReportInfoService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(GetReportInfoProjectAmountService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }

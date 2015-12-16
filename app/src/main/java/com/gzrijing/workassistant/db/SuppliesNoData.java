@@ -15,6 +15,7 @@ public class SuppliesNoData extends DataSupport {
     private String approvalTime;    //材料审批时间
     private String receivedTime;    //领料时间
     private String returnTime;      //退回申请时间
+    private String reason;          //不批准原因
     private String remarks;         //备注
     private BusinessData businessData;
 
@@ -112,6 +113,14 @@ public class SuppliesNoData extends DataSupport {
 
     public void setReturnTime(String returnTime) {
         this.returnTime = returnTime;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public String getRemarks() {

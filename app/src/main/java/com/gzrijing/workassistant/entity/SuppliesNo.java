@@ -15,12 +15,13 @@ public class SuppliesNo implements Parcelable {
     private String approvalTime;    //审批时间
     private String receivedTime;    //领料时间
     private String returnTime;      //退回申请时间
+    private String reason;          //不批准原因
     private String remarks;         //备注
 
     public SuppliesNo() {
     }
 
-    public SuppliesNo(String applyId, String receivedId, String returnId, String applyState, String receivedState, String returnState, String applyTime, String useTime, String approvalTime, String receivedTime, String returnTime, String remarks) {
+    public SuppliesNo(String applyId, String receivedId, String returnId, String applyState, String receivedState, String returnState, String applyTime, String useTime, String approvalTime, String receivedTime, String returnTime, String reason, String remarks) {
         this.applyId = applyId;
         this.receivedId = receivedId;
         this.returnId = returnId;
@@ -32,6 +33,7 @@ public class SuppliesNo implements Parcelable {
         this.approvalTime = approvalTime;
         this.receivedTime = receivedTime;
         this.returnTime = returnTime;
+        this.reason = reason;
         this.remarks = remarks;
     }
 
@@ -123,6 +125,14 @@ public class SuppliesNo implements Parcelable {
         this.returnTime = returnTime;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     public String getRemarks() {
         return remarks;
     }
@@ -130,7 +140,6 @@ public class SuppliesNo implements Parcelable {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-
 
     @Override
     public int describeContents() {
@@ -150,6 +159,7 @@ public class SuppliesNo implements Parcelable {
         dest.writeString(this.approvalTime);
         dest.writeString(this.receivedTime);
         dest.writeString(this.returnTime);
+        dest.writeString(this.reason);
         dest.writeString(this.remarks);
     }
 
@@ -165,6 +175,7 @@ public class SuppliesNo implements Parcelable {
         this.approvalTime = in.readString();
         this.receivedTime = in.readString();
         this.returnTime = in.readString();
+        this.reason = in.readString();
         this.remarks = in.readString();
     }
 

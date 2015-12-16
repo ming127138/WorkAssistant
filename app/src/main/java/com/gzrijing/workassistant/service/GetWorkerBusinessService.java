@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
 import com.gzrijing.workassistant.db.ImageData;
-import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
@@ -28,7 +27,6 @@ import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
-import com.gzrijing.workassistant.view.LeaderFragment;
 import com.gzrijing.workassistant.view.WorkerFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -66,7 +64,7 @@ public class GetWorkerBusinessService extends IntentService {
         String date = "2015-10-01 00:00";
         String url = null;
         try {
-            url = "?cmd=getmycons&userno=00004&fileno=&begindate=" + URLEncoder.encode(date, "UTF-8");
+            url = "?cmd=getmycons&userno="+URLEncoder.encode(userNo, "UTF-8")+"&fileno=&begindate=" + URLEncoder.encode(date, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -74,6 +72,7 @@ public class GetWorkerBusinessService extends IntentService {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 saveData(response);
                 sendNotification();
             }

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 public class ReportProgressService extends IntentService {
 
     private Handler handler = new Handler();
-    private String id;
 
     public ReportProgressService() {
         super("ReportProgressService");
@@ -49,7 +48,7 @@ public class ReportProgressService extends IntentService {
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                if(response.equals("Error")){
+                if (response.substring(0, 1).equals("E")) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -57,58 +56,52 @@ public class ReportProgressService extends IntentService {
                             stopSelf();
                         }
                     });
-                }else{
-                    Log.e("id", response);
-                    id = response;
+                } else {
+                    for (PicUrl picUrl : picUrls) {
+                        Log.e("id", response);
+                        String[] key = {"cmd", "userno", "relationid", "picdescription"};
+                        String[] value = {"uploadconstaskpic", userNo, response, ""};
 
-                    String[] key = {"cmd", "userno", "relationid", "picdescription"};
-                    String[] value = {"uploadconstaskpic", userNo, id, content};
-
-                    MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
-                    for (int i = 0; i < key.length; i++) {
-                        Log.e("key", key[i]);
-                        Log.e("value", value[i]);
-                        builder.addFormDataPart(key[i], value[i]);
-                    }
-
-                    for(PicUrl picUrl : picUrls){
+                        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+                        for (int i = 0; i < key.length; i++) {
+                            Log.e("key", key[i]);
+                            Log.e("value", value[i]);
+                            builder.addFormDataPart(key[i], value[i]);
+                        }
                         File file = new File(picUrl.getPicUrl());
-                        if(file != null){
+                        if (file != null) {
                             String fileName = file.getName();
-                            Log.e("fileName", fileName);
                             RequestBody fileBody = RequestBody.create(MediaType.parse(guessMimeType(fileName)), file);
                             builder.addFormDataPart("constaskpic", fileName, fileBody);
                         }
-                    }
+                        HttpUtils.sendHttpPostRequest(builder.build(), new HttpCallbackListener() {
+                            @Override
+                            public void onFinish(String response) {
+                                Log.e("res", response);
+                                if (response.substring(0, 1).equals("E")) {
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ToastUtil.showToast(ReportProgressService.this, "上传图片失败", Toast.LENGTH_SHORT);
+                                        }
+                                    });
+                                }
+                            }
 
-                    HttpUtils.sendHttpPostRequest(builder.build(), new HttpCallbackListener() {
-                        @Override
-                        public void onFinish(String response) {
-                            Log.e("res", response);
-                            if(response.equals("Error")){
+                            @Override
+                            public void onError(Exception e) {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ToastUtil.showToast(ReportProgressService.this, "上传图片失败", Toast.LENGTH_SHORT);
-                                        Log.e("no", "no");
+                                        ToastUtil.showToast(ReportProgressService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                                     }
                                 });
-                            }else {
-                                Log.e("yes", "yes");
                             }
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ToastUtil.showToast(ReportProgressService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
-                                }
-                            });
-                        }
-                    });
-               }
+                        });
+                    }
+                    Intent intent1 = new Intent("action.com.gzrijing.workassistant.reportProgressFragment");
+                    sendBroadcast(intent1);
+                }
             }
 
             @Override
@@ -125,12 +118,10 @@ public class ReportProgressService extends IntentService {
 
     }
 
-    private String guessMimeType(String path)
-    {
+    private String guessMimeType(String path) {
         FileNameMap fileNameMap = URLConnection.getFileNameMap();
         String contentTypeFor = fileNameMap.getContentTypeFor(path);
-        if (contentTypeFor == null)
-        {
+        if (contentTypeFor == null) {
             contentTypeFor = "application/octet-stream";
         }
         return contentTypeFor;

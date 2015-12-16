@@ -146,7 +146,6 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                     returnList.add(returnNo);
                 }
             }
-
         }
     }
 

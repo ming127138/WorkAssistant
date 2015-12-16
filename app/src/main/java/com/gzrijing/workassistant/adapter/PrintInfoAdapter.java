@@ -1,23 +1,29 @@
 package com.gzrijing.workassistant.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.entity.ReportInfo;
+import com.gzrijing.workassistant.entity.DetailedInfo;
+import com.gzrijing.workassistant.entity.PicUrl;
+import com.gzrijing.workassistant.view.ImageBrowserForLocationActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ReportInfoCompleteAdapter extends BaseAdapter {
+public class PrintInfoAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<ReportInfo> list;
+    private List<DetailedInfo> list;
 
-    public ReportInfoCompleteAdapter(Context context, List<ReportInfo> list) {
+    public PrintInfoAdapter(Context context, List<DetailedInfo> list) {
         listContainer = LayoutInflater.from(context);
         this.list = list;
     }
@@ -43,25 +49,20 @@ public class ReportInfoCompleteAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_report_info_problem, parent, false);
-            v.content = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_content_tv);
-            v.state = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_state_tv);
+                    R.layout.listview_item_print_info, parent, false);
+            v.key = (TextView) convertView.findViewById(R.id.listview_item_print_info_key_tv);
+            v.value = (TextView) convertView.findViewById(R.id.listview_item_print_info_value_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
-
-        if (list.get(position).getContent().length() > 10) {
-            v.content.setText((position + 1) + "." + list.get(position).getContent().substring(0, 10) + "...");
-        } else {
-            v.content.setText((position + 1) + "." + list.get(position).getContent());
-        }
-        v.state.setVisibility(View.GONE);
+        v.key.setText(list.get(position).getKey());
+        v.value.setText(list.get(position).getValue());
         return convertView;
     }
 
     class ViewHolder {
-        private TextView content;
-        private TextView state;
+        private TextView key;
+        private TextView value;
     }
 }

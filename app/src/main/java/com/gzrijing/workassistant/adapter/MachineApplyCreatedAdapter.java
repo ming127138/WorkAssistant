@@ -45,7 +45,6 @@ public class MachineApplyCreatedAdapter extends BaseAdapter {
             convertView = listContainer.inflate(
                     R.layout.listview_item_machine_apply_created, parent, false);
             v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_created_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_created_spec_tv);
             v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_created_unit_tv);
             v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_created_num_tv);
             convertView.setTag(v);
@@ -54,7 +53,6 @@ public class MachineApplyCreatedAdapter extends BaseAdapter {
         }
 
         v.name.setText(machineList.get(position).getName());
-        v.spec.setText(machineList.get(position).getSpec());
         v.unit.setText(machineList.get(position).getUnit());
         v.num.setText(machineList.get(position).getNum() + "");
 
@@ -63,7 +61,6 @@ public class MachineApplyCreatedAdapter extends BaseAdapter {
 
     class ViewHolder {
         private TextView name;
-        private TextView spec;
         private TextView unit;
         private TextView num;
     }

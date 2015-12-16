@@ -206,6 +206,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                 if (flag.equals("汇报")) {
                     Intent intent = new Intent(context, ReportActivity.class);
                     intent.putExtra("orderId", orderList.get(position).getOrderId());
+                    intent.putExtra("type", orderList.get(position).getType());
                     context.startActivity(intent);
                 }
 

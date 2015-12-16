@@ -10,10 +10,10 @@ import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
-public class GetProgressReportInfoService extends Service {
+public class GetReportInfoProjectAmountSuppliesService extends Service {
     private Handler handler = new Handler();
 
-    public GetProgressReportInfoService() {
+    public GetReportInfoProjectAmountSuppliesService() {
     }
 
     @Override
@@ -24,13 +24,14 @@ public class GetProgressReportInfoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String id = intent.getStringExtra("id");
-        String url = "?cmd=getsomeinstalltask&togetherid="+id+"&savedate=";
+        String togetherid = intent.getStringExtra("togetherid");
+        String confirmid = intent.getStringExtra("confirmid");
+        String url = "?cmd=getsomeinstallconfirmdetail&togetherid=" + togetherid + "&confirmid=" + confirmid;
 
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.progress");
+                Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfoProjectAmount");
                 intent1.putExtra("jsonData", response);
                 sendBroadcast(intent1);
             }
@@ -40,7 +41,7 @@ public class GetProgressReportInfoService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(GetProgressReportInfoService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(GetReportInfoProjectAmountSuppliesService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }

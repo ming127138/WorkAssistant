@@ -234,6 +234,9 @@
             android:name=".service.ReportCompleteService"
             android:exported="false" />
         <service
+            android:name=".service.ReportProjectAmountService"
+            android:exported="false" />
+        <service
             android:name=".service.DownLoadAllImageService"
             android:exported="false" />
         <service
@@ -258,13 +261,13 @@
             android:name=".service.GetSuppliesVerifyService"
             android:exported="false" />
         <service
-            android:name=".service.GetProblemReportInfoService"
+            android:name=".service.GetReportInfoProblemService"
             android:exported="false" />
         <service
-            android:name=".service.GetProgressReportInfoService"
+            android:name=".service.GetReportInfoProgressService"
             android:exported="false" />
         <service
-            android:name=".service.GetCompleteReportInfoService"
+            android:name=".service.GetReportInfoProjectAmountService"
             android:exported="false" />
 
         <!-- app service -->
@@ -280,22 +283,22 @@
         <!-- 配置的第三方参数属性 -->
         <meta-data
             android:name="PUSH_APPID"
-            android:value="JHJk2GTlf762hrxIcFUNr" />
+            android:value="nd5YEvLkMv711zw2OWl1xA" />
         <!-- 替换为应用的APPID -->
         <meta-data
             android:name="PUSH_APPKEY"
-            android:value="gCr0DLhequ8vwvLOYUwpH5" />
+            android:value="Oz562IOwvUAZJLtwOmsKgA" />
         <!-- 替换为应用的APPKEY -->
         <meta-data
             android:name="PUSH_APPSECRET"
-            android:value="hNmKFN1uVc66G0K4UpE9F4" />
+            android:value="tf8MWbvysa7OBKwUVx6CI8" />
         <!-- 替换为应用的APPSECRET -->
         <!-- 配置第三方Receiver 用来接收ClientId和透传消息 -->
         <receiver
             android:name=".receiver.MainReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.igexin.sdk.action.JHJk2GTlf762hrxIcFUNr" />
+                <action android:name="com.igexin.sdk.action.nd5YEvLkMv711zw2OWl1xA" />
             </intent-filter>
         </receiver>
         <!-- 配置SDK核心服务 -->
@@ -368,7 +371,7 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.igexin.sdk.action.7fjUl2Z3LH6xYy7NQK4ni4" />
-                <action android:name="com.igexin.sdk.action.JHJk2GTlf762hrxIcFUNr" />
+                <action android:name="com.igexin.sdk.action.nd5YEvLkMv711zw2OWl1xA" />
             </intent-filter>
         </receiver>
 
@@ -379,7 +382,8 @@
 
         <activity android:name=".view.MachineApplyingScanActivity" />
         <activity android:name=".view.MachineApprovalActivity" />
-        <activity android:name=".view.MachineReturnActivity"></activity>
+        <activity android:name=".view.MachineReturnActivity" />
+        <activity android:name=".view.ReportInfoProjectAmountActivity"></activity>
     </application>
 
 </manifest>

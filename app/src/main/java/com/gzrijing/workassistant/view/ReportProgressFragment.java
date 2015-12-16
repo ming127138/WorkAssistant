@@ -1,8 +1,11 @@
 package com.gzrijing.workassistant.view;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,12 +20,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportProgressGriViewAdapter;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.service.ReportProgressService;
 import com.gzrijing.workassistant.util.ImageUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -57,6 +62,9 @@ public class ReportProgressFragment extends Fragment implements View.OnClickList
 
         PicUrl picUrl = new PicUrl();
         picUrls.add(picUrl);
+
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.reportProgressFragment");
+        getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -175,6 +183,7 @@ public class ReportProgressFragment extends Fragment implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fragment_report_progress_report_btn:
+                btn_report.setVisibility(View.GONE);
                 String content = et_content.getText().toString().trim();
 
                 Intent intent = new Intent(getActivity(), ReportProgressService.class);
@@ -185,5 +194,22 @@ public class ReportProgressFragment extends Fragment implements View.OnClickList
                 getActivity().startService(intent);
                 break;
         }
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.reportProgressFragment")){
+                btn_report.setVisibility(View.VISIBLE);
+                ToastUtil.showToast(getActivity(), "汇报成功", Toast.LENGTH_SHORT);
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
     }
 }

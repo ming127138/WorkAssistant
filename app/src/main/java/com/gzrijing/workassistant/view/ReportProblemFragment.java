@@ -1,8 +1,11 @@
 package com.gzrijing.workassistant.view;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportProgressGriViewAdapter;
@@ -24,6 +28,7 @@ import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.service.ReportProblemService;
 import com.gzrijing.workassistant.service.ReportProgressService;
 import com.gzrijing.workassistant.util.ImageUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -70,6 +75,9 @@ public class ReportProblemFragment extends Fragment implements View.OnClickListe
 
         PicUrl picUrl = new PicUrl();
         picUrls.add(picUrl);
+
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.reportProblemFragment");
+        getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     private void initViews() {
@@ -176,6 +184,7 @@ public class ReportProblemFragment extends Fragment implements View.OnClickListe
     public void onClick(View v) {
       switch (v.getId()) {
       case R.id.fragment_report_problem_report_btn:
+          btn_report.setVisibility(View.GONE);
           String content = et_describe.getText().toString().trim();
 
           Intent intent = new Intent(getActivity(), ReportProblemService.class);
@@ -186,6 +195,23 @@ public class ReportProblemFragment extends Fragment implements View.OnClickListe
           getActivity().startService(intent);
           break;
       }
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.reportProblemFragment")){
+                btn_report.setVisibility(View.VISIBLE);
+                ToastUtil.showToast(getActivity(), "汇报成功", Toast.LENGTH_SHORT);
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
     }
 
 }

@@ -64,7 +64,7 @@ public class GetLeaderBusinessService extends IntentService {
         String date = "2015-10-29 00:00";
         String url = null;
         try {
-            url = "?cmd=getconstruction&userno=00004&begindate=" + URLEncoder.encode(date, "UTF-8");
+            url = "?cmd=getconstruction&userno="+URLEncoder.encode(userNo, "UTF-8")+"&begindate=" + URLEncoder.encode(date, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

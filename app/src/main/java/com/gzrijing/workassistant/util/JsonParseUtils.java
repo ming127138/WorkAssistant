@@ -10,6 +10,7 @@ import com.gzrijing.workassistant.entity.MachineVerifyInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Progress;
 import com.gzrijing.workassistant.entity.ReportInfo;
+import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
@@ -148,9 +149,12 @@ public class JsonParseUtils {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String orderId = jsonObject.getString("FileNo");
                 String type = jsonObject.getString("ConsTypeName");
-                String state = jsonObject.getString("Accident");
-                if (state.equals("")) {
+                String accident = jsonObject.getString("Accident").trim();
+                String state;
+                if(accident.equals("")){
                     state = "正常";
+                }else {
+                    state = accident;
                 }
                 String deadline = jsonObject.getString("EstimateFinishDate").replace("/", "-");
                 boolean urgent = jsonObject.getBoolean("IsUrgent");
@@ -176,18 +180,24 @@ public class JsonParseUtils {
                     DetailedInfo detailedInfo = new DetailedInfo(key, value);
                     infos.add(detailedInfo);
                 }
+                String content = jsonObject.getString("InstallContent");
+                DetailedInfo detailedInfo = new DetailedInfo("施工内容", content);
+                infos.add(detailedInfo);
+
                 String str = jsonObject.getString("PicUri");
                 if (!str.equals("")) {
                     ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
-                    JSONArray jsonArray2 = jsonObject.getJSONArray("PicUri");
-                    for (int k = 0; k < jsonArray2.length(); k++) {
-                        JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
-                        String url = jsonObject2.getString("PicUri");
-                        int index = url.lastIndexOf("/");
-                        url = url.substring(index + 1);
+                    String[] urls = str.split(",");
+                    if(urls.length == 0){
                         PicUrl picUrl = new PicUrl();
-                        picUrl.setPicUrl(url);
+                        picUrl.setPicUrl(str);
                         picUrls.add(picUrl);
+                    }else{
+                        for (int k = 0; k < urls.length; k++) {
+                            PicUrl picUrl = new PicUrl();
+                            picUrl.setPicUrl(urls[k]);
+                            picUrls.add(picUrl);
+                        }
                     }
                     businessByWorker.setPicUrls(picUrls);
                 }
@@ -554,5 +564,80 @@ public class JsonParseUtils {
         return list;
     }
 
+    /**
+     * 查看已派工单工程量信息-施工内容
+     * @param jsonData
+     * @return
+     */
+    public static List<ReportInfoProjectAmount> getProjectAmountReportInfo(String jsonData){
+        List<ReportInfoProjectAmount> list = new ArrayList<ReportInfoProjectAmount>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.getString("id");
+                String content = jsonObject.getString("ConsContent");
+                String civil = jsonObject.getString("EarthWorkContent");
+                String stateStr = jsonObject.getString("State");
+                String state = "";
+                if(stateStr.equals("保存")){
+                    state = "未审核";
+                }
+                if(stateStr.equals("审核")){
+                    state = "已审核";
+                }
+                if(stateStr.equals("不通过")){
+                    state = "不通过";
+                }
+                String reportName = jsonObject.getString("SaveName");
+                String reportData = jsonObject.getString("SaveDate");
+                String checkDate = jsonObject.getString("CheckDate");
+
+                ReportInfoProjectAmount info = new ReportInfoProjectAmount();
+                info.setId(id);
+                info.setContent(content);
+                info.setCivil(civil);
+                info.setState(state);
+                info.setReportName(reportName);
+                info.setReportDate(reportData);
+                info.setCheckData(checkDate);
+                list.add(info);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 查看已派工单工程量信息—材料
+     * @param jsonData
+     * @return
+     */
+    public static List<Supplies> getProjectAmountReportInfoSupplies(String jsonData){
+        List<Supplies> list = new ArrayList<Supplies>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.getString("MakingNo");
+                String name = jsonObject.getString("MakingName");
+                String spec = jsonObject.getString("MakingSpace");
+                String unit = jsonObject.getString("MakingUnit");
+                String num = jsonObject.getString("MakingQty");
+
+                Supplies supplies = new Supplies();
+                supplies.setId(id);
+                supplies.setName(name);
+                supplies.setSpec(spec);
+                supplies.setUnit(unit);
+                supplies.setNum(Integer.valueOf(num));
+                list.add(supplies);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
 }

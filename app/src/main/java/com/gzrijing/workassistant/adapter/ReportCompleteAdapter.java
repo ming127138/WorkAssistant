@@ -76,7 +76,7 @@ public class ReportCompleteAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         String key = infos.get(position).getKey();
-        if (key.equals("水表有效日期") || key.equals("排水时间") || key.equals("施工日期") || key.equals("完工日期") || key.equals("验收日期")) {
+        if (key.equals("抄表日期") || key.equals("水表有效日期") || key.equals("排水时间") || key.equals("施工日期") || key.equals("完工日期") || key.equals("验收日期")) {
             if (lmap.get(position) == null) {
                 convertView = listContainer.inflate(
                         R.layout.listview_item_fragment_report_complete_date, parent, false);
@@ -88,48 +88,6 @@ public class ReportCompleteAdapter extends BaseAdapter {
                 if (tv_value != null) {
                     tv_value.setText(infos.get(position).getValue());
                 }
-                lmap.put(position, convertView);
-            } else {
-                convertView = lmap.get(position);
-            }
-            return convertView;
-        } else if (position == infos.size() - 2) {
-            if (lmap.get(position) == null) {
-                convertView = listContainer.inflate(
-                        R.layout.listview_item_fragment_report_complete_supplies, parent, false);
-                ListView lv_supplies = (ListView) convertView.findViewById(R.id.listview_item_fragment_report_complete_supplies_lv);
-                adapter = new SuppliesAdapter(context, suppliesList);
-                lv_supplies.setAdapter(adapter);
-                lmap.put(position, convertView);
-            } else {
-                convertView = lmap.get(position);
-            }
-            return convertView;
-        } else if (position + 1 == infos.size()) {
-            if (lmap.get(position) == null) {
-                convertView = listContainer.inflate(
-                        R.layout.listview_item_fragment_report_complete_submit, parent, false);
-                Button btn_need = (Button) convertView.findViewById(R.id.listview_item_fragment_report_complete_submit_need_btn);
-                Button btn_wait = (Button) convertView.findViewById(R.id.listview_item_fragment_report_complete_submit_wait_btn);
-                btn_need.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, ReportCompleteService.class);
-                        intent.putExtra("orderId", orderId);
-                        intent.putParcelableArrayListExtra("reportComplete", infos);
-                        context.startService(intent);
-
-                    }
-                });
-                btn_wait.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, ReportCompleteService.class);
-                        intent.putExtra("orderId", orderId);
-                        intent.putParcelableArrayListExtra("reportComplete", infos);
-                        context.startService(intent);
-                    }
-                });
                 lmap.put(position, convertView);
             } else {
                 convertView = lmap.get(position);

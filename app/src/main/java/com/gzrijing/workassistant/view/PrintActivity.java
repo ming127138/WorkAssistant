@@ -18,12 +18,18 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.DetailedInfoAdapter;
+import com.gzrijing.workassistant.adapter.PrintInfoAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReceivedAdapter;
+import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.db.DetailedInfoData;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.zj.btsdk.BluetoothService;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,14 +40,16 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
     private ListView lv_info;
     private ListView lv_supplies;
     private List<DetailedInfo> infos = new ArrayList<DetailedInfo>();
-    private DetailedInfoAdapter adapter;
-    private List<Supplies> suppliesList = new ArrayList<Supplies>();
-    private SuppliesApplyReceivedAdapter receivedAdapter;
+    private PrintInfoAdapter adapter;
+    private ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
+    private SuppliesApplyingAdapter receivedAdapter;
     BluetoothService mService = null;
     BluetoothDevice con_dev = null;
     private static final int REQUEST_ENABLE_BT = 2;
     private static final int REQUEST_CONNECT_DEVICE = 1;  //获取设备消息
     private boolean isConnect;
+    private String userNo;
+    private String orderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,44 +70,26 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
 
     private void initData() {
         Intent intent = getIntent();
-        int flag = intent.getIntExtra("flag", -1);
-        if (flag == 1) {
-            String[] keys = {"收款性质", "表身编号", "水表产地", "排水口径", "施工内容", "土建项目", "　　备注", "排水时间", "施工日期", "完工日期", "验收日期", "水表有效日期"};
-            String[] values = {"用户", "NO4747", "XXX市XXX区XXX镇", "DN36", "XXXXXX施工内容XXXXXXX", "XXXXX土建项目XXXXX", "XXXX备注XXXXX", "2015-10-27 9:00", "2015-10-27 10:00", "2015-10-27 11:00", "2015-10-27 14:00", "2018-10-27 15:00"};
-            for (int i = 0; i < keys.length; i++) {
-                DetailedInfo info = new DetailedInfo();
-                info.setKey(keys[i]);
-                info.setValue(values[i]);
-                infos.add(info);
-            }
-        } else {
-            List<ReportComplete> datas = intent.getParcelableArrayListExtra("infos");
-            boolean isCheck = intent.getBooleanExtra("isCheck", false);
+        userNo = intent.getStringExtra("userNo");
+        orderId = intent.getStringExtra("orderId");
+        String content = intent.getStringExtra("content");
+        String civil = intent.getStringExtra("civil");
+        suppliesList = intent.getParcelableArrayListExtra("suppliesList");
+
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
+                .find(BusinessData.class, true).get(0);
+        List<DetailedInfoData> detailedDatas = businessData.getDetailedInfoList();
+        for (DetailedInfoData data : detailedDatas) {
             DetailedInfo info = new DetailedInfo();
-            info.setKey("收款性质");
-            if (isCheck) {
-                info.setValue("用户");
-            } else {
-                info.setValue("水务");
-            }
+            info.setKey(data.getKey());
+            info.setValue(data.getValue());
             infos.add(info);
-            for (ReportComplete data : datas) {
-                DetailedInfo info1 = new DetailedInfo();
-                info1.setKey(data.getKey());
-                info1.setValue(data.getValue());
-                infos.add(info1);
-            }
-            infos.remove(infos.size() - 1);
-            infos.remove(infos.size() - 1);
         }
-        for (int i = 1; i < 5; i++) {
-            Supplies supplies = new Supplies();
-            supplies.setName("材料" + i);
-            supplies.setSpec("规格" + i);
-            supplies.setUnit("单位" + i);
-            supplies.setNum(i);
-            suppliesList.add(supplies);
-        }
+        infos.remove(infos.size()-1);
+        DetailedInfo info1 = new DetailedInfo("施工内容", content);
+        DetailedInfo info2 = new DetailedInfo("土建工程", civil);
+        infos.add(info1);
+        infos.add(info2);
     }
 
     private void initViews() {
@@ -110,10 +100,11 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
         btn_connect = (Button) findViewById(R.id.print_connect_btn);
 
         lv_info = (ListView) findViewById(R.id.print_info_lv);
-//        adapter = new DetailedInfoAdapter(this, infos);
+        adapter = new PrintInfoAdapter(this, infos);
         lv_info.setAdapter(adapter);
+
         lv_supplies = (ListView) findViewById(R.id.print_supplies_lv);
-//        receivedAdapter = new SuppliesApplyReceivedAdapter(this, suppliesList);
+        receivedAdapter = new SuppliesApplyingAdapter(this, suppliesList);
         lv_supplies.setAdapter(receivedAdapter);
     }
 
