@@ -10,7 +10,7 @@ public class MachineData extends DataSupport {
     private String name;                //机械名称
     private String unit;                //机械单位
     private int num;                    //数量
-    private String receivedState;       //领用状态（已安排，已领出）
+    private String receivedState;       //领用状态（已安排，已领出，已退回）
     private BusinessData businessData;
 
     public int getId() {

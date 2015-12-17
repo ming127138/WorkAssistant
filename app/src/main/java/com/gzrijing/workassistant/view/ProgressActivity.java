@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ProgressAdapter;
@@ -14,7 +16,10 @@ import com.gzrijing.workassistant.entity.Progress;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +48,16 @@ public class ProgressActivity extends BaseActivity {
     }
 
     private void getData() {
-        String url = "?cmd=getconstask&fileno="+orderId;
+        String url = null;
+        try {
+            url = "?cmd=getconstask&fileno=" + URLEncoder.encode(orderId, "UTF-8") + "&savedate=";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 final List<Progress> list = JsonParseUtils.getProgress(response);
                 handler.post(new Runnable() {
                     @Override
@@ -60,7 +71,12 @@ public class ProgressActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(ProgressActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
             }
         });
 

@@ -40,8 +40,7 @@ public class ImageUtils {
     /**
      * 将图片保存到SD中
      */
-    public static void saveFile(Context context, Bitmap bm, String fileName) throws IOException {
-        File path = getImagePath(context);
+    public static void saveFile(Context context, Bitmap bm, String fileName, File path) throws IOException {
         if(path==null){
             return;
         }
@@ -60,7 +59,7 @@ public class ImageUtils {
     /**
      * 获取图片存储文件夹路径
      */
-    private static File getImagePath(Context context){
+    public static File getImagePath(Context context, String userNo, String orderId){
         // 未安装SD卡时不做保存
         String storageState = Environment.getExternalStorageState();
         if (!storageState.equals(Environment.MEDIA_MOUNTED)) {
@@ -70,7 +69,7 @@ public class ImageUtils {
 
         // 图片文件保存路径
         File storageDirectory = Environment.getExternalStorageDirectory();
-        File path = new File(storageDirectory, "/GZRJWorkassistant/image");
+        File path = new File(storageDirectory, "/GZRJWorkassistant/image/"+userNo+"/"+orderId);
         // 图片路径不存在创建之
         if (!path.exists()) {
             path.mkdirs();
@@ -82,8 +81,7 @@ public class ImageUtils {
     /**
      * 获取本地图片并显示
      */
-    public static void getLocaImage(Context context, String picUrl, ImageView imageView){
-        File path = ImageUtils.getImagePath(context);
+    public static void getLocaImage(Context context, String picUrl, ImageView imageView, File path){
         if(path==null){
             return;
         }

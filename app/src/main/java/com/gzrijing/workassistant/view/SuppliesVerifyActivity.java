@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,9 +16,12 @@ import android.widget.ListView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesVerifyAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
 import com.gzrijing.workassistant.service.GetSuppliesVerifyService;
 import com.gzrijing.workassistant.util.JsonParseUtils;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 
@@ -119,6 +123,18 @@ public class SuppliesVerifyActivity extends BaseActivity {
                 }
                 okAdapter.notifyDataSetChanged();
                 waitAdapter.notifyDataSetChanged();
+
+                BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
+                        .find(BusinessData.class, true).get(0);
+                int num = businessData.getSuppliesApplyNum();
+
+                ContentValues values = new ContentValues();
+                values.put("suppliesApplyNum", 0);
+                DataSupport.updateAll(BusinessData.class, values, "user = ? and orderId = ?", userNo, orderId);
+
+                Intent intent1 = new Intent("action.com.gzrijing.workassistant.LeaderFragment.SuppliesVerify0");
+                intent1.putExtra("orderId", orderId);
+                sendBroadcast(intent1);
             }
         }
     };

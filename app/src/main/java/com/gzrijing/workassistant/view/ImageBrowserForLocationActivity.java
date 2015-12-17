@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.TextView;
@@ -19,6 +20,8 @@ public class ImageBrowserForLocationActivity extends BaseActivity {
     private int position;
     private List<PicUrl> picUrls;
     private ImageBrowserForLocationAdapter adapter;
+    private String userNo;
+    private String orderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,12 @@ public class ImageBrowserForLocationActivity extends BaseActivity {
     }
 
     private void initData() {
+        SharedPreferences app = getSharedPreferences(
+                "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
+
         Intent intent = getIntent();
+        orderId = intent.getStringExtra("orderId");
         position = intent.getIntExtra("position", -1);
         picUrls = intent.getParcelableArrayListExtra("picUrls");
     }
@@ -42,7 +50,7 @@ public class ImageBrowserForLocationActivity extends BaseActivity {
             tv_topNum.setText(1 + " / " + picUrls.size());
         }
         vp_image = (ViewPager) findViewById(R.id.image_browser_vp);
-        adapter = new ImageBrowserForLocationAdapter(this, picUrls);
+        adapter = new ImageBrowserForLocationAdapter(this, picUrls, userNo, orderId);
         vp_image.setAdapter(adapter);
         vp_image.setCurrentItem(position);
 

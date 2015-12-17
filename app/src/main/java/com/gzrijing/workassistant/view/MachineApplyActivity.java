@@ -152,7 +152,9 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
 
         List<MachineData> machineDataList = businessData.getMachineDataList();
         for(MachineData machineData : machineDataList){
-            if(machineData.getReceivedState().equals("已安排") || machineData.getReceivedState().equals("已领出")){
+            if(machineData.getReceivedState().equals("已安排") ||
+                    machineData.getReceivedState().equals("已领出") ||
+                    machineData.getReceivedState().equals("已退回")){
                 Machine machine = new Machine();
                 machine.setId(machineData.getNo());
                 machine.setName(machineData.getName());
@@ -284,8 +286,14 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                 break;
 
             case R.id.machine_apply_return_edit_btn:
+                ArrayList<Machine> machineList = new ArrayList<Machine>();
+                for(Machine machine : receivedList){
+                    if(machine.getState().equals("已领出")){
+                        machineList.add(machine);
+                    }
+                }
                 Intent intent3 = new Intent(this, MachineReturnEditActivity.class);
-                intent3.putParcelableArrayListExtra("machineList", receivedList);
+                intent3.putParcelableArrayListExtra("machineList", machineList);
                 startActivityForResult(intent3, 30);
                 break;
 
@@ -579,10 +587,25 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void returnConfirm(final String id) {
+        final List<MachineData> machineDataList = DataSupport.where("returnId = ?", id).find(MachineData.class);
+        JSONArray jsonArray = new JSONArray();
+        for (MachineData data : machineDataList) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("BillNo", id);
+                jsonObject.put("MachineName", data.getName());
+                jsonObject.put("BackQty", "1");
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "domachineback")
                 .add("userno", userNo)
-                .add("id", id)
+                .add("machinedetail", jsonArray.toString())
                 .build();
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
@@ -600,6 +623,17 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                                     returnAdapter.notifyDataSetChanged();
                                 }
                             }
+                            for (MachineData data : machineDataList) {
+                                ContentValues values1 = new ContentValues();
+                                values.put("receivedState", "已退回");
+                                DataSupport.updateAll(MachineData.class, values1, "returnId = ? and No = ?", id, data.getNo());
+                                for(Machine machine : receivedList){
+                                    if(data.getNo().equals(machine.getId())){
+                                        machine.setState("已退回");
+                                    }
+                                }
+                            }
+                            receivedAdapter.notifyDataSetChanged();
                         } else {
                             ToastUtil.showToast(MachineApplyActivity.this, "退回失败", Toast.LENGTH_SHORT);
                         }

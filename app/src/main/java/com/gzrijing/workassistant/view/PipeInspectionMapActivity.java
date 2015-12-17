@@ -3,6 +3,7 @@ package com.gzrijing.workassistant.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -38,6 +43,10 @@ public class PipeInspectionMapActivity extends BaseActivity {
     private BaiduMap mBaiduMap;
     private MapView mMapView;
     private List<Inspection> markers;
+    private LocationClient locationClient;
+    private static int LOCATION_COUTNS = 0;
+    private double longitude;
+    private double latitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +56,6 @@ public class PipeInspectionMapActivity extends BaseActivity {
 
         initViews();
         initData();
-        setListeners();
     }
 
     private void initViews() {
@@ -59,8 +67,39 @@ public class PipeInspectionMapActivity extends BaseActivity {
     }
 
     private void initData() {
-        initMap();
-        initMarker();
+        setLocation();
+    }
+
+    private void setLocation() {
+        locationClient = new LocationClient(getApplicationContext());
+        // 设置定位条件
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy); // 设置定位模式
+        option.setOpenGps(true); // 是否打开GPS
+        option.setCoorType("bd09ll"); // 设置返回值的坐标类型。
+        option.setProdName("LocationDemo1230"); // 设置产品线名称。强烈建议您使用自定义的产品线名称，方便我们以后为您提供更高效准确的定位服务。
+        option.setScanSpan(30 * 1000); // 设置定时定位的时间间隔。单位毫秒
+        locationClient.setLocOption(option);
+        locationClient.start();
+
+        locationClient.registerLocationListener(new BDLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation bdLocation) {
+                Log.e("bdLocation", bdLocation+"");
+                if (bdLocation == null) {
+                    return;
+                }
+                latitude = bdLocation.getLatitude();
+                longitude = bdLocation.getLongitude();
+
+                Log.e("latitude", latitude+"");
+                Log.e("longitude", longitude+"");
+                initMap();
+                initMarker();
+                setListeners();
+            }
+        });
+
     }
 
 
@@ -69,7 +108,13 @@ public class PipeInspectionMapActivity extends BaseActivity {
         // 普通地图
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         // 定义Maker坐标点
-        LatLng point = new LatLng(23.043248, 113.315723);
+        LatLng point = new LatLng(latitude, longitude);
+
+        BitmapDescriptor bitmap = BitmapDescriptorFactory
+                .fromResource(R.drawable.map_flag_blue);
+        OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
+        mBaiduMap.addOverlay(option);
+        Log.e("12e", "12e");
         // 定义地图状态
         MapStatus mMapStatus = new MapStatus.Builder().target(point).zoom(18)
                 .build();
@@ -111,27 +156,10 @@ public class PipeInspectionMapActivity extends BaseActivity {
 
         return inspectionList;
 
-//        String[] ids = {"BH001", "BH002", "BH003", "BH004"};
-//        String[] types = {"供水阀门井","供水消防栓","供水阀门井","污水井"};
-//        String[] areas = {"A片区","A片区","A片区","A片区"};
-//        String[] addrs = {"XXX市XXX区XXX街XXX号","XXX市XXX区XXX街XXX号","XXX市XXX区XXX街XXX号","XXX市XXX区XXX街XXX号"};
-//        double[] latitudes = {23.044807, 23.043248, 23.045206, 23.044973};
-//        double[] longitudes = {113.314668, 113.315723, 113.31403, 113.316671};
-//        List<Marker> markers = new ArrayList<Marker>();
-//        for (int i = 0; i < ids.length; i++) {
-//            Marker marker = new Marker();
-//            marker.setId(ids[i]);
-//            marker.setLatitude(latitudes[i]);
-//            marker.setLongitude(longitudes[i]);
-//            marker.setType(types[i]);
-//            marker.setArea(areas[i]);
-//            marker.setAddress(addrs[i]);
-//            markers.add(marker);
-//        }
-//        return markers;
     }
 
     private void setListeners() {
+
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final com.baidu.mapapi.map.Marker markerInfo) {
@@ -223,6 +251,13 @@ public class PipeInspectionMapActivity extends BaseActivity {
         super.onPause();
         //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
         mMapView.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        locationClient.stop();
+        super.onStop();
     }
 
 }

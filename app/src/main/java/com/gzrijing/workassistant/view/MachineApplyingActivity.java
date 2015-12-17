@@ -103,7 +103,7 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tv_reason = (TextView) findViewById(R.id.machine_applying_reason_tv);
-        tv_reason.setText("XXXXXX原因");
+        tv_reason.setText(machineNo.getReason());
         tv_useTime = (TextView) findViewById(R.id.machine_applying_use_time_tv);
         tv_useTime.setText(machineNo.getUseTime());
         et_useAddress = (EditText) findViewById(R.id.machine_applying_use_address_et);

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +34,10 @@ public class BusinessFragment extends Fragment {
         layoutView = inflater.inflate(R.layout.fragment_business, container, false);
 
         if (savedInstanceState == null) {
-            Fragment fragment = getChildFragmentManager().findFragmentByTag("0");
+            Log.e("userRank", userRank);
+            Fragment fragment = getChildFragmentManager().findFragmentByTag(userRank);
             if (fragment == null) {
-                setTabSelection(Integer.valueOf("0"));
+                setTabSelection(Integer.valueOf(userRank));
             }
         }
 

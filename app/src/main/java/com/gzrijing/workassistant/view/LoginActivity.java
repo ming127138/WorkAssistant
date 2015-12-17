@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -138,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (password.equals(pwd)) {
             password = pwd;
         } else {
-            String md5 = MD5Encryptor.getMD5(password.substring(0, password.length() - 2));
+            String md5 = MD5Encryptor.getMD5(password);
             password = md5.substring(0, md5.length() - 2)
                     + password.substring(password.length() - 2);
         }

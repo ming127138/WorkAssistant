@@ -17,11 +17,12 @@ public class MachineNo implements Parcelable {
     private String returnType;      //机械退回性质（正常，损坏）
     private String returnApplyTime; //机械退回申请时间
     private String returnAddress;   //机械退回地点
+    private String reason;          //不批准原因
 
     public MachineNo() {
     }
 
-    public MachineNo(String applyId, String returnId, String applyTime, String useTime, String returnTime, String useAddress, String remarks, String approvalTime, String applyState, String returnState, String returnType, String returnApplyTime, String returnAddress) {
+    public MachineNo(String applyId, String returnId, String applyTime, String useTime, String returnTime, String useAddress, String remarks, String approvalTime, String applyState, String returnState, String returnType, String returnApplyTime, String returnAddress, String reason) {
         this.applyId = applyId;
         this.returnId = returnId;
         this.applyTime = applyTime;
@@ -35,6 +36,7 @@ public class MachineNo implements Parcelable {
         this.returnType = returnType;
         this.returnApplyTime = returnApplyTime;
         this.returnAddress = returnAddress;
+        this.reason = reason;
     }
 
     public String getApplyId() {
@@ -141,6 +143,14 @@ public class MachineNo implements Parcelable {
         this.returnAddress = returnAddress;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -161,6 +171,7 @@ public class MachineNo implements Parcelable {
         dest.writeString(this.returnType);
         dest.writeString(this.returnApplyTime);
         dest.writeString(this.returnAddress);
+        dest.writeString(this.reason);
     }
 
     protected MachineNo(Parcel in) {
@@ -177,6 +188,7 @@ public class MachineNo implements Parcelable {
         this.returnType = in.readString();
         this.returnApplyTime = in.readString();
         this.returnAddress = in.readString();
+        this.reason = in.readString();
     }
 
     public static final Creator<MachineNo> CREATOR = new Creator<MachineNo>() {

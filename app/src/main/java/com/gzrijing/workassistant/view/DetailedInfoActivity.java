@@ -76,7 +76,7 @@ public class DetailedInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv_info = (ListView) findViewById(R.id.detailed_info_lv);
-        adapter = new DetailedInfoAdapter(this, infos, picUrls);
+        adapter = new DetailedInfoAdapter(this, infos, picUrls, userNo, orderId);
         lv_info.setAdapter(adapter);
     }
 

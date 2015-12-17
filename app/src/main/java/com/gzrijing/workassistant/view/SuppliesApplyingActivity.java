@@ -96,7 +96,7 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tv_reason = (TextView) findViewById(R.id.supplies_applying_reason_tv);
-        tv_reason.setText("XXXXXX原因");
+        tv_reason.setText(suppliesNo.getReason());
         tv_useTime = (TextView) findViewById(R.id.supplies_applying_use_time_tv);
         tv_useTime.setText(suppliesNo.getUseTime());
         et_remarks = (EditText) findViewById(R.id.supplies_applying_remarks_et);

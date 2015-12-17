@@ -1,0 +1,118 @@
+package com.gzrijing.workassistant.service;
+
+import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.os.Handler;
+import android.support.v7.app.NotificationCompat;
+import android.widget.Toast;
+
+import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.db.SuppliesNoData;
+import com.gzrijing.workassistant.entity.SuppliesNo;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.receiver.NotificationReceiver;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
+
+import org.litepal.crud.DataSupport;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
+
+public class ListenerSuppliesApplyStateService extends IntentService {
+
+    private Handler handler = new Handler();
+    private String userNo;
+    private String orderId;
+
+    public ListenerSuppliesApplyStateService() {
+        super("ListenerSuppliesApplyStateService");
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+
+        userNo = intent.getStringExtra("userNo");
+        orderId = intent.getStringExtra("orderId");
+
+        String url = null;
+        try {
+            url = "?cmd=getmymaterialneedmain&userno=" + URLEncoder.encode(userNo, "UTF-8") +
+                    "&checkdate=&fileno=" + URLEncoder.encode(orderId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                saveData(response);
+                sendNotification();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(ListenerSuppliesApplyStateService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+    }
+
+    private void saveData(String jsonData) {
+        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
+                .find(BusinessData.class, true).get(0);
+        List<SuppliesNoData> suppliesNoDataList = businessData.getSuppliesNoList();
+
+        List<SuppliesNo> list = JsonParseUtils.getLitenerSuppliesApplyState(jsonData);
+        for (SuppliesNo suppliesNo : list) {
+            if (suppliesNo.getApplyState().equals("不批准")) {
+                for (SuppliesNoData suppliesNoData : suppliesNoDataList) {
+                    if (suppliesNo.getApplyId().equals(suppliesNoData.getApplyId())) {
+                        ContentValues values = new ContentValues();
+                        values.put("applyState", "不批准");
+                        values.put("reason", suppliesNo.getReason());
+                        DataSupport.updateAll(SuppliesNoData.class, values, "applyId = ?", suppliesNoData.getApplyId());
+                    }
+                }
+            }
+            if (suppliesNo.getApplyState().equals("已审批")) {
+                for (SuppliesNoData suppliesNoData : suppliesNoDataList) {
+                    if (suppliesNo.getApplyId().equals(suppliesNoData.getApplyId())) {
+                        ContentValues values = new ContentValues();
+                        values.put("applyState", "已审核");
+                        values.put("approvalTime", suppliesNo.getApprovalTime());
+                        DataSupport.updateAll(SuppliesNoData.class, values, "applyId = ?", suppliesNoData.getApplyId());
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void sendNotification() {
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("工程编号：" + orderId + "\n有一条材料申请单信息更新")
+                .setTicker("这是通知的ticker")
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(android.R.drawable.ic_notification_clear_all)
+                .build();
+        notification.defaults = Notification.DEFAULT_SOUND;
+        notification.flags = Notification.FLAG_AUTO_CANCEL;
+        manager.notify(0, notification);
+    }
+
+}

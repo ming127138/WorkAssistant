@@ -17,6 +17,7 @@ public class MachineNoData extends DataSupport {
     private String returnType;      //机械退回性质（正常，损坏）
     private String returnApplyTime; //机械退回申请时间
     private String returnAddress;   //机械退回地点
+    private String reason;          //不批准原因
     private BusinessData businessData;
 
     public int getId() {
@@ -129,6 +130,14 @@ public class MachineNoData extends DataSupport {
 
     public void setReturnAddress(String returnAddress) {
         this.returnAddress = returnAddress;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public BusinessData getBusinessData() {

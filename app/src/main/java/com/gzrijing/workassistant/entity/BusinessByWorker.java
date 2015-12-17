@@ -9,6 +9,7 @@ public class BusinessByWorker {
     private String state;                   //工程状态
     private String deadline;                //工程期限
     private boolean urgent;                 //工程是否紧急
+    private int temInfoNum;                 //标记有多少条未查看的临时信息
     private String flag;
     private List<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();   //详细信息
     private List<PicUrl> picUrls = new ArrayList<PicUrl>();     //图片URL
@@ -17,12 +18,13 @@ public class BusinessByWorker {
     public BusinessByWorker() {
     }
 
-    public BusinessByWorker(String orderId, String type, String state, String deadline, boolean urgent, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls, ArrayList<Inspection> inspectionInfos) {
+    public BusinessByWorker(String orderId, String type, String state, String deadline, boolean urgent, int temInfoNum, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls, ArrayList<Inspection> inspectionInfos) {
         this.orderId = orderId;
         this.type = type;
         this.state = state;
         this.deadline = deadline;
         this.urgent = urgent;
+        this.temInfoNum = temInfoNum;
         this.flag = flag;
         this.detailedInfos = detailedInfos;
         this.picUrls = picUrls;
@@ -67,6 +69,14 @@ public class BusinessByWorker {
 
     public void setUrgent(boolean urgent) {
         this.urgent = urgent;
+    }
+
+    public int getTemInfoNum() {
+        return temInfoNum;
+    }
+
+    public void setTemInfoNum(int temInfoNum) {
+        this.temInfoNum = temInfoNum;
     }
 
     public String getFlag() {

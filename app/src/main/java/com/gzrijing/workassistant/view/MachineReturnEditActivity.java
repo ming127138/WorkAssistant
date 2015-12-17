@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MachineApplyAdapter;
 import com.gzrijing.workassistant.adapter.MachineApplyingAdapter;
+import com.gzrijing.workassistant.adapter.MachineReturnEditAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.MachineData;
@@ -65,7 +66,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
     private MyListView lv_received;
     private ArrayList<Machine> returnList = new ArrayList<Machine>();
     private ArrayList<Machine> receivedList = new ArrayList<Machine>();
-    private MachineApplyAdapter returnAdapter;
+    private MachineReturnEditAdapter returnAdapter;
     private MachineApplyingAdapter receivedAdapter;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -105,7 +106,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
         iv_delAll = (ImageView) findViewById(R.id.machine_return_edit_del_all_iv);
 
         lv_return = (MyListView) findViewById(R.id.machine_return_edit_return_lv);
-        returnAdapter = new MachineApplyAdapter(this, returnList);
+        returnAdapter = new MachineReturnEditAdapter(this, returnList);
         lv_return.setAdapter(returnAdapter);
 
         lv_received = (MyListView) findViewById(R.id.machine_return_edit_received_lv);

@@ -2,6 +2,7 @@ package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import com.gzrijing.workassistant.adapter.DistributeGriViewAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.BusinessHaveSendData;
+import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -295,7 +297,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
             public void onFinish(String response) {
                 Log.e("response", response);
                 Message msg;
-                if (response.length() >= 5 && response.substring(0, 5).equals("Error")) {
+                if (response.substring(0, 1).equals("E")) {
                     msg = handler.obtainMessage(1);
                 } else {
                     msg = handler.obtainMessage(0);
@@ -306,7 +308,12 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void onError(Exception e) {
-
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(DistributeActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
             }
         });
     }
@@ -340,7 +347,15 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         List<BusinessHaveSendData> dataList = businessData.getBusinessHaveSendDataList();
         dataList.add(data);
         businessData.save();
+
+        ContentValues values = new ContentValues();
+        values.put("state", "已派工");
+        DataSupport.updateAll(BusinessData.class, values, "user = ? and orderId = ?", userNo, orderId);
         ToastUtil.showToast(DistributeActivity.this, "派工成功", Toast.LENGTH_SHORT);
+
+        Intent intent = new Intent("action.com.gzrijing.workassistant.LeaderFragment.Distribute");
+        intent.putExtra("orderId", orderId);
+        sendBroadcast(intent);
         finish();
     }
 

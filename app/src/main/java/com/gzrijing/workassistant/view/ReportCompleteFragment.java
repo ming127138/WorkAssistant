@@ -21,17 +21,14 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ReportCompleteAdapter;
 import com.gzrijing.workassistant.adapter.ReportProgressGriViewAdapter;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.service.ReportCompleteService;
-import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.util.ToastUtil;

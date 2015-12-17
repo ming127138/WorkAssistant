@@ -10,7 +10,9 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.db.BusinessData;
@@ -31,6 +33,7 @@ import com.gzrijing.workassistant.view.SubordinateActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -40,16 +43,7 @@ public class GetLeaderBusinessService extends IntentService {
 
     private String userNo;
     private ImageLoader mImageLoader;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            List<BusinessByLeader> list = (List<BusinessByLeader>) msg.obj;
-            LeaderFragment.orderList.addAll(list);
-            LeaderFragment.orderListByLeader.addAll(list);
-            LeaderFragment.adapter.notifyDataSetChanged();
-        }
-    };
-
+    private Handler handler = new Handler();
 
     public GetLeaderBusinessService() {
         super("GetLeaderBusinessService");
@@ -91,7 +85,7 @@ public class GetLeaderBusinessService extends IntentService {
 
     private void saveData(String data) {
         List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(data);
-        for (BusinessByLeader order : list) {
+        for (final BusinessByLeader order : list) {
             BusinessData data1 = new BusinessData();
             data1.setUser(userNo);
             data1.setOrderId(order.getOrderId());
@@ -110,13 +104,14 @@ public class GetLeaderBusinessService extends IntentService {
             }
             List<PicUrl> picUrls = order.getPicUrls();
             for (final PicUrl picUrl : picUrls) {
-                mImageLoader.loadImage(HttpUtils.imageURLPath + picUrl.getPicUrl(), new SimpleImageLoadingListener() {
+                Log.e("picUrl", HttpUtils.imageURLPath + "/Pic/"+picUrl.getPicUrl());
+                mImageLoader.loadImage(HttpUtils.imageURLPath + "/Pic/"+picUrl.getPicUrl(), new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         super.onLoadingComplete(imageUri, view, loadedImage);
                         try {
-                            ImageUtils.saveFile(GetLeaderBusinessService.this, loadedImage, picUrl.getPicUrl());
-
+                            File path = ImageUtils.getImagePath(GetLeaderBusinessService.this, userNo, order.getOrderId());
+                            ImageUtils.saveFile(GetLeaderBusinessService.this, loadedImage, picUrl.getPicUrl(), path);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -130,11 +125,9 @@ public class GetLeaderBusinessService extends IntentService {
             data1.save();
         }
 
-        if (ActivityManagerUtil.activities.size() != 0) {
-            Message msg = handler.obtainMessage();
-            msg.obj = list;
-            handler.sendMessage(msg);
-        }
+        Intent intent = new Intent("action.com.gzrijing.workassistant.LeaderFragment");
+        intent.putExtra("jsonData", data);
+        sendBroadcast(intent);
     }
 
     private void sendNotification() {
@@ -143,11 +136,12 @@ public class GetLeaderBusinessService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("这就是通知的头")
-                .setTicker("这是通知的ticker")
+                .setContentTitle("有一条新工程项目需要确认")
+                .setTicker("有一条新工程项目需要确认")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();
+        notification.defaults=Notification.DEFAULT_SOUND;
         notification.flags = Notification.FLAG_AUTO_CANCEL;
         manager.notify(0, notification);
     }

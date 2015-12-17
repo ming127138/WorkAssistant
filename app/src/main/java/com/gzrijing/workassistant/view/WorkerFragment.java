@@ -21,6 +21,7 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessWorkerAdapter;
 import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.service.GetInspectionService;
 import com.gzrijing.workassistant.service.GetSewageWellsService;
@@ -38,9 +39,9 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
     private Spinner sp_state;
     private String userNo;
     private ListView lv_order;
-    public static List<BusinessByWorker> orderList = new ArrayList<BusinessByWorker>();
-    public static BusinessWorkerAdapter adapter;
-    public static List<BusinessByWorker> orderListByWorker = new ArrayList<BusinessByWorker>();
+    private List<BusinessByWorker> orderList = new ArrayList<BusinessByWorker>();
+    private BusinessWorkerAdapter adapter;
+    private List<BusinessByWorker> orderListByWorker = new ArrayList<BusinessByWorker>();
 
     public WorkerFragment() {
     }
@@ -86,7 +87,9 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void getInspectionOrder() {
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.WorkerFragment");
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment");
+        intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment1");
         getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
         Intent serviceIntent = new Intent(getActivity(), GetInspectionService.class);
         serviceIntent.putExtra("userNo", userNo);
@@ -125,8 +128,10 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void select(View view){
-        TextView tv = (TextView) view;
-        tv.setTextColor(MyApplication.getContext().getResources().getColor(R.color.black));
+        if(view != null){
+            TextView tv = (TextView) view;
+            tv.setTextColor(getResources().getColor(R.color.black));
+        }
         String type = sp_business.getSelectedItem().toString();
         String state = sp_state.getSelectedItem().toString();
 
@@ -178,6 +183,14 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                     orderListByWorker.add(businessByWorker);
                     orderList.add(businessByWorker);
                 }
+                adapter.notifyDataSetChanged();
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.WorkerFragment1")){
+                String jsonData = intent.getStringExtra("jsonData");
+                List<BusinessByWorker> list = JsonParseUtils.getWorkerBusiness(jsonData);
+                orderList.addAll(list);
+                orderListByWorker.addAll(list);
                 adapter.notifyDataSetChanged();
             }
         }

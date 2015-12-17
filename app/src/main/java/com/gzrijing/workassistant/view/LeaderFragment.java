@@ -1,9 +1,14 @@
 package com.gzrijing.workassistant.view;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +20,10 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessLeaderAdapter;
+import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -30,9 +37,9 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
     private Spinner sp_business;
     private Spinner sp_state;
     private ListView lv_order;
-    public static List<BusinessByLeader> orderList = new ArrayList<BusinessByLeader>();
-    public static BusinessLeaderAdapter adapter;
-    public static List<BusinessByLeader> orderListByLeader = new ArrayList<BusinessByLeader>();
+    private List<BusinessByLeader> orderList = new ArrayList<BusinessByLeader>();
+    private BusinessLeaderAdapter adapter;
+    private List<BusinessByLeader> orderListByLeader = new ArrayList<BusinessByLeader>();
 
     public LeaderFragment() {
     }
@@ -67,9 +74,19 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
             order.setType(data.getType());
             order.setState(data.getState());
             order.setDeadline(data.getDeadline());
+            order.setMachineApplyNum(data.getMachineApplyNum());
+            order.setSuppliesApplyNum(data.getSuppliesApplyNum());
+            order.setTemInfoNum(data.getTemInfoNum());
             order.setFlag(data.getFlag());
             orderListByLeader.add(order);
         }
+
+        IntentFilter mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment");
+        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment.Distribute");
+        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment.SuppliesVerify");
+        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment.SuppliesVerify0");
+        MyApplication.getContext().registerReceiver(mBroadcastReceiver, mIntentFilter);
     }
 
     private void initViews() {
@@ -98,8 +115,10 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void select(View view){
-        TextView tv = (TextView) view;
-        tv.setTextColor(getResources().getColor(R.color.black));
+        if(view != null){
+            TextView tv = (TextView) view;
+            tv.setTextColor(getResources().getColor(R.color.black));
+        }
         String type = sp_business.getSelectedItem().toString();
         String state = sp_state.getSelectedItem().toString();
 
@@ -138,4 +157,55 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
 
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.e("action", action);
+            if(action.equals("action.com.gzrijing.workassistant.LeaderFragment")){
+                String jsonData = intent.getStringExtra("jsonData");
+                Log.e("jsonData", jsonData);
+                List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(jsonData);
+                orderList.addAll(list);
+                orderListByLeader.addAll(list);
+                adapter.notifyDataSetChanged();
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.LeaderFragment.Distribute")){
+                String orderId = intent.getStringExtra("orderId");
+                for(BusinessByLeader order : orderListByLeader){
+                    if(order.getOrderId().equals(orderId)){
+                        order.setState("已派工");
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.LeaderFragment.SuppliesVerify")){
+                String orderId = intent.getStringExtra("orderId");
+                for(BusinessByLeader order : orderListByLeader){
+                    if(order.getOrderId().equals(orderId)){
+                        order.setSuppliesApplyNum(order.getSuppliesApplyNum()+1);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.LeaderFragment.SuppliesVerify0")){
+                String orderId = intent.getStringExtra("orderId");
+                for(BusinessByLeader order : orderListByLeader){
+                    if(order.getOrderId().equals(orderId)){
+                        order.setSuppliesApplyNum(0);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        MyApplication.getContext().unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
+    }
 }

@@ -20,16 +20,20 @@ import java.util.List;
 
 public class DetailedInfoAdapter extends BaseAdapter {
 
+    private String orderId;
+    private String userNo;
     private Context context;
     private LayoutInflater listContainer;
     private List<DetailedInfo> list;
     private ArrayList<PicUrl> picUrls;
 
-    public DetailedInfoAdapter(Context context, List<DetailedInfo> list, ArrayList<PicUrl> picUrls) {
+    public DetailedInfoAdapter(Context context, List<DetailedInfo> list, ArrayList<PicUrl> picUrls, String userNo, String orderId) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.list = list;
         this.picUrls = picUrls;
+        this.userNo = userNo;
+        this.orderId = orderId;
     }
 
     @Override
@@ -53,13 +57,14 @@ public class DetailedInfoAdapter extends BaseAdapter {
             convertView = listContainer.inflate(
                     R.layout.listview_item_gridview_image, parent, false);
             GridView gv_image = (GridView) convertView.findViewById(R.id.listview_item_gridview_image_gv);
-            GridViewImageAdapter adapter = new GridViewImageAdapter(context, picUrls);
+            GridViewImageAdapter adapter = new GridViewImageAdapter(context, picUrls, userNo, orderId);
             gv_image.setAdapter(adapter);
             gv_image.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (picUrls.size() > 0) {
                         Intent intent = new Intent(context, ImageBrowserForLocationActivity.class);
+                        intent.putExtra("orderId", orderId);
                         intent.putExtra("position", position);
                         intent.putParcelableArrayListExtra("picUrls", picUrls);
                         context.startActivity(intent);

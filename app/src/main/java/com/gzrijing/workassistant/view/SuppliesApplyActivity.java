@@ -128,17 +128,18 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                     approval.setApprovalTime(data.getApprovalTime());
                     approvalList.add(approval);
                 }
-
-                if (data.getReceivedState().equals("可领用") || data.getReceivedState().equals("已领出")) {
-                    SuppliesNo received = new SuppliesNo();
-                    received.setApplyId(data.getApplyId());
-                    received.setReceivedId(data.getReceivedId());
-                    received.setReceivedState(data.getReceivedState());
-                    received.setReceivedTime(data.getReceivedTime());
-                    receivedList.add(received);
+                if (data.getReceivedState() != null) {
+                    if (data.getReceivedState().equals("可领用") || data.getReceivedState().equals("已领出")) {
+                        SuppliesNo received = new SuppliesNo();
+                        received.setApplyId(data.getApplyId());
+                        received.setReceivedId(data.getReceivedId());
+                        received.setReceivedState(data.getReceivedState());
+                        received.setReceivedTime(data.getReceivedTime());
+                        receivedList.add(received);
+                    }
                 }
             } else {
-                if(!data.getReturnId().equals("")){
+                if (!data.getReturnId().equals("")) {
                     SuppliesNo returnNo = new SuppliesNo();
                     returnNo.setReturnId(data.getReturnId());
                     returnNo.setReturnTime(data.getReturnTime());
@@ -204,7 +205,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                     intent.putExtra("userNo", userNo);
                     intent.putExtra("orderId", orderId);
                     startActivityForResult(intent, 20);
-                }else{
+                } else {
                     Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesApplyingScanActivity.class);
                     intent.putExtra("suppliesNo", (Parcelable) applyingList.get(position));
                     startActivity(intent);
@@ -522,12 +523,16 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void run() {
                         if (response.equals("ok")) {
+                            Calendar rightNow = Calendar.getInstance();
+                            String receivedTime = dateFormat.format(rightNow.getTime());
                             ContentValues values = new ContentValues();
                             values.put("receivedState", "已领出");
+                            values.put("receivedTime", receivedTime);
                             DataSupport.updateAll(SuppliesNoData.class, values, "receivedId = ?", id);
                             for (SuppliesNo suppliesNo : receivedList) {
                                 if (suppliesNo.getReceivedId().equals(id)) {
                                     suppliesNo.setReceivedState("已领出");
+                                    suppliesNo.setReceivedTime(receivedTime);
                                     receivedAdapter.notifyDataSetChanged();
                                 }
                             }

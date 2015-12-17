@@ -109,6 +109,9 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         v.type.setText(orderList.get(position).getType());
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
+        v.machineVerify.setText(orderList.get(position).getMachineApplyNum()+"条新机械申请");
+        v.suppliesVerify.setText(orderList.get(position).getSuppliesApplyNum()+"条新材料申请");
+        v.temInfo.setText(orderList.get(position).getTemInfoNum()+"条新临时信息");
 
         if (orderList.get(position).isUrgent()) {
             v.urgent.setVisibility(View.VISIBLE);

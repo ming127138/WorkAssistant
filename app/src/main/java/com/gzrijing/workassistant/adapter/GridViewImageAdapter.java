@@ -16,20 +16,25 @@ import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class GridViewImageAdapter extends BaseAdapter {
 
+    private String orderId;
+    private String userNo;
     private ImageLoader imageLoader;
     private Context context;
     private LayoutInflater listContainer;
     private ArrayList<PicUrl> picUrls;
 
-    public GridViewImageAdapter(Context context, ArrayList<PicUrl> picUrls) {
+    public GridViewImageAdapter(Context context, ArrayList<PicUrl> picUrls, String userNo, String orderId) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.picUrls = picUrls;
         imageLoader = ImageLoader.getInstance();
+        this.userNo = userNo;
+        this.orderId = orderId;
     }
 
     @Override
@@ -66,8 +71,8 @@ public class GridViewImageAdapter extends BaseAdapter {
                 - gv.getPaddingLeft() - gv.getPaddingRight()) / 3;
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
         v.image.setLayoutParams(params);
-
-        ImageUtils.getLocaImage(context, picUrls.get(position).getPicUrl(), v.image);
+        File path = ImageUtils.getImagePath(context, userNo, orderId);
+        ImageUtils.getLocaImage(context, picUrls.get(position).getPicUrl(), v.image, path);
         return convertView;
     }
 

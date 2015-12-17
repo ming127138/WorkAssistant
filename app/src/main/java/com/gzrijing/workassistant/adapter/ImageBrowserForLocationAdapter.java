@@ -10,18 +10,23 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.util.ImageUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageBrowserForLocationAdapter extends PagerAdapter{
 
+    private String orderId;
+    private String userNo;
     private Context context;
     private List<PicUrl> picUrls;
     private List<View> picViews;
 
-    public ImageBrowserForLocationAdapter(Context context, List<PicUrl> picUrls){
+    public ImageBrowserForLocationAdapter(Context context, List<PicUrl> picUrls, String userNo, String orderId){
         this.context = context;
         this.picUrls = picUrls;
+        this.userNo = userNo;
+        this.orderId = orderId;
         initViews();
     }
 
@@ -50,7 +55,8 @@ public class ImageBrowserForLocationAdapter extends PagerAdapter{
         ImageView mImageView = (ImageView) view.findViewById(R.id.viewpage_item_image_browser_image_iv);
         String picUrl = picUrls.get(position).getPicUrl();
 
-        ImageUtils.getLocaImage(context, picUrl, mImageView);
+        File path = ImageUtils.getImagePath(context, userNo, orderId);
+        ImageUtils.getLocaImage(context, picUrl, mImageView, path);
 
         container.addView(view);
         return view;
