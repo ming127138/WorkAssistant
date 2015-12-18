@@ -1,11 +1,13 @@
 package com.gzrijing.workassistant.view;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.gzrijing.workassistant.R;
@@ -39,8 +41,8 @@ public class MoreFragment extends Fragment {
     }
 
     private void initData() {
-        iconIds = new int[]{R.drawable.icon_notice};
-        texts = new String[]{"通知公告"};
+        iconIds = new int[]{R.drawable.icon_notice, R.drawable.icon_notice};
+        texts = new String[]{"通知公告", "送机列表"};
     }
 
     private void initViews() {
@@ -50,7 +52,20 @@ public class MoreFragment extends Fragment {
     }
 
     private void setListeners() {
+        gv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0){
+                    Intent intent = new Intent(getActivity(), NoticeActivity.class);
+                    getActivity().startActivity(intent);
+                }
 
+                if(position == 1){
+                    Intent intent = new Intent(getActivity(), SendMachineActivity.class);
+                    getActivity().startActivity(intent);
+                }
+            }
+        });
     }
 
 }

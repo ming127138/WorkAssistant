@@ -90,6 +90,9 @@ public class ListenerMachineReceivedStateService extends IntentService {
         }
         businessData.save();
 
+        Intent intent = new Intent("action.com.gzrijing.workassistant.MachineApply.refresh");
+        sendBroadcast(intent);
+
     }
 
     private void sendNotification() {

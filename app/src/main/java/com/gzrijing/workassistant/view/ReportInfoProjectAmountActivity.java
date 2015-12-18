@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.PrintInfoAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
 import com.gzrijing.workassistant.entity.Supplies;
@@ -39,7 +40,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportInfoProjectAmountActivity extends AppCompatActivity implements View.OnClickListener {
+public class ReportInfoProjectAmountActivity extends BaseActivity implements View.OnClickListener {
 
     private String userNo;
     private Intent serviceIntent;

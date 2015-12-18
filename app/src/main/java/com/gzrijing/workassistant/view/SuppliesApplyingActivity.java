@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,6 +83,7 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
         List<SuppliesData> suppliesDataList = DataSupport.where("applyId = ?", suppliesNo.getApplyId()).find(SuppliesData.class);
         for (SuppliesData data : suppliesDataList) {
             Supplies supplies = new Supplies();
+            supplies.setId(data.getNo());
             supplies.setName(data.getName());
             supplies.setSpec(data.getSpec());
             supplies.setUnit(data.getUnit());
@@ -234,9 +236,11 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
                 .add("makingjson", jsonArray.toString())
                 .build();
 
+
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
+                Log.e("response", response);
                 if (response.substring(0, 1).equals("E")) {
                     handler.post(new Runnable() {
                         @Override

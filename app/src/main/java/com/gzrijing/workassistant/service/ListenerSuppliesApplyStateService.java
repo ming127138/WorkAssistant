@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.db.BusinessData;
@@ -37,7 +38,6 @@ public class ListenerSuppliesApplyStateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
 
@@ -52,6 +52,7 @@ public class ListenerSuppliesApplyStateService extends IntentService {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 saveData(response);
                 sendNotification();
             }
@@ -89,13 +90,16 @@ public class ListenerSuppliesApplyStateService extends IntentService {
                 for (SuppliesNoData suppliesNoData : suppliesNoDataList) {
                     if (suppliesNo.getApplyId().equals(suppliesNoData.getApplyId())) {
                         ContentValues values = new ContentValues();
-                        values.put("applyState", "已审核");
+                        values.put("applyState", "已审批");
                         values.put("approvalTime", suppliesNo.getApprovalTime());
                         DataSupport.updateAll(SuppliesNoData.class, values, "applyId = ?", suppliesNoData.getApplyId());
                     }
                 }
             }
         }
+
+        Intent intent = new Intent("action.com.gzrijing.workassistant.SuppliesApply.refresh");
+        sendBroadcast(intent);
 
     }
 

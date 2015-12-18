@@ -8,12 +8,12 @@ public class Supplies implements Parcelable {
     private String name;        //材料名称
     private String spec;        //材料规格
     private String unit;        //材料单位
-    private int num;            //数量
+    private String num;         //数量
 
     public Supplies() {
     }
 
-    public Supplies(String id, String name, String spec, String unit, int num) {
+    public Supplies(String id, String name, String spec, String unit, String num) {
         this.id = id;
         this.name = name;
         this.spec = spec;
@@ -53,11 +53,11 @@ public class Supplies implements Parcelable {
         this.unit = unit;
     }
 
-    public int getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(String num) {
         this.num = num;
     }
 
@@ -72,7 +72,7 @@ public class Supplies implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.spec);
         dest.writeString(this.unit);
-        dest.writeInt(this.num);
+        dest.writeString(this.num);
     }
 
     protected Supplies(Parcel in) {
@@ -80,7 +80,7 @@ public class Supplies implements Parcelable {
         this.name = in.readString();
         this.spec = in.readString();
         this.unit = in.readString();
-        this.num = in.readInt();
+        this.num = in.readString();
     }
 
     public static final Creator<Supplies> CREATOR = new Creator<Supplies>() {

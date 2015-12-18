@@ -2,18 +2,18 @@ package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ImageSelectorAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.PicUrl;
 
 import java.util.ArrayList;
 
-public class ImageSelectorActivity extends AppCompatActivity {
+public class ImageSelectorActivity extends BaseActivity {
 
     private int position;
     private ArrayList<PicUrl> imageUrls;

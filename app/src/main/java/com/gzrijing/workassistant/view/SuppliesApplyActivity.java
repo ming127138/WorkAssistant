@@ -1,9 +1,12 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -104,29 +107,40 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
+        getDBData();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.com.gzrijing.workassistant.SuppliesApply.refresh");
+        registerReceiver(mBroadcastReceiver, intentFilter);
+    }
+
+    private void getDBData() {
         businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         List<SuppliesNoData> suppliesNoData = businessData.getSuppliesNoList();
         for (SuppliesNoData data : suppliesNoData) {
-            if (!data.getApplyId().equals("")) {
-                if (data.getApplyState().equals("申请中") || data.getApplyState().equals("不批准")) {
-                    SuppliesNo applying = new SuppliesNo();
-                    applying.setApplyId(data.getApplyId());
-                    applying.setApplyState(data.getApplyState());
-                    applying.setApplyTime(data.getApplyTime());
-                    applying.setUseTime(data.getUseTime());
-                    applying.setRemarks(data.getRemarks());
-                    applyingList.add(applying);
-                }
+            if (data.getApplyId() != null && !data.getApplyId().equals("")) {
+                if(data.getApplyState()!= null){
+                    if (data.getApplyState().equals("申请中") || data.getApplyState().equals("不批准")) {
+                        SuppliesNo applying = new SuppliesNo();
+                        applying.setApplyId(data.getApplyId());
+                        applying.setApplyState(data.getApplyState());
+                        applying.setApplyTime(data.getApplyTime());
+                        applying.setUseTime(data.getUseTime());
+                        applying.setRemarks(data.getRemarks());
+                        applying.setReason(data.getReason());
+                        applyingList.add(applying);
+                    }
 
-                if (data.getApplyState().equals("已审批")) {
-                    SuppliesNo approval = new SuppliesNo();
-                    approval.setApplyId(data.getApplyId());
-                    approval.setApplyState(data.getApplyState());
-                    approval.setApplyTime(data.getApplyTime());
-                    approval.setUseTime(data.getUseTime());
-                    approval.setRemarks(data.getRemarks());
-                    approval.setApprovalTime(data.getApprovalTime());
-                    approvalList.add(approval);
+                    if (data.getApplyState().equals("已审批")) {
+                        SuppliesNo approval = new SuppliesNo();
+                        approval.setApplyId(data.getApplyId());
+                        approval.setApplyState(data.getApplyState());
+                        approval.setApplyTime(data.getApplyTime());
+                        approval.setUseTime(data.getUseTime());
+                        approval.setRemarks(data.getRemarks());
+                        approval.setApprovalTime(data.getApprovalTime());
+                        approvalList.add(approval);
+                    }
                 }
                 if (data.getReceivedState() != null) {
                     if (data.getReceivedState().equals("可领用") || data.getReceivedState().equals("已领出")) {
@@ -473,7 +487,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         if (requestCode == 30) {
             if (resultCode == 30) {
                 SuppliesNo suppliesNo = data.getParcelableExtra("suppliesNo");
-                receivedList.add(suppliesNo);
+                returnList.add(suppliesNo);
                 returnAdapter.notifyDataSetChanged();
             }
         }
@@ -504,7 +518,6 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
             jsonObject.put("PicType", "WnW_MaterialSendMain");
             jsonObject.put("FileNo", orderId);
             jsonObject.put("BillNo", id);
-            jsonObject.put("MachineNo", "");
             jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -534,6 +547,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                                     suppliesNo.setReceivedState("已领出");
                                     suppliesNo.setReceivedTime(receivedTime);
                                     receivedAdapter.notifyDataSetChanged();
+                                    ToastUtil.showToast(SuppliesApplyActivity.this, "发放单ID:"+id+",领出成功", Toast.LENGTH_SHORT);
                                 }
                             }
                         } else {
@@ -576,6 +590,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                                 if (suppliesNo.getReturnId().equals(id)) {
                                     suppliesNo.setReturnState("已退回");
                                     returnAdapter.notifyDataSetChanged();
+                                    ToastUtil.showToast(SuppliesApplyActivity.this, "退回单ID:"+id+",退回成功", Toast.LENGTH_SHORT);
                                 }
                             }
                         } else {
@@ -599,6 +614,25 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
 
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals("action.com.gzrijing.workassistant.SuppliesApply.refresh")) {
+                applyingList.clear();
+                approvalList.clear();
+                receivedList.clear();
+                returnList.clear();
+                getDBData();
+                applyingAdapter.notifyDataSetChanged();
+                approvalAdapter.notifyDataSetChanged();
+                receivedAdapter.notifyDataSetChanged();
+                returnAdapter.notifyDataSetChanged();
+            }
+        }
+    };
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -611,4 +645,9 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
+    }
 }

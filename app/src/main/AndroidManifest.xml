@@ -30,17 +30,14 @@
     <permission
         android:name="getui.permission.GetuiService.com.gzrijing.workassistant"
         android:protectionLevel="normal" />
+
     <!-- 个推SDK权限配置结束 -->
-
-
-
     <application
         android:name=".base.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/MyAppTheme">
-
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="usHHwzjX4di1HX2Hwz85xRtg" />
@@ -48,13 +45,11 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" >
+            android:process=":remote">
             <intent-filter>
-                <action android:name="com.baidu.location.service_v6.1.3" >
-                </action>
+                <action android:name="com.baidu.location.service_v6.1.3" />
             </intent-filter>
         </service>
-
 
         <!-- app activity -->
         <activity
@@ -228,6 +223,30 @@
         <activity
             android:name=".zxing.view.MipcaActivityCapture"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.MachineApplyingScanActivity"
+            android:label="机械列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.MachineApprovalActivity"
+            android:label="机械列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.MachineReturnActivity"
+            android:label="退料列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ReportInfoProjectAmountActivity"
+            android:label="工程量信息"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SendMachineActivity"
+            android:label="送机列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.QrcodeActivity"
+            android:label="二维码"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -293,6 +312,9 @@
             android:exported="false" />
         <service
             android:name=".service.ListenerSuppliesApprovalOrderService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerSuppliesReturnStateService"
             android:exported="false" />
 
         <!-- app service -->
@@ -405,10 +427,6 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".view.MachineApplyingScanActivity" />
-        <activity android:name=".view.MachineApprovalActivity" />
-        <activity android:name=".view.MachineReturnActivity" />
-        <activity android:name=".view.ReportInfoProjectAmountActivity"></activity>
     </application>
 
 </manifest>

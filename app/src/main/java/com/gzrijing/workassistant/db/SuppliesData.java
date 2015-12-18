@@ -11,7 +11,7 @@ public class SuppliesData extends DataSupport {
     private String name;        //材料名称
     private String spec;        //材料规格
     private String unit;        //材料单位
-    private int num;            //数量
+    private String num;            //数量
     private BusinessData businessData;
 
     public int getId() {
@@ -78,11 +78,11 @@ public class SuppliesData extends DataSupport {
         this.unit = unit;
     }
 
-    public int getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(String num) {
         this.num = num;
     }
 

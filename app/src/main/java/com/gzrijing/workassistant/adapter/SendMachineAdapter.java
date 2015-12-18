@@ -7,34 +7,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.view.NoticeActivity;
+import com.gzrijing.workassistant.entity.MachineNo;
+import com.gzrijing.workassistant.entity.SendMachine;
+import com.gzrijing.workassistant.view.QrcodeActivity;
 
-public class MoreGridViewAdapter extends BaseAdapter {
+import java.util.List;
+
+public class SendMachineAdapter extends BaseAdapter {
+
     private Context context;
     private LayoutInflater listContainer;
-    private final int[] iconIds;
-    private final String[] texts;
+    private List<SendMachine> list;
 
-    public MoreGridViewAdapter(
-            Context context, int[] iconIds, String[] texts) {
+    public SendMachineAdapter(Context context, List<SendMachine> list) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
-        this.iconIds = iconIds;
-        this.texts = texts;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return texts.length;
+        return list.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return texts[position];
+        return list.get(position);
     }
 
     @Override
@@ -48,22 +49,27 @@ public class MoreGridViewAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_more_gridview, parent, false);
-            v.icon = (ImageView) convertView.findViewById(R.id.more_gridview_icon_iv);
-            v.text = (TextView) convertView.findViewById(R.id.more_gridview_text_tv);
-            v.ll = (LinearLayout) convertView.findViewById(R.id.more_gridview_ll);
+                    R.layout.listview_item_send_machine, parent, false);
+            v.name = (TextView) convertView.findViewById(R.id.listview_item_send_machine_tv);
+            v.qrcode = (ImageView) convertView.findViewById(R.id.listview_item_send_machine_iv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
-        v.icon.setImageResource(iconIds[position]);
-        v.text.setText(texts[position]);
+
+        v.name.setText(list.get(position).getMachineName());
+        v.qrcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, QrcodeActivity.class);
+                context.startActivity(intent);
+            }
+        });
         return convertView;
     }
 
     class ViewHolder {
-        private ImageView icon;
-        private TextView text;
-        private LinearLayout ll;
+        private TextView name;
+        private ImageView qrcode;
     }
 }

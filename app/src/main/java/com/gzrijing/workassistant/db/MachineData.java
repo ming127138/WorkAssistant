@@ -9,7 +9,7 @@ public class MachineData extends DataSupport {
     private String No;                  //机械编号
     private String name;                //机械名称
     private String unit;                //机械单位
-    private int num;                    //数量
+    private String num;                 //数量
     private String receivedState;       //领用状态（已安排，已领出，已退回）
     private BusinessData businessData;
 
@@ -61,11 +61,11 @@ public class MachineData extends DataSupport {
         this.unit = unit;
     }
 
-    public int getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(String num) {
         this.num = num;
     }
 

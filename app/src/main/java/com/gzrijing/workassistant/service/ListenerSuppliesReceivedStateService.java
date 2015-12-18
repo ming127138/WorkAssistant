@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.db.BusinessData;
@@ -56,6 +57,7 @@ public class ListenerSuppliesReceivedStateService extends IntentService {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 saveData(response);
                 sendNotification();
             }
@@ -100,6 +102,9 @@ public class ListenerSuppliesReceivedStateService extends IntentService {
         }
         businessData.save();
 
+        Intent intent = new Intent("action.com.gzrijing.workassistant.SuppliesApply.refresh");
+        sendBroadcast(intent);
+
     }
 
     private void sendNotification() {
@@ -109,7 +114,7 @@ public class ListenerSuppliesReceivedStateService extends IntentService {
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("工程编号：" + orderId + "\n有一条材料申请单可领用")
-                .setTicker("这是通知的ticker")
+                .setTicker("有一条材料申请单可领用")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();

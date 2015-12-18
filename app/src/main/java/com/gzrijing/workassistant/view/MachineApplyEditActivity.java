@@ -116,7 +116,7 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
                 apply.setId(query.getId());
                 apply.setName(query.getName());
                 apply.setUnit(query.getUnit());
-                apply.setNum(1);
+                apply.setNum("1");
                 machineList.add(apply);
                 applyAdapter.notifyDataSetChanged();
             }
@@ -160,7 +160,7 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
             machine.setName(name+"_"+spec);
         }
         machine.setUnit(unit);
-        machine.setNum(1);
+        machine.setNum("1");
         machineList.add(machine);
         applyAdapter.notifyDataSetChanged();
         et_name.setText("");

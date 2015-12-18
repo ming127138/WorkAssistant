@@ -102,6 +102,9 @@ public class ListenerMachineApplyStateService extends IntentService {
             }
         }
 
+        Intent intent = new Intent("action.com.gzrijing.workassistant.MachineApply.refresh");
+        sendBroadcast(intent);
+
     }
 
     private void sendNotification() {

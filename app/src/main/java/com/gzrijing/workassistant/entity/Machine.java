@@ -7,13 +7,13 @@ public class Machine implements Parcelable {
     private String id;          //机械编号
     private String name;        //机械名称
     private String unit;        //机械单位
-    private int num;            //数量
+    private String num;         //数量
     private String state;       //机械状态(查询时的机械状态，已安排，已领出)
 
     public Machine() {
     }
 
-    public Machine(String id, String name, String unit, int num, String state) {
+    public Machine(String id, String name, String unit, String num, String state) {
         this.id = id;
         this.name = name;
         this.unit = unit;
@@ -45,11 +45,11 @@ public class Machine implements Parcelable {
         this.unit = unit;
     }
 
-    public int getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(String num) {
         this.num = num;
     }
 
@@ -71,7 +71,7 @@ public class Machine implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.unit);
-        dest.writeInt(this.num);
+        dest.writeString(this.num);
         dest.writeString(this.state);
     }
 
@@ -79,7 +79,7 @@ public class Machine implements Parcelable {
         this.id = in.readString();
         this.name = in.readString();
         this.unit = in.readString();
-        this.num = in.readInt();
+        this.num = in.readString();
         this.state = in.readString();
     }
 

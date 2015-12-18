@@ -110,7 +110,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
                 supplies.setName(received.getName());
                 supplies.setSpec(received.getSpec());
                 supplies.setUnit(received.getUnit());
-                supplies.setNum(1);
+                supplies.setNum("1");
                 returnList.add(supplies);
                 returnAdapter.notifyDataSetChanged();
             }
@@ -243,7 +243,6 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
         data1.save();
         businessData.getSuppliesNoList().add(data1);
         businessData.save();
-
 
         SuppliesNo suppliesNo = new SuppliesNo();
         suppliesNo.setReturnId(returnId);

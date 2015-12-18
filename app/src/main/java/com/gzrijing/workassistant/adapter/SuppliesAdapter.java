@@ -80,7 +80,7 @@ public class SuppliesAdapter extends BaseAdapter {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                suppliesList.get(position).setNum(Integer.valueOf(et.getText().toString().trim()));
+                                suppliesList.get(position).setNum(et.getText().toString().trim());
                                 notifyDataSetChanged();
                             }
                         })

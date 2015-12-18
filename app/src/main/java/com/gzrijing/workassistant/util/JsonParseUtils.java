@@ -12,6 +12,7 @@ import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Progress;
 import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
+import com.gzrijing.workassistant.entity.SendMachine;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
@@ -227,7 +228,7 @@ public class JsonParseUtils {
                 supplies.setName(name);
                 supplies.setSpec(spec);
                 supplies.setUnit(unit);
-                supplies.setNum(1);
+                supplies.setNum("1");
                 suppliesList.add(supplies);
             }
         } catch (JSONException e) {
@@ -458,25 +459,27 @@ public class JsonParseUtils {
                 suppliesVerify.setRemarks(remarks);
                 suppliesVerify.setState(state);
 
-                ArrayList<SuppliesVerifyInfo> infos = new ArrayList<SuppliesVerifyInfo>();
-                JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
-                for (int j = 0; j < jsonArray1.length(); j++) {
-                    JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
-                    String name = jsonObject1.getString("MakingName");
-                    String spec = jsonObject1.getString("MakingSpace");
-                    String unit = jsonObject1.getString("MakingUnit");
-                    String applyNum = jsonObject1.getString("NeedQty");
-                    String sendNum = jsonObject1.getString("SendQty");
-                    SuppliesVerifyInfo info = new SuppliesVerifyInfo();
-                    info.setName(name);
-                    info.setSendNum(spec);
-                    info.setUnit(unit);
-                    info.setApplyNum(applyNum);
-                    info.setSendNum(sendNum);
-                    infos.add(info);
+                if(!jsonObject.getString("MaterialDetail").equals("")){
+                    ArrayList<SuppliesVerifyInfo> infos = new ArrayList<SuppliesVerifyInfo>();
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String name = jsonObject1.getString("MakingName");
+                        String spec = jsonObject1.getString("MakingSpace");
+                        String unit = jsonObject1.getString("MakingUnit");
+                        String applyNum = jsonObject1.getString("NeedQty");
+                        String sendNum = jsonObject1.getString("SendQty");
+                        SuppliesVerifyInfo info = new SuppliesVerifyInfo();
+                        info.setName(name);
+                        info.setSendNum(spec);
+                        info.setUnit(unit);
+                        info.setApplyNum(applyNum);
+                        info.setSendNum(sendNum);
+                        infos.add(info);
+                    }
+                    suppliesVerify.setSuppliesVerifyInfoList(infos);
                 }
 
-                suppliesVerify.setSuppliesVerifyInfoList(infos);
                 list.add(suppliesVerify);
 
             }
@@ -633,7 +636,7 @@ public class JsonParseUtils {
                 supplies.setName(name);
                 supplies.setSpec(spec);
                 supplies.setUnit(unit);
-                supplies.setNum(Integer.valueOf(num));
+                supplies.setNum(num);
                 list.add(supplies);
             }
         } catch (JSONException e) {
@@ -660,9 +663,9 @@ public class JsonParseUtils {
                     state = "申请中";
                 }
                 if (state.equals("审核")) {
-                    state = "已审核";
+                    state = "已审批";
                 }
-                if (state.equals("停止")) {
+                if (state.equals("不通过")) {
                     state = "不批准";
                 }
                 String approvalTime = jsonObject.getString("CheckDate");
@@ -694,7 +697,7 @@ public class JsonParseUtils {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String receivedId = jsonObject.getString("BillNo");
-                String applyId = jsonObject.getString("MaterialNeedBillNo");
+                String applyId = jsonObject.getString("NeedMainid");
                 String state = jsonObject.getString("State");
                 if (state.equals("审核")) {
                     state = "可领用";
@@ -728,7 +731,7 @@ public class JsonParseUtils {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
                 for (int j = 0; j < jsonArray1.length(); j++) {
-                    JSONObject jsonObject1 = jsonArray.getJSONObject(j);
+                    JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
                     String id = jsonObject1.getString("MakingNo");
                     String name = jsonObject1.getString("MakingName");
                     String spec = jsonObject1.getString("MakingSpace");
@@ -740,7 +743,7 @@ public class JsonParseUtils {
                     supplies.setName(name);
                     supplies.setSpec(spec);
                     supplies.setUnit(unit);
-                    supplies.setNum(Integer.valueOf(num));
+                    supplies.setNum(num);
                     list.add(supplies);
                 }
             }
@@ -812,7 +815,7 @@ public class JsonParseUtils {
                     machine.setId(id);
                     machine.setName(name);
                     machine.setUnit(unit);
-                    machine.setNum(1);
+                    machine.setNum("1");
                     machine.setState("已安排");
                     list.add(machine);
                 }
@@ -822,5 +825,36 @@ public class JsonParseUtils {
         }
         return list;
     }
+
+    /**
+     * 获取待送机械列表
+     * @param jsonData
+     * @return
+     */
+    public static List<SendMachine> getSendMachine (String jsonData){
+        List<SendMachine> list = new ArrayList<SendMachine>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String billNo = jsonObject.getString("BillNo");
+                String address = jsonObject.getString("ProAddress");
+                String machineNo = jsonObject.getString("MachineNo");
+                String machineName = jsonObject.getString("MachineName");
+
+                SendMachine sendMachine = new SendMachine();
+                sendMachine.setBillNo(billNo);
+                sendMachine.setAddress(address);
+                sendMachine.setMachineNo(machineNo);
+                sendMachine.setMachineName(machineName);
+                list.add(sendMachine);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
 
 }

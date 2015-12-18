@@ -1,9 +1,12 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -108,6 +111,15 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
+        getDBData();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.com.gzrijing.workassistant.MachineApply.refresh");
+        registerReceiver(mBroadcastReceiver, intentFilter);
+
+    }
+
+    private void getDBData() {
         businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         List<MachineNoData> machineNoDataList = businessData.getMachineNoList();
         for(MachineNoData data : machineNoDataList){
@@ -121,6 +133,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                     applying.setReturnTime(data.getReturnTime());
                     applying.setUseAddress(data.getUseAddress());
                     applying.setRemarks(data.getRemarks());
+                    applying.setReason(data.getReason());
                     applyingList.add(applying);
                 }
 
@@ -164,9 +177,6 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                 receivedList.add(machine);
             }
         }
-
-
-
     }
 
     private void initViews() {
@@ -655,6 +665,24 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
 
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.MachineApply.refresh")){
+                applyingList.clear();
+                approvalList.clear();
+                receivedList.clear();
+                returnList.clear();
+                getDBData();
+                applyingAdapter.notifyDataSetChanged();
+                approvalAdapter.notifyDataSetChanged();
+                receivedAdapter.notifyDataSetChanged();
+                returnAdapter.notifyDataSetChanged();
+            }
+        }
+    };
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -665,5 +693,11 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
     }
 }

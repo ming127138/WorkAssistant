@@ -8,9 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.gzrijing.workassistant.base.MyApplication;
-import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.SuppliesNoData;
-import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.service.GetLeaderBusinessService;
 import com.gzrijing.workassistant.service.GetWorkerBusinessService;
 import com.gzrijing.workassistant.service.ListenerMachineApplyStateService;
@@ -18,14 +15,12 @@ import com.gzrijing.workassistant.service.ListenerMachineReceivedStateService;
 import com.gzrijing.workassistant.service.ListenerSuppliesApplyStateService;
 import com.gzrijing.workassistant.service.ListenerSuppliesApprovalOrderService;
 import com.gzrijing.workassistant.service.ListenerSuppliesReceivedStateService;
+import com.gzrijing.workassistant.service.ListenerSuppliesReturnStateService;
 import com.igexin.sdk.PushConsts;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 public class MainReceiver extends BroadcastReceiver {
     /**
@@ -59,9 +54,18 @@ public class MainReceiver extends BroadcastReceiver {
                                 if(cmd.equals("getmycons")){
                                     getWorkerBusiness();
                                 }
+                                if(cmd.equals("getmaterialneedlist")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    listenerSuppliesApprovalOrder(user, orderId);
+                                }
                                 if(cmd.equals("getmymaterialneedmain")){
                                     String orderId = jsonObject.getString("FileNo");
                                     listenerSuppliesApplyState(user, orderId);
+                                }
+                                if(cmd.equals("getmaterialreturnstate")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    String billNo = jsonObject.getString("BillNo");
+                                    listenerSuppliesReturnState(user, orderId, billNo);
                                 }
                                 if(cmd.equals("getmaterialsend")){
                                     String orderId = jsonObject.getString("FileNo");
@@ -77,10 +81,6 @@ public class MainReceiver extends BroadcastReceiver {
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
                                     listenerMachineReceivedState(user, orderId, billNo);
-                                }
-                                if(cmd.equals("getmaterialneedlist")){
-                                    String orderId = jsonObject.getString("FileNo");
-                                    listenerSuppliesApprovalOrder(user, orderId);
                                 }
                             }
                         }
@@ -109,6 +109,16 @@ public class MainReceiver extends BroadcastReceiver {
     }
 
     /**
+     * 监听是否有材料审核单要审核
+     */
+    private void listenerSuppliesApprovalOrder(String userNo, String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerSuppliesApprovalOrderService.class);
+        intent.putExtra("userNo", userNo);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
      * 监听材料申请单状态
      */
     private void listenerSuppliesApplyState(String userNo, String orderId){
@@ -130,7 +140,18 @@ public class MainReceiver extends BroadcastReceiver {
     }
 
     /**
-     * 监听材料申请单状态
+     * 监听哪些材料可以退回
+     */
+    private void listenerSuppliesReturnState(String userNo, String orderId, String billNo){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerSuppliesReturnStateService.class);
+        intent.putExtra("userNo", userNo);
+        intent.putExtra("orderId", orderId);
+        intent.putExtra("billNo", billNo);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听机械申请单状态
      */
     private void listenerMachineApplyState(String userNo, String orderId, String billNo){
         Intent intent = new Intent(MyApplication.getContext(), ListenerMachineApplyStateService.class);
@@ -148,16 +169,6 @@ public class MainReceiver extends BroadcastReceiver {
         intent.putExtra("userNo", userNo);
         intent.putExtra("orderId", orderId);
         intent.putExtra("billNo", billNo);
-        MyApplication.getContext().startService(intent);
-    }
-
-    /**
-     * 监听是否有材料审核单要审核
-     */
-    private void listenerSuppliesApprovalOrder(String userNo, String orderId){
-        Intent intent = new Intent(MyApplication.getContext(), ListenerSuppliesApprovalOrderService.class);
-        intent.putExtra("userNo", userNo);
-        intent.putExtra("orderId", orderId);
         MyApplication.getContext().startService(intent);
     }
 }

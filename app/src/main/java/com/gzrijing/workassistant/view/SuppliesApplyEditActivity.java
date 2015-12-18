@@ -192,7 +192,7 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
         supplies.setName(name);
         supplies.setSpec(spec);
         supplies.setUnit(unit);
-        supplies.setNum(1);
+        supplies.setNum("1");
         suppliesList.add(supplies);
         adapter.notifyDataSetChanged();
         et_name.setText("");
