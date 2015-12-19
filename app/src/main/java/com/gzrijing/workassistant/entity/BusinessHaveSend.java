@@ -1,29 +1,29 @@
 package com.gzrijing.workassistant.entity;
 
 public class BusinessHaveSend {
-    private String orderId;
-    private String content;
-    private String state;
-    private String deadline;
-    private String executors;
+    private String Id;              //已派工程id
+    private String content;         //已派工程内容
+    private String state;           //已派工程状态
+    private String deadline;        //已派工程期限
+    private String executors;       //已派工程执行者
 
     public BusinessHaveSend() {
     }
 
-    public BusinessHaveSend(String orderId, String content, String state, String deadline, String executors) {
-        this.orderId = orderId;
+    public BusinessHaveSend(String id, String content, String state, String deadline, String executors) {
+        Id = id;
         this.content = content;
         this.state = state;
         this.deadline = deadline;
         this.executors = executors;
     }
 
-    public String getOrderId() {
-        return orderId;
+    public String getId() {
+        return Id;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public void setId(String id) {
+        Id = id;
     }
 
     public String getContent() {

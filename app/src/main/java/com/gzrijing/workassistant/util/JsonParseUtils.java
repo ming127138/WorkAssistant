@@ -2,6 +2,7 @@ package com.gzrijing.workassistant.util;
 
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
+import com.gzrijing.workassistant.entity.BusinessHaveSend;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.Inspection;
 import com.gzrijing.workassistant.entity.Machine;
@@ -12,6 +13,7 @@ import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Progress;
 import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
+import com.gzrijing.workassistant.entity.ReturnMachine;
 import com.gzrijing.workassistant.entity.SendMachine;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.entity.Supplies;
@@ -93,18 +95,20 @@ public class JsonParseUtils {
                     infos.add(detailedInfo);
                 }
 
-                JSONArray jsonArray2 = jsonObject.getJSONArray("PicUri");
-                ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
-                for (int k = 0; k < jsonArray2.length(); k++) {
-                    JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
-                    String url = jsonObject2.getString("PicUri");
-                    int index = url.lastIndexOf("/");
-                    url = url.substring(index + 1);
-                    PicUrl picUrl = new PicUrl();
-                    picUrl.setPicUrl(url);
-                    picUrls.add(picUrl);
+                if(!jsonObject.getString("PicUri").equals("")){
+                    JSONArray jsonArray2 = jsonObject.getJSONArray("PicUri");
+                    ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
+                    for (int k = 0; k < jsonArray2.length(); k++) {
+                        JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
+                        String url = jsonObject2.getString("PicUri");
+                        int index = url.lastIndexOf("/");
+                        url = url.substring(index + 1);
+                        PicUrl picUrl = new PicUrl();
+                        picUrl.setPicUrl(url);
+                        picUrls.add(picUrl);
+                    }
+                    businessByLeader.setPicUrls(picUrls);
                 }
-                businessByLeader.setPicUrls(picUrls);
                 businessByLeader.setDetailedInfos(infos);
                 list.add(businessByLeader);
             }
@@ -185,19 +189,21 @@ public class JsonParseUtils {
                 DetailedInfo detailedInfo = new DetailedInfo("施工内容", content);
                 infos.add(detailedInfo);
 
-                JSONArray jsonArray2 = jsonObject.getJSONArray("PicUri");
-                ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
-                for (int k = 0; k < jsonArray2.length(); k++) {
-                    JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
-                    String url = jsonObject2.getString("PicUri");
-                    int index = url.lastIndexOf("/");
-                    url = url.substring(index + 1);
-                    PicUrl picUrl = new PicUrl();
-                    picUrl.setPicUrl(url);
-                    picUrls.add(picUrl);
-                }
+                if(!jsonObject.getString("PicUri").equals("")){
+                    JSONArray jsonArray2 = jsonObject.getJSONArray("PicUri");
+                    ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
+                    for (int k = 0; k < jsonArray2.length(); k++) {
+                        JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
+                        String url = jsonObject2.getString("PicUri");
+                        int index = url.lastIndexOf("/");
+                        url = url.substring(index + 1);
+                        PicUrl picUrl = new PicUrl();
+                        picUrl.setPicUrl(url);
+                        picUrls.add(picUrl);
+                    }
 
-                businessByWorker.setPicUrls(picUrls);
+                    businessByWorker.setPicUrls(picUrls);
+                }
                 businessByWorker.setDetailedInfos(infos);
                 list.add(businessByWorker);
             }
@@ -491,6 +497,39 @@ public class JsonParseUtils {
     }
 
     /**
+     * 获取某工程已派工单
+     *
+     * @param jsonData
+     * @return
+     */
+
+    public static List<BusinessHaveSend> getBusinessHaveSend(String jsonData){
+        List<BusinessHaveSend> list = new ArrayList<BusinessHaveSend>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.getString("id");
+                String content = jsonObject.getString("Content");
+                String state = jsonObject.getString("State");
+                String deadline = jsonObject.getString("EstimateFinishDate");
+                String executors = jsonObject.getString("InstallUser");
+
+                BusinessHaveSend businessHaveSend = new BusinessHaveSend();
+                businessHaveSend.setId(id);
+                businessHaveSend.setContent(content);
+                businessHaveSend.setState(state);
+                businessHaveSend.setDeadline(deadline);
+                businessHaveSend.setExecutors(executors);
+                list.add(businessHaveSend);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
      * 获取问题汇报信息
      *
      * @param jsonData
@@ -771,7 +810,7 @@ public class JsonParseUtils {
                     state = "申请中";
                 }
                 if (state.equals("审核")) {
-                    state = "已审核";
+                    state = "已审批";
                 }
                 if (state.equals("停止")) {
                     state = "不批准";
@@ -804,20 +843,24 @@ public class JsonParseUtils {
             JSONArray jsonArray = new JSONArray(jsonData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                JSONArray jsonArray1 = jsonObject.getJSONArray("MachineSendDetail");
-                for (int j = 0; j < jsonArray1.length(); j++) {
-                    JSONObject jsonObject1 = jsonArray.getJSONObject(j);
-                    String id = jsonObject1.getString("MachineNo");
-                    String name = jsonObject1.getString("MachineName");
-                    String unit = jsonObject1.getString("MachineUnit");
+                String applyId = jsonObject.getString("BillNo");
+                if(!jsonObject.getString("MachineSendDetail").equals("")){
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("MachineSendDetail");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String id = jsonObject1.getString("MachineNo");
+                        String name = jsonObject1.getString("MachineName");
+                        String unit = jsonObject1.getString("MachineUnit");
 
-                    Machine machine = new Machine();
-                    machine.setId(id);
-                    machine.setName(name);
-                    machine.setUnit(unit);
-                    machine.setNum("1");
-                    machine.setState("已安排");
-                    list.add(machine);
+                        Machine machine = new Machine();
+                        machine.setApplyId(applyId);
+                        machine.setId(id);
+                        machine.setName(name);
+                        machine.setUnit(unit);
+                        machine.setNum("1");
+                        machine.setState("已安排");
+                        list.add(machine);
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -837,16 +880,22 @@ public class JsonParseUtils {
             JSONArray jsonArray = new JSONArray(jsonData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String orderId = jsonObject.getString("FileNo");
                 String billNo = jsonObject.getString("BillNo");
                 String address = jsonObject.getString("ProAddress");
                 String machineNo = jsonObject.getString("MachineNo");
                 String machineName = jsonObject.getString("MachineName");
+                String sendData = jsonObject.getString("SendDate");
+                String applyName = jsonObject.getString("SaveName");
 
                 SendMachine sendMachine = new SendMachine();
+                sendMachine.setOrderId(orderId);
                 sendMachine.setBillNo(billNo);
                 sendMachine.setAddress(address);
                 sendMachine.setMachineNo(machineNo);
                 sendMachine.setMachineName(machineName);
+                sendMachine.setApplyName(applyName);
+                sendMachine.setSendData(sendData);
                 list.add(sendMachine);
             }
         } catch (JSONException e) {
@@ -855,6 +904,40 @@ public class JsonParseUtils {
         return list;
     }
 
+    /**
+     * 获取待退机械列表
+     * @param jsonData
+     * @return
+     */
+    public static List<ReturnMachine> getReturnMachine (String jsonData){
+        List<ReturnMachine> list = new ArrayList<ReturnMachine>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String orderId = jsonObject.getString("FileNo");
+                String billNo = jsonObject.getString("BillNo");
+                String address = jsonObject.getString("ProAddress");
+                String machineName = jsonObject.getString("MachineName");
+                String returnName = jsonObject.getString("SaveName");
+                String returnTime = jsonObject.getString("EstimateFinishDate");
+                String type = jsonObject.getString("BillType");
+
+                ReturnMachine returnMachine = new ReturnMachine();
+                returnMachine.setOrderId(orderId);
+                returnMachine.setBillNo(billNo);
+                returnMachine.setAddress(address);
+                returnMachine.setMachineName(machineName);
+                returnMachine.setReturnName(returnName);
+                returnMachine.setReturnTiem(returnTime);
+                returnMachine.setType(type);
+                list.add(returnMachine);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
 
 }

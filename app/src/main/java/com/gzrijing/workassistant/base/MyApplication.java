@@ -13,9 +13,9 @@ import org.litepal.tablemanager.Connector;
 
 public class MyApplication extends LitePalApplication {
     private static Context context;
-    private SQLiteDatabase db;
-    private ImageLoaderConfiguration configuration;
-    private PushManager pushManager;
+    private static SQLiteDatabase db;
+    private static ImageLoaderConfiguration configuration;
+    private static PushManager pushManager;
 
     @Override
     public void onCreate() {
@@ -32,14 +32,16 @@ public class MyApplication extends LitePalApplication {
         }
         //Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(configuration);
-
         if(pushManager == null){
             pushManager = PushManager.getInstance();
         }
         pushManager.initialize(this);
-        String clientid = pushManager.getClientid(this);
-        Log.e("clientid", clientid);
 
+    }
+
+    public static String getClientid(){
+        String clientid = pushManager.getClientid(context);
+        return clientid;
     }
 
     public static Context getContext() {

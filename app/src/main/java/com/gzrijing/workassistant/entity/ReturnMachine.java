@@ -3,26 +3,26 @@ package com.gzrijing.workassistant.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SendMachine implements Parcelable {
+public class ReturnMachine implements Parcelable {
     private String orderId;         //工程单号
     private String billNo;          //机械申请单号
-    private String address;         //用机械地址
-    private String machineNo;       //机械编号
+    private String address;         //退机械地址
+    private String type;            //退回类型
     private String machineName;     //机械名称
-    private String applyName;       //申请人
-    private String sendData;        //发放时间
+    private String returnName;      //退机人
+    private String returnTiem;      //退机时间
 
-    public SendMachine() {
+    public ReturnMachine() {
     }
 
-    public SendMachine(String orderId, String billNo, String address, String machineNo, String machineName, String applyName, String sendData) {
+    public ReturnMachine(String orderId, String billNo, String address, String type, String machineName, String returnName, String returnTiem) {
         this.orderId = orderId;
         this.billNo = billNo;
         this.address = address;
-        this.machineNo = machineNo;
+        this.type = type;
         this.machineName = machineName;
-        this.applyName = applyName;
-        this.sendData = sendData;
+        this.returnName = returnName;
+        this.returnTiem = returnTiem;
     }
 
     public String getOrderId() {
@@ -49,12 +49,12 @@ public class SendMachine implements Parcelable {
         this.address = address;
     }
 
-    public String getMachineNo() {
-        return machineNo;
+    public String getType() {
+        return type;
     }
 
-    public void setMachineNo(String machineNo) {
-        this.machineNo = machineNo;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getMachineName() {
@@ -65,20 +65,20 @@ public class SendMachine implements Parcelable {
         this.machineName = machineName;
     }
 
-    public String getApplyName() {
-        return applyName;
+    public String getReturnName() {
+        return returnName;
     }
 
-    public void setApplyName(String applyName) {
-        this.applyName = applyName;
+    public void setReturnName(String returnName) {
+        this.returnName = returnName;
     }
 
-    public String getSendData() {
-        return sendData;
+    public String getReturnTiem() {
+        return returnTiem;
     }
 
-    public void setSendData(String sendData) {
-        this.sendData = sendData;
+    public void setReturnTiem(String returnTiem) {
+        this.returnTiem = returnTiem;
     }
 
     @Override
@@ -91,29 +91,29 @@ public class SendMachine implements Parcelable {
         dest.writeString(this.orderId);
         dest.writeString(this.billNo);
         dest.writeString(this.address);
-        dest.writeString(this.machineNo);
+        dest.writeString(this.type);
         dest.writeString(this.machineName);
-        dest.writeString(this.applyName);
-        dest.writeString(this.sendData);
+        dest.writeString(this.returnName);
+        dest.writeString(this.returnTiem);
     }
 
-    protected SendMachine(Parcel in) {
+    protected ReturnMachine(Parcel in) {
         this.orderId = in.readString();
         this.billNo = in.readString();
         this.address = in.readString();
-        this.machineNo = in.readString();
+        this.type = in.readString();
         this.machineName = in.readString();
-        this.applyName = in.readString();
-        this.sendData = in.readString();
+        this.returnName = in.readString();
+        this.returnTiem = in.readString();
     }
 
-    public static final Creator<SendMachine> CREATOR = new Creator<SendMachine>() {
-        public SendMachine createFromParcel(Parcel source) {
-            return new SendMachine(source);
+    public static final Creator<ReturnMachine> CREATOR = new Creator<ReturnMachine>() {
+        public ReturnMachine createFromParcel(Parcel source) {
+            return new ReturnMachine(source);
         }
 
-        public SendMachine[] newArray(int size) {
-            return new SendMachine[size];
+        public ReturnMachine[] newArray(int size) {
+            return new ReturnMachine[size];
         }
     };
 }

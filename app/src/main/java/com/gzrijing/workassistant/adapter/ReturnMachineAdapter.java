@@ -12,19 +12,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.entity.ReturnMachine;
 import com.gzrijing.workassistant.entity.SendMachine;
 import com.gzrijing.workassistant.view.QrcodeActivity;
 import com.gzrijing.workassistant.view.SendMachineInfoActivity;
 
 import java.util.List;
 
-public class SendMachineAdapter extends BaseAdapter {
+public class ReturnMachineAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater listContainer;
-    private List<SendMachine> list;
+    private List<ReturnMachine> list;
 
-    public SendMachineAdapter(Context context, List<SendMachine> list) {
+    public ReturnMachineAdapter(Context context, List<ReturnMachine> list) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.list = list;
@@ -66,8 +67,8 @@ public class SendMachineAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, SendMachineInfoActivity.class);
-                intent.putExtra("flag", "SendMachine");
-                intent.putExtra("SendMachine", (Parcelable) list.get(position));
+                intent.putExtra("flag", "ReturnMachine");
+                intent.putExtra("ReturnMachine", (Parcelable) list.get(position));
                 context.startActivity(intent);
             }
         });
@@ -77,8 +78,7 @@ public class SendMachineAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(context, QrcodeActivity.class);
                 intent.putExtra("billNo", list.get(position).getBillNo());
-                intent.putExtra("machineNo", list.get(position).getMachineNo());
-                intent.putExtra("flag", "send");
+                intent.putExtra("flag", "return");
                 context.startActivity(intent);
             }
         });

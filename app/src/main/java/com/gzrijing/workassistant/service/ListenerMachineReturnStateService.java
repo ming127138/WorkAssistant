@@ -8,61 +8,52 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.MachineNoData;
 import com.gzrijing.workassistant.db.SuppliesNoData;
-import com.gzrijing.workassistant.entity.MachineNo;
-import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
-import com.gzrijing.workassistant.util.HttpUtils;
-import com.gzrijing.workassistant.util.JsonParseUtils;
-import com.gzrijing.workassistant.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
-public class ListenerSuppliesReturnStateService extends IntentService {
+public class ListenerMachineReturnStateService extends IntentService {
 
     private Handler handler = new Handler();
     private String userNo;
     private String orderId;
 
-    public ListenerSuppliesReturnStateService() {
-        super("ListenerSuppliesReturnStateService");
+    public ListenerMachineReturnStateService() {
+        super("ListenerMachineReturnStateService");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
-        String billId = intent.getStringExtra("billId");
+        String billNo = intent.getStringExtra("billNo");
 
-        saveData(billId);
+        saveData(billNo);
         sendNotification();
 
     }
 
-    private void saveData(String billId) {
+    private void saveData(String billNo) {
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
                 .find(BusinessData.class, true).get(0);
-        List<SuppliesNoData> suppliesNoDataList = businessData.getSuppliesNoList();
+        List<MachineNoData> machineNoDataList = businessData.getMachineNoList();
 
-        for(SuppliesNoData suppliesNoData : suppliesNoDataList){
-            if(suppliesNoData.getReturnId() != null && suppliesNoData.getReturnId().equals(billId)){
+        for(MachineNoData machineNoData : machineNoDataList){
+            if(machineNoData.getReturnId() != null && machineNoData.getReturnId().equals(billNo)){
                 ContentValues values = new ContentValues();
                 values.put("returnState", "可退回");
-                DataSupport.updateAll(SuppliesNoData.class, values, "returnId = ?", suppliesNoData.getReturnId());
+                DataSupport.updateAll(MachineNoData.class, values, "returnId = ?", machineNoData.getReturnId());
             }
         }
 
 
-        Intent intent = new Intent("action.com.gzrijing.workassistant.SuppliesApply.refresh");
+        Intent intent = new Intent("action.com.gzrijing.workassistant.MachineApply.refresh");
         sendBroadcast(intent);
 
     }
@@ -73,8 +64,8 @@ public class ListenerSuppliesReturnStateService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("工程编号：" + orderId + "\n有一条材料退回单信息更新")
-                .setTicker("有一条材料退回单信息更新")
+                .setContentTitle("工程编号：" + orderId + "\n有一条机械退回单信息更新")
+                .setTicker("有一条机械退回单信息更新")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();

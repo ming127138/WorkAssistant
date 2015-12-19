@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.db.BusinessData;
@@ -40,7 +41,6 @@ public class ListenerMachineReceivedStateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
         String billNo = intent.getStringExtra("billNo");
@@ -57,6 +57,7 @@ public class ListenerMachineReceivedStateService extends IntentService {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 saveData(response);
                 sendNotification();
             }
@@ -80,6 +81,7 @@ public class ListenerMachineReceivedStateService extends IntentService {
         List<Machine> machineList = JsonParseUtils.getLitenerMachineReceivedState(jsonData);
         for(Machine machine : machineList){
             MachineData machineData = new MachineData();
+            machineData.setApplyId(machine.getApplyId());
             machineData.setNo(machine.getId());
             machineData.setName(machine.getName());
             machineData.setUnit(machine.getUnit());

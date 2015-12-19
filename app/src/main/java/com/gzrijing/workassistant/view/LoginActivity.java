@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.User;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -148,6 +149,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .add("cmd", "login")
                 .add("userno", userName)
                 .add("pwd", password)
+                .add("clientid", MyApplication.getClientid())
                 .build();
         final String finalPWD = password;
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {

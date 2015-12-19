@@ -247,6 +247,13 @@
             android:name=".view.QrcodeActivity"
             android:label="二维码"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SendMachineInfoActivity"
+            android:label="送机信息"
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.ReturnMachineActivity"
+            android:label="退机信息"
+            android:screenOrientation="portrait"/>
         <!-- app activity -->
 
 
@@ -315,6 +322,15 @@
             android:exported="false" />
         <service
             android:name=".service.ListenerSuppliesReturnStateService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerSendMachineOrderService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerMachineReturnStateService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerReturnMachineOrderService"
             android:exported="false" />
 
         <!-- app service -->

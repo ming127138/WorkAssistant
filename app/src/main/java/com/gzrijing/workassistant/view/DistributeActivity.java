@@ -335,18 +335,18 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     };
 
     private void saveInfo(String id) {
-        BusinessHaveSendData data = new BusinessHaveSendData();
-        data.setOrderId(id);
-        data.setContent(et_remarks.getText().toString().trim());
-        data.setState("未接受");
-        data.setExecutors(tv_executor.getText().toString());
-        data.setDeadline(tv_deadline.getText().toString());
-        data.save();
-        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
-                .find(BusinessData.class, true).get(0);
-        List<BusinessHaveSendData> dataList = businessData.getBusinessHaveSendDataList();
-        dataList.add(data);
-        businessData.save();
+//        BusinessHaveSendData data = new BusinessHaveSendData();
+//        data.setOrderId(id);
+//        data.setContent(et_remarks.getText().toString().trim());
+//        data.setState("未接受");
+//        data.setExecutors(tv_executor.getText().toString());
+//        data.setDeadline(tv_deadline.getText().toString());
+//        data.save();
+//        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
+//                .find(BusinessData.class, true).get(0);
+//        List<BusinessHaveSendData> dataList = businessData.getBusinessHaveSendDataList();
+//        dataList.add(data);
+//        businessData.save();
 
         ContentValues values = new ContentValues();
         values.put("state", "已派工");

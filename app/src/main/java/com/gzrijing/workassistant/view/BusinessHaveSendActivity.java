@@ -3,19 +3,28 @@ package com.gzrijing.workassistant.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessHaveSendAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.BusinessHaveSendData;
+import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.BusinessHaveSend;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +36,7 @@ public class BusinessHaveSendActivity extends BaseActivity {
     private ListView lv_business;
     private List<BusinessHaveSend> BHSList = new ArrayList<BusinessHaveSend>();
     private BusinessHaveSendAdapter adapter;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +55,38 @@ public class BusinessHaveSendActivity extends BaseActivity {
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
-        getDBData();
+        getBusinessHaveSend();
 
+//        getDBData();
+
+    }
+
+    private void getBusinessHaveSend() {
+        String url = null;
+        try {
+            url = "?cmd=getinstalllocatetask&fileno=" + URLEncoder.encode(orderId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                List<BusinessHaveSend> list = JsonParseUtils.getBusinessHaveSend(response);
+                BHSList.addAll(list);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(BusinessHaveSendActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
     }
 
     private void getDBData() {
@@ -55,7 +95,7 @@ public class BusinessHaveSendActivity extends BaseActivity {
         List<BusinessHaveSendData> dataList = businessData.getBusinessHaveSendDataList();
         for(BusinessHaveSendData data : dataList){
             BusinessHaveSend bhs = new BusinessHaveSend();
-            bhs.setOrderId(data.getOrderId());
+            bhs.setId(data.getOrderId());
             bhs.setContent(data.getContent());
             bhs.setState(data.getState());
             bhs.setExecutors(data.getExecutors());

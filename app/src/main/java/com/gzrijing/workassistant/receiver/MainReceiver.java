@@ -12,6 +12,9 @@ import com.gzrijing.workassistant.service.GetLeaderBusinessService;
 import com.gzrijing.workassistant.service.GetWorkerBusinessService;
 import com.gzrijing.workassistant.service.ListenerMachineApplyStateService;
 import com.gzrijing.workassistant.service.ListenerMachineReceivedStateService;
+import com.gzrijing.workassistant.service.ListenerMachineReturnStateService;
+import com.gzrijing.workassistant.service.ListenerReturnMachineOrderService;
+import com.gzrijing.workassistant.service.ListenerSendMachineOrderService;
 import com.gzrijing.workassistant.service.ListenerSuppliesApplyStateService;
 import com.gzrijing.workassistant.service.ListenerSuppliesApprovalOrderService;
 import com.gzrijing.workassistant.service.ListenerSuppliesReceivedStateService;
@@ -62,22 +65,38 @@ public class MainReceiver extends BroadcastReceiver {
                                     String orderId = jsonObject.getString("FileNo");
                                     listenerSuppliesApplyState(user, orderId);
                                 }
-                                if(cmd.equals("getmaterialreturnstate")){
-                                    String orderId = jsonObject.getString("FileNo");
-                                    String billNo = jsonObject.getString("BillNo");
-                                    listenerSuppliesReturnState(user, orderId, billNo);
-                                }
                                 if(cmd.equals("getmaterialsend")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
                                     listenerSuppliesReceivedState(user, orderId, billNo);
                                 }
-                                if(cmd.equals("getmymachineneed1")){
+                                if(cmd.equals("getmaterialreturnstate")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    String billId = jsonObject.getString("Billid");
+                                    listenerSuppliesReturnState(user, orderId, billId);
+                                }
+                                if(cmd.equals("getmymachineneed")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
                                     listenerMachineApplyState(user, orderId, billNo);
                                 }
-                                if(cmd.equals("getmymachineneed2")){
+                                if(cmd.equals("getmymachinereceived")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    String billNo = jsonObject.getString("BillNo");
+                                    listenerMachineReceivedState(user, orderId, billNo);
+                                }
+                                if(cmd.equals("getmymachinereturn")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    String billNo = jsonObject.getString("BillNo");
+                                    listenerMachineReturnState(user, orderId, billNo);
+                                }
+                                if(cmd.equals("getneedsendmachinelist")){
+                                    listenerSendMachineOrder();
+                                }
+                                if(cmd.equals("getneedbackmachinelist")){
+                                    listenerReturnMachineOrder();
+                                }
+                                if(cmd.equals("")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
                                     listenerMachineReceivedState(user, orderId, billNo);
@@ -142,11 +161,11 @@ public class MainReceiver extends BroadcastReceiver {
     /**
      * 监听哪些材料可以退回
      */
-    private void listenerSuppliesReturnState(String userNo, String orderId, String billNo){
+    private void listenerSuppliesReturnState(String userNo, String orderId, String billId){
         Intent intent = new Intent(MyApplication.getContext(), ListenerSuppliesReturnStateService.class);
         intent.putExtra("userNo", userNo);
         intent.putExtra("orderId", orderId);
-        intent.putExtra("billNo", billNo);
+        intent.putExtra("billId", billId);
         MyApplication.getContext().startService(intent);
     }
 
@@ -171,4 +190,34 @@ public class MainReceiver extends BroadcastReceiver {
         intent.putExtra("billNo", billNo);
         MyApplication.getContext().startService(intent);
     }
+
+    /**
+     * 监听哪些机械可以退回
+     */
+    private void listenerMachineReturnState(String userNo, String orderId, String billNo){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerMachineReturnStateService.class);
+        intent.putExtra("userNo", userNo);
+        intent.putExtra("orderId", orderId);
+        intent.putExtra("billNo", billNo);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听是否有新的送机任务
+     */
+    private void listenerSendMachineOrder(){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerSendMachineOrderService.class);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听是否有新的退机任务
+     */
+    private void listenerReturnMachineOrder(){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerReturnMachineOrderService.class);
+        MyApplication.getContext().startService(intent);
+    }
+
+
+
 }

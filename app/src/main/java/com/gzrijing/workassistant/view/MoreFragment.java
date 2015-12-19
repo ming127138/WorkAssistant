@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ManageGridViewAdapter;
 import com.gzrijing.workassistant.adapter.MoreGridViewAdapter;
 
 
@@ -41,8 +40,8 @@ public class MoreFragment extends Fragment {
     }
 
     private void initData() {
-        iconIds = new int[]{R.drawable.icon_notice, R.drawable.icon_notice};
-        texts = new String[]{"通知公告", "送机列表"};
+        iconIds = new int[]{R.drawable.icon_notice, R.drawable.icon_notice, R.drawable.icon_notice};
+        texts = new String[]{"通知公告", "送机列表", "退机列表"};
     }
 
     private void initViews() {
@@ -62,6 +61,11 @@ public class MoreFragment extends Fragment {
 
                 if(position == 1){
                     Intent intent = new Intent(getActivity(), SendMachineActivity.class);
+                    getActivity().startActivity(intent);
+                }
+
+                if(position == 2){
+                    Intent intent = new Intent(getActivity(), ReturnMachineActivity.class);
                     getActivity().startActivity(intent);
                 }
             }

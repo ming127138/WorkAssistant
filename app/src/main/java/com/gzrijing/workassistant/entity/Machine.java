@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Machine implements Parcelable {
+    private String applyId;     //申请单号
     private String id;          //机械编号
     private String name;        //机械名称
     private String unit;        //机械单位
@@ -13,12 +14,21 @@ public class Machine implements Parcelable {
     public Machine() {
     }
 
-    public Machine(String id, String name, String unit, String num, String state) {
+    public Machine(String applyId, String id, String name, String unit, String num, String state) {
+        this.applyId = applyId;
         this.id = id;
         this.name = name;
         this.unit = unit;
         this.num = num;
         this.state = state;
+    }
+
+    public String getApplyId() {
+        return applyId;
+    }
+
+    public void setApplyId(String applyId) {
+        this.applyId = applyId;
     }
 
     public String getId() {
@@ -68,6 +78,7 @@ public class Machine implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.applyId);
         dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.unit);
@@ -76,6 +87,7 @@ public class Machine implements Parcelable {
     }
 
     protected Machine(Parcel in) {
+        this.applyId = in.readString();
         this.id = in.readString();
         this.name = in.readString();
         this.unit = in.readString();

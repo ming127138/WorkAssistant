@@ -64,7 +64,7 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.orderId.setText(BHSList.get(position).getOrderId());
+        v.orderId.setText(BHSList.get(position).getId());
         v.content.setText(BHSList.get(position).getContent());
         v.state.setText(BHSList.get(position).getState());
         v.executors.setText(BHSList.get(position).getExecutors());
@@ -73,7 +73,7 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ReportInfoActivity.class);
-                intent.putExtra("id", BHSList.get(position).getOrderId());
+                intent.putExtra("id", BHSList.get(position).getId());
                 context.startActivity(intent);
             }
         });

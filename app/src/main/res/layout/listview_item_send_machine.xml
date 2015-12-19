@@ -6,7 +6,7 @@
     android:padding="@dimen/sw_5dp">
 
     <TextView
-        android:id="@+id/listview_item_send_machine_tv"
+        android:id="@+id/listview_item_send_machine_name_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="7"
@@ -14,10 +14,18 @@
         android:textColor="@color/black"
         android:textSize="@dimen/sw_15dp"/>
 
-
+    <Button
+        android:id="@+id/listview_item_send_machine_info_btn"
+        android:layout_width="@dimen/sw_50dp"
+        android:layout_height="@dimen/sw_30dp"
+        android:background="@drawable/btn_blue_frame"
+        android:layout_gravity="center"
+        android:text="信息"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/sw_15dp"/>
 
     <ImageView
-        android:id="@+id/listview_item_send_machine_iv"
+        android:id="@+id/listview_item_send_machine_qrcode_iv"
         android:layout_width="0dp"
         android:layout_height="@dimen/sw_30dp"
         android:layout_weight="1"
