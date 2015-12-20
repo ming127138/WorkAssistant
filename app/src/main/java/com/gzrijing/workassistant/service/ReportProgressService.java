@@ -64,8 +64,6 @@ public class ReportProgressService extends IntentService {
 
                         MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
                         for (int i = 0; i < key.length; i++) {
-                            Log.e("key", key[i]);
-                            Log.e("value", value[i]);
                             builder.addFormDataPart(key[i], value[i]);
                         }
                         File file = new File(picUrl.getPicUrl());
@@ -93,7 +91,8 @@ public class ReportProgressService extends IntentService {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ToastUtil.showToast(ReportProgressService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                                        Log.e("失败", "失败");
+                                        ToastUtil.showToast(ReportProgressService.this, "上传图片失败", Toast.LENGTH_SHORT);
                                     }
                                 });
                             }

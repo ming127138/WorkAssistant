@@ -276,18 +276,14 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                 if (response.equals("ok")) {
                     if (orderList.get(position).getType().equals("供水管网巡查")) {
                         orderList.get(position).setFlag("巡检");
-                        orderList.get(position).setState("正在处理");
                         ContentValues values = new ContentValues();
                         values.put("flag", "巡检");
-                        values.put("state", "正在处理");
                         DataSupport.updateAll(BusinessData.class, values,
                                 "user = ? and orderId = ?", userNo, orderList.get(position).getOrderId());
                     } else {
                         orderList.get(position).setFlag("汇报");
-                        orderList.get(position).setState("正在处理");
                         ContentValues values = new ContentValues();
                         values.put("flag", "汇报");
-                        values.put("state", "正在处理");
                         DataSupport.updateAll(BusinessData.class, values,
                                 "user = ? and orderId = ?", userNo, orderList.get(position).getOrderId());
                     }

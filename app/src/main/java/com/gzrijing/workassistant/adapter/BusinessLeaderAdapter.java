@@ -94,6 +94,8 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.id.listview_item_business_leader_supplies_verify_tv);
             v.temInfo = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_tem_info_tv);
+            v.completeInfo = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_leader_complete_info_tv);
             v.flag = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_flag_tv);
             v.bg_ll = (LinearLayout) convertView.findViewById(
@@ -173,6 +175,15 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             }
         });
 
+        v.completeInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, TemInfoActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
         final String flag = orderList.get(position).getFlag();
         v.flag.setText(flag);
         if (flag.equals("确认收到")) {
@@ -241,6 +252,7 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         private TextView suppliesVerify;
         private TextView deadline;
         private TextView temInfo;
+        private TextView completeInfo;
         private Button progress;
         private Button info;
         private Button haveSend;

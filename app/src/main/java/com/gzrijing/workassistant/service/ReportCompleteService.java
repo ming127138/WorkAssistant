@@ -69,8 +69,6 @@ public class ReportCompleteService extends IntentService {
 
                         MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
                         for (int i = 0; i < key.length; i++) {
-                            Log.e("key", key[i]);
-                            Log.e("value", value[i]);
                             builder.addFormDataPart(key[i], value[i]);
                         }
                         File file = new File(picUrl.getPicUrl());

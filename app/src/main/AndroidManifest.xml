@@ -251,8 +251,12 @@
             android:name=".view.SendMachineInfoActivity"
             android:label="送机信息"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.ReturnMachineActivity"
+        <activity
+            android:name=".view.ReturnMachineActivity"
             android:label="退机信息"
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.ReportInfoCompleteActivity"
+            android:label="完工信息"
             android:screenOrientation="portrait"/>
         <!-- app activity -->
 

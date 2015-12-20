@@ -1,13 +1,9 @@
 package com.gzrijing.workassistant.view;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,31 +11,36 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ReturnMachineAdapter;
-import com.gzrijing.workassistant.entity.ReturnMachine;
+import com.gzrijing.workassistant.adapter.DetailedInfoAdapter;
+import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.entity.DetailedInfo;
+import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
-public class ReturnMachineActivity extends AppCompatActivity {
+public class ReportInfoCompleteActivity extends BaseActivity {
 
+    private String orderId;
+    private ArrayList<DetailedInfo> infos = new ArrayList<DetailedInfo>();
+    private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
     private String userNo;
-    private ListView lv_list;
-    private List<ReturnMachine> returnMachineList = new ArrayList<ReturnMachine>();
-    private ReturnMachineAdapter adapter;
     private Handler handler = new Handler();
+    private ListView lv_info;
+    private DetailedInfoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_return_machine);
+        setContentView(R.layout.activity_report_info_complete);
 
-        initData();
         initViews();
+        initData();
     }
 
     private void initData() {
@@ -47,15 +48,19 @@ public class ReturnMachineActivity extends AppCompatActivity {
                 "saveUser", MODE_PRIVATE);
         userNo = app.getString("userNo", "");
 
-        getReturnMachine();
-
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.ReturnMachine");
-        registerReceiver(mBroadcastReceiver, intentFilter);
-
+        Intent intent = getIntent();
+        orderId = intent.getStringExtra("orderId");
+        getCompleteInfo();
     }
 
-    private void getReturnMachine() {
-        String url = "?cmd=getneedbackmachinelist";
+    private void getCompleteInfo() {
+        String url = null;
+        try {
+            url = "?cmd=getfinishconstruction&userno=" + URLEncoder.encode(userNo, "UTF-8") +
+                    "&fileno=" + URLEncoder.encode(orderId, "UTF-8") + "&enddate=&isfinish=1";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
@@ -63,12 +68,15 @@ public class ReturnMachineActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        List<ReturnMachine> list = JsonParseUtils.getReturnMachine(response);
-                        returnMachineList.clear();
-                        returnMachineList.addAll(list);
-                        adapter.notifyDataSetChanged();
+                        ArrayList<DetailedInfo> list = JsonParseUtils.getReportCompleteInfo(response);
+                        ArrayList<PicUrl> picUrlList = JsonParseUtils.getReportCompletePicUrl(response);
+                        infos.addAll(list);
+                        picUrls.addAll(picUrlList);
+                        adapter = new DetailedInfoAdapter(ReportInfoCompleteActivity.this, infos, picUrls, userNo, orderId);
+                        lv_info.setAdapter(adapter);
                     }
                 });
+
             }
 
             @Override
@@ -76,7 +84,7 @@ public class ReturnMachineActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(ReturnMachineActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(ReportInfoCompleteActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }
@@ -88,10 +96,7 @@ public class ReturnMachineActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        lv_list = (ListView) findViewById(R.id.return_machine_lv);
-        adapter = new ReturnMachineAdapter(this, returnMachineList);
-        lv_list.setAdapter(adapter);
-
+        lv_info = (ListView) findViewById(R.id.report_info_complete_info_lv);
     }
 
     @Override
@@ -102,23 +107,7 @@ public class ReturnMachineActivity extends AppCompatActivity {
             finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if(action.equals("action.com.gzrijing.workassistant.ReturnMachine")){
-                getReturnMachine();
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        unregisterReceiver(mBroadcastReceiver);
-        super.onDestroy();
-    }
 }

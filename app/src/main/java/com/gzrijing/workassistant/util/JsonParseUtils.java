@@ -11,6 +11,7 @@ import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.entity.MachineVerifyInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Progress;
+import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
 import com.gzrijing.workassistant.entity.ReturnMachine;
@@ -932,6 +933,65 @@ public class JsonParseUtils {
                 returnMachine.setReturnTiem(returnTime);
                 returnMachine.setType(type);
                 list.add(returnMachine);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取完工信息
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<DetailedInfo> getReportCompleteInfo (String jsonData){
+        ArrayList<DetailedInfo> list = new ArrayList<DetailedInfo>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if(!jsonObject.getString("Detail").equals("")){
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("Detail");
+                    for(int j = 0; j<jsonArray1.length();j++){
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String key = jsonObject.getString("key");
+                        String value = jsonObject.getString("value");
+                        DetailedInfo info = new DetailedInfo();
+                        info.setKey(key);
+                        info.setValue(value);
+                        list.add(info);
+                    }
+                }
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取完工图片
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<PicUrl> getReportCompletePicUrl (String jsonData){
+        ArrayList<PicUrl> list = new ArrayList<PicUrl>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if(!jsonObject.getString("PicUri").equals("")){
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("PicUri");
+                    for(int j = 0; j<jsonArray1.length();j++){
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String url = jsonObject.getString("PicUri");
+                        PicUrl picUrl = new PicUrl();
+                        picUrl.setPicUrl(url);
+                        list.add(picUrl);
+                    }
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

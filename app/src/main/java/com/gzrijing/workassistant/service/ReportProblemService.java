@@ -53,7 +53,6 @@ public class ReportProblemService extends IntentService {
                         @Override
                         public void run() {
                             ToastUtil.showToast(ReportProblemService.this, "汇报失败", Toast.LENGTH_SHORT);
-                            stopSelf();
                         }
                     });
                 } else {
@@ -64,8 +63,6 @@ public class ReportProblemService extends IntentService {
 
                         MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
                         for (int i = 0; i < key.length; i++) {
-                            Log.e("key", key[i]);
-                            Log.e("value", value[i]);
                             builder.addFormDataPart(key[i], value[i]);
                         }
                         File file = new File(picUrl.getPicUrl());
@@ -110,7 +107,6 @@ public class ReportProblemService extends IntentService {
                     @Override
                     public void run() {
                         ToastUtil.showToast(ReportProblemService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
-                        stopSelf();
                     }
                 });
             }

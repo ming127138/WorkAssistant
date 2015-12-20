@@ -11,4 +11,5 @@
         android:id="@+id/report_info_complete_info_lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
 </LinearLayout>

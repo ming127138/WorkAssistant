@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,9 +28,12 @@ import com.gzrijing.workassistant.adapter.ReportProgressGriViewAdapter;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.service.ReportProblemService;
 import com.gzrijing.workassistant.service.ReportProgressService;
+import com.gzrijing.workassistant.util.ImageCompressUtil;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ReportProblemFragment extends Fragment implements View.OnClickListener{
@@ -160,6 +164,16 @@ public class ReportProblemFragment extends Fragment implements View.OnClickListe
                     return;
                 }
                 String path = ImageUtils.getPicPath(getActivity(), imageUri);
+                Log.e("path", path);
+                Bitmap bitmap = ImageCompressUtil.getimage(path);
+                String fileName = path.substring(path.lastIndexOf("/") + 1);
+                String filePathStr = path.substring(0, path.lastIndexOf("/"));
+                File filePath = new File(filePathStr);
+                try {
+                    ImageUtils.saveFile(getActivity(), bitmap, fileName, filePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 PicUrl picUrl = new PicUrl();
                 picUrl.setPicUrl(path);
                 picUrls.add(picUrl);
@@ -172,6 +186,16 @@ public class ReportProblemFragment extends Fragment implements View.OnClickListe
                 }
                 Uri imageUri = data.getData();
                 String path1 = ImageUtils.getPicPath(getActivity(), imageUri);
+                Log.e("path", path1);
+                Bitmap bitmap1 = ImageCompressUtil.getimage(path1);
+                String fileName1 = path1.substring(path1.lastIndexOf("/") + 1);
+                String filePathStr1 = path1.substring(0, path1.lastIndexOf("/"));
+                File filePath1 = new File(filePathStr1);
+                try {
+                    ImageUtils.saveFile(getActivity(), bitmap1, fileName1, filePath1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 PicUrl picUrl1 = new PicUrl();
                 picUrl1.setPicUrl(path1);
                 picUrls.add(picUrl1);

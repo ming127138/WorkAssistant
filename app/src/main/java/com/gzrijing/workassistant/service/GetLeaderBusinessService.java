@@ -66,6 +66,7 @@ public class GetLeaderBusinessService extends IntentService {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 saveData(response);
                 sendNotification();
             }

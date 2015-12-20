@@ -36,7 +36,7 @@ public class HttpUtils {
                     if (listener != null) {
                         listener.onFinish(response.body().string());
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     if (listener != null) {
                         listener.onError(e);
                     }
@@ -59,7 +59,7 @@ public class HttpUtils {
                     if (listener != null) {
                         listener.onFinish(response.body().string());
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     if (listener != null) {
                         listener.onError(e);
                     }

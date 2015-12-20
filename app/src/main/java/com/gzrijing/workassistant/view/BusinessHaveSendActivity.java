@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -72,6 +73,7 @@ public class BusinessHaveSendActivity extends BaseActivity {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 List<BusinessHaveSend> list = JsonParseUtils.getBusinessHaveSend(response);
                 BHSList.addAll(list);
                 adapter.notifyDataSetChanged();

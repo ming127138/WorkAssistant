@@ -73,10 +73,10 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
                 .find(BusinessData.class, true).get(0);
         List<SuppliesNoData> suppliesNoDataList = businessData.getSuppliesNoList();
         List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
-        for(SuppliesNoData suppliesNodata : suppliesNoDataList){
-            if(suppliesNodata.getReceivedState().equals("已领用")){
-                for(SuppliesData suppliesData : suppliesDataList){
-                    if(suppliesData.getReceivedId().equals(suppliesNodata.getReceivedId())){
+        for (SuppliesNoData suppliesNodata : suppliesNoDataList) {
+            if (suppliesNodata.getReceivedState() != null && suppliesNodata.getReceivedState().equals("已领用")) {
+                for (SuppliesData suppliesData : suppliesDataList) {
+                    if (suppliesData.getReceivedId().equals(suppliesNodata.getReceivedId())) {
                         Supplies supplies = new Supplies();
                         supplies.setId(suppliesData.getNo());
                         supplies.setName(suppliesData.getName());
@@ -94,7 +94,7 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        layoutView = inflater.inflate(R.layout.fragment_report_progress, container, false);
+        layoutView = inflater.inflate(R.layout.fragment_report_project_amount, container, false);
 
         initViews();
         setListeners();
@@ -127,11 +127,11 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fragment_report_project_amount_submit_need_btn:
-                    report("need");
+                report("need");
                 break;
 
             case R.id.fragment_report_project_amount_submit_wait_btn:
-                    report("wait");
+                report("wait");
                 break;
 
             case R.id.fragment_report_project_amount_print_btn:
@@ -163,18 +163,18 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals("action.com.gzrijing.workassistant.ReportProjectAmountFragment")){
+            if (action.equals("action.com.gzrijing.workassistant.ReportProjectAmountFragment")) {
                 String result = intent.getStringExtra("result");
-                if(result.equals("汇报成功")){
+                if (result.equals("汇报成功")) {
                     ToastUtil.showToast(context, "汇报成功", Toast.LENGTH_SHORT);
-                    if(intent.getStringExtra("flag").equals("wait")){
+                    if (intent.getStringExtra("flag").equals("wait")) {
                         btn_print.setVisibility(View.VISIBLE);
                     }
                 }
-                if(result.equals("汇报失败")){
+                if (result.equals("汇报失败")) {
                     ToastUtil.showToast(context, "汇报失败", Toast.LENGTH_SHORT);
                 }
-                if(result.equals("与服务器断开连接")){
+                if (result.equals("与服务器断开连接")) {
                     ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);
                 }
                 btn_need.setVisibility(View.VISIBLE);

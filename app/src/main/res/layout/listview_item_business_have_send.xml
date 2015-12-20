@@ -134,7 +134,7 @@
                 android:id="@+id/listview_item_business_have_send_report_info_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0条新汇报信息"
+                android:text="查看汇报信息"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_15dp" />
         </LinearLayout>
