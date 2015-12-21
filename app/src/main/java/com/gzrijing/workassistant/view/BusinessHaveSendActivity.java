@@ -72,11 +72,17 @@ public class BusinessHaveSendActivity extends BaseActivity {
 
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
-            public void onFinish(String response) {
+            public void onFinish(final String response) {
                 Log.e("response", response);
-                List<BusinessHaveSend> list = JsonParseUtils.getBusinessHaveSend(response);
-                BHSList.addAll(list);
-                adapter.notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<BusinessHaveSend> list = JsonParseUtils.getBusinessHaveSend(response);
+                        BHSList.addAll(list);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
             }
 
             @Override

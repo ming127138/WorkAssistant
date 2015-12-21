@@ -255,9 +255,14 @@
             android:name=".view.ReturnMachineActivity"
             android:label="退机信息"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.ReportInfoCompleteActivity"
+        <activity
+            android:name=".view.ReportInfoCompleteActivity"
             android:label="完工信息"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.PipeInspectionUpdateByValveActivity"
+            android:label="更新信息"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -308,6 +313,9 @@
             android:exported="false" />
         <service
             android:name=".service.GetReportInfoProjectAmountService"
+            android:exported="false" />
+        <service
+            android:name=".service.GetReportInfoProjectAmountSuppliesService"
             android:exported="false" />
         <service
             android:name=".service.ListenerSuppliesApplyStateService"

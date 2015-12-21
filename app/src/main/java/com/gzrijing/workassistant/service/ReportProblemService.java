@@ -58,8 +58,8 @@ public class ReportProblemService extends IntentService {
                 } else {
                     for (PicUrl picUrl : picUrls) {
                         Log.e("id", response);
-                        String[] key = {"cmd", "userno", "fileno", "picdescription"};
-                        String[] value = {"uploadconsaccidentpic", userNo, orderId, ""};
+                        String[] key = {"cmd", "userno", "fileno", "relationid", "picdescription"};
+                        String[] value = {"uploadconsaccidentpic", userNo, orderId, response, ""};
 
                         MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
                         for (int i = 0; i < key.length; i++) {

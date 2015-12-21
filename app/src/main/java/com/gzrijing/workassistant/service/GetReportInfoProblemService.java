@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -31,6 +32,7 @@ public class GetReportInfoProblemService extends Service {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.problem");
                 intent1.putExtra("jsonData", response);
                 sendBroadcast(intent1);

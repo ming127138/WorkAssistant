@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.adapter;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import com.gzrijing.workassistant.view.MachineVerifyActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.DistributeActivity;
 import com.gzrijing.workassistant.view.ReportInfoActivity;
+import com.gzrijing.workassistant.view.ReportInfoCompleteActivity;
 import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
@@ -178,7 +180,7 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         v.completeInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, TemInfoActivity.class);
+                Intent intent = new Intent(context, ReportInfoCompleteActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }

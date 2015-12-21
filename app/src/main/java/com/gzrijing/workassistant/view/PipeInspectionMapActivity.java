@@ -30,21 +30,17 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.Inspection;
-import com.gzrijing.workassistant.entity.Marker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class PipeInspectionMapActivity extends BaseActivity {
 
     private BaiduMap mBaiduMap;
     private MapView mMapView;
-    private List<Inspection> markers;
+    private ArrayList<Inspection> markers;
     private LocationClient locationClient;
-    private static int LOCATION_COUTNS = 0;
     private double longitude;
     private double latitude;
 
@@ -67,6 +63,8 @@ public class PipeInspectionMapActivity extends BaseActivity {
     }
 
     private void initData() {
+        Intent intent = getIntent();
+        markers = intent.getParcelableArrayListExtra("inspectionList");
         setLocation();
     }
 
@@ -126,7 +124,6 @@ public class PipeInspectionMapActivity extends BaseActivity {
     }
 
     private void initMarker() {
-        markers = getMarker();
         for (Inspection marker : markers) {
             LatLng point = new LatLng(marker.getLatitude(), marker.getLongitude());
             BitmapDescriptor bitmap = null;
@@ -150,20 +147,12 @@ public class PipeInspectionMapActivity extends BaseActivity {
         }
     }
 
-    private List<Inspection> getMarker() {
-        Intent intent = getIntent();
-        List<Inspection> inspectionList = intent.getParcelableArrayListExtra("inspectionList");
-
-        return inspectionList;
-
-    }
-
     private void setListeners() {
 
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final com.baidu.mapapi.map.Marker markerInfo) {
-                LayoutInflater inflater = getLayoutInflater();
+                final LayoutInflater inflater = getLayoutInflater();
                 View view = inflater.inflate(R.layout.listview_item_pipe_inspection_map_marker, mMapView, false);
                 TextView tv_id = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_id_tv);
                 TextView tv_name = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_name_tv);
@@ -172,6 +161,7 @@ public class PipeInspectionMapActivity extends BaseActivity {
                 TextView tv_valveGNo = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_valveGNo_tv);
                 TextView tv_address = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_address_tv);
                 Button btn_inspection = (Button) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_inspection_btn);
+                Button btn_updata = (Button) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_update_btn);
                 LatLng point = markerInfo.getPosition();
                 for (final Inspection marker : markers) {
                     if (point.latitude == marker.getLatitude()
@@ -189,6 +179,23 @@ public class PipeInspectionMapActivity extends BaseActivity {
                                 intent.putExtra("id", marker.getNo());
                                 intent.putExtra("type", marker.getType());
                                 startActivity(intent);
+                            }
+                        });
+
+                        btn_updata.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(marker.getType().equals("0")){
+
+                                }
+                                if(marker.getType().equals("1")){
+                                    Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionUpdateByValveActivity.class);
+                                    intent.putExtra("valve", marker);
+                                    startActivity(intent);
+                                }
+                                if(marker.getType().equals("2")){
+
+                                }
                             }
                         });
                     }

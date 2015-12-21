@@ -12,7 +12,7 @@ public class Inspection implements Parcelable {
     private double longitude;   //经度
     private String valveNo;     //阀门型号
     private String valveGNo;    //阀门井型号
-    private String type;        //0是阀门 1是消防栓
+    private String type;        //1是阀门 0是消防栓
 
     public Inspection() {
     }

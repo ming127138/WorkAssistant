@@ -152,7 +152,7 @@ public class ReportInfoActivity extends BaseActivity {
             }
             if(action.equals("action.com.gzrijing.workassistant.ReportInfo.progress")){
                 String jsonData = intent.getStringExtra("jsonData");
-                List<ReportInfo> infos = JsonParseUtils.getProblemReportInfo(jsonData);
+                List<ReportInfo> infos = JsonParseUtils.getProgressReportInfo(jsonData);
                 progressList.addAll(infos);
                 progressAdapter = new ReportInfoProgressAdapter(ReportInfoActivity.this, progressList);
                 lv_progress.setAdapter(progressAdapter);
@@ -160,6 +160,7 @@ public class ReportInfoActivity extends BaseActivity {
             if(action.equals("action.com.gzrijing.workassistant.ReportInfo.projectAmount")){
                 String jsonData = intent.getStringExtra("jsonData");
                 List<ReportInfoProjectAmount> infos = JsonParseUtils.getProjectAmountReportInfo(jsonData);
+                projectAmountList.addAll(infos);
                 projectAmountAdapter = new ReportInfoProjectAmountAdapter(ReportInfoActivity.this, projectAmountList);
                 lv_projectAmount.setAdapter(projectAmountAdapter);
             }
@@ -171,13 +172,8 @@ public class ReportInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10) {
             if (resultCode == 10) {
-                String isPass = data.getStringExtra("isPass");
-                int position = data.getIntExtra("position", -1);
-                if(isPass.equals("1")){
-                    projectAmountList.get(position).setState("已审批");
-                }else{
-                    projectAmountList.get(position).setState("不通过");
-                }
+                projectAmountList.clear();
+                initCompleteReportInfo();
                 projectAmountAdapter.notifyDataSetChanged();
             }
         }

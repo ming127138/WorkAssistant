@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.view;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +11,12 @@ import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.AcceptanceAdapter;
+import com.gzrijing.workassistant.entity.Acceptance;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +27,7 @@ public class AcceptanceFragment extends Fragment {
     private ListView lv_accList;
     private List<String> accList = new ArrayList<String>();
     private AcceptanceAdapter adapter;
+    private String userNo;
 
     public AcceptanceFragment() {
     }
@@ -29,7 +36,9 @@ public class AcceptanceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
+        SharedPreferences app = getActivity().getSharedPreferences(
+                "saveUser", getActivity().MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
     }
 
     @Override
@@ -41,7 +50,32 @@ public class AcceptanceFragment extends Fragment {
         return layoutView;
     }
 
+    @Override
+    public void onStart() {
+        initData();
+        super.onStart();
+    }
+
     private void initData() {
+        String url = null;
+        try {
+            url = "cmd=getmyconsconfirm&userno="+ URLEncoder.encode(userNo, "UTF-8")+"&ispass=";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+
+
             accList.add("工单007");
     }
 

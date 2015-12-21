@@ -67,6 +67,7 @@ public class ReportProjectAmountService extends IntentService {
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("respone", response);
                 if (response.substring(0, 1).equals("E")) {
                     Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportProjectAmountFragment");
                     intent1.putExtra("result", "汇报失败");

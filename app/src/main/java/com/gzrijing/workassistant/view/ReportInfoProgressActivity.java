@@ -76,7 +76,7 @@ public class ReportInfoProgressActivity extends BaseActivity {
         tv_content = (TextView) findViewById(R.id.report_info_progress_content_tv);
         tv_content.setText(content);
 
-        gv_image = (GridView) findViewById(R.id.report_info_problem_image_gv);
+        gv_image = (GridView) findViewById(R.id.report_info_progress_image_gv);
     }
 
     private void setListeners() {

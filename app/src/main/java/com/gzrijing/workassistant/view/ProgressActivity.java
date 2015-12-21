@@ -14,6 +14,7 @@ import com.gzrijing.workassistant.adapter.ProgressAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Progress;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.DateUtil;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
@@ -21,6 +22,9 @@ import com.gzrijing.workassistant.util.ToastUtil;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class ProgressActivity extends BaseActivity {
@@ -56,12 +60,25 @@ public class ProgressActivity extends BaseActivity {
         }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
-            public void onFinish(String response) {
+            public void onFinish(final String response) {
                 Log.e("response", response);
-                final List<Progress> list = JsonParseUtils.getProgress(response);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        List<Progress> list = JsonParseUtils.getProgress(response);
+                        Collections.sort(list, new Comparator<Progress>() {
+                            @Override
+                            public int compare(Progress lhs, Progress rhs) {
+                                Date date1 = DateUtil.stringToDate(lhs.getTime());
+                                Date date2 = DateUtil.stringToDate(rhs.getTime());
+                                // 对日期字段进行升序，如果欲降序可采用after方法
+                                if (date1.before(date2)) {
+                                    return 1;
+                                }
+                                return -1;
+
+                            }
+                        });
                         proInfos.clear();
                         proInfos.addAll(list);
                         adapter.notifyDataSetChanged();

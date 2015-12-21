@@ -59,7 +59,7 @@ public class ReportInfoProblemAdapter extends BaseAdapter {
         if(list.get(position).getState().equals("0")){
             v.state.setText("未解决");
         }
-        if(list.get(position).getState().equals("0")){
+        if(list.get(position).getState().equals("1")){
             v.state.setText("已解决");
         }
         return convertView;

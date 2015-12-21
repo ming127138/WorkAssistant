@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -30,7 +31,7 @@ public class DownLoadProgressImageService extends Service {
         String url = null;
         try {
             url = "?cmd=getconspic&fileno=" + URLEncoder.encode(fileNo, "UTF-8")
-                    + "relationid=" + id + "&pictype=WnW_ConsTaskPic";
+                    + "&relationid=" + id + "&pictype=WnW_ConsTaskPic";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -38,6 +39,7 @@ public class DownLoadProgressImageService extends Service {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfoProgress");
                 intent1.putExtra("response", response);
                 sendBroadcast(intent1);

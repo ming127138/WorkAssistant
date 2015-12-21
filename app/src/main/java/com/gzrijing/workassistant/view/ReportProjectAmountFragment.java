@@ -74,9 +74,9 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
         List<SuppliesNoData> suppliesNoDataList = businessData.getSuppliesNoList();
         List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
         for (SuppliesNoData suppliesNodata : suppliesNoDataList) {
-            if (suppliesNodata.getReceivedState() != null && suppliesNodata.getReceivedState().equals("已领用")) {
+            if (suppliesNodata.getReceivedState() != null && suppliesNodata.getReceivedState().equals("已领出")) {
                 for (SuppliesData suppliesData : suppliesDataList) {
-                    if (suppliesData.getReceivedId().equals(suppliesNodata.getReceivedId())) {
+                    if (suppliesData.getReceivedId() != null && suppliesData.getReceivedId().equals(suppliesNodata.getReceivedId())) {
                         Supplies supplies = new Supplies();
                         supplies.setId(suppliesData.getNo());
                         supplies.setName(suppliesData.getName());

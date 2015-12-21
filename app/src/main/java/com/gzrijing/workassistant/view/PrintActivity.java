@@ -17,15 +17,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.DetailedInfoAdapter;
 import com.gzrijing.workassistant.adapter.PrintInfoAdapter;
-import com.gzrijing.workassistant.adapter.SuppliesApplyReceivedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
 import com.gzrijing.workassistant.entity.DetailedInfo;
-import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.zj.btsdk.BluetoothService;
 
@@ -86,6 +83,7 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
             infos.add(info);
         }
         infos.remove(infos.size()-1);
+
         DetailedInfo info1 = new DetailedInfo("施工内容", content);
         DetailedInfo info2 = new DetailedInfo("土建工程", civil);
         infos.add(info1);

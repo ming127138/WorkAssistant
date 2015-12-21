@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -26,11 +27,13 @@ public class GetReportInfoProjectAmountSuppliesService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String togetherid = intent.getStringExtra("togetherid");
         String confirmid = intent.getStringExtra("confirmid");
+
         String url = "?cmd=getsomeinstallconfirmdetail&togetherid=" + togetherid + "&confirmid=" + confirmid;
 
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfoProjectAmount");
                 intent1.putExtra("jsonData", response);
                 sendBroadcast(intent1);

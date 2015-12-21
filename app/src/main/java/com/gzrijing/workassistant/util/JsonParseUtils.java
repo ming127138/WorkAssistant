@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.util;
 
+import com.gzrijing.workassistant.entity.Acceptance;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.BusinessHaveSend;
@@ -992,6 +993,32 @@ public class JsonParseUtils {
                         list.add(picUrl);
                     }
                 }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public static ArrayList<Acceptance> getAcceptanceInfo (String jsonData){
+        ArrayList<Acceptance> list = new ArrayList<Acceptance>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String orderId = jsonObject.getString("FileNo");
+                String content = jsonObject.getString("ConsContent");
+                String civil = jsonObject.getString("EarthWorkContent");
+                String checkData = jsonObject.getString("TimeUnit.SECONDS");
+                String state = jsonObject.getString("State");
+
+                Acceptance acceptance = new Acceptance();
+                acceptance.setOrderId(orderId);
+                acceptance.setContent(content);
+                acceptance.setCivil(civil);
+                acceptance.setCheckDate(checkData);
+                acceptance.setState(state);
+                list.add(acceptance);
             }
         } catch (JSONException e) {
             e.printStackTrace();

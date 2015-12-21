@@ -9,6 +9,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class HttpUtils {
     /**
@@ -36,7 +37,7 @@ public class HttpUtils {
                     if (listener != null) {
                         listener.onFinish(response.body().string());
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     if (listener != null) {
                         listener.onError(e);
                     }
@@ -47,6 +48,7 @@ public class HttpUtils {
 
     public static void sendHttpPostRequest(final RequestBody requestBody,
                                            final HttpCallbackListener listener) {
+//        mOkHttpClient.setConnectTimeout(100, TimeUnit.SECONDS);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -59,7 +61,7 @@ public class HttpUtils {
                     if (listener != null) {
                         listener.onFinish(response.body().string());
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     if (listener != null) {
                         listener.onError(e);
                     }

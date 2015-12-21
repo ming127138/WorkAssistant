@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -146,7 +147,7 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.supplies_verify_wait_info_yes_ll:
+            case R.id.report_info_project_amount_yes_ll:
                 if (!isCheck) {
                     iv_yes.setImageResource(R.drawable.spinner_item_check_on);
                     iv_no.setImageResource(R.drawable.spinner_item_check_off);
@@ -154,7 +155,7 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
                 }
                 break;
 
-            case R.id.supplies_verify_wait_info_no_ll:
+            case R.id.report_info_project_amount_no_ll:
                 if (isCheck) {
                     iv_no.setImageResource(R.drawable.spinner_item_check_on);
                     iv_yes.setImageResource(R.drawable.spinner_item_check_off);
@@ -170,7 +171,7 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
 
     private void approval() {
         btn_approval.setVisibility(View.GONE);
-        final String isPass;
+        String isPass;
         if (isCheck) {
             isPass = "1";
         } else {
@@ -181,7 +182,7 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
         for (int i = 0; i < suppliesList.size(); i++) {
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", (i + 1) + "");
+                jsonObject.put("id", info.getId());
                 jsonObject.put("IsPass", isPass);
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
@@ -189,7 +190,7 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
             }
 
         }
-
+        Log.e("jsonData",jsonArray.toString());
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "docheckconsconfirm")
                 .add("userno", userNo)
@@ -199,14 +200,13 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 if (response.equals("ok")) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             ToastUtil.showToast(ReportInfoProjectAmountActivity.this, "提交成功", Toast.LENGTH_SHORT);
                             Intent intent = getIntent();
-                            intent.putExtra("isPass", isPass);
-                            intent.putExtra("position", position);
                             setResult(10);
                             finish();
                         }

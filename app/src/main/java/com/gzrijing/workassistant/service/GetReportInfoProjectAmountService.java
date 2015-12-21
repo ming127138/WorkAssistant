@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -30,6 +31,7 @@ public class GetReportInfoProjectAmountService extends Service {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.projectAmount");
                 intent1.putExtra("jsonData", response);
                 sendBroadcast(intent1);
@@ -45,9 +47,6 @@ public class GetReportInfoProjectAmountService extends Service {
                 });
             }
         });
-
-
-
 
         return super.onStartCommand(intent, flags, startId);
     }
