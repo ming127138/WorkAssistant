@@ -4,31 +4,26 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
 
-import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
 
-import org.litepal.crud.DataSupport;
+public class ListenerReportInfoProblemService extends IntentService {
 
-import java.util.List;
+    private String orderId;
 
-public class ListenerSendMachineOrderService extends IntentService {
-
-    private Handler handler = new Handler();
-
-    public ListenerSendMachineOrderService() {
-        super("ListenerSendMachineOrderService");
+    public ListenerReportInfoProblemService() {
+        super("ListenerReportInfoProblemService");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Intent intent1 = new Intent("action.com.gzrijing.workassistant.SendMachine");
+        orderId = intent.getStringExtra("orderId");
+
+        Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.problem.refresh");
         sendBroadcast(intent1);
+
         sendNotification();
 
     }
@@ -39,9 +34,9 @@ public class ListenerSendMachineOrderService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("")
-                .setContentText("有一条新的送机任务更新")
-                .setTicker("有一条新的送机任务更新")
+                .setContentTitle(orderId)
+                .setContentText("有一条新的问题汇报信息")
+                .setTicker("有一条新的问题汇报信息")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();

@@ -344,6 +344,18 @@
         <service
             android:name=".service.ListenerReturnMachineOrderService"
             android:exported="false" />
+        <service
+            android:name=".service.ListenerReportInfoProgressService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerReportInfoProblemService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerReportInfoProjectAmountService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerReportInfoCompleteService"
+            android:exported="false" />
 
         <!-- app service -->
 

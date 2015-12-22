@@ -32,7 +32,8 @@ public class ListenerReturnMachineOrderService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("有一条新的退机任务更新")
+                .setContentTitle("")
+                .setContentText("有一条新的退机任务更新")
                 .setTicker("有一条新的退机任务更新")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)

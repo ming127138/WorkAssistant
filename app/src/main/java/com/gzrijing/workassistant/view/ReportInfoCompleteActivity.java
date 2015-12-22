@@ -2,24 +2,33 @@ package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.DetailedInfoAdapter;
+import com.gzrijing.workassistant.adapter.ReportInfoCompleteAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.service.GetLeaderBusinessService;
 import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -32,7 +41,8 @@ public class ReportInfoCompleteActivity extends BaseActivity {
     private String userNo;
     private Handler handler = new Handler();
     private ListView lv_info;
-    private DetailedInfoAdapter adapter;
+    private ReportInfoCompleteAdapter adapter;
+    private ImageLoader mImageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +58,51 @@ public class ReportInfoCompleteActivity extends BaseActivity {
                 "saveUser", MODE_PRIVATE);
         userNo = app.getString("userNo", "");
 
+        mImageLoader = ImageLoader.getInstance();
+
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
         getCompleteInfo();
+        getCompletePicUrl();
+    }
+
+    private void getCompletePicUrl() {
+        String url = null;
+        try {
+            url = "?cmd=getconspic&fileno=" + URLEncoder.encode(orderId, "UTF-8") + "&relationid=&pictype=WnW_ConsFinishPic";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(final String response) {
+                        Log.e("response", response);
+                        handler.post(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             ArrayList<PicUrl> picUrlList = JsonParseUtils.getReportCompletePicUrl(response);
+                                             picUrls.addAll(picUrlList);
+                                             adapter = new ReportInfoCompleteAdapter(ReportInfoCompleteActivity.this, infos, picUrls, userNo, orderId);
+                                             lv_info.setAdapter(adapter);
+                                         }
+                                     }
+
+                        );
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.showToast(ReportInfoCompleteActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                            }
+                        });
+                    }
+                }
+
+        );
     }
 
     private void getCompleteInfo() {
@@ -69,10 +121,8 @@ public class ReportInfoCompleteActivity extends BaseActivity {
                     @Override
                     public void run() {
                         ArrayList<DetailedInfo> list = JsonParseUtils.getReportCompleteInfo(response);
-                        ArrayList<PicUrl> picUrlList = JsonParseUtils.getReportCompletePicUrl(response);
                         infos.addAll(list);
-                        picUrls.addAll(picUrlList);
-                        adapter = new DetailedInfoAdapter(ReportInfoCompleteActivity.this, infos, picUrls, userNo, orderId);
+                        adapter = new ReportInfoCompleteAdapter(ReportInfoCompleteActivity.this, infos, picUrls, userNo, orderId);
                         lv_info.setAdapter(adapter);
                     }
                 });

@@ -13,6 +13,10 @@ import com.gzrijing.workassistant.service.GetWorkerBusinessService;
 import com.gzrijing.workassistant.service.ListenerMachineApplyStateService;
 import com.gzrijing.workassistant.service.ListenerMachineReceivedStateService;
 import com.gzrijing.workassistant.service.ListenerMachineReturnStateService;
+import com.gzrijing.workassistant.service.ListenerReportInfoCompleteService;
+import com.gzrijing.workassistant.service.ListenerReportInfoProblemService;
+import com.gzrijing.workassistant.service.ListenerReportInfoProgressService;
+import com.gzrijing.workassistant.service.ListenerReportInfoProjectAmountService;
 import com.gzrijing.workassistant.service.ListenerReturnMachineOrderService;
 import com.gzrijing.workassistant.service.ListenerSendMachineOrderService;
 import com.gzrijing.workassistant.service.ListenerSuppliesApplyStateService;
@@ -96,10 +100,21 @@ public class MainReceiver extends BroadcastReceiver {
                                 if(cmd.equals("getneedbackmachinelist")){
                                     listenerReturnMachineOrder();
                                 }
-                                if(cmd.equals("")){
+                                if(cmd.equals("getsomeinstalltask")){
                                     String orderId = jsonObject.getString("FileNo");
-                                    String billNo = jsonObject.getString("BillNo");
-                                    listenerMachineReceivedState(user, orderId, billNo);
+                                    listenerReportInfoProgress(orderId);
+                                }
+                                if(cmd.equals("getsomeinstallaccident")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    listenerReportInfoProblem(orderId);
+                                }
+                                if(cmd.equals("getsomeinstallconfirmmain")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    listenerReportInfoProjectAmount(orderId);
+                                }
+                                if(cmd.equals("getfinishconstruction")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    listenerReportInfoComplete(orderId);
                                 }
                             }
                         }
@@ -215,6 +230,42 @@ public class MainReceiver extends BroadcastReceiver {
      */
     private void listenerReturnMachineOrder(){
         Intent intent = new Intent(MyApplication.getContext(), ListenerReturnMachineOrderService.class);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听是否有新的进度汇报信息
+     */
+    private void listenerReportInfoProgress(String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerReportInfoProgressService.class);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听是否有新的问题汇报信息
+     */
+    private void listenerReportInfoProblem(String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerReportInfoProblemService.class);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听是否有新的进度汇报信息
+     */
+    private void listenerReportInfoProjectAmount(String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerReportInfoProjectAmountService.class);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听是否有新的完工汇报信息
+     */
+    private void listenerReportInfoComplete(String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerReportInfoCompleteService.class);
+        intent.putExtra("orderId", orderId);
         MyApplication.getContext().startService(intent);
     }
 

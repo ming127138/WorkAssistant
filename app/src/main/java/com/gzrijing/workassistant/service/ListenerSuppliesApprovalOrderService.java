@@ -62,7 +62,8 @@ public class ListenerSuppliesApprovalOrderService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("工程编号：" + orderId + "\n有一条新的材料申请单需要审核")
+                .setContentTitle(orderId)
+                .setContentText("有一条新的材料申请单需要审核")
                 .setTicker("有一条新的材料申请单需要审核")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)

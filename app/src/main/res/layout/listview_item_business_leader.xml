@@ -193,7 +193,7 @@
                 android:id="@+id/listview_item_business_leader_complete_info_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0条完工信息"
+                android:text="查看完工信息"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_15dp" />
         </LinearLayout>

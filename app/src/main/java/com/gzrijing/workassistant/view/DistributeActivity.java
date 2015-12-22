@@ -286,6 +286,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
 
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "doappoint")
+                .add("userno", userNo)
                 .add("fileno", orderId)
                 .add("installuserno", executors)
                 .add("installcontent", et_remarks.getText().toString().trim())

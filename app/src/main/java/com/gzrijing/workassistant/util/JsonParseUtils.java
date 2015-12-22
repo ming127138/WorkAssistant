@@ -956,8 +956,8 @@ public class JsonParseUtils {
                     JSONArray jsonArray1 = jsonObject.getJSONArray("Detail");
                     for(int j = 0; j<jsonArray1.length();j++){
                         JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
-                        String key = jsonObject.getString("key");
-                        String value = jsonObject.getString("value");
+                        String key = jsonObject1.getString("key");
+                        String value = jsonObject1.getString("value");
                         DetailedInfo info = new DetailedInfo();
                         info.setKey(key);
                         info.setValue(value);
@@ -983,16 +983,10 @@ public class JsonParseUtils {
             JSONArray jsonArray = new JSONArray(jsonData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                if(!jsonObject.getString("PicUri").equals("")){
-                    JSONArray jsonArray1 = jsonObject.getJSONArray("PicUri");
-                    for(int j = 0; j<jsonArray1.length();j++){
-                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
-                        String url = jsonObject.getString("PicUri");
-                        PicUrl picUrl = new PicUrl();
-                        picUrl.setPicUrl(url);
-                        list.add(picUrl);
-                    }
-                }
+                String url = jsonObject.getString("PicUri");
+                PicUrl picUrl = new PicUrl();
+                picUrl.setPicUrl(url);
+                list.add(picUrl);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1009,14 +1003,14 @@ public class JsonParseUtils {
                 String orderId = jsonObject.getString("FileNo");
                 String content = jsonObject.getString("ConsContent");
                 String civil = jsonObject.getString("EarthWorkContent");
-                String checkData = jsonObject.getString("TimeUnit.SECONDS");
+                String checkDate = jsonObject.getString("CheckDate");
                 String state = jsonObject.getString("State");
 
                 Acceptance acceptance = new Acceptance();
                 acceptance.setOrderId(orderId);
                 acceptance.setContent(content);
                 acceptance.setCivil(civil);
-                acceptance.setCheckDate(checkData);
+                acceptance.setCheckDate(checkDate);
                 acceptance.setState(state);
                 list.add(acceptance);
             }

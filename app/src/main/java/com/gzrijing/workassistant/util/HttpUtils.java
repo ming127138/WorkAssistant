@@ -48,7 +48,8 @@ public class HttpUtils {
 
     public static void sendHttpPostRequest(final RequestBody requestBody,
                                            final HttpCallbackListener listener) {
-//        mOkHttpClient.setConnectTimeout(100, TimeUnit.SECONDS);
+        mOkHttpClient.setWriteTimeout(100, TimeUnit.SECONDS);
+        mOkHttpClient.setReadTimeout(100, TimeUnit.SECONDS);
         new Thread(new Runnable() {
             @Override
             public void run() {

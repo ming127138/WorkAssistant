@@ -137,7 +137,8 @@ public class GetLeaderBusinessService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("有一条新工程项目需要确认")
+                .setContentTitle("")
+                .setContentText("有一条新工程项目需要确认")
                 .setTicker("有一条新工程项目需要确认")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)

@@ -49,7 +49,7 @@
                 android:textSize="@dimen/sw_15dp"/>
 
             <com.gzrijing.workassistant.widget.MyListView
-                android:id="@+id/report_info_complete_lv"
+                android:id="@+id/report_info_project_amount_lv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

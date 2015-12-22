@@ -103,8 +103,9 @@ public class ListenerMachineReceivedStateService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("工程编号：" + orderId + "\n有一些机械已安排")
-                .setTicker("这是通知的ticker")
+                .setContentTitle(orderId)
+                .setContentText("有一些机械已安排")
+                .setTicker("有一些机械已安排")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();

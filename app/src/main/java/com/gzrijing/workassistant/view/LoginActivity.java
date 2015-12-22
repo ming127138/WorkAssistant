@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.MyApplication;
+import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.User;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;

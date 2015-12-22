@@ -206,8 +206,8 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
                         @Override
                         public void run() {
                             ToastUtil.showToast(ReportInfoProjectAmountActivity.this, "提交成功", Toast.LENGTH_SHORT);
-                            Intent intent = getIntent();
-                            setResult(10);
+                            Intent intent = new Intent("action.com.gzrijing.workassistant.ReportInfo.projectAmount.refresh");
+                            sendBroadcast(intent);
                             finish();
                         }
                     });

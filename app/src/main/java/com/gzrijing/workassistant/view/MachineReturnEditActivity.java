@@ -319,9 +319,9 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
         String applyTime = dateFormat.format(rightNow.getTime());
         String type;
         if(isCheck){
-            type = "正常";
-        }else{
             type = "损坏";
+        }else{
+            type = "正常";
         }
 
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);

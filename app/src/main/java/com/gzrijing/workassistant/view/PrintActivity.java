@@ -229,7 +229,7 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
                     sb.append(" 　" + supplies.getName() + "　　" + supplies.getSpec() + "　　" + supplies.getUnit()
                             + "　　" + supplies.getNum() + "\n");
                 }
-                sb.append("\n　　用户签字:_________　　日期:_________");
+                sb.append("\n\n\n    　　用户签字:_________　　日期:_________");
                 sb.append("\n\n\n");
                 String msg = sb.toString();
                 mService.sendMessage(msg, "GBK");

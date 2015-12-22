@@ -56,15 +56,22 @@ public class ReportInfoActivity extends BaseActivity {
         Intent intent = getIntent();
         togetherid = intent.getStringExtra("id");
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.com.gzrijing.workassistant.ReportInfo.problem");
+        intentFilter.addAction("action.com.gzrijing.workassistant.ReportInfo.progress");
+        intentFilter.addAction("action.com.gzrijing.workassistant.ReportInfo.projectAmount");
+        intentFilter.addAction("action.com.gzrijing.workassistant.ReportInfo.problem.refresh");
+        intentFilter.addAction("action.com.gzrijing.workassistant.ReportInfo.progress.refresh");
+        intentFilter.addAction("action.com.gzrijing.workassistant.ReportInfo.projectAmount.refresh");
+        registerReceiver(mBroadcastReceiver, intentFilter);
+
         initProblemReportInfo();
         initProgressReportInfo();
-        initCompleteReportInfo();
+        initProjectAmountReportInfo();
 
     }
 
     private void initProblemReportInfo() {
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.ReportInfo.problem");
-        registerReceiver(mBroadcastReceiver, intentFilter);
         problemIntent = new Intent(this, GetReportInfoProblemService.class);
         problemIntent.putExtra("id", togetherid);
         startService(problemIntent);
@@ -72,16 +79,12 @@ public class ReportInfoActivity extends BaseActivity {
     }
 
     private void initProgressReportInfo() {
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.ReportInfo.progress");
-        registerReceiver(mBroadcastReceiver, intentFilter);
         progressIntent = new Intent(this, GetReportInfoProgressService.class);
         progressIntent.putExtra("id", togetherid);
         startService(progressIntent);
     }
 
-    private void initCompleteReportInfo() {
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.ReportInfo.projectAmount");
-        registerReceiver(mBroadcastReceiver, intentFilter);
+    private void initProjectAmountReportInfo() {
         projectAmountIntent = new Intent(this, GetReportInfoProjectAmountService.class);
         projectAmountIntent.putExtra("id", togetherid);
         startService(projectAmountIntent);
@@ -96,7 +99,7 @@ public class ReportInfoActivity extends BaseActivity {
 
         lv_progress = (ListView) findViewById(R.id.report_info_progress_lv);
 
-        lv_projectAmount = (ListView) findViewById(R.id.report_info_complete_lv);
+        lv_projectAmount = (ListView) findViewById(R.id.report_info_project_amount_lv);
 
     }
 
@@ -134,7 +137,7 @@ public class ReportInfoActivity extends BaseActivity {
                 intent.putExtra("id", togetherid);
                 intent.putExtra("projectAmount", projectAmountList.get(position));
                 intent.putExtra("position", position);
-                startActivityForResult(intent, 10);
+                startActivity(intent);
             }
         });
     }
@@ -164,21 +167,26 @@ public class ReportInfoActivity extends BaseActivity {
                 projectAmountAdapter = new ReportInfoProjectAmountAdapter(ReportInfoActivity.this, projectAmountList);
                 lv_projectAmount.setAdapter(projectAmountAdapter);
             }
-        }
-    };
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10) {
-            if (resultCode == 10) {
+            if(action.equals("action.com.gzrijing.workassistant.ReportInfo.problem.refresh")){
+                problemList.clear();
+                initProblemReportInfo();
+                problemAdapter.notifyDataSetChanged();
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.ReportInfo.progress.refresh")){
+                progressList.clear();
+                initProgressReportInfo();
+                progressAdapter.notifyDataSetChanged();
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.ReportInfo.projectAmount.refresh")){
                 projectAmountList.clear();
-                initCompleteReportInfo();
+                initProjectAmountReportInfo();
                 projectAmountAdapter.notifyDataSetChanged();
             }
         }
-
-    }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

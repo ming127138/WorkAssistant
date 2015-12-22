@@ -112,7 +112,7 @@ public class ListenerMachineApplyStateService extends IntentService {
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("工程编号：" + orderId + "\n有一条机械申请单信息更新")
-                .setTicker("这是通知的ticker")
+                .setTicker("有一条机械申请单信息更新")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();

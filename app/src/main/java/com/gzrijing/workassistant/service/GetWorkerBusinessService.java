@@ -135,13 +135,14 @@ public class GetWorkerBusinessService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("有一条新工程项目需要确认")
-                .setTicker("这是通知的ticker")
+                .setContentTitle("")
+                .setContentText("有一条新工程项目需要确认")
+                .setTicker("有一条新工程项目需要确认")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();
         notification.defaults = Notification.DEFAULT_SOUND;
         notification.flags = Notification.FLAG_AUTO_CANCEL;
-        manager.notify(1, notification);
+        manager.notify(0, notification);
     }
 }
