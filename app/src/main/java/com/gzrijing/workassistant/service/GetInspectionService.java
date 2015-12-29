@@ -3,6 +3,7 @@ package com.gzrijing.workassistant.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -31,7 +32,8 @@ public class GetInspectionService extends IntentService {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                Intent intent1 = new Intent("action.com.gzrijing.workassistant.WorkerFragment");
+                Log.e("阀门，消防栓计划", response);
+                Intent intent1 = new Intent("action.com.gzrijing.workassistant.WorkerFragment.Inspection");
                 intent1.putExtra("jsonData", response);
                 sendBroadcast(intent1);
             }

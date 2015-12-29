@@ -35,9 +35,9 @@ public class BusinessFragment extends Fragment {
 
         if (savedInstanceState == null) {
             Log.e("userRank", userRank);
-            Fragment fragment = getChildFragmentManager().findFragmentByTag(userRank);
+            Fragment fragment = getChildFragmentManager().findFragmentByTag("0");
             if (fragment == null) {
-                setTabSelection(Integer.valueOf(userRank));
+                setTabSelection(Integer.valueOf("0"));
             }
         }
 

@@ -213,6 +213,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                 if (flag.equals("巡检")) {
                     Intent intent = new Intent(context, PipeInspectionMapActivity.class);
                     intent.putParcelableArrayListExtra("inspectionList", orderList.get(position).getInspectionInfos());
+                    intent.putExtra("orderId", orderList.get(position).getOrderId());
                     context.startActivity(intent);
                 }
             }

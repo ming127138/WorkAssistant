@@ -47,7 +47,7 @@
             android:enabled="true"
             android:process=":remote">
             <intent-filter>
-                <action android:name="com.baidu.location.service_v6.1.3" />
+                <action android:name="com.baidu.location.service_v2.2" />
             </intent-filter>
         </service>
 
@@ -69,7 +69,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.PipeInspectionMapActivity"
-            android:label="@string/title_activity_pipe_inspection_map" />
+            android:label="@string/title_activity_pipe_inspection_map"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.DownloadOfflineMapActivity"
             android:label="@string/title_activity_download_offline_map"
@@ -263,6 +264,8 @@
             android:name=".view.PipeInspectionUpdateByValveActivity"
             android:label="更新信息"
             android:screenOrientation="portrait" />
+        <activity android:name=".view.MapPointActivity"
+            android:screenOrientation="portrait"/>
         <!-- app activity -->
 
 

@@ -91,8 +91,7 @@ public class ReportProgressService extends IntentService {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Log.e("失败", "失败");
-                                        ToastUtil.showToast(ReportProgressService.this, "上传图片失败", Toast.LENGTH_SHORT);
+                                        ToastUtil.showToast(ReportProgressService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                                     }
                                 });
                             }

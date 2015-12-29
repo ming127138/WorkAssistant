@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,14 +79,14 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
 
         getInspectionOrder();
 
-//        getSewageWellsOrder();
-//
+        getSewageWellsOrder();
+
     }
 
     private void getInspectionOrder() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment");
-        intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment1");
+        intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment.Inspection");
         getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
         Intent serviceIntent = new Intent(getActivity(), GetInspectionService.class);
         serviceIntent.putExtra("userNo", userNo);
@@ -172,10 +171,8 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals("action.com.gzrijing.workassistant.WorkerFragment")){
-                Log.e("ok", "asdf");
+            if(action.equals("action.com.gzrijing.workassistant.WorkerFragment.Inspection")){
                 String jsonData = intent.getStringExtra("jsonData");
-                Log.e("ok", jsonData);
                 List<BusinessByWorker> list = JsonParseUtils.getInspection(jsonData);
                 for(BusinessByWorker businessByWorker: list){
                     orderListByWorker.add(businessByWorker);
@@ -184,13 +181,14 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                 adapter.notifyDataSetChanged();
             }
 
-            if(action.equals("action.com.gzrijing.workassistant.WorkerFragment1")){
+            if(action.equals("action.com.gzrijing.workassistant.WorkerFragment")){
                 String jsonData = intent.getStringExtra("jsonData");
                 List<BusinessByWorker> list = JsonParseUtils.getWorkerBusiness(jsonData);
                 orderList.addAll(list);
                 orderListByWorker.addAll(list);
                 adapter.notifyDataSetChanged();
             }
+
         }
     };
 

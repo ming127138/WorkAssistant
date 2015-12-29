@@ -124,7 +124,7 @@ public class GetWorkerBusinessService extends IntentService {
             data1.save();
         }
 
-        Intent intent = new Intent("action.com.gzrijing.workassistant.WorkerFragment1");
+        Intent intent = new Intent("action.com.gzrijing.workassistant.WorkerFragment");
         intent.putExtra("jsonData", data);
         sendBroadcast(intent);
     }

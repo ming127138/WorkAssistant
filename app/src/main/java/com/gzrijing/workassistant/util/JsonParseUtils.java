@@ -343,7 +343,7 @@ public class JsonParseUtils {
                 String deadline = beginTime + "——\n" + endTime;
 
                 BusinessByWorker businessByWorker = new BusinessByWorker();
-                businessByWorker.setOrderId(areaNo + " / " + areaName);
+                businessByWorker.setOrderId(areaNo + "/" + areaName);
                 businessByWorker.setType(type);
                 businessByWorker.setState(state);
                 businessByWorker.setDeadline(deadline);
@@ -352,7 +352,7 @@ public class JsonParseUtils {
                 ArrayList<Inspection> inspectionList = new ArrayList<Inspection>();
                 JSONArray jsonArray1 = jsonObject.getJSONArray("DelatInf");
                 for (int j = 0; j < jsonArray1.length(); j++) {
-                    JSONObject jsonObject1 = jsonArray1.getJSONObject(i);
+                    JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
                     String No = jsonObject1.getString("FileNo");
                     String name = jsonObject1.getString("FileNm");
                     String model = jsonObject1.getString("FileClass");

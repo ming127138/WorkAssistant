@@ -2,6 +2,7 @@ package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,12 +22,15 @@ import com.gzrijing.workassistant.adapter.ReportProgressGriViewAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.service.PipeInspectionFormService;
+import com.gzrijing.workassistant.util.ImageCompressUtil;
 import com.gzrijing.workassistant.util.ImageUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PipeInspectionFormActivity extends BaseActivity implements View.OnClickListener {
@@ -143,11 +147,11 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
 
         iv_check5 = (ImageView) findViewById(R.id.pipe_inspection_form_standard_checkbox5_iv);
         tv_name5 = (TextView) findViewById(R.id.pipe_inspection_form_standard_name5_tv);
-        tv_name5.setText(nameList.get(4));
         ll_remark5 = (LinearLayout) findViewById(R.id.pipe_inspection_form_standard_remark5_ll);
         et_remark5 = (EditText) findViewById(R.id.pipe_inspection_form_standard_remark5_et);
         ll_item5 = (LinearLayout) findViewById(R.id.pipe_inspection_form_item5_ll);
         if (type.equals("0")) {
+            tv_name5.setText(nameList.get(4));
             ll_item5.setVisibility(View.VISIBLE);
         }
 
@@ -296,6 +300,16 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
                     return;
                 }
                 String path = ImageUtils.getPicPath(this, ImageUtils.imageUriFromCamera);
+                Log.e("path", path);
+                Bitmap bitmap = ImageCompressUtil.getimage(path);
+                String fileName = path.substring(path.lastIndexOf("/") + 1);
+                String filePathStr = path.substring(0, path.lastIndexOf("/"));
+                File filePath = new File(filePathStr);
+                try {
+                    ImageUtils.saveFile(this, bitmap, fileName, filePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 PicUrl picUrl = new PicUrl();
                 picUrl.setPicUrl(path);
                 picUrls.add(picUrl);
@@ -308,6 +322,16 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
                 }
                 Uri imageUri = data.getData();
                 String path1 = ImageUtils.getPicPath(this, imageUri);
+                Log.e("path", path1);
+                Bitmap bitmap1 = ImageCompressUtil.getimage(path1);
+                String fileName1 = path1.substring(path1.lastIndexOf("/") + 1);
+                String filePathStr1 = path1.substring(0, path1.lastIndexOf("/"));
+                File filePath1 = new File(filePathStr1);
+                try {
+                    ImageUtils.saveFile(this, bitmap1, fileName1, filePath1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 PicUrl picUrl1 = new PicUrl();
                 picUrl1.setPicUrl(path1);
                 picUrls.add(picUrl1);

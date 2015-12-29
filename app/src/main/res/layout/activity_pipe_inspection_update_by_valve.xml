@@ -181,7 +181,7 @@
             android:layout_height="@dimen/sw_30dp"
             android:background="@drawable/btn_blue_frame"
             android:layout_marginLeft="@dimen/sw_10dp"
-            android:text="获取坐标"
+            android:text="修改坐标"
             android:textColor="@color/blue"
             android:textSize="@dimen/sw_15dp"/>
     </LinearLayout>

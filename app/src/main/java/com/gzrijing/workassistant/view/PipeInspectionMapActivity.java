@@ -21,28 +21,39 @@ import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapPoi;
-import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.model.LatLng;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Inspection;
+import com.gzrijing.workassistant.listener.MyOrientationListener;
 
 import java.util.ArrayList;
 
 
 public class PipeInspectionMapActivity extends BaseActivity {
 
+    private String orderId;
     private BaiduMap mBaiduMap;
     private MapView mMapView;
     private ArrayList<Inspection> markers;
     private LocationClient locationClient;
-    private double longitude;
-    private double latitude;
+    private MyOrientationListener myOrientationListener;
+    private int mXDirection;            //传感器弧度值
+    private double mCurrentLatitude;   //最新一次的纬度
+    private double mCurrentLongitude;   //最新一次的经度
+    private float mCurrentAccracy;      //当前的精度
+    private volatile boolean isFristLocation; //是否是第一次定位
+    /**
+     * 定位的监听器
+     */
+    private MyLocationListener mMyLocationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +63,8 @@ public class PipeInspectionMapActivity extends BaseActivity {
 
         initViews();
         initData();
+        setListeners();
+
     }
 
     private void initViews() {
@@ -59,70 +72,116 @@ public class PipeInspectionMapActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mMapView = (MapView) findViewById(R.id.bmapView);
+        // 第一次定位
+        isFristLocation = true;
+        mMapView = (MapView) findViewById(R.id.pipe_inspection_map_bmapView);
     }
 
     private void initData() {
         Intent intent = getIntent();
         markers = intent.getParcelableArrayListExtra("inspectionList");
-        setLocation();
+        orderId = intent.getStringExtra("orderId");
+        mBaiduMap = mMapView.getMap();
+        MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(18.0f);
+        mBaiduMap.setMapStatus(msu);
+
+        initMyLocation();
+        initOritationListener();
+        initMarker();
     }
 
-    private void setLocation() {
-        locationClient = new LocationClient(getApplicationContext());
+    /**
+     * 初始化定位
+     */
+    private void initMyLocation() {
+        locationClient = new LocationClient(this);
+        mMyLocationListener = new MyLocationListener();
+        locationClient.registerLocationListener(mMyLocationListener);
         // 设置定位条件
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy); // 设置定位模式
         option.setOpenGps(true); // 是否打开GPS
         option.setCoorType("bd09ll"); // 设置返回值的坐标类型。
-        option.setProdName("LocationDemo1230"); // 设置产品线名称。强烈建议您使用自定义的产品线名称，方便我们以后为您提供更高效准确的定位服务。
-        option.setScanSpan(30 * 1000); // 设置定时定位的时间间隔。单位毫秒
+        option.setScanSpan(5000); // 设置定时定位的时间间隔。单位毫秒
         locationClient.setLocOption(option);
-        locationClient.start();
 
-        locationClient.registerLocationListener(new BDLocationListener() {
-            @Override
-            public void onReceiveLocation(BDLocation bdLocation) {
-                Log.e("bdLocation", bdLocation+"");
-                if (bdLocation == null) {
-                    return;
-                }
-                latitude = bdLocation.getLatitude();
-                longitude = bdLocation.getLongitude();
+    }
 
-                Log.e("latitude", latitude+"");
-                Log.e("longitude", longitude+"");
-                initMap();
-                initMarker();
-                setListeners();
+    /**
+     * 初始化方向传感器
+     */
+    private void initOritationListener() {
+        myOrientationListener = new MyOrientationListener(
+                getApplicationContext());
+        myOrientationListener
+                .setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
+                    @Override
+                    public void onOrientationChanged(float x) {
+                        mXDirection = (int) x;
+                        Log.e("x", x+"");
+                        // 构造定位数据
+                        MyLocationData locData = new MyLocationData.Builder()
+                                .accuracy(mCurrentAccracy)
+                                // 此处设置开发者获取到的方向信息，顺时针0-360
+                                .direction(mXDirection)
+                                .latitude(mCurrentLatitude)
+                                .longitude(mCurrentLongitude).build();
+                        // 设置定位数据
+                        mBaiduMap.setMyLocationData(locData);
+                        // 设置自定义图标
+                        BitmapDescriptor mCurrentMarker = BitmapDescriptorFactory
+                                .fromResource(R.drawable.map_gps_locked);
+                        MyLocationConfiguration config = new MyLocationConfiguration(
+                                MyLocationConfiguration.LocationMode.NORMAL, true, mCurrentMarker);
+                        mBaiduMap.setMyLocationConfigeration(config);
+                    }
+                });
+    }
+
+    /**
+     * 实现实位回调监听
+     */
+    public class MyLocationListener implements BDLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            // map view 销毁后不在处理新接收的位置
+            if (bdLocation == null || mMapView == null){
+                return;
             }
-        });
 
+            Log.e("Latitude", bdLocation.getLatitude()+"");
+            Log.e("Longitude", bdLocation.getLongitude()+"");
+            Log.e("mXDirection", mXDirection+"");
+            MyLocationData locData = new MyLocationData.Builder()
+                    .accuracy(bdLocation.getRadius())
+                    // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction(mXDirection).latitude(bdLocation.getLatitude())
+                    .longitude(bdLocation.getLongitude()).build();
+            mCurrentAccracy = bdLocation.getRadius();
+            // 设置定位数据
+            mBaiduMap.setMyLocationData(locData);
+            mCurrentLatitude = bdLocation.getLatitude();
+            mCurrentLongitude = bdLocation.getLongitude();
+            // 设置自定义图标
+            BitmapDescriptor mCurrentMarker = BitmapDescriptorFactory
+                    .fromResource(R.drawable.map_gps_locked);
+            MyLocationConfiguration config = new MyLocationConfiguration(
+                    MyLocationConfiguration.LocationMode.NORMAL, true, mCurrentMarker);
+            mBaiduMap.setMyLocationConfigeration(config);
+            // 第一次定位时
+            if (isFristLocation) {
+                isFristLocation = false;
+                LatLng ll = new LatLng(bdLocation.getLatitude(),
+                        bdLocation.getLongitude());
+                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+                mBaiduMap.animateMapStatus(u);
+            }
+        }
     }
 
-
-    private void initMap() {
-        mBaiduMap = mMapView.getMap();
-        // 普通地图
-        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-        // 定义Maker坐标点
-        LatLng point = new LatLng(latitude, longitude);
-
-        BitmapDescriptor bitmap = BitmapDescriptorFactory
-                .fromResource(R.drawable.map_flag_blue);
-        OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
-        mBaiduMap.addOverlay(option);
-        Log.e("12e", "12e");
-        // 定义地图状态
-        MapStatus mMapStatus = new MapStatus.Builder().target(point).zoom(18)
-                .build();
-        // 定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
-        MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory
-                .newMapStatus(mMapStatus);
-        // 改变地图状态
-        mBaiduMap.setMapStatus(mMapStatusUpdate);
-    }
-
+    /**
+     * 初始化覆盖物
+     */
     private void initMarker() {
         for (Inspection marker : markers) {
             LatLng point = new LatLng(marker.getLatitude(), marker.getLongitude());
@@ -144,6 +203,7 @@ public class PipeInspectionMapActivity extends BaseActivity {
             OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
             // 在地图上添加Marker，并显示
             mBaiduMap.addOverlay(option);
+
         }
     }
 
@@ -161,7 +221,7 @@ public class PipeInspectionMapActivity extends BaseActivity {
                 TextView tv_valveGNo = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_valveGNo_tv);
                 TextView tv_address = (TextView) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_address_tv);
                 Button btn_inspection = (Button) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_inspection_btn);
-                Button btn_updata = (Button) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_update_btn);
+                Button btn_update = (Button) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_update_btn);
                 LatLng point = markerInfo.getPosition();
                 for (final Inspection marker : markers) {
                     if (point.latitude == marker.getLatitude()
@@ -182,18 +242,19 @@ public class PipeInspectionMapActivity extends BaseActivity {
                             }
                         });
 
-                        btn_updata.setOnClickListener(new View.OnClickListener() {
+                        btn_update.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(marker.getType().equals("0")){
+                                if (marker.getType().equals("0")) {
 
                                 }
-                                if(marker.getType().equals("1")){
+                                if (marker.getType().equals("1")) {
                                     Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionUpdateByValveActivity.class);
                                     intent.putExtra("valve", marker);
+                                    intent.putExtra("orderId", orderId);
                                     startActivity(intent);
                                 }
-                                if(marker.getType().equals("2")){
+                                if (marker.getType().equals("2")) {
 
                                 }
                             }
@@ -217,6 +278,28 @@ public class PipeInspectionMapActivity extends BaseActivity {
                 mBaiduMap.hideInfoWindow();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        // 开启图层定位
+        mBaiduMap.setMyLocationEnabled(true);
+        if (!locationClient.isStarted()) {
+            locationClient.start();
+        }
+        // 开启方向传感器
+        myOrientationListener.start();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        // 关闭图层定位
+        mBaiduMap.setMyLocationEnabled(false);
+        locationClient.stop();
+        // 关闭方向传感器
+        myOrientationListener.stop();
+        super.onStop();
     }
 
     @Override
@@ -258,13 +341,6 @@ public class PipeInspectionMapActivity extends BaseActivity {
         super.onPause();
         //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
         mMapView.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        // TODO Auto-generated method stub
-        locationClient.stop();
-        super.onStop();
     }
 
 }
