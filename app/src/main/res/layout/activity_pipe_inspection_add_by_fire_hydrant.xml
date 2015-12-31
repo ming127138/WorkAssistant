@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.PipeInspectionUpdateByValveActivity">
+    tools:context="com.gzrijing.workassistant.view.PipeInspectionAddByFireHydrantActivity">
 
     <include layout="@layout/toolbar"/>
 
@@ -18,18 +18,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="阀门编号："
+            android:text="消防栓编号："
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp"/>
 
-        <EditText
-            android:id="@+id/pipe_inspection_update_by_valve_item1_et"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item1_tv"
+            android:layout_width="@dimen/sw_150dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_text"
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp"
             android:layout_gravity="center_vertical"/>
+
+        <Button
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item1_btn"
+            android:layout_width="@dimen/sw_80dp"
+            android:layout_height="@dimen/sw_30dp"
+            android:background="@drawable/btn_blue_frame"
+            android:layout_marginLeft="@dimen/sw_10dp"
+            android:text="获取编号"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/sw_15dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -42,12 +52,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="阀门名称："
+            android:text="消防栓名称："
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp"/>
 
         <EditText
-            android:id="@+id/pipe_inspection_update_by_valve_item2_et"
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item2_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_text"
@@ -71,7 +81,7 @@
             android:textSize="@dimen/sw_15dp"/>
 
         <EditText
-            android:id="@+id/pipe_inspection_update_by_valve_item3_et"
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item3_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_text"
@@ -95,7 +105,7 @@
             android:textSize="@dimen/sw_15dp"/>
 
         <EditText
-            android:id="@+id/pipe_inspection_update_by_valve_item4_et"
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item4_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_text"
@@ -119,7 +129,7 @@
             android:textSize="@dimen/sw_15dp"/>
 
         <EditText
-            android:id="@+id/pipe_inspection_update_by_valve_item5_et"
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item5_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_text"
@@ -143,7 +153,7 @@
             android:textSize="@dimen/sw_15dp"/>
 
         <EditText
-            android:id="@+id/pipe_inspection_update_by_valve_item6_et"
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item6_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_text"
@@ -162,12 +172,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="阀门坐标："
+            android:text="消防栓型号："
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp"/>
+
+        <EditText
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item7_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sw_15dp"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sw_5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="消防栓坐标："
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp"/>
 
         <TextView
-            android:id="@+id/pipe_inspection_update_by_valve_item7_tv"
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item8_tv"
             android:layout_width="@dimen/sw_150dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_text"
@@ -176,7 +210,7 @@
             android:layout_gravity="center_vertical"/>
 
         <Button
-            android:id="@+id/pipe_inspection_update_by_valve_item7_btn"
+            android:id="@+id/pipe_inspection_add_by_fire_hydrant_item8_btn"
             android:layout_width="@dimen/sw_80dp"
             android:layout_height="@dimen/sw_30dp"
             android:background="@drawable/btn_blue_frame"

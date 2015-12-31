@@ -1,8 +1,8 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -22,7 +22,7 @@ import com.gzrijing.workassistant.util.ToastUtil;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 
-public class PipeInspectionUpdateByValveActivity extends BaseActivity implements View.OnClickListener {
+public class PipeInspectionUpdateByWaterWellActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText et_item1;
     private EditText et_item2;
@@ -32,14 +32,14 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
     private EditText et_item6;
     private TextView tv_item7;
     private Button btn_item7;
-    private Inspection valve;
-    private String areaName;
+    private Inspection waterWell;
+    private String areaNo;
     private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pipe_inspection_update_by_valve);
+        setContentView(R.layout.activity_pipe_inspection_update_by_water_well);
 
         initData();
         initViews();
@@ -48,8 +48,8 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
 
     private void initData() {
         Intent intent = getIntent();
-        valve = intent.getParcelableExtra("valve");
-        areaName = intent.getStringExtra("orderId").split("/")[1];
+        waterWell = intent.getParcelableExtra("waterWell");
+        areaNo = intent.getStringExtra("orderId").split("/")[0];
     }
 
     private void initViews() {
@@ -57,21 +57,21 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        et_item1 = (EditText) findViewById(R.id.pipe_inspection_update_by_valve_item1_et);
-        et_item1.setText(valve.getNo());
-        et_item2 = (EditText) findViewById(R.id.pipe_inspection_update_by_valve_item2_et);
-        et_item2.setText(valve.getName());
-        et_item3 = (EditText) findViewById(R.id.pipe_inspection_update_by_valve_item3_et);
-        et_item3.setText(areaName);
-        et_item4 = (EditText) findViewById(R.id.pipe_inspection_update_by_valve_item4_et);
-        et_item4.setText(valve.getValveNo());
-        et_item5 = (EditText) findViewById(R.id.pipe_inspection_update_by_valve_item5_et);
-        et_item5.setText(valve.getValveGNo());
-        et_item6 = (EditText) findViewById(R.id.pipe_inspection_update_by_valve_item6_et);
-        et_item6.setText(valve.getAddress());
-        tv_item7 = (TextView) findViewById(R.id.pipe_inspection_update_by_valve_item7_tv);
-        tv_item7.setText(valve.getLongitude() + "，" + valve.getLatitude());
-        btn_item7 = (Button) findViewById(R.id.pipe_inspection_update_by_valve_item7_btn);
+        et_item1 = (EditText) findViewById(R.id.pipe_inspection_update_by_water_well_item1_et);
+        et_item1.setText(waterWell.getNo());
+        et_item2 = (EditText) findViewById(R.id.pipe_inspection_update_by_water_well_item2_et);
+        et_item2.setText(waterWell.getName());
+        et_item3 = (EditText) findViewById(R.id.pipe_inspection_update_by_water_well_item3_et);
+        et_item3.setText(areaNo);
+        et_item4 = (EditText) findViewById(R.id.pipe_inspection_update_by_water_well_item4_et);
+        et_item4.setText(waterWell.getValveNo());
+        et_item5 = (EditText) findViewById(R.id.pipe_inspection_update_by_water_well_item5_et);
+        et_item5.setText(waterWell.getValveGNo());
+        et_item6 = (EditText) findViewById(R.id.pipe_inspection_update_by_water_well_item6_et);
+        et_item6.setText(waterWell.getAddress());
+        tv_item7 = (TextView) findViewById(R.id.pipe_inspection_update_by_water_well_item7_tv);
+        tv_item7.setText(waterWell.getLongitude() + "，" + waterWell.getLatitude());
+        btn_item7 = (Button) findViewById(R.id.pipe_inspection_update_by_water_well_item7_btn);
     }
 
     private void initListeners() {
@@ -81,10 +81,10 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.pipe_inspection_update_by_valve_item7_btn:
+            case R.id.pipe_inspection_update_by_water_well_item7_btn:
                 Intent intent = new Intent(this, MapPointActivity.class);
-                intent.putExtra("longitude", valve.getLongitude());
-                intent.putExtra("latitude", valve.getLatitude());
+                intent.putExtra("longitude", waterWell.getLongitude());
+                intent.putExtra("latitude", waterWell.getLatitude());
                 startActivityForResult(intent, 10);
                 break;
         }
@@ -127,14 +127,14 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
 
     private void upData() {
         RequestBody requestBody = new FormEncodingBuilder()
-                .add("cmd", "upvalveinf")
+                .add("cmd", "upslopinf")
                 .add("fileno", et_item1.getText().toString().trim())
                 .add("FileName", et_item2.getText().toString().trim())
-                .add("AreaName", et_item3.getText().toString().trim())
+                .add("AreaNo", et_item3.getText().toString().trim())
                 .add("ValveClass", et_item4.getText().toString().trim())
                 .add("WellClass", et_item5.getText().toString().trim())
-                .add("Address", et_item6.getText().toString().trim())
-                .add("ValveGps", tv_item7.getText().toString())
+                .add("SlopAddress", et_item6.getText().toString().trim())
+                .add("GpsNo", tv_item7.getText().toString())
                 .build();
 
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
@@ -145,9 +145,9 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
                     @Override
                     public void run() {
                         if (response.equals("ok")) {
-                            ToastUtil.showToast(PipeInspectionUpdateByValveActivity.this, "更新成功", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(PipeInspectionUpdateByWaterWellActivity.this, "更新成功", Toast.LENGTH_SHORT);
                         } else {
-                            ToastUtil.showToast(PipeInspectionUpdateByValveActivity.this, "更新失败", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(PipeInspectionUpdateByWaterWellActivity.this, "更新失败", Toast.LENGTH_SHORT);
                         }
                     }
                 });
@@ -159,7 +159,7 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(PipeInspectionUpdateByValveActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(PipeInspectionUpdateByWaterWellActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }

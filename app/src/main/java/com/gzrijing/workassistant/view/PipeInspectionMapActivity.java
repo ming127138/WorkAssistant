@@ -1,7 +1,9 @@
 package com.gzrijing.workassistant.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +56,7 @@ public class PipeInspectionMapActivity extends BaseActivity {
      * 定位的监听器
      */
     private MyLocationListener mMyLocationListener;
+    private int index = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +121,7 @@ public class PipeInspectionMapActivity extends BaseActivity {
                     @Override
                     public void onOrientationChanged(float x) {
                         mXDirection = (int) x;
-                        Log.e("x", x+"");
+                        Log.e("x", x + "");
                         // 构造定位数据
                         MyLocationData locData = new MyLocationData.Builder()
                                 .accuracy(mCurrentAccracy)
@@ -145,13 +148,13 @@ public class PipeInspectionMapActivity extends BaseActivity {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             // map view 销毁后不在处理新接收的位置
-            if (bdLocation == null || mMapView == null){
+            if (bdLocation == null || mMapView == null) {
                 return;
             }
 
-            Log.e("Latitude", bdLocation.getLatitude()+"");
-            Log.e("Longitude", bdLocation.getLongitude()+"");
-            Log.e("mXDirection", mXDirection+"");
+            Log.e("Latitude", bdLocation.getLatitude() + "");
+            Log.e("Longitude", bdLocation.getLongitude() + "");
+            Log.e("mXDirection", mXDirection + "");
             MyLocationData locData = new MyLocationData.Builder()
                     .accuracy(bdLocation.getRadius())
                     // 此处设置开发者获取到的方向信息，顺时针0-360
@@ -208,7 +211,6 @@ public class PipeInspectionMapActivity extends BaseActivity {
     }
 
     private void setListeners() {
-
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final com.baidu.mapapi.map.Marker markerInfo) {
@@ -246,7 +248,10 @@ public class PipeInspectionMapActivity extends BaseActivity {
                             @Override
                             public void onClick(View v) {
                                 if (marker.getType().equals("0")) {
-
+                                    Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionUpdateByFireHydrantActivity.class);
+                                    intent.putExtra("fireHydrant", marker);
+                                    intent.putExtra("orderId", orderId);
+                                    startActivity(intent);
                                 }
                                 if (marker.getType().equals("1")) {
                                     Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionUpdateByValveActivity.class);
@@ -255,7 +260,10 @@ public class PipeInspectionMapActivity extends BaseActivity {
                                     startActivity(intent);
                                 }
                                 if (marker.getType().equals("2")) {
-
+                                    Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionUpdateByWaterWellActivity.class);
+                                    intent.putExtra("waterWell", marker);
+                                    intent.putExtra("orderId", orderId);
+                                    startActivity(intent);
                                 }
                             }
                         });
@@ -318,8 +326,42 @@ public class PipeInspectionMapActivity extends BaseActivity {
                 Intent intent = new Intent(this, DownloadOfflineMapActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.pipe_inspection_add:
+                add();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void add() {
+        new AlertDialog.Builder(this).setTitle("选择类型").setSingleChoiceItems(
+                new String[]{"消防栓", "阀门", "污水井"}, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                            index = which;
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(index == 0){
+                            Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionAddByFireHydrantActivity.class);
+                            intent.putExtra("orderId", orderId);
+                            startActivity(intent);
+                        }
+                        if(index == 1){
+                            Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionAddByValveActivity.class);
+                            intent.putExtra("orderId", orderId);
+                            startActivity(intent);
+                        }
+                        if(index == 2){
+                            Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionAddByWaterWellActivity.class);
+                            intent.putExtra("orderId", orderId);
+                            startActivity(intent);
+                        }
+                    }
+                })
+                .setNegativeButton("取消", null).show();
     }
 
     @Override

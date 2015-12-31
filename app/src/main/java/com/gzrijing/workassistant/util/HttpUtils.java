@@ -1,14 +1,16 @@
 package com.gzrijing.workassistant.util;
 
-import android.util.Log;
-
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 public class HttpUtils {
@@ -70,4 +72,68 @@ public class HttpUtils {
             }
         }).start();
     }
+
+
+    public static void downloadFile(final String url, final String fileDir,
+                                    final HttpCallbackListener listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Request request = new Request.Builder().url(url).build();
+                mOkHttpClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        if (listener != null) {
+                            listener.onError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        if (response.code() == 200) {
+                            InputStream is = null;
+                            byte[] buf = new byte[2048];
+                            int len = 0;
+                            FileOutputStream fos = null;
+                            try {
+                                is = response.body().byteStream();
+                                File file = new File(fileDir, getFileName(url));
+                                fos = new FileOutputStream(file);
+                                while ((len = is.read(buf)) != -1) {
+                                    fos.write(buf, 0, len);
+                                }
+                                fos.flush();
+                                if (listener != null) {
+                                    listener.onFinish("ok");
+                                }
+                            } catch (IOException e) {
+                                if (listener != null) {
+                                    listener.onError(e);
+                                }
+                            } finally {
+                                try {
+                                    if (is != null) is.close();
+                                } catch (IOException e) {
+                                }
+                                try {
+                                    if (fos != null) fos.close();
+                                } catch (IOException e) {
+                                }
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinish(response.code() + "");
+                            }
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private static String getFileName(String path) {
+        int separatorIndex = path.lastIndexOf("/");
+        return (separatorIndex < 0) ? path : path.substring(separatorIndex + 1, path.length());
+    }
+
 }

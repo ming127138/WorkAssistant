@@ -10,6 +10,7 @@
     <dimen name="sw_40dp">64dp</dimen>
     <dimen name="sw_50dp">80dp</dimen>
     <dimen name="sw_60dp">96dp</dimen>
+    <dimen name="sw_80dp">128dp</dimen>
     <dimen name="sw_100dp">160dp</dimen>
     <dimen name="sw_120dp">192dp</dimen>
     <dimen name="sw_150dp">240dp</dimen>

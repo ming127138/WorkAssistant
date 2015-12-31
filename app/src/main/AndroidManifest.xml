@@ -264,8 +264,21 @@
             android:name=".view.PipeInspectionUpdateByValveActivity"
             android:label="更新信息"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.MapPointActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.PipeInspectionUpdateByFireHydrantActivity"
+            android:label="更新信息"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.PipeInspectionUpdateByWaterWellActivity"
+            android:label="更新信息"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.MapPointActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.PipeInspectionAddByValveActivity"
+            android:label="增加阀门"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -470,6 +483,8 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
+        <activity android:name=".view.PipeInspectionAddByFireHydrantActivity" />
+        <activity android:name=".view.PipeInspectionAddByWaterWellActivity"></activity>
     </application>
 
 </manifest>
