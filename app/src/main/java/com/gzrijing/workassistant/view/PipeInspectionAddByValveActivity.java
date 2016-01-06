@@ -26,6 +26,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.entity.Inspection;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
@@ -217,6 +218,16 @@ public class PipeInspectionAddByValveActivity extends BaseActivity implements Vi
                     public void run() {
                         if (response.equals("ok")) {
                             ToastUtil.showToast(PipeInspectionAddByValveActivity.this, "增加成功", Toast.LENGTH_SHORT);
+                            Inspection marker = new Inspection();
+                            marker.setNo(tv_item1.getText().toString());
+                            marker.setName(et_item2.getText().toString().trim());
+                            marker.setValveNo(et_item4.getText().toString().trim());
+                            marker.setValveGNo(et_item5.getText().toString().trim());
+                            marker.setAddress(et_item6.getText().toString().trim());
+                            marker.setLongitude(Double.valueOf(tv_item7.getText().toString().split("，")[0]));
+                            marker.setLatitude(Double.valueOf(tv_item7.getText().toString().split("，")[1]));
+                            Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.add");
+                            sendBroadcast(intent);
                         } else {
                             ToastUtil.showToast(PipeInspectionAddByValveActivity.this, "增加失败", Toast.LENGTH_SHORT);
                         }

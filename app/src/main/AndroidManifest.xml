@@ -279,6 +279,34 @@
             android:name=".view.PipeInspectionAddByValveActivity"
             android:label="增加阀门"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.PipeInspectionAddByFireHydrantActivity"
+            android:label="增加消防栓"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.PipeInspectionAddByWaterWellActivity"
+            android:label="增加污水井"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectTaskActivity"
+            android:label="安全检查"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectMapActivity"
+            android:label="工程地点"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectFormActivity"
+            android:label="检查项目"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectRecordActivity"
+            android:label="检查表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectUploadImageActivity"
+            android:label="上传图片"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -371,6 +399,9 @@
             android:exported="false" />
         <service
             android:name=".service.ListenerReportInfoCompleteService"
+            android:exported="false" />
+        <service
+            android:name=".service.UploadSafetyInspectImageService"
             android:exported="false" />
 
         <!-- app service -->
@@ -483,8 +514,6 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".view.PipeInspectionAddByFireHydrantActivity" />
-        <activity android:name=".view.PipeInspectionAddByWaterWellActivity"></activity>
     </application>
 
 </manifest>

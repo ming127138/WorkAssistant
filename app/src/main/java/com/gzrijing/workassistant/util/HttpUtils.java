@@ -1,5 +1,7 @@
 package com.gzrijing.workassistant.util;
 
+import android.util.Log;
+
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -61,6 +63,7 @@ public class HttpUtils {
                             .post(requestBody)
                             .build();
                     Response response = mOkHttpClient.newCall(request).execute();
+                    Log.e("response", response.toString());
                     if (listener != null) {
                         listener.onFinish(response.body().string());
                     }

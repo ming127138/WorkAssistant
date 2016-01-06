@@ -1,7 +1,10 @@
 package com.gzrijing.workassistant.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -91,6 +94,9 @@ public class PipeInspectionMapActivity extends BaseActivity {
         initMyLocation();
         initOritationListener();
         initMarker();
+
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.PipeInspectMap.add");
+        registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     /**
@@ -364,11 +370,23 @@ public class PipeInspectionMapActivity extends BaseActivity {
                 .setNegativeButton("取消", null).show();
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.PipeInspectMap.add")){
+
+            }
+        }
+    };
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
         mMapView.onDestroy();
+        unregisterReceiver(mBroadcastReceiver);
     }
 
     @Override
