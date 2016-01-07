@@ -24,7 +24,7 @@ import com.squareup.okhttp.RequestBody;
 
 public class PipeInspectionUpdateByWaterWellActivity extends BaseActivity implements View.OnClickListener {
 
-    private EditText et_item1;
+    private TextView tv_item1;
     private EditText et_item2;
     private EditText et_item3;
     private EditText et_item4;
@@ -35,6 +35,7 @@ public class PipeInspectionUpdateByWaterWellActivity extends BaseActivity implem
     private Inspection waterWell;
     private String areaNo;
     private Handler handler = new Handler();
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class PipeInspectionUpdateByWaterWellActivity extends BaseActivity implem
 
     private void initData() {
         Intent intent = getIntent();
+        position = intent.getIntExtra("position", -1);
         waterWell = intent.getParcelableExtra("waterWell");
         areaNo = intent.getStringExtra("orderId").split("/")[0];
     }
@@ -57,8 +59,8 @@ public class PipeInspectionUpdateByWaterWellActivity extends BaseActivity implem
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        et_item1 = (EditText) findViewById(R.id.pipe_inspection_update_by_water_well_item1_et);
-        et_item1.setText(waterWell.getNo());
+        tv_item1 = (TextView) findViewById(R.id.pipe_inspection_update_by_water_well_item1_tv);
+        tv_item1.setText(waterWell.getNo());
         et_item2 = (EditText) findViewById(R.id.pipe_inspection_update_by_water_well_item2_et);
         et_item2.setText(waterWell.getName());
         et_item3 = (EditText) findViewById(R.id.pipe_inspection_update_by_water_well_item3_et);
@@ -128,7 +130,7 @@ public class PipeInspectionUpdateByWaterWellActivity extends BaseActivity implem
     private void upData() {
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "upslopinf")
-                .add("fileno", et_item1.getText().toString().trim())
+                .add("fileno", tv_item1.getText().toString().trim())
                 .add("FileName", et_item2.getText().toString().trim())
                 .add("AreaNo", et_item3.getText().toString().trim())
                 .add("ValveClass", et_item4.getText().toString().trim())
@@ -145,7 +147,21 @@ public class PipeInspectionUpdateByWaterWellActivity extends BaseActivity implem
                     @Override
                     public void run() {
                         if (response.equals("ok")) {
+                            Inspection marker = new Inspection();
+                            marker.setNo(tv_item1.getText().toString());
+                            marker.setName(et_item2.getText().toString().trim());
+                            marker.setValveNo(et_item4.getText().toString().trim());
+                            marker.setValveGNo(et_item5.getText().toString().trim());
+                            marker.setAddress(et_item6.getText().toString().trim());
+                            marker.setLongitude(Double.valueOf(tv_item7.getText().toString().split("，")[0]));
+                            marker.setLatitude(Double.valueOf(tv_item7.getText().toString().split("，")[1]));
+                            marker.setType("2");
+                            Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.update");
+                            intent.putExtra("position", position);
+                            intent.putExtra("marker", marker);
+                            sendBroadcast(intent);
                             ToastUtil.showToast(PipeInspectionUpdateByWaterWellActivity.this, "更新成功", Toast.LENGTH_SHORT);
+                            finish();
                         } else {
                             ToastUtil.showToast(PipeInspectionUpdateByWaterWellActivity.this, "更新失败", Toast.LENGTH_SHORT);
                         }

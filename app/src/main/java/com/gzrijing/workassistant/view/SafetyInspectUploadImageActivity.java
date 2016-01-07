@@ -1,6 +1,10 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,13 +16,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportProgressGriViewAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.PicUrl;
+import com.gzrijing.workassistant.service.UploadSafetyInspectImageService;
 import com.gzrijing.workassistant.util.ImageCompressUtil;
 import com.gzrijing.workassistant.util.ImageUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +38,8 @@ public class SafetyInspectUploadImageActivity extends BaseActivity {
     private String userNo;
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
     private ReportProgressGriViewAdapter adapter;
+    private ProgressDialog pDialog;
+    private int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,9 @@ public class SafetyInspectUploadImageActivity extends BaseActivity {
 
         PicUrl picUrl = new PicUrl();
         picUrls.add(picUrl);
+
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.SafeInspectUploadImage");
+        registerReceiver(mBroadcastReceiver, intentFilter);
 
     }
 
@@ -142,7 +154,11 @@ public class SafetyInspectUploadImageActivity extends BaseActivity {
         }
 
         if (id == R.id.action_upload) {
-            upload();
+            if (picUrls.size() > 1) {
+                upload();
+            } else {
+                ToastUtil.showToast(SafetyInspectUploadImageActivity.this, "请添加图片后上传", Toast.LENGTH_SHORT);
+            }
             return true;
         }
 
@@ -150,6 +166,41 @@ public class SafetyInspectUploadImageActivity extends BaseActivity {
     }
 
     private void upload() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在上传图片");
+        pDialog.show();
+        count = 0;
+        Intent intent = new Intent(SafetyInspectUploadImageActivity.this, UploadSafetyInspectImageService.class);
+        intent.putExtra("orderId", orderId);
+        intent.putExtra("userNo", userNo);
+        intent.putParcelableArrayListExtra("picUrls", picUrls);
+        startService(intent);
+    }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals("action.com.gzrijing.workassistant.SafeInspectUploadImage")) {
+                String result = intent.getStringExtra("result");
+                if (result.equals("上传图片成功")) {
+                    count++;
+                    if (count == picUrls.size() - 1) {
+                        pDialog.cancel();
+                        ToastUtil.showToast(SafetyInspectUploadImageActivity.this, result, Toast.LENGTH_SHORT);
+                    }
+                } else {
+                    pDialog.cancel();
+                    ToastUtil.showToast(SafetyInspectUploadImageActivity.this, result, Toast.LENGTH_SHORT);
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mBroadcastReceiver);
     }
 }

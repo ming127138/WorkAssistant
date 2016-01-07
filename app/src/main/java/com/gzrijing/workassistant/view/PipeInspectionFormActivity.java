@@ -1,6 +1,10 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -16,6 +20,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportProgressGriViewAdapter;
@@ -24,6 +29,7 @@ import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.service.PipeInspectionFormService;
 import com.gzrijing.workassistant.util.ImageCompressUtil;
 import com.gzrijing.workassistant.util.ImageUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +72,9 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
     private String userNo;
     private LinearLayout ll_item5;
+    private ProgressDialog pDialog;
+    private int position;
+    private int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +94,7 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
         type = intent.getStringExtra("type");
+        position = intent.getIntExtra("position", -1);
 
         if (type.equals("0")) {
             String[] data = {"开关", "出水口", "外观", "出水压力", "阀门性能"};
@@ -113,6 +123,10 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
         PicUrl picUrl = new PicUrl();
         picUrls.add(picUrl);
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectionForm.uploadImage");
+        intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectionForm.uploadData");
+        registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     private void initViews() {
@@ -253,40 +267,28 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
                 break;
 
             case R.id.pipe_inspection_form_submit_btn:
-                submit();
+                if(picUrls.size()>1){
+                    submitImage();
+                }else{
+                    ToastUtil.showToast(PipeInspectionFormActivity.this, "请添加附件再提交", Toast.LENGTH_SHORT);
+                }
                 break;
         }
     }
 
-    private void submit() {
+    private void submitImage() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在提交");
+        pDialog.show();
+        count = 0;
+
         Intent intent = new Intent(this, PipeInspectionFormService.class);
         intent.putExtra("type", type);
         intent.putExtra("userNo", userNo);
         intent.putExtra("id", id);
+        intent.putExtra("flag", "0");
         intent.putParcelableArrayListExtra("picUrls", picUrls);
-
-        JSONArray jsonArray = new JSONArray();
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Item1", checkList.get(0));
-            jsonObject.put("Item2", checkList.get(1));
-            jsonObject.put("Item3", checkList.get(2));
-            jsonObject.put("Item4", checkList.get(3));
-            jsonObject.put("ItemR1", et_remark1.getText().toString().trim());
-            jsonObject.put("ItemR2", et_remark2.getText().toString().trim());
-            jsonObject.put("ItemR3", et_remark3.getText().toString().trim());
-            jsonObject.put("ItemR4", et_remark4.getText().toString().trim());
-            if(type.equals("0")){
-                jsonObject.put("Item5", checkList.get(4));
-                jsonObject.put("ItemR5", et_remark5.getText().toString().trim());
-            }
-            jsonObject.put("Remark", et_problem.getText().toString().trim());
-            jsonArray.put(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        intent.putExtra("jsonData", jsonArray.toString());
         startService(intent);
     }
 
@@ -351,5 +353,75 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.PipeInspectionForm.uploadImage")){
+                String result = intent.getStringExtra("result");
+                if(result.equals("提交成功")){
+                    count++;
+                    if(count == picUrls.size()-1){
+                        submitData();
+                    }
+                }else{
+                    pDialog.cancel();
+                    ToastUtil.showToast(PipeInspectionFormActivity.this, result, Toast.LENGTH_SHORT);
+                }
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.PipeInspectionForm.uploadData")){
+                String result = intent.getStringExtra("result");
+                if(result.equals("提交成功")){
+                    ToastUtil.showToast(PipeInspectionFormActivity.this, result, Toast.LENGTH_SHORT);
+                    Intent intent1 = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.inspection");
+                    intent1.putExtra("position", position);
+                    sendBroadcast(intent1);
+                    finish();
+                }else{
+                    ToastUtil.showToast(PipeInspectionFormActivity.this, result, Toast.LENGTH_SHORT);
+                }
+                pDialog.cancel();
+            }
+        }
+    };
+
+    private void submitData() {
+        Intent intent = new Intent(this, PipeInspectionFormService.class);
+        intent.putExtra("type", type);
+        intent.putExtra("id", id);
+        intent.putExtra("flag", "1");
+
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Item1", checkList.get(0));
+            jsonObject.put("Item2", checkList.get(1));
+            jsonObject.put("Item3", checkList.get(2));
+            jsonObject.put("Item4", checkList.get(3));
+            jsonObject.put("ItemR1", et_remark1.getText().toString().trim());
+            jsonObject.put("ItemR2", et_remark2.getText().toString().trim());
+            jsonObject.put("ItemR3", et_remark3.getText().toString().trim());
+            jsonObject.put("ItemR4", et_remark4.getText().toString().trim());
+            if(type.equals("0")){
+                jsonObject.put("Item5", checkList.get(4));
+                jsonObject.put("ItemR5", et_remark5.getText().toString().trim());
+            }
+            jsonObject.put("Remark", et_problem.getText().toString().trim());
+            jsonArray.put(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        intent.putExtra("jsonData", jsonArray.toString());
+        startService(intent);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mBroadcastReceiver);
     }
 }

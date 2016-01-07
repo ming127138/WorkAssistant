@@ -65,6 +65,24 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
         userNo = app.getString("userNo", "");
 
         orderListByWorker.clear();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment");
+        intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment.Inspection");
+        intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.add");
+        intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.update");
+        intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.inspection");
+        getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
+
+        getWorkerOreder();
+
+        getInspectionOrder();
+
+        getSewageWellsOrder();
+
+    }
+
+    private void getWorkerOreder(){
         List<BusinessData> list = DataSupport.where("user = ?", userNo).find(BusinessData.class);
         for (BusinessData data : list) {
             BusinessByWorker order = new BusinessByWorker();
@@ -76,18 +94,9 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
             order.setFlag(data.getFlag());
             orderListByWorker.add(order);
         }
-
-        getInspectionOrder();
-
-        getSewageWellsOrder();
-
     }
 
     private void getInspectionOrder() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment");
-        intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment.Inspection");
-        getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
         Intent serviceIntent = new Intent(getActivity(), GetInspectionService.class);
         serviceIntent.putExtra("userNo", userNo);
         getActivity().startService(serviceIntent);
@@ -187,6 +196,15 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                 orderList.addAll(list);
                 orderListByWorker.addAll(list);
                 adapter.notifyDataSetChanged();
+            }
+            if(action.equals("action.com.gzrijing.workassistant.PipeInspectMap.add")
+                    || action.equals("action.com.gzrijing.workassistant.PipeInspectMap.update")
+                    || action.equals("action.com.gzrijing.workassistant.PipeInspectMap.inspection")){
+                orderListByWorker.clear();
+                orderList.clear();
+                getWorkerOreder();
+                getInspectionOrder();
+                getSewageWellsOrder();
             }
 
         }

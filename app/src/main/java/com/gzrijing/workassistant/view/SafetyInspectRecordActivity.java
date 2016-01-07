@@ -174,7 +174,7 @@ public class SafetyInspectRecordActivity extends BaseActivity {
 
     private void mShowDialog() {
         new AlertDialog.Builder(this).setTitle("是否处理完？").setSingleChoiceItems(
-                new String[]{"否", "是"}, -1, new DialogInterface.OnClickListener() {
+                new String[]{"否", "是"}, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         index = which;

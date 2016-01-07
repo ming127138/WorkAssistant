@@ -26,7 +26,7 @@ public class PipeInspectionUpdateByFireHydrantActivity extends BaseActivity impl
 
     private Inspection fireHydrant;
     private String areaName;
-    private EditText et_item1;
+    private TextView tv_item1;
     private EditText et_item2;
     private EditText et_item3;
     private EditText et_item4;
@@ -36,6 +36,7 @@ public class PipeInspectionUpdateByFireHydrantActivity extends BaseActivity impl
     private TextView tv_item8;
     private Button btn_item8;
     private Handler handler = new Handler();
+    private int position;
 
 
     @Override
@@ -50,6 +51,7 @@ public class PipeInspectionUpdateByFireHydrantActivity extends BaseActivity impl
 
     private void initData() {
         Intent intent = getIntent();
+        position = intent.getIntExtra("position", -1);
         fireHydrant = intent.getParcelableExtra("fireHydrant");
         areaName = intent.getStringExtra("orderId").split("/")[1];
     }
@@ -59,8 +61,8 @@ public class PipeInspectionUpdateByFireHydrantActivity extends BaseActivity impl
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        et_item1 = (EditText) findViewById(R.id.pipe_inspection_update_by_fire_hydrant_item1_et);
-        et_item1.setText(fireHydrant.getNo());
+        tv_item1 = (TextView) findViewById(R.id.pipe_inspection_update_by_fire_hydrant_item1_tv);
+        tv_item1.setText(fireHydrant.getNo());
         et_item2 = (EditText) findViewById(R.id.pipe_inspection_update_by_fire_hydrant_item2_et);
         et_item2.setText(fireHydrant.getName());
         et_item3 = (EditText) findViewById(R.id.pipe_inspection_update_by_fire_hydrant_item3_et);
@@ -131,7 +133,7 @@ public class PipeInspectionUpdateByFireHydrantActivity extends BaseActivity impl
     private void upData() {
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "upfireinf")
-                .add("fileno", et_item1.getText().toString().trim())
+                .add("fileno", tv_item1.getText().toString().trim())
                 .add("FileName", et_item2.getText().toString().trim())
                 .add("AreaName", et_item3.getText().toString().trim())
                 .add("ValveClass", et_item4.getText().toString().trim())
@@ -149,7 +151,22 @@ public class PipeInspectionUpdateByFireHydrantActivity extends BaseActivity impl
                     @Override
                     public void run() {
                         if (response.equals("ok")) {
+                            Inspection marker = new Inspection();
+                            marker.setNo(tv_item1.getText().toString());
+                            marker.setName(et_item2.getText().toString().trim());
+                            marker.setValveNo(et_item4.getText().toString().trim());
+                            marker.setValveGNo(et_item5.getText().toString().trim());
+                            marker.setAddress(et_item6.getText().toString().trim());
+                            marker.setModel(et_item7.getText().toString().trim());
+                            marker.setLongitude(Double.valueOf(tv_item8.getText().toString().split("，")[0]));
+                            marker.setLatitude(Double.valueOf(tv_item8.getText().toString().split("，")[1]));
+                            marker.setType("0");
+                            Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.update");
+                            intent.putExtra("position", position);
+                            intent.putExtra("marker", marker);
+                            sendBroadcast(intent);
                             ToastUtil.showToast(PipeInspectionUpdateByFireHydrantActivity.this, "更新成功", Toast.LENGTH_SHORT);
+                            finish();
                         } else {
                             ToastUtil.showToast(PipeInspectionUpdateByFireHydrantActivity.this, "更新失败", Toast.LENGTH_SHORT);
                         }

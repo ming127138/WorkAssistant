@@ -22,11 +22,10 @@
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp"/>
 
-        <EditText
-            android:id="@+id/pipe_inspection_update_by_water_well_item1_et"
+        <TextView
+            android:id="@+id/pipe_inspection_update_by_water_well_item1_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_text"
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp"
             android:layout_gravity="center_vertical"/>

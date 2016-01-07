@@ -217,17 +217,21 @@ public class PipeInspectionAddByValveActivity extends BaseActivity implements Vi
                     @Override
                     public void run() {
                         if (response.equals("ok")) {
-                            ToastUtil.showToast(PipeInspectionAddByValveActivity.this, "增加成功", Toast.LENGTH_SHORT);
                             Inspection marker = new Inspection();
                             marker.setNo(tv_item1.getText().toString());
                             marker.setName(et_item2.getText().toString().trim());
                             marker.setValveNo(et_item4.getText().toString().trim());
+                            marker.setModel(et_item4.getText().toString().trim());
                             marker.setValveGNo(et_item5.getText().toString().trim());
                             marker.setAddress(et_item6.getText().toString().trim());
                             marker.setLongitude(Double.valueOf(tv_item7.getText().toString().split("，")[0]));
                             marker.setLatitude(Double.valueOf(tv_item7.getText().toString().split("，")[1]));
+                            marker.setType("1");
                             Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.add");
+                            intent.putExtra("marker", marker);
                             sendBroadcast(intent);
+                            ToastUtil.showToast(PipeInspectionAddByValveActivity.this, "增加成功", Toast.LENGTH_SHORT);
+                            finish();
                         } else {
                             ToastUtil.showToast(PipeInspectionAddByValveActivity.this, "增加失败", Toast.LENGTH_SHORT);
                         }

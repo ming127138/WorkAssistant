@@ -24,7 +24,7 @@ import com.squareup.okhttp.RequestBody;
 
 public class PipeInspectionUpdateByValveActivity extends BaseActivity implements View.OnClickListener {
 
-    private EditText et_item1;
+    private TextView tv_item1;
     private EditText et_item2;
     private EditText et_item3;
     private EditText et_item4;
@@ -35,6 +35,7 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
     private Inspection valve;
     private String areaName;
     private Handler handler = new Handler();
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
 
     private void initData() {
         Intent intent = getIntent();
+        position = intent.getIntExtra("position", -1);
         valve = intent.getParcelableExtra("valve");
         areaName = intent.getStringExtra("orderId").split("/")[1];
     }
@@ -57,8 +59,8 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        et_item1 = (EditText) findViewById(R.id.pipe_inspection_update_by_valve_item1_et);
-        et_item1.setText(valve.getNo());
+        tv_item1 = (TextView) findViewById(R.id.pipe_inspection_update_by_valve_item1_tv);
+        tv_item1.setText(valve.getNo());
         et_item2 = (EditText) findViewById(R.id.pipe_inspection_update_by_valve_item2_et);
         et_item2.setText(valve.getName());
         et_item3 = (EditText) findViewById(R.id.pipe_inspection_update_by_valve_item3_et);
@@ -128,7 +130,7 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
     private void upData() {
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "upvalveinf")
-                .add("fileno", et_item1.getText().toString().trim())
+                .add("fileno", tv_item1.getText().toString().trim())
                 .add("FileName", et_item2.getText().toString().trim())
                 .add("AreaName", et_item3.getText().toString().trim())
                 .add("ValveClass", et_item4.getText().toString().trim())
@@ -145,7 +147,22 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
                     @Override
                     public void run() {
                         if (response.equals("ok")) {
+                            Inspection marker = new Inspection();
+                            marker.setNo(tv_item1.getText().toString());
+                            marker.setName(et_item2.getText().toString().trim());
+                            marker.setValveNo(et_item4.getText().toString().trim());
+                            marker.setModel(et_item4.getText().toString().trim());
+                            marker.setValveGNo(et_item5.getText().toString().trim());
+                            marker.setAddress(et_item6.getText().toString().trim());
+                            marker.setLongitude(Double.valueOf(tv_item7.getText().toString().split("，")[0]));
+                            marker.setLatitude(Double.valueOf(tv_item7.getText().toString().split("，")[1]));
+                            marker.setType("1");
+                            Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.update");
+                            intent.putExtra("marker", marker);
+                            intent.putExtra("position", position);
+                            sendBroadcast(intent);
                             ToastUtil.showToast(PipeInspectionUpdateByValveActivity.this, "更新成功", Toast.LENGTH_SHORT);
+                            finish();
                         } else {
                             ToastUtil.showToast(PipeInspectionUpdateByValveActivity.this, "更新失败", Toast.LENGTH_SHORT);
                         }

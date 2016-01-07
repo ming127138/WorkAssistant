@@ -37,6 +37,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Inspection;
+import com.gzrijing.workassistant.entity.Marker;
 import com.gzrijing.workassistant.listener.MyOrientationListener;
 
 import java.util.ArrayList;
@@ -95,7 +96,10 @@ public class PipeInspectionMapActivity extends BaseActivity {
         initOritationListener();
         initMarker();
 
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.PipeInspectMap.add");
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.add");
+        intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.update");
+        intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.inspection");
         registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
@@ -193,27 +197,30 @@ public class PipeInspectionMapActivity extends BaseActivity {
      */
     private void initMarker() {
         for (Inspection marker : markers) {
-            LatLng point = new LatLng(marker.getLatitude(), marker.getLongitude());
-            BitmapDescriptor bitmap = null;
-            if (marker.getType().equals("0")) {
-                // 构建Marker图标
-                bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.map_flag_green);
-            }
-            if (marker.getType().equals("1")) {
-                bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.map_flag_blue);
-            }
-            if (marker.getType().equals("2")) {
-                bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.map_flag_black);
-            }
-            // 构建MarkerOption，用于在地图上添加Marker
-            OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
-            // 在地图上添加Marker，并显示
-            mBaiduMap.addOverlay(option);
-
+            addMarker(marker);
         }
+    }
+
+    private void addMarker(Inspection marker) {
+        LatLng point = new LatLng(marker.getLatitude(), marker.getLongitude());
+        BitmapDescriptor bitmap = null;
+        if (marker.getType().equals("0")) {
+            // 构建Marker图标
+            bitmap = BitmapDescriptorFactory
+                    .fromResource(R.drawable.map_flag_green);
+        }
+        if (marker.getType().equals("1")) {
+            bitmap = BitmapDescriptorFactory
+                    .fromResource(R.drawable.map_flag_blue);
+        }
+        if (marker.getType().equals("2")) {
+            bitmap = BitmapDescriptorFactory
+                    .fromResource(R.drawable.map_flag_black);
+        }
+        // 构建MarkerOption，用于在地图上添加Marker
+        OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
+        // 在地图上添加Marker，并显示
+        mBaiduMap.addOverlay(option);
     }
 
     private void setListeners() {
@@ -231,21 +238,27 @@ public class PipeInspectionMapActivity extends BaseActivity {
                 Button btn_inspection = (Button) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_inspection_btn);
                 Button btn_update = (Button) view.findViewById(R.id.listview_item_pipe_inspection_map_marker_update_btn);
                 LatLng point = markerInfo.getPosition();
-                for (final Inspection marker : markers) {
+                for (int i = 0; i < markers.size(); i++) {
+                    final Inspection marker = markers.get(i);
                     if (point.latitude == marker.getLatitude()
                             && point.longitude == marker.getLongitude()) {
                         tv_id.setText(marker.getNo());
                         tv_name.setText(marker.getName());
-                        tv_model.setText(marker.getModel());
-                        tv_valveNo.setText(marker.getModel());
+                        if (!marker.getType().equals("2")) {
+                            tv_model.setText(marker.getModel());
+                        }
+                        tv_valveNo.setText(marker.getValveNo());
                         tv_valveGNo.setText(marker.getValveGNo());
                         tv_address.setText(marker.getAddress());
+                        final int position = i;
+
                         btn_inspection.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionFormActivity.class);
                                 intent.putExtra("id", marker.getNo());
                                 intent.putExtra("type", marker.getType());
+                                intent.putExtra("position", position);
                                 startActivity(intent);
                             }
                         });
@@ -255,18 +268,21 @@ public class PipeInspectionMapActivity extends BaseActivity {
                             public void onClick(View v) {
                                 if (marker.getType().equals("0")) {
                                     Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionUpdateByFireHydrantActivity.class);
+                                    intent.putExtra("position", position);
                                     intent.putExtra("fireHydrant", marker);
                                     intent.putExtra("orderId", orderId);
                                     startActivity(intent);
                                 }
                                 if (marker.getType().equals("1")) {
                                     Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionUpdateByValveActivity.class);
+                                    intent.putExtra("position", position);
                                     intent.putExtra("valve", marker);
                                     intent.putExtra("orderId", orderId);
                                     startActivity(intent);
                                 }
                                 if (marker.getType().equals("2")) {
                                     Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionUpdateByWaterWellActivity.class);
+                                    intent.putExtra("position", position);
                                     intent.putExtra("waterWell", marker);
                                     intent.putExtra("orderId", orderId);
                                     startActivity(intent);
@@ -344,23 +360,23 @@ public class PipeInspectionMapActivity extends BaseActivity {
                 new String[]{"消防栓", "阀门", "污水井"}, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                            index = which;
+                        index = which;
                     }
                 })
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(index == 0){
+                        if (index == 0) {
                             Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionAddByFireHydrantActivity.class);
                             intent.putExtra("orderId", orderId);
                             startActivity(intent);
                         }
-                        if(index == 1){
+                        if (index == 1) {
                             Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionAddByValveActivity.class);
                             intent.putExtra("orderId", orderId);
                             startActivity(intent);
                         }
-                        if(index == 2){
+                        if (index == 2) {
                             Intent intent = new Intent(PipeInspectionMapActivity.this, PipeInspectionAddByWaterWellActivity.class);
                             intent.putExtra("orderId", orderId);
                             startActivity(intent);
@@ -374,8 +390,25 @@ public class PipeInspectionMapActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals("action.com.gzrijing.workassistant.PipeInspectMap.add")){
+            if (action.equals("action.com.gzrijing.workassistant.PipeInspectMap.add")) {
+                Inspection marker = intent.getParcelableExtra("marker");
+                markers.add(marker);
+                addMarker(marker);
+            }
+            if (action.equals("action.com.gzrijing.workassistant.PipeInspectMap.update")) {
+                Inspection marker = intent.getParcelableExtra("marker");
+                int position = intent.getIntExtra("position", -1);
+                markers.remove(position);
+                markers.add(marker);
+                mBaiduMap.clear();
+                initMarker();
+            }
 
+            if(action.equals("action.com.gzrijing.workassistant.PipeInspectMap.inspection")){
+                int position = intent.getIntExtra("position", -1);
+                markers.remove(position);
+                mBaiduMap.clear();
+                initMarker();
             }
         }
     };
