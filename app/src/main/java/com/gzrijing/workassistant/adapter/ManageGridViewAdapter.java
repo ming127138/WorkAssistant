@@ -12,11 +12,8 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.view.EntrustActivity;
-import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
+import com.gzrijing.workassistant.view.LeaderMachineApplyBillListActivity;
 import com.gzrijing.workassistant.view.TrajectoryQueryActivity;
-
-import java.util.Calendar;
-import java.util.List;
 
 public class ManageGridViewAdapter extends BaseAdapter {
     private Context context;
@@ -73,6 +70,11 @@ public class ManageGridViewAdapter extends BaseAdapter {
 
                 if(position == 1){
                     Intent intent = new Intent(context, EntrustActivity.class);
+                    context.startActivity(intent);
+                }
+
+                if(position == 2){
+                    Intent intent = new Intent(context, LeaderMachineApplyBillListActivity.class);
                     context.startActivity(intent);
                 }
             }

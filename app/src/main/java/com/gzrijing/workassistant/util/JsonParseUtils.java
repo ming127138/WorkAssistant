@@ -6,6 +6,8 @@ import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.BusinessHaveSend;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.Inspection;
+import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
+import com.gzrijing.workassistant.entity.LeaderMachineApplyBillByMachine;
 import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.MachineNo;
 import com.gzrijing.workassistant.entity.MachineVerify;
@@ -1124,6 +1126,66 @@ public class JsonParseUtils {
                 form.setFailure(failureList);
                 form.setPicUrls(picUrls);
                 list.add(form);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取申请单列表（机械组长界面）
+     * @param jsonData
+     * @return
+     */
+    public static  ArrayList<LeaderMachineApplyBill> getLeaderMachineApplyBill(String jsonData){
+        ArrayList<LeaderMachineApplyBill> list = new ArrayList<LeaderMachineApplyBill>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String billNo = jsonObject.getString("BillNo");
+                String billType = jsonObject.getString("BillType");
+                String orderId = jsonObject.getString("FileNo");
+                String useAddress = jsonObject.getString("ProAddress");
+                String useDate = jsonObject.getString("BeginDate");
+                String finishDate = jsonObject.getString("EstimateFinishDate");
+                String applyName = jsonObject.getString("SaveName");
+                String applyDate = jsonObject.getString("SaveDate");
+                String remark = jsonObject.getString("Remark");
+
+                String machineNeedDetail = jsonObject.getString("MachineNeedDetail");
+                ArrayList<LeaderMachineApplyBillByMachine> machineList = new ArrayList<LeaderMachineApplyBillByMachine>();
+                if(!machineNeedDetail.equals("")){
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("MachineNeedDetail");
+                    for(int j = 0; j < jsonArray1.length(); j++){
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String name = jsonObject1.getString("MachineName");
+                        String unit = jsonObject1.getString("MachineUnit");
+                        String applyNum = jsonObject1.getString("Qty");
+                        String sendNum = jsonObject1.getString("SendQty");
+
+                        LeaderMachineApplyBillByMachine machine = new LeaderMachineApplyBillByMachine();
+                        machine.setName(name);
+                        machine.setUnit(unit);
+                        machine.setApplyNum(applyNum);
+                        machine.setSendNum(sendNum);
+                        machineList.add(machine);
+                    }
+                }
+
+                LeaderMachineApplyBill bill = new LeaderMachineApplyBill();
+                bill.setBillNo(billNo);
+                bill.setBillType(billType);
+                bill.setOrderId(orderId);
+                bill.setUseAddress(useAddress);
+                bill.setUseDate(useDate);
+                bill.setFinishDate(finishDate);
+                bill.setApplyName(applyName);
+                bill.setApplyDate(applyDate);
+                bill.setRemark(remark);
+                bill.setMachineList(machineList);
+                list.add(bill);
             }
         } catch (JSONException e) {
             e.printStackTrace();

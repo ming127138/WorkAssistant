@@ -88,6 +88,7 @@ public class SafetyInspectRecordActivity extends BaseActivity {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
+                Log.e("response", response);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -224,6 +225,7 @@ public class SafetyInspectRecordActivity extends BaseActivity {
                     public void run() {
                         if(response.equals("ok")){
                             ToastUtil.showToast(SafetyInspectRecordActivity.this, "提交成功", Toast.LENGTH_SHORT);
+                            finish();
                         }else{
                             ToastUtil.showToast(SafetyInspectRecordActivity.this, "提交失败", Toast.LENGTH_SHORT);
                         }

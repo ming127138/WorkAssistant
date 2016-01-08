@@ -15,6 +15,7 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SafetyInspectFormExpandableAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.SafetyInspectFirstItem;
+import com.gzrijing.workassistant.entity.SafetyInspectForm;
 import com.gzrijing.workassistant.entity.SafetyInspectSecondItem;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
@@ -156,6 +157,9 @@ public class SafetyInspectFormActivity extends BaseActivity {
                     public void run() {
                         if(response.equals("ok")){
                             ToastUtil.showToast(SafetyInspectFormActivity.this, "提交成功", Toast.LENGTH_SHORT);
+                            Intent intent = new Intent(SafetyInspectFormActivity.this, SafetyInspectRecordActivity.class);
+                            startActivity(intent);
+                            finish();
                         }else{
                             ToastUtil.showToast(SafetyInspectFormActivity.this, "提交失败", Toast.LENGTH_SHORT);
                         }

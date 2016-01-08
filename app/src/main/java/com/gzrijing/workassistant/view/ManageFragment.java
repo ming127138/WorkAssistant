@@ -20,7 +20,6 @@ public class ManageFragment extends Fragment {
     private String[] texts;
 
     public ManageFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -39,8 +38,8 @@ public class ManageFragment extends Fragment {
     }
 
     private void initData() {
-        iconIds = new int[]{R.drawable.icon_trajectory_query, R.drawable.icon_entrust};
-        texts = new String[]{"轨迹查询", "委托功能"};
+        iconIds = new int[]{R.drawable.icon_trajectory_query, R.drawable.icon_entrust, R.drawable.icon_entrust, R.drawable.icon_entrust};
+        texts = new String[]{"轨迹查询", "委托功能", "机械申请单", "机械退机单"};
     }
 
     private void initViews() {

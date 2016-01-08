@@ -1,9 +1,11 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -12,9 +14,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.SafetyInspectTaskAdapter;
+import com.gzrijing.workassistant.adapter.LeaderMachineApplyBillListAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.SafetyInspectTask;
+import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
@@ -24,20 +26,21 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SafetyInspectTaskActivity extends BaseActivity implements View.OnClickListener {
+public class LeaderMachineApplyBillListActivity extends BaseActivity implements View.OnClickListener {
 
-    private ListView lv_tasks;
-    private ArrayList<SafetyInspectTask> taskList = new ArrayList<SafetyInspectTask>();
-    private SafetyInspectTaskAdapter adapter;
+    private String userNo;
     private EditText et_id;
     private Button btn_query;
+    private ListView lv_bill;
+    private ArrayList<LeaderMachineApplyBill> billList = new ArrayList<LeaderMachineApplyBill>();
+    private LeaderMachineApplyBillListAdapter adapter;
     private ProgressDialog pDialog;
     private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_safety_inspect_task);
+        setContentView(R.layout.activity_leader_machine_apply_bill_list);
 
         initData();
         initViews();
@@ -45,6 +48,9 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
     }
 
     private void initData() {
+        SharedPreferences app = getSharedPreferences(
+                "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
 
     }
 
@@ -53,12 +59,13 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        et_id = (EditText) findViewById(R.id.safety_inspect_task_id_et);
-        btn_query = (Button) findViewById(R.id.safety_inspect_task_query_btn);
+        et_id = (EditText) findViewById(R.id.leader_machine_apply_bill_list_id_et);
+        btn_query = (Button) findViewById(R.id.leader_machine_apply_bill_list_query_btn);
 
-        lv_tasks = (ListView) findViewById(R.id.safety_inspect_task_lv);
-        adapter = new SafetyInspectTaskAdapter(this, taskList);
-        lv_tasks.setAdapter(adapter);
+        lv_bill = (ListView) findViewById(R.id.leader_machine_apply_bill_list_lv);
+        adapter = new LeaderMachineApplyBillListAdapter(LeaderMachineApplyBillListActivity.this, billList);
+        lv_bill.setAdapter(adapter);
+
     }
 
     private void setListeners() {
@@ -68,13 +75,13 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.safety_inspect_task_query_btn:
-                queryTasks();
+            case R.id.leader_machine_apply_bill_list_query_btn:
+                getApplyBill();
                 break;
         }
     }
 
-    private void queryTasks() {
+    private void getApplyBill() {
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setMessage("正在加载数据");
@@ -82,16 +89,19 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
         String id = et_id.getText().toString().trim();
         String url = null;
         try {
-            url = "?cmd=LoadTaskInf&fileid=" + URLEncoder.encode(id, "UTF-8");
+            url = "?cmd=getmachineneedandbacklist&userno=" + URLEncoder.encode(userNo, "UTF-8")
+                    + "&savedate=&billno=" + URLEncoder.encode(id, "UTF-8")
+                    + "&fileno=&billtype=" + URLEncoder.encode("申请", "UTF-8") + "&isallappoint=";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                ArrayList<SafetyInspectTask> list = JsonParseUtils.getSafetyInspectTask(response);
-                taskList.clear();
-                taskList.addAll(list);
+                Log.e("response", response);
+                ArrayList<LeaderMachineApplyBill> list = JsonParseUtils.getLeaderMachineApplyBill(response);
+                billList.clear();
+                billList.addAll(list);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -106,7 +116,8 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(SafetyInspectTaskActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(LeaderMachineApplyBillListActivity.this,
+                                "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
                 pDialog.cancel();
