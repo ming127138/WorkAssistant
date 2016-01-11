@@ -8,6 +8,9 @@ import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.Inspection;
 import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
 import com.gzrijing.workassistant.entity.LeaderMachineApplyBillByMachine;
+import com.gzrijing.workassistant.entity.LeaderMachineReturnBill;
+import com.gzrijing.workassistant.entity.LeaderMachineReturnBillByMachine;
+import com.gzrijing.workassistant.entity.LeaderMachineState;
 import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.MachineNo;
 import com.gzrijing.workassistant.entity.MachineVerify;
@@ -1020,8 +1023,12 @@ public class JsonParseUtils {
                 String type = jsonObject.getString("TaskClass");
                 String gps = jsonObject.getString("TaskGps");
                 String formId = jsonObject.getString("TaskRID");
-                String longitude = gps.split("，")[0];
-                String latitude = gps.split("，")[1];
+                String longitude = "0";
+                String latitude = "0";
+                if(!gps.equals("")){
+                    longitude = gps.split("，")[0];
+                    latitude = gps.split("，")[1];
+                }
 
                 SafetyInspectTask task = new SafetyInspectTask();
                 task.setId(id);
@@ -1095,13 +1102,17 @@ public class JsonParseUtils {
                 String flag = jsonObject.getString("TaskSf");
 
                 String failure = jsonObject.getString("TaskDel");
-                ArrayList<String> failureList = new ArrayList<String>();
+                ArrayList<SafetyInspectSecondItem> failureList = new ArrayList<SafetyInspectSecondItem>();
                 if(!failure.equals("")){
                     JSONArray jsonArray1 = jsonObject.getJSONArray("TaskDel");
                     for(int j = 0; j < jsonArray1.length(); j++){
                         JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String id = jsonObject1.getString("ItemId");
                         String name = jsonObject1.getString("ItemName");
-                        failureList.add(name);
+                        SafetyInspectSecondItem failureItem = new SafetyInspectSecondItem();
+                        failureItem.setId(id);
+                        failureItem.setName(name);
+                        failureList.add(failureItem);
                     }
                 }
 
@@ -1134,7 +1145,7 @@ public class JsonParseUtils {
     }
 
     /**
-     * 获取申请单列表（机械组长界面）
+     * 获取机械申请单列表（机械组长界面）
      * @param jsonData
      * @return
      */
@@ -1193,6 +1204,92 @@ public class JsonParseUtils {
         return list;
     }
 
+    /**
+     * 查询某机械信息
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<LeaderMachineState> getLeaderMachineState(String jsonData){
+        ArrayList<LeaderMachineState> list = new ArrayList<LeaderMachineState>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String machineNo = jsonObject.getString("MachineNo");
+                String machineName = jsonObject.getString("MachineName");
+                String machineUnit = jsonObject.getString("MachineUnit");
+                String state = jsonObject.getString("State");
+                String address = jsonObject.getString("MachineAddress");
+
+                LeaderMachineState machineState = new LeaderMachineState();
+                machineState.setMachineNo(machineNo);
+                machineState.setMachineName(machineName);
+                machineState.setMachineUnit(machineUnit);
+                machineState.setState(state);
+                machineState.setAddress(address);
+                list.add(machineState);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取机械退回单列表（机械组长界面）
+     * @param jsonData
+     * @return
+     */
+    public static  ArrayList<LeaderMachineReturnBill> getLeaderMachineReturnBill(String jsonData){
+        ArrayList<LeaderMachineReturnBill> list = new ArrayList<LeaderMachineReturnBill>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String billNo = jsonObject.getString("BillNo");
+                String billType = jsonObject.getString("BillType");
+                String orderId = jsonObject.getString("FileNo");
+                String returnAddress = jsonObject.getString("ProAddress");
+                String returnDate = jsonObject.getString("EstimateFinishDate");
+                String applyName = jsonObject.getString("SaveName");
+                String applyDate = jsonObject.getString("SaveDate");
+                String remark = jsonObject.getString("Remark");
+
+                String machineNeedDetail = jsonObject.getString("MachineSendDetail");
+                ArrayList<LeaderMachineReturnBillByMachine> machineList = new ArrayList<LeaderMachineReturnBillByMachine>();
+                if(!machineNeedDetail.equals("")){
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("MachineSendDetail");
+                    for(int j = 0; j < jsonArray1.length(); j++){
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String machineNo = jsonObject1.getString("MachineNo");
+                        String name = jsonObject1.getString("MachineName");
+                        String unit = jsonObject1.getString("MachineUnit");
+
+                        LeaderMachineReturnBillByMachine machine = new LeaderMachineReturnBillByMachine();
+                        machine.setMachineNo(machineNo);
+                        machine.setName(name);
+                        machine.setUnit(unit);
+                        machineList.add(machine);
+                    }
+                }
+
+                LeaderMachineReturnBill bill = new LeaderMachineReturnBill();
+                bill.setBillNo(billNo);
+                bill.setBillType(billType);
+                bill.setOrderId(orderId);
+                bill.setReturnAddress(returnAddress);
+                bill.setReturnDate(returnDate);
+                bill.setApplyName(applyName);
+                bill.setApplyDate(applyDate);
+                bill.setRemark(remark);
+                bill.setMachineList(machineList);
+                list.add(bill);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     public static ArrayList<Acceptance> getAcceptanceInfo(String jsonData) {
         ArrayList<Acceptance> list = new ArrayList<Acceptance>();

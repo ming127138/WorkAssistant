@@ -1,27 +1,39 @@
 package com.gzrijing.workassistant.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.entity.Notice;
+import com.gzrijing.workassistant.entity.SafetyInspectSecondItem;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SafetyInspectRecordAdapter extends BaseAdapter {
 
+    private Context context;
+    private String orderId;
     private LayoutInflater listContainer;
-    private ArrayList<String> list;
+    private ArrayList<SafetyInspectSecondItem> list;
+    private Handler handler = new Handler();
 
-    public SafetyInspectRecordAdapter(Context context, ArrayList<String> list) {
+    public SafetyInspectRecordAdapter(Context context, ArrayList<SafetyInspectSecondItem> list, String orderId) {
+        this.context = context;
         listContainer = LayoutInflater.from(context);
         this.list = list;
+        this.orderId = orderId;
     }
 
     @Override
@@ -53,7 +65,47 @@ public class SafetyInspectRecordAdapter extends BaseAdapter {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.name.setText(list.get(position));
+        v.name.setText(list.get(position).getName());
+        v.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestBody requestBody = new FormEncodingBuilder()
+                        .add("cmd", "DelSafeItem")
+                        .add("TaskId", orderId)
+                        .add("FileId", list.get(position).getId())
+                        .build();
+                Log.e("orderID", orderId);
+                Log.e("fileId", list.get(position).getId());
+                HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(final String response) {
+                        Log.e("response", response);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(response.equals("ok")){
+                                    list.remove(position);
+                                    notifyDataSetChanged();
+                                    ToastUtil.showToast(context, "删除成功", Toast.LENGTH_SHORT);
+                                }else {
+                                    ToastUtil.showToast(context, "删除失败", Toast.LENGTH_SHORT);
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);
+                            }
+                        });
+                    }
+                });
+            }
+        });
         return convertView;
     }
 

@@ -11,17 +11,19 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
+import com.gzrijing.workassistant.entity.LeaderMachineReturnBill;
 import com.gzrijing.workassistant.view.LeaderMachineApplyBillByInfoActivity;
+import com.gzrijing.workassistant.view.LeaderMachineReturnBillByInfoActivity;
 
 import java.util.ArrayList;
 
-public class LeaderMachineApplyBillListAdapter extends BaseAdapter {
+public class LeaderMachineReturnBillListAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater listContainer;
-    private ArrayList<LeaderMachineApplyBill> list;
+    private ArrayList<LeaderMachineReturnBill> list;
 
-    public LeaderMachineApplyBillListAdapter(Context context, ArrayList<LeaderMachineApplyBill> list) {
+    public LeaderMachineReturnBillListAdapter(Context context, ArrayList<LeaderMachineReturnBill> list) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.list = list;
@@ -48,12 +50,13 @@ public class LeaderMachineApplyBillListAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_leader_machine_apply_bill_list, parent, false);
-            v.billNo = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_list_id_tv);
-            v.orderId = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_list_order_id_tv);
-            v.applyDate = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_list_apply_date_tv);
-            v.plan = (Button) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_list_plan_btn);
-            v.info = (Button) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_list_info_btn);
+                    R.layout.listview_item_leader_machine_return_bill_list, parent, false);
+            v.billNo = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_list_id_tv);
+            v.orderId = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_list_order_id_tv);
+            v.applyDate = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_list_apply_date_tv);
+            v.type = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_list_type_tv);
+            v.plan = (Button) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_list_plan_btn);
+            v.info = (Button) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_list_info_btn);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -62,11 +65,12 @@ public class LeaderMachineApplyBillListAdapter extends BaseAdapter {
         v.billNo.setText(list.get(position).getBillNo());
         v.orderId.setText(list.get(position).getOrderId());
         v.applyDate.setText(list.get(position).getApplyDate());
+        v.type.setText(list.get(position).getApplyDate());
 
         v.info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, LeaderMachineApplyBillByInfoActivity.class);
+                Intent intent = new Intent(context, LeaderMachineReturnBillByInfoActivity.class);
                 intent.putExtra("bill", list.get(position));
                 context.startActivity(intent);
             }
@@ -88,6 +92,7 @@ public class LeaderMachineApplyBillListAdapter extends BaseAdapter {
         private TextView billNo;
         private TextView orderId;
         private TextView applyDate;
+        private TextView type;
         private Button plan;
         private Button info;
 

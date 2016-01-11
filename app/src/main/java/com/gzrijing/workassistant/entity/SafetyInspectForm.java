@@ -7,13 +7,13 @@ public class SafetyInspectForm {
     private String process;         //问题处理
     private String checkDate;       //检查日期
     private String flag;            //是否处理完成（0未处理完，1处理完）
-    private ArrayList<String> failure = new ArrayList<String>(); //不合格项
+    private ArrayList<SafetyInspectSecondItem> failure = new ArrayList<SafetyInspectSecondItem>(); //不合格项
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>(); //图片
 
     public SafetyInspectForm() {
     }
 
-    public SafetyInspectForm(String situation, String process, String checkDate, String flag, ArrayList<String> failure, ArrayList<PicUrl> picUrls) {
+    public SafetyInspectForm(String situation, String process, String checkDate, String flag, ArrayList<SafetyInspectSecondItem> failure, ArrayList<PicUrl> picUrls) {
         this.situation = situation;
         this.process = process;
         this.checkDate = checkDate;
@@ -54,11 +54,11 @@ public class SafetyInspectForm {
         this.flag = flag;
     }
 
-    public ArrayList<String> getFailure() {
+    public ArrayList<SafetyInspectSecondItem> getFailure() {
         return failure;
     }
 
-    public void setFailure(ArrayList<String> failure) {
+    public void setFailure(ArrayList<SafetyInspectSecondItem> failure) {
         this.failure = failure;
     }
 
@@ -69,4 +69,5 @@ public class SafetyInspectForm {
     public void setPicUrls(ArrayList<PicUrl> picUrls) {
         this.picUrls = picUrls;
     }
+
 }

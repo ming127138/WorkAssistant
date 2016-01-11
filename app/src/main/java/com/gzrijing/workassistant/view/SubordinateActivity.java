@@ -1,9 +1,9 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,12 +22,15 @@ import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class SubordinateActivity extends BaseActivity {
 
+    private String flag;
     private TextView tv_selected;
     private ImageView iv_checkAll;
     private ListView lv_subordinate;
@@ -36,20 +39,8 @@ public class SubordinateActivity extends BaseActivity {
     private SubordinateAdapter adapter;
     private HashMap<Integer, String> names = new HashMap<Integer, String>();
     private String orderId;
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    List<Subordinate> subList = (ArrayList<Subordinate>) msg.obj;
-                    subordinates.addAll(subList);
-                    adapter = new SubordinateAdapter(SubordinateActivity.this, subordinates, iv_checkAll, tv_selected, names);
-                    lv_subordinate.setAdapter(adapter);
-                    break;
-            }
-        }
-    };
+    private String userNo;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +54,20 @@ public class SubordinateActivity extends BaseActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        orderId = intent.getStringExtra("orderId");
+        flag = intent.getStringExtra("flag");
         subordinates = intent.getParcelableArrayListExtra("subordinates");
-        if(subordinates.toString().equals("[]")){
-            initSubordinates();
-        }else{
-            for(int i=0; i<subordinates.size(); i++){
-                if(subordinates.get(i).isCheck()){
+        if (subordinates.toString().equals("[]")) {
+            if (flag.equals("派工")) {
+                orderId = intent.getStringExtra("orderId");
+                initSubordinates();
+            }
+            if (flag.equals("送机")) {
+                userNo = intent.getStringExtra("userNo");
+                initSubordinatesByMachine();
+            }
+        } else {
+            for (int i = 0; i < subordinates.size(); i++) {
+                if (subordinates.get(i).isCheck()) {
                     names.put(i, subordinates.get(i).getName());
                 }
             }
@@ -78,15 +76,59 @@ public class SubordinateActivity extends BaseActivity {
         }
     }
 
-    private void initSubordinates() {
-        String url = "?cmd=getsituser&fileno=" + orderId;
+    private void initSubordinatesByMachine() {
+        String url = null;
+        try {
+            url = "?cmd=getsitusergl&userno=" + URLEncoder.encode(userNo, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
-            public void onFinish(String response) {
-                List<Subordinate> subList = JsonParseUtils.getSubordinate(response);
-                Message msg = handler.obtainMessage(0);
-                msg.obj = subList;
-                handler.sendMessage(msg);
+            public void onFinish(final String response) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Subordinate> subList = JsonParseUtils.getSubordinate(response);
+                        subordinates.addAll(subList);
+                        adapter = new SubordinateAdapter(SubordinateActivity.this, subordinates, iv_checkAll, tv_selected, names);
+                        lv_subordinate.setAdapter(adapter);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(SubordinateActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void initSubordinates() {
+        String url = null;
+        try {
+            url = "?cmd=getsituser&fileno=" + URLEncoder.encode(orderId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Subordinate> subList = JsonParseUtils.getSubordinate(response);
+                        subordinates.addAll(subList);
+                        adapter = new SubordinateAdapter(SubordinateActivity.this, subordinates, iv_checkAll, tv_selected, names);
+                        lv_subordinate.setAdapter(adapter);
+                    }
+                });
             }
 
             @Override

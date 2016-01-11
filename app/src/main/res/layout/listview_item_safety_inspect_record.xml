@@ -10,7 +10,7 @@
         android:layout_width="@dimen/sw_20dp"
         android:layout_height="@dimen/sw_20dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/icon_red_dot"/>
+        android:src="@drawable/icon_delete"/>
 
     <TextView
         android:id="@+id/listview_item_safety_inspect_record_name_tv"

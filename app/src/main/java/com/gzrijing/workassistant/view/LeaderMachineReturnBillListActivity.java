@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -14,10 +13,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.LeaderMachineApplyBillListAdapter;
+import com.gzrijing.workassistant.adapter.LeaderMachineReturnBillListAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
-import com.gzrijing.workassistant.entity.Progress;
+import com.gzrijing.workassistant.entity.LeaderMachineReturnBill;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.DateUtil;
 import com.gzrijing.workassistant.util.HttpUtils;
@@ -31,21 +29,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
-public class LeaderMachineApplyBillListActivity extends BaseActivity implements View.OnClickListener {
+public class LeaderMachineReturnBillListActivity extends BaseActivity implements View.OnClickListener{
 
     private String userNo;
     private EditText et_id;
     private Button btn_query;
     private ListView lv_bill;
-    private ArrayList<LeaderMachineApplyBill> billList = new ArrayList<LeaderMachineApplyBill>();
-    private LeaderMachineApplyBillListAdapter adapter;
+    private ArrayList<LeaderMachineReturnBill> billList = new ArrayList<LeaderMachineReturnBill>();
+    private LeaderMachineReturnBillListAdapter adapter;
     private ProgressDialog pDialog;
     private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leader_machine_apply_bill_list);
+        setContentView(R.layout.activity_leader_machine_return_bill_list);
 
         initData();
         initViews();
@@ -64,11 +62,11 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        et_id = (EditText) findViewById(R.id.leader_machine_apply_bill_list_id_et);
-        btn_query = (Button) findViewById(R.id.leader_machine_apply_bill_list_query_btn);
+        et_id = (EditText) findViewById(R.id.leader_machine_return_bill_list_id_et);
+        btn_query = (Button) findViewById(R.id.leader_machine_return_bill_list_query_btn);
 
-        lv_bill = (ListView) findViewById(R.id.leader_machine_apply_bill_list_lv);
-        adapter = new LeaderMachineApplyBillListAdapter(LeaderMachineApplyBillListActivity.this, billList);
+        lv_bill = (ListView) findViewById(R.id.leader_machine_return_bill_list_lv);
+        adapter = new LeaderMachineReturnBillListAdapter(LeaderMachineReturnBillListActivity.this, billList);
         lv_bill.setAdapter(adapter);
 
     }
@@ -80,7 +78,7 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.leader_machine_apply_bill_list_query_btn:
+            case R.id.leader_machine_return_bill_list_query_btn:
                 getApplyBill();
                 break;
         }
@@ -96,20 +94,20 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
         try {
             url = "?cmd=getmachineneedandbacklist&userno=" + URLEncoder.encode(userNo, "UTF-8")
                     + "&savedate=&billno=" + URLEncoder.encode(id, "UTF-8")
-                    + "&fileno=&billtype=" + URLEncoder.encode("申请", "UTF-8") + "&isallappoint=";
+                    + "&fileno=&billtype=" + URLEncoder.encode("退还", "UTF-8") + "&isallappoint=";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                ArrayList<LeaderMachineApplyBill> list = JsonParseUtils.getLeaderMachineApplyBill(response);
+                ArrayList<LeaderMachineReturnBill> list = JsonParseUtils.getLeaderMachineReturnBill(response);
                 billList.clear();
                 billList.addAll(list);
                 if(billList.toString().equals("[]")){
-                    Collections.sort(billList, new Comparator<LeaderMachineApplyBill>() {
+                    Collections.sort(billList, new Comparator<LeaderMachineReturnBill>() {
                         @Override
-                        public int compare(LeaderMachineApplyBill lhs, LeaderMachineApplyBill rhs) {
+                        public int compare(LeaderMachineReturnBill lhs, LeaderMachineReturnBill rhs) {
                             Date date1 = DateUtil.stringToDate(lhs.getApplyName());
                             Date date2 = DateUtil.stringToDate(rhs.getApplyName());
                             // 对日期字段进行升序，如果欲降序可采用after方法
@@ -134,7 +132,7 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(LeaderMachineApplyBillListActivity.this,
+                        ToastUtil.showToast(LeaderMachineReturnBillListActivity.this,
                                 "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });

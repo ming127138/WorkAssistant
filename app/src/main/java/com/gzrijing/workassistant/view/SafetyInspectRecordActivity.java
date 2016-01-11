@@ -24,6 +24,7 @@ import com.gzrijing.workassistant.adapter.SafetyInspectRecordAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.SafetyInspectForm;
+import com.gzrijing.workassistant.entity.SafetyInspectSecondItem;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
@@ -49,7 +50,7 @@ public class SafetyInspectRecordActivity extends BaseActivity {
     private EditText et_process;
     private ListView lv_failure;
     private GridView gv_image;
-    private ArrayList<String> failureList = new ArrayList<String>();
+    private ArrayList<SafetyInspectSecondItem> failureList = new ArrayList<SafetyInspectSecondItem>();
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
     private SafetyInspectRecordAdapter failureAdapter;
     private GridViewImageForReportInfoAdapter picUrlsAdapter;
@@ -100,7 +101,7 @@ public class SafetyInspectRecordActivity extends BaseActivity {
                                 et_process.setText(form.getProcess());
                                 failureList.addAll(form.getFailure());
                                 picUrls.addAll(form.getPicUrls());
-                                failureAdapter = new SafetyInspectRecordAdapter(SafetyInspectRecordActivity.this, failureList);
+                                failureAdapter = new SafetyInspectRecordAdapter(SafetyInspectRecordActivity.this, failureList, orderId);
                                 lv_failure.setAdapter(failureAdapter);
                                 picUrlsAdapter = new GridViewImageForReportInfoAdapter(SafetyInspectRecordActivity.this, picUrls);
                                 gv_image.setAdapter(picUrlsAdapter);

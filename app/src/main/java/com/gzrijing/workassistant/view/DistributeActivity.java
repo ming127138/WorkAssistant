@@ -71,7 +71,6 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>(); //选中的图片
     private ArrayList<PicUrl> imageUrls = new ArrayList<PicUrl>(); //这个工程的所有图片
     private DistributeGriViewAdapter adapter;
-    private BusinessData businessData;
     private Intent imageIntent;
 
     @Override
@@ -145,6 +144,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.distribute_executor_ll:
                 Intent intent = new Intent(this, SubordinateActivity.class);
+                intent.putExtra("flag", "派工");
                 intent.putExtra("orderId", orderId);
                 intent.putParcelableArrayListExtra("subordinates", subordinates);
                 startActivityForResult(intent, 10);
@@ -336,19 +336,6 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     };
 
     private void saveInfo(String id) {
-//        BusinessHaveSendData data = new BusinessHaveSendData();
-//        data.setOrderId(id);
-//        data.setContent(et_remarks.getText().toString().trim());
-//        data.setState("未接受");
-//        data.setExecutors(tv_executor.getText().toString());
-//        data.setDeadline(tv_deadline.getText().toString());
-//        data.save();
-//        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
-//                .find(BusinessData.class, true).get(0);
-//        List<BusinessHaveSendData> dataList = businessData.getBusinessHaveSendDataList();
-//        dataList.add(data);
-//        businessData.save();
-
         ContentValues values = new ContentValues();
         values.put("state", "已派工");
         DataSupport.updateAll(BusinessData.class, values, "user = ? and orderId = ?", userNo, orderId);
