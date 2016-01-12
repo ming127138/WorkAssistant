@@ -317,7 +317,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.LeaderMachineApplyBillByPlanActivity"
-            android:label="安排机械"
+            android:label="安排送机"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.LeaderMachineApplyBillByMachineStateActivity"
@@ -326,6 +326,22 @@
         <activity
             android:name=".view.LeaderMachineApplyBillBySendMachineActivity"
             android:label="发放机械"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.LeaderMachineReturnBillListActivity"
+            android:label="机械退机单"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.LeaderMachineReturnBillByInfoActivity"
+            android:label="退机单信息"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.LeaderMachineReturnBillByPlanActivity"
+            android:label="安排退机"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.LeaderMachineReturnBillByBackMachineActivity"
+            android:label="退回机械"
             android:screenOrientation="portrait" />
         <!-- app activity -->
 
@@ -534,8 +550,6 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".view.LeaderMachineReturnBillListActivity" />
-        <activity android:name=".view.LeaderMachineReturnBillByInfoActivity"></activity>
     </application>
 
 </manifest>

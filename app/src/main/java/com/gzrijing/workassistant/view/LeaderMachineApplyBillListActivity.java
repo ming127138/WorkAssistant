@@ -1,11 +1,14 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +20,7 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.LeaderMachineApplyBillListAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
-import com.gzrijing.workassistant.entity.Progress;
+import com.gzrijing.workassistant.entity.LeaderMachineApplyBillByMachine;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.DateUtil;
 import com.gzrijing.workassistant.util.HttpUtils;
@@ -57,6 +60,8 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
                 "saveUser", MODE_PRIVATE);
         userNo = app.getString("userNo", "");
 
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan");
+        registerReceiver(mBroadcastReceiver,intentFilter);
     }
 
     private void initViews() {
@@ -143,6 +148,29 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
         });
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan")){
+                String machineName = intent.getStringExtra("machineName");
+                String billNo = intent.getStringExtra("billNo");
+                for(LeaderMachineApplyBill bill : billList){
+                    if(bill.getBillNo().equals(billNo)){
+                        for(LeaderMachineApplyBillByMachine machine : bill.getMachineList()){
+                            if(machine.getName().equals(machineName)){
+                                int sendNum = Integer.valueOf(machine.getSendNum());
+                                sendNum++;
+                                machine.setSendNum(String.valueOf(sendNum));
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -153,5 +181,11 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mBroadcastReceiver);
     }
 }

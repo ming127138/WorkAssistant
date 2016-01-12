@@ -1,7 +1,10 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -48,6 +51,9 @@ public class LeaderMachineApplyBillByMachineStateActivity extends BaseActivity {
         String machineName = intent.getStringExtra("machineName");
 
         getMachineState(machineName);
+
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan");
+        registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     private void getMachineState(String machineName) {
@@ -101,6 +107,16 @@ public class LeaderMachineApplyBillByMachineStateActivity extends BaseActivity {
 
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan")){
+                finish();
+            }
+        }
+    };
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -111,5 +127,11 @@ public class LeaderMachineApplyBillByMachineStateActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mBroadcastReceiver);
     }
 }

@@ -12,18 +12,21 @@ import android.widget.TextView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
 import com.gzrijing.workassistant.entity.LeaderMachineApplyBillByMachine;
+import com.gzrijing.workassistant.entity.LeaderMachineReturnBill;
+import com.gzrijing.workassistant.entity.LeaderMachineReturnBillByMachine;
 import com.gzrijing.workassistant.view.LeaderMachineApplyBillByMachineStateActivity;
+import com.gzrijing.workassistant.view.LeaderMachineReturnBillByBackMachineActivity;
 
 import java.util.ArrayList;
 
-public class LeaderMachineApplyBillByPlanAdapter extends BaseAdapter {
+public class LeaderMachineReturnBillByPlanAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater listContainer;
-    private LeaderMachineApplyBill bill;
-    private ArrayList<LeaderMachineApplyBillByMachine> list;
+    private LeaderMachineReturnBill bill;
+    private ArrayList<LeaderMachineReturnBillByMachine> list;
 
-    public LeaderMachineApplyBillByPlanAdapter(Context context, LeaderMachineApplyBill bill) {
+    public LeaderMachineReturnBillByPlanAdapter(Context context, LeaderMachineReturnBill bill) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.bill = bill;
@@ -51,37 +54,36 @@ public class LeaderMachineApplyBillByPlanAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_leader_machine_apply_bill_by_plan, parent, false);
-            v.name = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_plan_name_tv);
-            v.applyNum = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_plan_apply_num_tv);
-            v.sendNum = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_plan_send_num_tv);
-            v.planOk = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_plan_ok_tv);
-            v.plan = (Button) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_plan_btn);
+                    R.layout.listview_item_leader_machine_return_bill_by_plan, parent, false);
+            v.machineNo = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_by_plan_machine_no_tv);
+            v.machineName = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_by_plan_machine_name_tv);
+            v.num = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_by_plan_num_tv);
+            v.planOk = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_by_plan_ok_tv);
+            v.plan = (Button) convertView.findViewById(R.id.listview_item_leader_machine_return_bill_by_plan_btn);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.name.setText(list.get(position).getName());
-        v.applyNum.setText(list.get(position).getApplyNum());
-        v.sendNum.setText(list.get(position).getSendNum());
-
-        int applyNum = Integer.valueOf(list.get(position).getApplyNum());
-        int sendNum = Integer.valueOf(list.get(position).getSendNum());
-        if(applyNum - sendNum == 0){
-            v.planOk.setVisibility(View.VISIBLE);
-            v.plan.setVisibility(View.GONE);
-        }else{
-            v.planOk.setVisibility(View.GONE);
+        v.machineNo.setText(list.get(position).getMachineNo());
+        v.machineName.setText(list.get(position).getName());
+        v.num.setText("1");
+        if(list.get(position).getFlag().equals("0")){
             v.plan.setVisibility(View.VISIBLE);
+            v.planOk.setVisibility(View.GONE);
+        }else {
+            v.plan.setVisibility(View.GONE);
+            v.planOk.setVisibility(View.VISIBLE);
         }
 
         v.plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, LeaderMachineApplyBillByMachineStateActivity.class);
+                Intent intent = new Intent(context, LeaderMachineReturnBillByBackMachineActivity.class);
                 intent.putExtra("bill", bill);
+                intent.putExtra("machineNo", list.get(position).getMachineNo());
                 intent.putExtra("machineName", list.get(position).getName());
+                intent.putExtra("machinePosition", position);
                 context.startActivity(intent);
             }
         });
@@ -90,9 +92,9 @@ public class LeaderMachineApplyBillByPlanAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        private TextView name;
-        private TextView applyNum;
-        private TextView sendNum;
+        private TextView machineNo;
+        private TextView machineName;
+        private TextView num;
         private TextView planOk;
         private Button plan;
 

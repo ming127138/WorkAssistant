@@ -14,6 +14,7 @@ import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
 import com.gzrijing.workassistant.entity.LeaderMachineReturnBill;
 import com.gzrijing.workassistant.view.LeaderMachineApplyBillByInfoActivity;
 import com.gzrijing.workassistant.view.LeaderMachineReturnBillByInfoActivity;
+import com.gzrijing.workassistant.view.LeaderMachineReturnBillByPlanActivity;
 
 import java.util.ArrayList;
 
@@ -79,7 +80,7 @@ public class LeaderMachineReturnBillListAdapter extends BaseAdapter {
         v.plan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, LeaderMachineApplyBillByInfoActivity.class);
+                Intent intent = new Intent(context, LeaderMachineReturnBillByPlanActivity.class);
                 intent.putExtra("bill", list.get(position));
                 context.startActivity(intent);
             }

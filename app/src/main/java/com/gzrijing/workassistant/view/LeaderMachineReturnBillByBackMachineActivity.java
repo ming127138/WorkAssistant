@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
+import com.gzrijing.workassistant.entity.LeaderMachineReturnBill;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
@@ -38,31 +38,30 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity implements View.OnClickListener {
+public class LeaderMachineReturnBillByBackMachineActivity extends BaseActivity implements View.OnClickListener{
 
     private String userNo;
     private String machineNo;
     private String machineName;
-    private String flag;
-    private LeaderMachineApplyBill bill;
+    private LeaderMachineReturnBill bill;
     private TextView tv_machineNo;
     private TextView tv_machineName;
     private TextView tv_getAddress;
-    private TextView tv_sendAddress;
-    private TextView tv_sendUser;
-    private TextView tv_sendDate;
-    private TextView btn_send;
-    private String getAddress;
+    private TextView et_sendAddress;
+    private TextView tv_backUser;
+    private TextView tv_backDate;
+    private TextView btn_plan;
     private ArrayList<Subordinate> subordinates = new ArrayList<Subordinate>();
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Handler handler = new Handler();
     private ProgressDialog pDialog;
+    private int machinePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leader_machine_apply_bill_by_send_machine);
+        setContentView(R.layout.activity_leader_machine_return_bill_by_back_machine);
 
         initData();
         initViews();
@@ -77,9 +76,8 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
         Intent intent = getIntent();
         machineNo = intent.getStringExtra("machineNo");
         machineName = intent.getStringExtra("machineName");
-        getAddress = intent.getStringExtra("getAddress");
-        flag = intent.getStringExtra("flag");
         bill = intent.getParcelableExtra("bill");
+        machinePosition = intent.getIntExtra("machinePosition", -1);
 
     }
 
@@ -88,36 +86,29 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tv_machineNo = (TextView) findViewById(R.id.leader_machine_apply_bill_by_send_machine_no_tv);
+        tv_machineNo = (TextView) findViewById(R.id.leader_machine_return_bill_by_back_machine_no_tv);
         tv_machineNo.setText(machineNo);
-        tv_machineName = (TextView) findViewById(R.id.leader_machine_apply_bill_by_send_machine_name_tv);
+        tv_machineName = (TextView) findViewById(R.id.leader_machine_return_bill_by_back_machine_name_tv);
         tv_machineName.setText(machineName);
-        tv_getAddress = (TextView) findViewById(R.id.leader_machine_apply_bill_by_send_machine_get_address_tv);
-        tv_getAddress.setText(getAddress);
-        tv_sendAddress = (TextView) findViewById(R.id.leader_machine_apply_bill_by_send_machine_send_address_tv);
-        tv_sendAddress.setText(bill.getUseAddress());
-        tv_sendUser = (TextView) findViewById(R.id.leader_machine_apply_bill_by_send_machine_send_user_tv);
-        tv_sendDate = (TextView) findViewById(R.id.leader_machine_apply_bill_by_send_machine_send_date_tv);
-        tv_sendDate.setText(bill.getUseDate());
-        btn_send = (TextView) findViewById(R.id.leader_machine_apply_bill_by_send_machine_send_btn);
-        if (flag.equals("安排")) {
-            btn_send.setText("安排");
-        }
-        if (flag.equals("调派")) {
-            btn_send.setText("调派");
-        }
+        tv_getAddress = (TextView) findViewById(R.id.leader_machine_return_bill_by_back_machine_get_address_tv);
+        tv_getAddress.setText(bill.getReturnAddress());
+        et_sendAddress = (TextView) findViewById(R.id.leader_machine_return_bill_by_back_machine_send_address_et);
+        tv_backUser = (TextView) findViewById(R.id.leader_machine_return_bill_by_back_machine_back_user_tv);
+        tv_backDate = (TextView) findViewById(R.id.leader_machine_return_bill_by_back_machine_back_date_tv);
+        tv_backDate.setText(bill.getReturnDate());
+        btn_plan = (TextView) findViewById(R.id.leader_machine_return_bill_by_back_machine_plan_btn);
     }
 
     private void setListeners() {
-        tv_sendUser.setOnClickListener(this);
-        tv_sendDate.setOnClickListener(this);
-        btn_send.setOnClickListener(this);
+        tv_backUser.setOnClickListener(this);
+        tv_backDate.setOnClickListener(this);
+        btn_plan.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.leader_machine_apply_bill_by_send_machine_send_user_tv:
+            case R.id.leader_machine_return_bill_by_back_machine_back_user_tv:
                 Intent intent = new Intent(this, SubordinateActivity.class);
                 intent.putExtra("flag", "送机");
                 intent.putExtra("userNo", userNo);
@@ -125,28 +116,33 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
                 startActivityForResult(intent, 10);
                 break;
 
-            case R.id.leader_machine_apply_bill_by_send_machine_send_date_tv:
+            case R.id.leader_machine_return_bill_by_back_machine_back_date_tv:
                 getsendDate();
                 break;
 
-            case R.id.leader_machine_apply_bill_by_send_machine_send_btn:
-                send();
+            case R.id.leader_machine_return_bill_by_back_machine_plan_btn:
+                plan();
                 break;
         }
     }
 
-    private void send() {
+    private void plan() {
+        if(et_sendAddress.getText().toString().trim().equals("")){
+            ToastUtil.showToast(this, "填写送机地点", Toast.LENGTH_SHORT);
+            return;
+        }
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pDialog.setMessage("正在" + flag + "中");
+        pDialog.setMessage("正在安排中");
         pDialog.show();
         JSONArray jsonArray = new JSONArray();
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("BillNo", bill.getBillNo());
             jsonObject.put("MachineNo", machineNo);
-            jsonObject.put("SendUNo", tv_sendUser.getText().toString());
-            jsonObject.put("SendDate", tv_sendDate.getText().toString());
+            jsonObject.put("SendUNo", tv_backUser.getText().toString());
+            jsonObject.put("SendDate", tv_backDate.getText().toString());
+            jsonObject.put("MachineAddress", et_sendAddress.getText().toString().trim());
             jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -166,14 +162,16 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
                     @Override
                     public void run() {
                         if (response.equals("ok")) {
-                            Intent intent = new Intent("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan");
-                            intent.putExtra("machineName", machineName);
+                            Intent intent = new Intent("action.com.gzrijing.workassistant.LeaderMachineReturnBillByPlan");
+                            intent.putExtra("machinePosition", machinePosition);
+                            intent.putExtra("billNo", bill.getBillNo());
                             sendBroadcast(intent);
-                            ToastUtil.showToast(LeaderMachineApplyBillBySendMachineActivity.this,
-                                    flag + "成功", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(LeaderMachineReturnBillByBackMachineActivity.this,
+                                    "安排成功", Toast.LENGTH_SHORT);
+                            finish();
                         } else {
-                            ToastUtil.showToast(LeaderMachineApplyBillBySendMachineActivity.this,
-                                    flag + "失败", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(LeaderMachineReturnBillByBackMachineActivity.this,
+                                    "安排失败", Toast.LENGTH_SHORT);
                         }
                     }
                 });
@@ -185,7 +183,7 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(LeaderMachineApplyBillBySendMachineActivity.this,
+                        ToastUtil.showToast(LeaderMachineReturnBillByBackMachineActivity.this,
                                 "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
@@ -200,7 +198,7 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
         ScreenInfo screenInfo = new ScreenInfo(this);
         wheelMain = new WheelMain(timepickerview, true);
         wheelMain.screenheight = screenInfo.getHeight();
-        String time = tv_sendDate.getText().toString();
+        String time = tv_backDate.getText().toString();
         Calendar calendar = Calendar.getInstance();
         if (JudgeDate.isDate(time, "yyyy-MM-dd HH:mm")) {
             try {
@@ -223,7 +221,7 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        tv_sendDate.setText(wheelMain.getTime());
+                        tv_backDate.setText(wheelMain.getTime());
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -240,7 +238,7 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
             if (resultCode == 10) {
                 String executors = data.getStringExtra("executors");
                 subordinates = data.getParcelableArrayListExtra("subordinates");
-                tv_sendUser.setText(executors);
+                tv_backUser.setText(executors);
             }
         }
     }

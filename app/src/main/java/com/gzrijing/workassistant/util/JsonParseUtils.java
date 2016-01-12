@@ -1264,11 +1264,18 @@ public class JsonParseUtils {
                         String machineNo = jsonObject1.getString("MachineNo");
                         String name = jsonObject1.getString("MachineName");
                         String unit = jsonObject1.getString("MachineUnit");
+                        String flag = jsonObject1.getString("SendName");
+                        if(flag.equals("")){
+                            flag = "0";
+                        }else{
+                            flag = "1";
+                        }
 
                         LeaderMachineReturnBillByMachine machine = new LeaderMachineReturnBillByMachine();
                         machine.setMachineNo(machineNo);
                         machine.setName(name);
                         machine.setUnit(unit);
+                        machine.setFlag(flag);
                         machineList.add(machine);
                     }
                 }

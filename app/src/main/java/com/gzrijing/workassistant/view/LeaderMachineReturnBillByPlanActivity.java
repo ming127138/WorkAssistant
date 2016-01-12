@@ -10,22 +10,20 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.LeaderMachineApplyBillByPlanAdapter;
+import com.gzrijing.workassistant.adapter.LeaderMachineReturnBillByPlanAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
-import com.gzrijing.workassistant.entity.LeaderMachineApplyBillByMachine;
+import com.gzrijing.workassistant.entity.LeaderMachineReturnBill;
 
+public class LeaderMachineReturnBillByPlanActivity extends BaseActivity {
 
-public class LeaderMachineApplyBillByPlanActivity extends BaseActivity {
-
-    private LeaderMachineApplyBill bill;
+    private LeaderMachineReturnBill bill;
     private ListView lv_machineList;
-    private LeaderMachineApplyBillByPlanAdapter adapter;
+    private LeaderMachineReturnBillByPlanAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leader_machine_apply_bill_by_plan);
+        setContentView(R.layout.activity_leader_machine_return_bill_by_plan);
 
         initData();
         initViews();
@@ -35,8 +33,8 @@ public class LeaderMachineApplyBillByPlanActivity extends BaseActivity {
         Intent intent = getIntent();
         bill = intent.getParcelableExtra("bill");
 
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan");
-        registerReceiver(mBroadcastReceiver,intentFilter);
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.LeaderMachineReturnBillByPlan");
+        registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     private void initViews() {
@@ -44,8 +42,8 @@ public class LeaderMachineApplyBillByPlanActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        lv_machineList = (ListView) findViewById(R.id.leader_machine_apply_bill_by_plan_machine_lv);
-        adapter = new LeaderMachineApplyBillByPlanAdapter(this, bill);
+        lv_machineList = (ListView) findViewById(R.id.leader_machine_return_bill_by_plan_machine_lv);
+        adapter = new LeaderMachineReturnBillByPlanAdapter(this, bill);
         lv_machineList.setAdapter(adapter);
     }
 
@@ -53,16 +51,10 @@ public class LeaderMachineApplyBillByPlanActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan")){
-                String machineName = intent.getStringExtra("machineName");
-                for(LeaderMachineApplyBillByMachine machine : bill.getMachineList()){
-                    if(machine.getName().equals(machineName)){
-                        int sendNum = Integer.valueOf(machine.getSendNum());
-                        sendNum++;
-                        machine.setSendNum(String.valueOf(sendNum));
-                        adapter.notifyDataSetChanged();
-                    }
-                }
+            if(action.equals("action.com.gzrijing.workassistant.LeaderMachineReturnBillByPlan")){
+                int machinePosition = intent.getIntExtra("machinePosition", -1);
+                bill.getMachineList().get(machinePosition).setFlag("1");
+                adapter.notifyDataSetChanged();
             }
         }
     };

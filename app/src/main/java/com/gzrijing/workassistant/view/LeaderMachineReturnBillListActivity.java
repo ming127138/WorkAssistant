@@ -1,6 +1,10 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -54,6 +58,10 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
         SharedPreferences app = getSharedPreferences(
                 "saveUser", MODE_PRIVATE);
         userNo = app.getString("userNo", "");
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.com.gzrijing.workassistant.LeaderMachineReturnBillByPlan");
+        registerReceiver(mBroadcastReceiver, intentFilter);
 
     }
 
@@ -141,6 +149,23 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
         });
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals("action.com.gzrijing.workassistant.LeaderMachineReturnBillByPlan")){
+                int machinePosition = intent.getIntExtra("machinePosition", -1);
+                String billNo = intent.getStringExtra("billNo");
+                for(LeaderMachineReturnBill bill : billList){
+                    if(bill.getBillNo().equals(billNo)){
+                        bill.getMachineList().get(machinePosition).setFlag("1");
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
+    };
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -151,5 +176,11 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mBroadcastReceiver);
     }
 }

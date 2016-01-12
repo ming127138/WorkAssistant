@@ -7,14 +7,16 @@ public class LeaderMachineReturnBillByMachine implements Parcelable {
     private String machineNo;   //机械编号
     private String name;        //机械名称
     private String unit;        //机械单位
+    private String flag;        //是否已安排（0为未安排，1未安排）
 
     public LeaderMachineReturnBillByMachine() {
     }
 
-    public LeaderMachineReturnBillByMachine(String machineNo, String name, String unit) {
+    public LeaderMachineReturnBillByMachine(String machineNo, String name, String unit, String flag) {
         this.machineNo = machineNo;
         this.name = name;
         this.unit = unit;
+        this.flag = flag;
     }
 
     public String getMachineNo() {
@@ -41,6 +43,14 @@ public class LeaderMachineReturnBillByMachine implements Parcelable {
         this.unit = unit;
     }
 
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -51,12 +61,14 @@ public class LeaderMachineReturnBillByMachine implements Parcelable {
         dest.writeString(this.machineNo);
         dest.writeString(this.name);
         dest.writeString(this.unit);
+        dest.writeString(this.flag);
     }
 
     protected LeaderMachineReturnBillByMachine(Parcel in) {
         this.machineNo = in.readString();
         this.name = in.readString();
         this.unit = in.readString();
+        this.flag = in.readString();
     }
 
     public static final Creator<LeaderMachineReturnBillByMachine> CREATOR = new Creator<LeaderMachineReturnBillByMachine>() {
