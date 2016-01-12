@@ -38,8 +38,6 @@ public class HttpUtils {
                 try {
                     Request request = new Request.Builder().url(URLPath + url).build();
                     Response response = mOkHttpClient.newCall(request).execute();
-                    Log.e("response", response.toString());
-                    Log.e("responseBody", response.body().string());
                     if (listener != null) {
                         listener.onFinish(response.body().string());
                     }
@@ -66,7 +64,6 @@ public class HttpUtils {
                             .build();
                     Response response = mOkHttpClient.newCall(request).execute();
                     Log.e("response", response.toString());
-                    Log.e("responseBody", response.body().string());
                     if (listener != null) {
                         listener.onFinish(response.body().string());
                     }

@@ -269,6 +269,15 @@ public class MainReceiver extends BroadcastReceiver {
         MyApplication.getContext().startService(intent);
     }
 
+    /**
+     * 监听是否有新的机械申请单（机械组长界面）
+     */
+    private void listenerLeaderMachineApplyBill(String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerReportInfoCompleteService.class);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
+
 
 
 }

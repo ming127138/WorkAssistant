@@ -73,7 +73,7 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
         btn_query = (Button) findViewById(R.id.leader_machine_apply_bill_list_query_btn);
 
         lv_bill = (ListView) findViewById(R.id.leader_machine_apply_bill_list_lv);
-        adapter = new LeaderMachineApplyBillListAdapter(LeaderMachineApplyBillListActivity.this, billList);
+        adapter = new LeaderMachineApplyBillListAdapter(LeaderMachineApplyBillListActivity.this, billList, userNo);
         lv_bill.setAdapter(adapter);
 
     }

@@ -14,12 +14,13 @@ public class LeaderMachineReturnBill implements Parcelable {
     private String applyName;       //申请人
     private String applyDate;       //申请时间
     private String remark;          //备注
+    private String state;           //状态（未审核，已审核，不通过）
     private ArrayList<LeaderMachineReturnBillByMachine> machineList = new ArrayList<LeaderMachineReturnBillByMachine>(); //退机单的机械列表
 
     public LeaderMachineReturnBill() {
     }
 
-    public LeaderMachineReturnBill(String billNo, String billType, String orderId, String returnAddress, String returnDate, String applyName, String applyDate, String remark, ArrayList<LeaderMachineReturnBillByMachine> machineList) {
+    public LeaderMachineReturnBill(String billNo, String billType, String orderId, String returnAddress, String returnDate, String applyName, String applyDate, String remark, String state, ArrayList<LeaderMachineReturnBillByMachine> machineList) {
         this.billNo = billNo;
         this.billType = billType;
         this.orderId = orderId;
@@ -28,6 +29,7 @@ public class LeaderMachineReturnBill implements Parcelable {
         this.applyName = applyName;
         this.applyDate = applyDate;
         this.remark = remark;
+        this.state = state;
         this.machineList = machineList;
     }
 
@@ -95,6 +97,14 @@ public class LeaderMachineReturnBill implements Parcelable {
         this.remark = remark;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     public ArrayList<LeaderMachineReturnBillByMachine> getMachineList() {
         return machineList;
     }
@@ -118,6 +128,7 @@ public class LeaderMachineReturnBill implements Parcelable {
         dest.writeString(this.applyName);
         dest.writeString(this.applyDate);
         dest.writeString(this.remark);
+        dest.writeString(this.state);
         dest.writeTypedList(machineList);
     }
 
@@ -130,6 +141,7 @@ public class LeaderMachineReturnBill implements Parcelable {
         this.applyName = in.readString();
         this.applyDate = in.readString();
         this.remark = in.readString();
+        this.state = in.readString();
         this.machineList = in.createTypedArrayList(LeaderMachineReturnBillByMachine.CREATOR);
     }
 

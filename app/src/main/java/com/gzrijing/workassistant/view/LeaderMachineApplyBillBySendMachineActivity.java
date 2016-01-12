@@ -168,9 +168,11 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
                         if (response.equals("ok")) {
                             Intent intent = new Intent("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan");
                             intent.putExtra("machineName", machineName);
+                            intent.putExtra("billNo", bill.getBillNo());
                             sendBroadcast(intent);
                             ToastUtil.showToast(LeaderMachineApplyBillBySendMachineActivity.this,
                                     flag + "成功", Toast.LENGTH_SHORT);
+                            finish();
                         } else {
                             ToastUtil.showToast(LeaderMachineApplyBillBySendMachineActivity.this,
                                     flag + "失败", Toast.LENGTH_SHORT);

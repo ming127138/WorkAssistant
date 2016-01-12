@@ -15,12 +15,13 @@ public class LeaderMachineApplyBill implements Parcelable {
     private String applyName;       //申请人
     private String applyDate;       //申请时间
     private String remark;          //备注
+    private String state;           //状态（未审核，已审核，不通过）
     private ArrayList<LeaderMachineApplyBillByMachine> machineList = new ArrayList<LeaderMachineApplyBillByMachine>(); //申请单的机械列表
 
     public LeaderMachineApplyBill() {
     }
 
-    public LeaderMachineApplyBill(String billNo, String billType, String orderId, String useAddress, String useDate, String finishDate, String applyName, String applyDate, String remark, ArrayList<LeaderMachineApplyBillByMachine> machineList) {
+    public LeaderMachineApplyBill(String billNo, String billType, String orderId, String useAddress, String useDate, String finishDate, String applyName, String applyDate, String remark, String state, ArrayList<LeaderMachineApplyBillByMachine> machineList) {
         this.billNo = billNo;
         this.billType = billType;
         this.orderId = orderId;
@@ -30,6 +31,7 @@ public class LeaderMachineApplyBill implements Parcelable {
         this.applyName = applyName;
         this.applyDate = applyDate;
         this.remark = remark;
+        this.state = state;
         this.machineList = machineList;
     }
 
@@ -105,6 +107,14 @@ public class LeaderMachineApplyBill implements Parcelable {
         this.remark = remark;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     public ArrayList<LeaderMachineApplyBillByMachine> getMachineList() {
         return machineList;
     }
@@ -129,6 +139,7 @@ public class LeaderMachineApplyBill implements Parcelable {
         dest.writeString(this.applyName);
         dest.writeString(this.applyDate);
         dest.writeString(this.remark);
+        dest.writeString(this.state);
         dest.writeTypedList(machineList);
     }
 
@@ -142,6 +153,7 @@ public class LeaderMachineApplyBill implements Parcelable {
         this.applyName = in.readString();
         this.applyDate = in.readString();
         this.remark = in.readString();
+        this.state = in.readString();
         this.machineList = in.createTypedArrayList(LeaderMachineApplyBillByMachine.CREATOR);
     }
 

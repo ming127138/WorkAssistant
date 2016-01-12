@@ -74,7 +74,7 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
         btn_query = (Button) findViewById(R.id.leader_machine_return_bill_list_query_btn);
 
         lv_bill = (ListView) findViewById(R.id.leader_machine_return_bill_list_lv);
-        adapter = new LeaderMachineReturnBillListAdapter(LeaderMachineReturnBillListActivity.this, billList);
+        adapter = new LeaderMachineReturnBillListAdapter(LeaderMachineReturnBillListActivity.this, billList, userNo);
         lv_bill.setAdapter(adapter);
 
     }

@@ -58,7 +58,7 @@ public class LeaderMachineApplyBillByMachineStateAdapter extends BaseAdapter {
             v.machineNo = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_machine_state_no_tv);
             v.machineName = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_machine_state_name_tv);
             v.state = (TextView) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_machine_state_state_tv);
-            v.plan = (Button) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_plan_btn);
+            v.plan = (Button) convertView.findViewById(R.id.listview_item_leader_machine_apply_bill_by_machine_state_plan_btn);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();

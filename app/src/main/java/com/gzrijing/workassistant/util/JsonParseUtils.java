@@ -1164,6 +1164,13 @@ public class JsonParseUtils {
                 String applyName = jsonObject.getString("SaveName");
                 String applyDate = jsonObject.getString("SaveDate");
                 String remark = jsonObject.getString("Remark");
+                String state = jsonObject.getString("State");
+                if(state.equals("保存")){
+                    state = "未审核";
+                }
+                if(state.equals("审核")){
+                    state = "已审核";
+                }
 
                 String machineNeedDetail = jsonObject.getString("MachineNeedDetail");
                 ArrayList<LeaderMachineApplyBillByMachine> machineList = new ArrayList<LeaderMachineApplyBillByMachine>();
@@ -1195,6 +1202,7 @@ public class JsonParseUtils {
                 bill.setApplyName(applyName);
                 bill.setApplyDate(applyDate);
                 bill.setRemark(remark);
+                bill.setState(state);
                 bill.setMachineList(machineList);
                 list.add(bill);
             }
@@ -1254,6 +1262,13 @@ public class JsonParseUtils {
                 String applyName = jsonObject.getString("SaveName");
                 String applyDate = jsonObject.getString("SaveDate");
                 String remark = jsonObject.getString("Remark");
+                String state = jsonObject.getString("State");
+                if(state.equals("保存")){
+                    state = "未审核";
+                }
+                if(state.equals("审核")){
+                    state = "已审核";
+                }
 
                 String machineNeedDetail = jsonObject.getString("MachineSendDetail");
                 ArrayList<LeaderMachineReturnBillByMachine> machineList = new ArrayList<LeaderMachineReturnBillByMachine>();
@@ -1289,6 +1304,7 @@ public class JsonParseUtils {
                 bill.setApplyName(applyName);
                 bill.setApplyDate(applyDate);
                 bill.setRemark(remark);
+                bill.setState(state);
                 bill.setMachineList(machineList);
                 list.add(bill);
             }
