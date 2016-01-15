@@ -10,9 +10,13 @@ import android.util.Log;
 import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.service.GetLeaderBusinessService;
 import com.gzrijing.workassistant.service.GetWorkerBusinessService;
+import com.gzrijing.workassistant.service.ListenerLeaderMachineApplyBillService;
+import com.gzrijing.workassistant.service.ListenerLeaderMachineReturnBillService;
 import com.gzrijing.workassistant.service.ListenerMachineApplyStateService;
+import com.gzrijing.workassistant.service.ListenerMachineBackOkService;
 import com.gzrijing.workassistant.service.ListenerMachineReceivedStateService;
 import com.gzrijing.workassistant.service.ListenerMachineReturnStateService;
+import com.gzrijing.workassistant.service.ListenerMachineSendOkService;
 import com.gzrijing.workassistant.service.ListenerReportInfoCompleteService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProblemService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProgressService;
@@ -89,10 +93,21 @@ public class MainReceiver extends BroadcastReceiver {
                                     String billNo = jsonObject.getString("BillNo");
                                     listenerMachineReceivedState(user, orderId, billNo);
                                 }
+                                if(cmd.equals("sendmachineok")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    String billNo = jsonObject.getString("BillNo");
+                                    String machineNo = jsonObject.getString("MachineNo");
+                                    listenerMachineSendOk(user, orderId, billNo, machineNo);
+                                }
                                 if(cmd.equals("getmymachinereturn")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
                                     listenerMachineReturnState(user, orderId, billNo);
+                                }
+                                if(cmd.equals("backmachinebillok")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    String billNo = jsonObject.getString("BillNo");
+                                    listenerMachineBackOk(user, orderId, billNo);
                                 }
                                 if(cmd.equals("getneedsendmachinelist")){
                                     listenerSendMachineOrder();
@@ -115,6 +130,12 @@ public class MainReceiver extends BroadcastReceiver {
                                 if(cmd.equals("getfinishconstruction")){
                                     String orderId = jsonObject.getString("FileNo");
                                     listenerReportInfoComplete(orderId);
+                                }
+                                if(cmd.equals("getmachineneedlist")){
+                                    listenerLeaderMachineApplyBill();
+                                }
+                                if(cmd.equals("getmachinebacklist")){
+                                    listenerLeaderMachineReturnBill();
                                 }
                             }
                         }
@@ -207,10 +228,33 @@ public class MainReceiver extends BroadcastReceiver {
     }
 
     /**
+     * 监听哪些机械已经送达目的地
+     */
+    private void listenerMachineSendOk(String userNo, String orderId, String billNo, String machineNo){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerMachineSendOkService.class);
+        intent.putExtra("userNo", userNo);
+        intent.putExtra("orderId", orderId);
+        intent.putExtra("billNo", billNo);
+        intent.putExtra("machineNo", machineNo);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
      * 监听哪些机械可以退回
      */
     private void listenerMachineReturnState(String userNo, String orderId, String billNo){
         Intent intent = new Intent(MyApplication.getContext(), ListenerMachineReturnStateService.class);
+        intent.putExtra("userNo", userNo);
+        intent.putExtra("orderId", orderId);
+        intent.putExtra("billNo", billNo);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听退机申请单已全部退完
+     */
+    private void listenerMachineBackOk(String userNo, String orderId, String billNo){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerMachineBackOkService.class);
         intent.putExtra("userNo", userNo);
         intent.putExtra("orderId", orderId);
         intent.putExtra("billNo", billNo);
@@ -272,9 +316,16 @@ public class MainReceiver extends BroadcastReceiver {
     /**
      * 监听是否有新的机械申请单（机械组长界面）
      */
-    private void listenerLeaderMachineApplyBill(String orderId){
-        Intent intent = new Intent(MyApplication.getContext(), ListenerReportInfoCompleteService.class);
-        intent.putExtra("orderId", orderId);
+    private void listenerLeaderMachineApplyBill(){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerLeaderMachineApplyBillService.class);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听是否有新的退机申请单（机械组长界面）
+     */
+    private void listenerLeaderMachineReturnBill(){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerLeaderMachineReturnBillService.class);
         MyApplication.getContext().startService(intent);
     }
 

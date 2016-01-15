@@ -69,7 +69,6 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
     private EditText et_useAddress;
     private EditText et_applyRemarks;
     private Button btn_apply;
-    private Button btn_received;
     private Button btn_returnEdit;
     private Button btn_return;
     private MyListView lv_created;
@@ -121,7 +120,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
         List<MachineNoData> machineNoDataList = businessData.getMachineNoList();
         for (MachineNoData data : machineNoDataList) {
-            if (data.getApplyId() != null && !data.getApplyId().equals("")){
+            if (data.getApplyId() != null && !data.getApplyId().equals("")) {
                 if (data.getApplyState().equals("申请中") || data.getApplyState().equals("不批准")) {
                     MachineNo applying = new MachineNo();
                     applying.setApplyId(data.getApplyId());
@@ -146,7 +145,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                     approval.setRemarks(data.getRemarks());
                     approvalList.add(approval);
                 }
-            }else{
+            } else {
                 if (!data.getReturnId().equals("")) {
                     MachineNo returnNo = new MachineNo();
                     returnNo.setReturnId(data.getReturnId());
@@ -165,14 +164,13 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         for (MachineData machineData : machineDataList) {
             if (machineData.getReceivedState() != null) {
                 if (machineData.getReceivedState().equals("已安排") ||
-                        machineData.getReceivedState().equals("已领出") ||
-                        machineData.getReceivedState().equals("已退回")) {
+                        machineData.getReceivedState().equals("已送达")) {
                     Machine machine = new Machine();
                     machine.setId(machineData.getNo());
                     machine.setName(machineData.getName());
                     machine.setUnit(machineData.getUnit());
-                    machine.setNum(machineData.getNum());
                     machine.setState(machineData.getReceivedState());
+                    machine.setSendNum(machineData.getSendNum());
                     receivedList.add(machine);
                 }
             }
@@ -191,10 +189,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         et_applyRemarks = (EditText) findViewById(R.id.machine_apply_apply_remarks_et);
         btn_apply = (Button) findViewById(R.id.machine_apply_apply_btn);
 
-        btn_received = (Button) findViewById(R.id.machine_apply_received_btn);
-
         btn_returnEdit = (Button) findViewById(R.id.machine_apply_return_edit_btn);
-        btn_return = (Button) findViewById(R.id.machine_apply_return_btn);
 
         lv_created = (MyListView) findViewById(R.id.machine_apply_created_lv);
         createdAdapter = new MachineApplyCreatedAdapter(this, createdList);
@@ -223,9 +218,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         tv_useTime.setOnClickListener(this);
         tv_returnTime.setOnClickListener(this);
         btn_apply.setOnClickListener(this);
-        btn_received.setOnClickListener(this);
         btn_returnEdit.setOnClickListener(this);
-        btn_return.setOnClickListener(this);
 
         lv_applying.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -288,17 +281,10 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                 apply();
                 break;
 
-            case R.id.machine_apply_received_btn:
-                Intent intent2 = new Intent();
-                intent2.setClass(this, MipcaActivityCapture.class);
-                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(intent2, MACHINE_RECEIVED);
-                break;
-
             case R.id.machine_apply_return_edit_btn:
                 ArrayList<Machine> machineList = new ArrayList<Machine>();
                 for (Machine machine : receivedList) {
-                    if (machine.getState().equals("已领出")) {
+                    if (machine.getState().equals("已送达")) {
                         machineList.add(machine);
                     }
                 }
@@ -307,13 +293,6 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                 intent3.putExtra("userNo", userNo);
                 intent3.putParcelableArrayListExtra("machineList", machineList);
                 startActivityForResult(intent3, 30);
-                break;
-
-            case R.id.machine_apply_return_btn:
-                Intent intent4 = new Intent();
-                intent4.setClass(this, MipcaActivityCapture.class);
-                intent4.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(intent4, MACHINE_RETURN);
                 break;
         }
     }
@@ -342,7 +321,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", "");
                 jsonObject.put("MachineName", machine.getName());
-                jsonObject.put("Qty", machine.getNum());
+                jsonObject.put("Qty", machine.getApplyNum());
                 jsonObject.put("BeginDate", useTime);
                 jsonObject.put("EstimateFinishDate", returnTime);
                 jsonObject.put("Remark", remarks);
@@ -404,10 +383,11 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         for (int i = 0; i < createdList.size(); i++) {
             MachineData data = new MachineData();
             data.setApplyId(applyId);
-            data.setNo(createdList.get(i).getId());
+            data.setNo("");
             data.setName(createdList.get(i).getName());
             data.setUnit(createdList.get(i).getUnit());
-            data.setNum(createdList.get(i).getNum());
+            data.setApplyNum(createdList.get(i).getApplyNum());
+            data.setReceivedState("");
             data.save();
             businessData.getMachineDataList().add(data);
         }
@@ -517,8 +497,14 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
 
         if (requestCode == 30) {
             if (resultCode == 30) {
-                MachineNo machineNo = (MachineNo) data.getParcelableExtra("machineNo");
-                returnList.add(machineNo);
+                applyingList.clear();
+                approvalList.clear();
+                receivedList.clear();
+                returnList.clear();
+                getDBData();
+                applyingAdapter.notifyDataSetChanged();
+                approvalAdapter.notifyDataSetChanged();
+                receivedAdapter.notifyDataSetChanged();
                 returnAdapter.notifyDataSetChanged();
             }
         }

@@ -9,8 +9,9 @@ public class MachineData extends DataSupport {
     private String No;                  //机械编号
     private String name;                //机械名称
     private String unit;                //机械单位
-    private String num;                 //数量
-    private String receivedState;       //领用状态（已安排，已领出，已退回）
+    private int applyNum;               //申请数量
+    private int sendNum;                //安排数量
+    private String receivedState;       //领用状态（已安排，已送达）
     private BusinessData businessData;
 
     public int getId() {
@@ -61,12 +62,20 @@ public class MachineData extends DataSupport {
         this.unit = unit;
     }
 
-    public String getNum() {
-        return num;
+    public int getApplyNum() {
+        return applyNum;
     }
 
-    public void setNum(String num) {
-        this.num = num;
+    public void setApplyNum(int applyNum) {
+        this.applyNum = applyNum;
+    }
+
+    public int getSendNum() {
+        return sendNum;
+    }
+
+    public void setSendNum(int sendNum) {
+        this.sendNum = sendNum;
     }
 
     public String getReceivedState() {

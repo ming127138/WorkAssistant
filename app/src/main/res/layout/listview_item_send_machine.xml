@@ -9,7 +9,7 @@
         android:id="@+id/listview_item_send_machine_name_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="7"
+        android:layout_weight="1"
         android:layout_gravity="center"
         android:textColor="@color/black"
         android:textSize="@dimen/sw_15dp"/>
@@ -17,19 +17,22 @@
     <Button
         android:id="@+id/listview_item_send_machine_info_btn"
         android:layout_width="@dimen/sw_50dp"
-        android:layout_height="@dimen/sw_30dp"
+        android:layout_height="@dimen/sw_25dp"
         android:background="@drawable/btn_blue_frame"
         android:layout_gravity="center"
         android:text="信息"
         android:textColor="@color/blue"
         android:textSize="@dimen/sw_15dp"/>
 
-    <ImageView
-        android:id="@+id/listview_item_send_machine_qrcode_iv"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/sw_30dp"
-        android:layout_weight="1"
+    <Button
+        android:id="@+id/listview_item_send_machine_report_btn"
+        android:layout_width="@dimen/sw_50dp"
+        android:layout_height="@dimen/sw_25dp"
+        android:layout_marginLeft="@dimen/sw_10dp"
+        android:background="@drawable/btn_blue_frame"
         android:layout_gravity="center"
-        android:src="@drawable/icon_qrcode"/>
+        android:text="汇报"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/sw_15dp"/>
 
 </LinearLayout>

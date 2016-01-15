@@ -8,13 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.SendMachine;
-import com.gzrijing.workassistant.view.QrcodeActivity;
 import com.gzrijing.workassistant.view.SendMachineInfoActivity;
+import com.gzrijing.workassistant.view.SendMachineReportActivity;
 
 import java.util.List;
 
@@ -54,13 +53,13 @@ public class SendMachineAdapter extends BaseAdapter {
                     R.layout.listview_item_send_machine, parent, false);
             v.name = (TextView) convertView.findViewById(R.id.listview_item_send_machine_name_tv);
             v.info = (Button) convertView.findViewById(R.id.listview_item_send_machine_info_btn);
-            v.qrcode = (ImageView) convertView.findViewById(R.id.listview_item_send_machine_qrcode_iv);
+            v.report = (Button) convertView.findViewById(R.id.listview_item_send_machine_report_btn);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.name.setText(list.get(position).getMachineName());
+        v.name.setText(list.get(position).getMachineNo()+"——"+list.get(position).getMachineName());
 
         v.info.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,13 +71,11 @@ public class SendMachineAdapter extends BaseAdapter {
             }
         });
 
-        v.qrcode.setOnClickListener(new View.OnClickListener() {
+        v.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, QrcodeActivity.class);
-                intent.putExtra("billNo", list.get(position).getBillNo());
-                intent.putExtra("machineNo", list.get(position).getMachineNo());
-                intent.putExtra("flag", "send");
+                Intent intent = new Intent(context, SendMachineReportActivity.class);
+                intent.putExtra("sendId", list.get(position).getSendId());
                 context.startActivity(intent);
             }
         });
@@ -88,6 +85,6 @@ public class SendMachineAdapter extends BaseAdapter {
     class ViewHolder {
         private TextView name;
         private Button info;
-        private ImageView qrcode;
+        private Button report;
     }
 }

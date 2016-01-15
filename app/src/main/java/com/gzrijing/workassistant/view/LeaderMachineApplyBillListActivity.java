@@ -60,7 +60,9 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
                 "saveUser", MODE_PRIVATE);
         userNo = app.getString("userNo", "");
 
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan");
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("action.com.gzrijing.workassistant.LeaderMachineApplyBillByPlan");
+        intentFilter.addAction("action.com.gzrijing.workassistant.LeaderMachineApplyBill");
         registerReceiver(mBroadcastReceiver,intentFilter);
     }
 
@@ -167,6 +169,10 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
                         }
                     }
                 }
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.LeaderMachineApplyBill")){
+                getApplyBill();
             }
         }
     };

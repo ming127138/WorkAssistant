@@ -1,6 +1,5 @@
 package com.gzrijing.workassistant.adapter;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -23,10 +22,9 @@ import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.view.BusinessHaveSendActivity;
-import com.gzrijing.workassistant.view.MachineVerifyActivity;
+import com.gzrijing.workassistant.view.MachineApplyActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.DistributeActivity;
-import com.gzrijing.workassistant.view.ReportInfoActivity;
 import com.gzrijing.workassistant.view.ReportInfoCompleteActivity;
 import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
@@ -76,6 +74,8 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.layout.listview_item_business_leader, parent, false);
             v.orderId = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_order_id_tv);
+            v.machineApply = (Button) convertView.findViewById(
+                    R.id.listview_item_business_leader_machine_apply_btn);
             v.progress = (Button) convertView.findViewById(
                     R.id.listview_item_business_leader_progress_btn);
             v.info = (Button) convertView.findViewById(
@@ -90,8 +90,6 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.id.listview_item_business_leader_state_tv);
             v.deadline = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_deadline_tv);
-            v.machineVerify = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_machine_verify_tv);
             v.suppliesVerify = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_supplies_verify_tv);
             v.temInfo = (TextView) convertView.findViewById(
@@ -113,7 +111,6 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         v.type.setText(orderList.get(position).getType());
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
-        v.machineVerify.setText(orderList.get(position).getMachineApplyNum()+"条新机械申请");
         v.suppliesVerify.setText(orderList.get(position).getSuppliesApplyNum()+"条新材料申请");
         v.temInfo.setText(orderList.get(position).getTemInfoNum()+"条新临时信息");
 
@@ -123,10 +120,11 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             v.urgent.setVisibility(View.GONE);
         }
 
-        v.machineVerify.setOnClickListener(new View.OnClickListener() {
+
+        v.machineApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MachineVerifyActivity.class);
+                Intent intent = new Intent(context, MachineApplyActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }
@@ -250,11 +248,11 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         private ImageView urgent;
         private TextView type;
         private TextView state;
-        private TextView machineVerify;
         private TextView suppliesVerify;
         private TextView deadline;
         private TextView temInfo;
         private TextView completeInfo;
+        private Button machineApply;
         private Button progress;
         private Button info;
         private Button haveSend;

@@ -47,7 +47,7 @@ public class MachineApplyingScanActivity extends BaseActivity {
             Machine machine = new Machine();
             machine.setName(data.getName());
             machine.setUnit(data.getUnit());
-            machine.setNum(data.getNum());
+            machine.setApplyNum(data.getApplyNum());
             machineList.add(machine);
         }
     }

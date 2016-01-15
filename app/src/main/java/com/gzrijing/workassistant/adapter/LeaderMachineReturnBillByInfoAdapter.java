@@ -56,7 +56,7 @@ public class LeaderMachineReturnBillByInfoAdapter extends BaseAdapter {
         v.machineNo.setText(list.get(position).getMachineNo());
         v.name.setText(list.get(position).getName());
         v.unit.setText(list.get(position).getUnit());
-        v.num.setText("1");
+        v.num.setText(list.get(position).getNum());
 
         return convertView;
     }

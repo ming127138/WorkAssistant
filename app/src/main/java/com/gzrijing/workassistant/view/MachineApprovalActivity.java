@@ -8,7 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.MachineApplyingAdapter;
+import com.gzrijing.workassistant.adapter.MachineApprovalAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.MachineData;
 import com.gzrijing.workassistant.entity.Machine;
@@ -28,7 +28,7 @@ public class MachineApprovalActivity extends BaseActivity {
     private TextView tv_useAddress;
     private TextView tv_remark;
     private ListView lv_list;
-    private MachineApplyingAdapter adapter;
+    private MachineApprovalAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +42,13 @@ public class MachineApprovalActivity extends BaseActivity {
     private void initData() {
         Intent intent = getIntent();
         machineNo = (MachineNo) intent.getParcelableExtra("machineNo");
-        List<MachineData> machineDataList = DataSupport.where("applyId = ?", machineNo.getApplyId()).find(MachineData.class);
+        List<MachineData> machineDataList = DataSupport.where("applyId = ? and receivedState=?", machineNo.getApplyId(), "").find(MachineData.class);
         for (MachineData data : machineDataList) {
             Machine machine = new Machine();
             machine.setName(data.getName());
             machine.setUnit(data.getUnit());
-            machine.setNum(data.getNum());
+            machine.setApplyNum(data.getApplyNum());
+            machine.setSendNum(data.getSendNum());
             machineList.add(machine);
         }
     }
@@ -67,7 +68,7 @@ public class MachineApprovalActivity extends BaseActivity {
         tv_remark.setText(machineNo.getRemarks());
 
         lv_list = (ListView) findViewById(R.id.machine_approval_lv);
-        adapter = new MachineApplyingAdapter(this, machineList);
+        adapter = new MachineApprovalAdapter(this, machineList);
         lv_list.setAdapter(adapter);
     }
 

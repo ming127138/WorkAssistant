@@ -12,12 +12,12 @@ import com.gzrijing.workassistant.entity.Machine;
 
 import java.util.List;
 
-public class MachineApplyCreatedAdapter extends BaseAdapter {
+public class MachineReturnEditReceivedAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
     private List<Machine> machineList;
 
-    public MachineApplyCreatedAdapter(Context context, List<Machine> machineList) {
+    public MachineReturnEditReceivedAdapter(Context context, List<Machine> machineList) {
         listContainer = LayoutInflater.from(context);
         this.machineList = machineList;
     }
@@ -43,23 +43,26 @@ public class MachineApplyCreatedAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_machine_apply_created, parent, false);
-            v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_created_name_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_created_unit_tv);
-            v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_apply_created_num_tv);
+                    R.layout.listview_item_machine_return_edit_received, parent, false);
+            v.id = (TextView) convertView.findViewById(R.id.listview_item_machine_return_edit_received_id_tv);
+            v.name = (TextView) convertView.findViewById(R.id.listview_item_machine_return_edit_received_name_tv);
+            v.unit = (TextView) convertView.findViewById(R.id.listview_item_machine_return_edit_received_unit_tv);
+            v.num = (TextView) convertView.findViewById(R.id.listview_item_machine_return_edit_received_num_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
+        v.id.setText(machineList.get(position).getId());
         v.name.setText(machineList.get(position).getName());
         v.unit.setText(machineList.get(position).getUnit());
-        v.num.setText(machineList.get(position).getApplyNum() + "");
+        v.num.setText(machineList.get(position).getSendNum() + "");
 
         return convertView;
     }
 
     class ViewHolder {
+        private TextView id;
         private TextView name;
         private TextView unit;
         private TextView num;

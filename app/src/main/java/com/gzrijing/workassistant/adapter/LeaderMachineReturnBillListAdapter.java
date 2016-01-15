@@ -84,7 +84,7 @@ public class LeaderMachineReturnBillListAdapter extends BaseAdapter {
         v.billNo.setText(list.get(position).getBillNo());
         v.orderId.setText(list.get(position).getOrderId());
         v.applyDate.setText(list.get(position).getApplyDate());
-        v.type.setText(list.get(position).getApplyDate());
+        v.type.setText(list.get(position).getBillType());
 
         String state = list.get(position).getState();
         if(state.equals("未审核")){

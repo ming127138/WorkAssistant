@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
@@ -12,11 +13,7 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.MachineData;
-import com.gzrijing.workassistant.db.SuppliesData;
-import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Machine;
-import com.gzrijing.workassistant.entity.Supplies;
-import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
 import com.gzrijing.workassistant.util.HttpUtils;
@@ -34,6 +31,7 @@ public class ListenerMachineReceivedStateService extends IntentService {
     private Handler handler = new Handler();
     private String userNo;
     private String orderId;
+    private String billNo;
 
     public ListenerMachineReceivedStateService() {
         super("ListenerMachineReceivedStateService");
@@ -43,7 +41,7 @@ public class ListenerMachineReceivedStateService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
-        String billNo = intent.getStringExtra("billNo");
+        billNo = intent.getStringExtra("billNo");
 
         String url = null;
         try {
@@ -54,6 +52,7 @@ public class ListenerMachineReceivedStateService extends IntentService {
             e.printStackTrace();
         }
 
+        Log.e("url", url);
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
@@ -78,17 +77,42 @@ public class ListenerMachineReceivedStateService extends IntentService {
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
                 .find(BusinessData.class, true).get(0);
 
+        List<Machine> machines = JsonParseUtils.getLitenerMachineSendNum(jsonData);
+        List<MachineData> machineDatas = DataSupport.where("applyId = ? and receivedState=?", billNo, "").find(MachineData.class);
+        for(Machine machine : machines){
+            for (MachineData data : machineDatas) {
+                if(data.getName().equals(machine.getName())){
+                    ContentValues values = new ContentValues();
+                    values.put("sendNum", machine.getSendNum());
+                    DataSupport.updateAll(MachineData.class, values, "applyId = ? and name = ? and receivedState = ?", billNo, machine.getName(), "");
+                }
+            }
+        }
+
+        List<MachineData> machineDataList = DataSupport.where("applyId = ?", billNo).find(MachineData.class);
         List<Machine> machineList = JsonParseUtils.getLitenerMachineReceivedState(jsonData);
+        int count = 0;
         for(Machine machine : machineList){
-            MachineData machineData = new MachineData();
-            machineData.setApplyId(machine.getApplyId());
-            machineData.setNo(machine.getId());
-            machineData.setName(machine.getName());
-            machineData.setUnit(machine.getUnit());
-            machineData.setNum(machine.getNum());
-            machineData.setReceivedState(machine.getState());
-            machineData.save();
-            businessData.getMachineDataList().add(machineData);
+            for(MachineData data : machineDataList){
+                if(machine.getId().equals(data.getNo())){
+                    break;
+                }else{
+                    count++;
+                }
+            }
+
+            if(count == machineDataList.size()){
+                MachineData machineData = new MachineData();
+                machineData.setApplyId(machine.getApplyId());
+                machineData.setNo(machine.getId());
+                machineData.setName(machine.getName());
+                machineData.setUnit(machine.getUnit());
+                machineData.setSendNum(1);
+                machineData.setReceivedState(machine.getState());
+                machineData.save();
+                businessData.getMachineDataList().add(machineData);
+            }
+            count = 0;
         }
         businessData.save();
 

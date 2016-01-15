@@ -62,7 +62,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".base.BaseActivity" />
+        <activity
+            android:name=".base.BaseActivity" />
         <activity
             android:name=".view.MainActivity"
             android:label="@string/title_activity_main"
@@ -78,6 +79,7 @@
         <activity
             android:name=".view.PipeInspectionFormActivity"
             android:label="@string/title_activity_pipe_inspection_form"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.SubordinateActivity"
@@ -343,6 +345,10 @@
             android:name=".view.LeaderMachineReturnBillByBackMachineActivity"
             android:label="退回机械"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SendMachineReportActivity"
+            android:label="送机汇报"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -438,6 +444,21 @@
             android:exported="false" />
         <service
             android:name=".service.UploadSafetyInspectImageService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerLeaderMachineApplyBillService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerLeaderMachineReturnBillService"
+            android:exported="false" />
+        <service
+            android:name=".service.SendMachineReportService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerMachineSendOkService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerMachineBackOkService"
             android:exported="false" />
 
         <!-- app service -->

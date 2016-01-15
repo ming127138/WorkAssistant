@@ -4,22 +4,12 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
 
-import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
 
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
-
 public class ListenerSendMachineOrderService extends IntentService {
-
-    private Handler handler = new Handler();
 
     public ListenerSendMachineOrderService() {
         super("ListenerSendMachineOrderService");

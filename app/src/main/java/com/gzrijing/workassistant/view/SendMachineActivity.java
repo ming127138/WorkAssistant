@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -58,13 +59,15 @@ public class SendMachineActivity extends BaseActivity {
     private void getSendMachine() {
         String url = null;
         try {
-            url = "?cmd=getneedsendmachinelist&userno=" + URLEncoder.encode(userNo, "UTF-8");
+            url = "?cmd=getneedsendmachinelist&userno=" + URLEncoder.encode(userNo, "UTF-8") + "&billtype="
+                    + URLEncoder.encode("申请", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
+                Log.e("response", response);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -115,7 +118,7 @@ public class SendMachineActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals("action.com.gzrijing.workassistant.SendMachine")){
+            if (action.equals("action.com.gzrijing.workassistant.SendMachine")) {
                 getSendMachine();
             }
         }

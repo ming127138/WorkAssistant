@@ -54,7 +54,7 @@ public class MachineApplyingAdapter extends BaseAdapter {
 
         v.name.setText(applyingList.get(position).getName());
         v.unit.setText(applyingList.get(position).getUnit());
-        v.num.setText(applyingList.get(position).getNum() + "");
+        v.num.setText(applyingList.get(position).getApplyNum() + "");
         return convertView;
     }
 

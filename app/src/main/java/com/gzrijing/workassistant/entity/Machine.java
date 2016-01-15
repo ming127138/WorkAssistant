@@ -8,18 +8,20 @@ public class Machine implements Parcelable {
     private String id;          //机械编号
     private String name;        //机械名称
     private String unit;        //机械单位
-    private String num;         //数量
+    private int applyNum;       //申请数量
+    private int sendNum;        //安排数量
     private String state;       //机械状态(查询时的机械状态，已安排，已领出)
 
     public Machine() {
     }
 
-    public Machine(String applyId, String id, String name, String unit, String num, String state) {
+    public Machine(String applyId, String id, String name, String unit, int applyNum, int sendNum, String state) {
         this.applyId = applyId;
         this.id = id;
         this.name = name;
         this.unit = unit;
-        this.num = num;
+        this.applyNum = applyNum;
+        this.sendNum = sendNum;
         this.state = state;
     }
 
@@ -55,12 +57,20 @@ public class Machine implements Parcelable {
         this.unit = unit;
     }
 
-    public String getNum() {
-        return num;
+    public int getApplyNum() {
+        return applyNum;
     }
 
-    public void setNum(String num) {
-        this.num = num;
+    public void setApplyNum(int applyNum) {
+        this.applyNum = applyNum;
+    }
+
+    public int getSendNum() {
+        return sendNum;
+    }
+
+    public void setSendNum(int sendNum) {
+        this.sendNum = sendNum;
     }
 
     public String getState() {
@@ -82,7 +92,8 @@ public class Machine implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.unit);
-        dest.writeString(this.num);
+        dest.writeInt(this.applyNum);
+        dest.writeInt(this.sendNum);
         dest.writeString(this.state);
     }
 
@@ -91,7 +102,8 @@ public class Machine implements Parcelable {
         this.id = in.readString();
         this.name = in.readString();
         this.unit = in.readString();
-        this.num = in.readString();
+        this.applyNum = in.readInt();
+        this.sendNum = in.readInt();
         this.state = in.readString();
     }
 

@@ -24,11 +24,9 @@ import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.MachineData;
 import com.gzrijing.workassistant.db.MachineNoData;
-import com.gzrijing.workassistant.db.SuppliesData;
 import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.MachineNo;
-import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
@@ -43,7 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -92,7 +89,7 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
             machine.setId(data.getNo());
             machine.setName(data.getName());
             machine.setUnit(data.getUnit());
-            machine.setNum(data.getNum());
+            machine.setApplyNum(data.getApplyNum());
             machineList.add(machine);
         }
     }
@@ -237,7 +234,7 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", "");
                 jsonObject.put("MachineName", machine.getName());
-                jsonObject.put("Qty", machine.getNum());
+                jsonObject.put("Qty", machine.getApplyNum());
                 jsonObject.put("BeginDate", useTime);
                 jsonObject.put("EstimateFinishDate", returnTime);
                 jsonObject.put("Remark", remarks);
@@ -311,7 +308,7 @@ public class MachineApplyingActivity extends BaseActivity implements View.OnClic
             data.setNo(machineList.get(i).getId());
             data.setName(machineList.get(i).getName());
             data.setUnit(machineList.get(i).getUnit());
-            data.setNum(machineList.get(i).getNum());
+            data.setApplyNum(machineList.get(i).getApplyNum());
             data.save();
             businessData.getMachineDataList().add(data);
         }

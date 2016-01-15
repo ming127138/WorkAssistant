@@ -6,66 +6,54 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
 
 import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.db.MachineData;
 import com.gzrijing.workassistant.db.MachineNoData;
+import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
 
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
-public class ListenerMachineReturnStateService extends IntentService {
+public class ListenerMachineBackOkService extends IntentService {
 
-    private Handler handler = new Handler();
-    private String userNo;
-    private String orderId;
-
-    public ListenerMachineReturnStateService() {
-        super("ListenerMachineReturnStateService");
+    public ListenerMachineBackOkService() {
+        super("ListenerMachineBackOkService");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        userNo = intent.getStringExtra("userNo");
-        orderId = intent.getStringExtra("orderId");
+        String userNo = intent.getStringExtra("userNo");
+        String orderId = intent.getStringExtra("orderId");
         String billNo = intent.getStringExtra("billNo");
 
         saveData(billNo);
-        sendNotification();
+        sendNotification(orderId, billNo);
 
     }
 
     private void saveData(String billNo) {
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
-                .find(BusinessData.class, true).get(0);
-        List<MachineNoData> machineNoDataList = businessData.getMachineNoList();
+        DataSupport.deleteAll(MachineNoData.class, "returnId = ?", billNo);
 
-        for(MachineNoData machineNoData : machineNoDataList){
-            if(machineNoData.getReturnId() != null && machineNoData.getReturnId().equals(billNo)){
-                ContentValues values = new ContentValues();
-                values.put("returnState", "已安排");
-                DataSupport.updateAll(MachineNoData.class, values, "returnId = ?", machineNoData.getReturnId());
-            }
-        }
-
+        DataSupport.deleteAll(MachineData.class, "returnId = ?", billNo);
 
         Intent intent = new Intent("action.com.gzrijing.workassistant.MachineApply.refresh");
         sendBroadcast(intent);
 
     }
 
-    private void sendNotification() {
+    private void sendNotification(String orderId, String billNo) {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, NotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle(orderId)
-                .setContentText("有一条机械退回单信息更新")
-                .setTicker("有一条机械退回单信息更新")
+                .setContentText("退机单：" + billNo + "的机械已退完")
+                .setTicker("退机单：" + billNo + "的机械已退完")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();

@@ -22,6 +22,8 @@ import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +57,13 @@ public class ReturnMachineActivity extends AppCompatActivity {
     }
 
     private void getReturnMachine() {
-        String url = "?cmd=getneedbackmachinelist";
+        String url = null;
+        try {
+            url = "?cmd=getneedsendmachinelist&userno=" + URLEncoder.encode(userNo, "UTF-8")
+                    + "&billtype=" + URLEncoder.encode("退还", "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
@@ -110,7 +118,7 @@ public class ReturnMachineActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals("action.com.gzrijing.workassistant.ReturnMachine")){
+            if (action.equals("action.com.gzrijing.workassistant.ReturnMachine")) {
                 getReturnMachine();
             }
         }

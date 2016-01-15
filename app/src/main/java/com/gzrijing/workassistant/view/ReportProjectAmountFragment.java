@@ -108,6 +108,7 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
         btn_need = (Button) layoutView.findViewById(R.id.fragment_report_project_amount_submit_need_btn);
         btn_wait = (Button) layoutView.findViewById(R.id.fragment_report_project_amount_submit_wait_btn);
         btn_print = (Button) layoutView.findViewById(R.id.fragment_report_project_amount_print_btn);
+        btn_print.setVisibility(View.VISIBLE);
 
         lv_supplies = (ListView) layoutView.findViewById(R.id.fragment_report_project_amount_supplies_lv);
         adapter = new SuppliesAdapter(getActivity(), suppliesList);

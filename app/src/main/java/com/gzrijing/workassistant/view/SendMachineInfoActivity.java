@@ -38,10 +38,10 @@ public class SendMachineInfoActivity extends BaseActivity {
         String flag = intent.getStringExtra("flag");
         if (flag.equals("ReturnMachine")) {
             returnMachineInfo = intent.getParcelableExtra("ReturnMachine");
-            String[] key = {"工程单号", "申请单号", "退机地址", "机械名称", "退机人", "退机时间", "退机类型"};
+            String[] key = {"工程单号", "申请单号", "退机地址", "机械编号", "机械名称", "数量", "退机人", "退机时间", "退机类型"};
             String[] value = {returnMachineInfo.getOrderId(), returnMachineInfo.getBillNo(),
-                    returnMachineInfo.getAddress(), returnMachineInfo.getMachineName(),
-                    returnMachineInfo.getReturnName(), returnMachineInfo.getReturnTiem(), returnMachineInfo.getType()};
+                    returnMachineInfo.getAddress(), returnMachineInfo.getMachineNo(), returnMachineInfo.getMachineName(),
+                    returnMachineInfo.getMachineNum(), returnMachineInfo.getReturnName(), returnMachineInfo.getReturnTiem(), returnMachineInfo.getType()};
 
             for (int i = 0; i < key.length; i++) {
                 DetailedInfo info = new DetailedInfo();
@@ -52,10 +52,10 @@ public class SendMachineInfoActivity extends BaseActivity {
         }
         if (flag.equals("SendMachine")) {
             sendMachineInfo = intent.getParcelableExtra("SendMachine");
-            String[] key1 = {"工程单号", "申请单号", "用机地址", "机械编号", "机械名称", "领机人", "发放时间"};
-            String[] value1 = {sendMachineInfo.getOrderId(), sendMachineInfo.getBillNo(),
-                    sendMachineInfo.getAddress(), sendMachineInfo.getMachineNo(), sendMachineInfo.getMachineName(),
-                    sendMachineInfo.getApplyName(), sendMachineInfo.getSendData()};
+            String[] key1 = {"工程单号", "申请单号", "取机地址", "送机地址", "机械编号", "机械名称", "发放数量", "领机人", "发放时间"};
+            String[] value1 = {sendMachineInfo.getOrderId(), sendMachineInfo.getBillNo(), sendMachineInfo.getGetAddress(),
+                    sendMachineInfo.getSendAddress(), sendMachineInfo.getMachineNo(), sendMachineInfo.getMachineName(),
+                    sendMachineInfo.getMachineNum(), sendMachineInfo.getApplyName(), sendMachineInfo.getSendData()};
 
             for (int i = 0; i < key1.length; i++) {
                 DetailedInfo info = new DetailedInfo();

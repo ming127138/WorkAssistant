@@ -64,7 +64,7 @@ public class MachineApplyAdapter extends BaseAdapter {
 
         v.name.setText(machineList.get(position).getName());
         v.unit.setText(machineList.get(position).getUnit());
-        v.num.setText(machineList.get(position).getNum() + "");
+        v.num.setText(machineList.get(position).getApplyNum() + "");
 
         v.num.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +78,7 @@ public class MachineApplyAdapter extends BaseAdapter {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                machineList.get(position).setNum(et.getText().toString().trim());
+                                machineList.get(position).setApplyNum(Integer.valueOf(et.getText().toString().trim()));
                                 notifyDataSetChanged();
                             }
                         })

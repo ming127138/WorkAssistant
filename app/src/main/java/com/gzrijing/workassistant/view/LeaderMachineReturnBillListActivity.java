@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -61,6 +62,7 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action.com.gzrijing.workassistant.LeaderMachineReturnBillByPlan");
+        intentFilter.addAction("action.com.gzrijing.workassistant.LeaderMachineReturnBill");
         registerReceiver(mBroadcastReceiver, intentFilter);
 
     }
@@ -87,12 +89,12 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.leader_machine_return_bill_list_query_btn:
-                getApplyBill();
+                getReturnBill();
                 break;
         }
     }
 
-    private void getApplyBill() {
+    private void getReturnBill() {
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setMessage("正在加载数据");
@@ -106,9 +108,12 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+        Log.e("url", url);
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 ArrayList<LeaderMachineReturnBill> list = JsonParseUtils.getLeaderMachineReturnBill(response);
                 billList.clear();
                 billList.addAll(list);
@@ -162,6 +167,10 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
                         adapter.notifyDataSetChanged();
                     }
                 }
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.LeaderMachineReturnBill")){
+                getReturnBill();
             }
         }
     };

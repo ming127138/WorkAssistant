@@ -63,7 +63,7 @@ public class ImageSelectorAdapter extends PagerAdapter{
             @Override
             public void onClick(View v) {
                 boolean ischeck = !imageUrls.get(position).isCheck();
-                imageUrls.get(position).setIsCheck(ischeck);
+                imageUrls.get(position).setCheck(ischeck);
                 if(ischeck){
                     select.setImageResource(R.drawable.login_checkbox_on);
 

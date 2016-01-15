@@ -20,9 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.MachineApplyAdapter;
-import com.gzrijing.workassistant.adapter.MachineApplyingAdapter;
 import com.gzrijing.workassistant.adapter.MachineReturnEditAdapter;
+import com.gzrijing.workassistant.adapter.MachineReturnEditReceivedAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.MachineData;
@@ -67,7 +66,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
     private ArrayList<Machine> returnList = new ArrayList<Machine>();
     private ArrayList<Machine> receivedList = new ArrayList<Machine>();
     private MachineReturnEditAdapter returnAdapter;
-    private MachineApplyingAdapter receivedAdapter;
+    private MachineReturnEditReceivedAdapter receivedAdapter;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Handler handler = new Handler();
@@ -110,7 +109,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
         lv_return.setAdapter(returnAdapter);
 
         lv_received = (MyListView) findViewById(R.id.machine_return_edit_received_lv);
-        receivedAdapter = new MachineApplyingAdapter(this, receivedList);
+        receivedAdapter = new MachineReturnEditReceivedAdapter(this, receivedList);
         lv_received.setAdapter(receivedAdapter);
 
     }
@@ -129,7 +128,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
                 machine.setId(received.getId());
                 machine.setName(received.getName());
                 machine.setUnit(received.getUnit());
-                machine.setNum(received.getNum());
+                machine.setApplyNum(received.getSendNum());
                 returnList.add(machine);
                 returnAdapter.notifyDataSetChanged();
             }
@@ -253,12 +252,12 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
         for (Machine machine : returnList) {
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", "");
+                jsonObject.put("MachineNo", machine.getId());
                 jsonObject.put("MachineName", machine.getName());
-                jsonObject.put("Qty", machine.getNum());
-                jsonObject.put("BeginDate", "");
+                jsonObject.put("MachineAddress", "");
                 jsonObject.put("EstimateFinishDate", time);
                 jsonObject.put("Remark", remark);
+                jsonObject.put("Qty", machine.getApplyNum());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -267,7 +266,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
 
         Log.e("json", jsonArray.toString());
         RequestBody requestBody = new FormEncodingBuilder()
-                .add("cmd", "dosavemachineneed")
+                .add("cmd", "dosavemachineback")
                 .add("billno", "")
                 .add("billtype", billtype)
                 .add("fileno", orderId)
@@ -275,6 +274,11 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
                 .add("userno", userNo)
                 .add("machinedetailjson", jsonArray.toString())
                 .build();
+
+        Log.e("billtype", billtype);
+        Log.e("fileno", orderId);
+        Log.e("proaddress", address);
+        Log.e("userno", userNo);
 
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
@@ -293,7 +297,6 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
                         public void run() {
                             MachineNo machineNo = savaMachineNo(response);
                             Intent  intent = getIntent();
-                            intent.putExtra("machineNo", (Parcelable)machineNo);
                             setResult(30, intent);
                             finish();
                         }
@@ -331,10 +334,13 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
             data.setNo(returnList.get(i).getId());
             data.setName(returnList.get(i).getName());
             data.setUnit(returnList.get(i).getUnit());
-            data.setNum(returnList.get(i).getNum());
+            data.setApplyNum(returnList.get(i).getApplyNum());
             data.save();
             businessData.getMachineDataList().add(data);
+            DataSupport.deleteAll(MachineData.class, "receivedState = ? and No = ?", "已送达", returnList.get(i).getId());
         }
+
+
 
         MachineNoData data1 = new MachineNoData();
         data1.setReturnId(returnId);

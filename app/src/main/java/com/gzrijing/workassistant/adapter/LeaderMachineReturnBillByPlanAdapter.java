@@ -67,7 +67,7 @@ public class LeaderMachineReturnBillByPlanAdapter extends BaseAdapter {
 
         v.machineNo.setText(list.get(position).getMachineNo());
         v.machineName.setText(list.get(position).getName());
-        v.num.setText("1");
+        v.num.setText(list.get(position).getNum());
         if(list.get(position).getFlag().equals("0")){
             v.plan.setVisibility(View.VISIBLE);
             v.planOk.setVisibility(View.GONE);

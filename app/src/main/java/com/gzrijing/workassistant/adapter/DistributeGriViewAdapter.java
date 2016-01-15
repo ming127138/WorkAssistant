@@ -88,7 +88,7 @@ public class DistributeGriViewAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     for (int i = 0; i < imageUrls.size(); i++) {
                         if (picUrls.get(position).getPicUrl().equals(imageUrls.get(i).getPicUrl())) {
-                            imageUrls.get(i).setIsCheck(false);
+                            imageUrls.get(i).setCheck(false);
                         }
                     }
                     picUrls.remove(position);

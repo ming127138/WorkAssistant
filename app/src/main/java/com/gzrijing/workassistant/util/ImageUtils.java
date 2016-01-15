@@ -23,6 +23,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ImageUtils {
 
@@ -174,6 +176,7 @@ public class ImageUtils {
      * 删除一条图片
      */
     public static void deleteImageUri(Context context, Uri uri) {
+        Log.e("uri", uri.toString());
         context.getContentResolver().delete(uri, null, null);
     }
 
@@ -190,6 +193,25 @@ public class ImageUtils {
         cursor.moveToFirst();
         String path = cursor.getString(column_index);
         return path;
+    }
+
+    /**
+     * 获取相册图片最后修改时间
+     * @param uri
+     * @return
+     */
+    public static String getPicLastTime(Context context, Uri uri) {
+        ContentResolver mResolver = context.getContentResolver();
+        String[] proj = {MediaStore.Images.Media.DATE_MODIFIED};
+        Cursor cursor = mResolver.query(uri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED);
+        cursor.moveToFirst();
+        int picLastTime = cursor.getInt(column_index);
+        Log.e("picLastTime", picLastTime+"");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        long lcc_time = Long.valueOf(picLastTime);
+        String picTime = sdf.format(new Date(lcc_time * 1000L));
+        return picTime;
     }
 
 }

@@ -27,7 +27,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SafetyInspectFormActivity extends BaseActivity {
 
@@ -35,6 +38,7 @@ public class SafetyInspectFormActivity extends BaseActivity {
     private String orderId;
     private ExpandableListView elv_item;
     private ArrayList<SafetyInspectFirstItem> groupList = new ArrayList<SafetyInspectFirstItem>();
+    private ArrayList<SafetyInspectSecondItem> checkedList = new ArrayList<SafetyInspectSecondItem>();
     private SafetyInspectFormExpandableAdapter expandableAdapter;
     private Handler handler = new Handler();
 
@@ -55,7 +59,37 @@ public class SafetyInspectFormActivity extends BaseActivity {
 
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
-        getItems();
+
+        getCheckedItems();
+    }
+
+    private void getCheckedItems() {
+        String url = null;
+        try {
+            url = "?cmd=cmd=LoadSafeItemSaved&fileid=" + URLEncoder.encode(orderId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                Log.e("response", response);
+                ArrayList<SafetyInspectSecondItem> list = JsonParseUtils.getSafetyInspectFormItemByChecked(response);
+                checkedList.addAll(list);
+                getItems();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(SafetyInspectFormActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
     }
 
     private void getItems() {
@@ -69,6 +103,15 @@ public class SafetyInspectFormActivity extends BaseActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        for (SafetyInspectSecondItem checkedItem : checkedList) {
+                            for (SafetyInspectFirstItem groupItem : groupList) {
+                                for (SafetyInspectSecondItem childItem : groupItem.getChildList()) {
+                                    if (checkedItem.getId().equals(checkedItem.getId())) {
+                                        childItem.setCheck(true);
+                                    }
+                                }
+                            }
+                        }
                         expandableAdapter = new SafetyInspectFormExpandableAdapter(SafetyInspectFormActivity.this, groupList);
                         elv_item.setAdapter(expandableAdapter);
                     }
@@ -127,7 +170,12 @@ public class SafetyInspectFormActivity extends BaseActivity {
         try {
             for (SafetyInspectFirstItem group : groupList) {
                 for (SafetyInspectSecondItem child : group.getChildList()) {
-                    if(child.isCheck()){
+                    for (SafetyInspectSecondItem checkedItem : checkedList) {
+                        if (child.getId().equals(child.getId())) {
+                            child.setCheck(false);
+                        }
+                    }
+                    if (child.isCheck()) {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("TaskNo", orderId);
                         jsonObject.put("FileNO", child.getId());
@@ -154,13 +202,13 @@ public class SafetyInspectFormActivity extends BaseActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if(response.equals("ok")){
+                        if (response.equals("ok")) {
                             ToastUtil.showToast(SafetyInspectFormActivity.this, "提交成功", Toast.LENGTH_SHORT);
                             Intent intent = new Intent(SafetyInspectFormActivity.this, SafetyInspectRecordActivity.class);
                             intent.putExtra("orderId", orderId);
                             startActivity(intent);
                             finish();
-                        }else{
+                        } else {
                             ToastUtil.showToast(SafetyInspectFormActivity.this, "提交失败", Toast.LENGTH_SHORT);
                         }
                     }

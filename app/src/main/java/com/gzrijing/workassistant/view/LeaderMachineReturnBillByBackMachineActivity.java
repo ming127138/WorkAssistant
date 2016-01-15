@@ -135,12 +135,21 @@ public class LeaderMachineReturnBillByBackMachineActivity extends BaseActivity i
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setMessage("正在安排中");
         pDialog.show();
+
+        StringBuilder sb = new StringBuilder();
+        for (Subordinate sub : subordinates) {
+            if (sub.isCheck()) {
+                sb.append(sub.getUserNo() + ",");
+            }
+        }
+        String executors = sb.toString().substring(0, sb.toString().length() - 1);
+
         JSONArray jsonArray = new JSONArray();
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("BillNo", bill.getBillNo());
             jsonObject.put("MachineNo", machineNo);
-            jsonObject.put("SendUNo", tv_backUser.getText().toString());
+            jsonObject.put("SendUNo", executors);
             jsonObject.put("SendDate", tv_backDate.getText().toString());
             jsonObject.put("MachineAddress", et_sendAddress.getText().toString().trim());
             jsonArray.put(jsonObject);

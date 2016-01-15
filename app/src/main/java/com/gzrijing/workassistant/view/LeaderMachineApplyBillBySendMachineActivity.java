@@ -140,12 +140,21 @@ public class LeaderMachineApplyBillBySendMachineActivity extends BaseActivity im
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setMessage("正在" + flag + "中");
         pDialog.show();
+
+        StringBuilder sb = new StringBuilder();
+        for (Subordinate sub : subordinates) {
+            if (sub.isCheck()) {
+                sb.append(sub.getUserNo() + ",");
+            }
+        }
+        String executors = sb.toString().substring(0, sb.toString().length() - 1);
+
         JSONArray jsonArray = new JSONArray();
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("BillNo", bill.getBillNo());
             jsonObject.put("MachineNo", machineNo);
-            jsonObject.put("SendUNo", tv_sendUser.getText().toString());
+            jsonObject.put("SendUNo", executors);
             jsonObject.put("SendDate", tv_sendDate.getText().toString());
             jsonArray.put(jsonObject);
         } catch (JSONException e) {

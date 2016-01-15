@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MachineApplyingAdapter;
+import com.gzrijing.workassistant.adapter.MachineReturnAdapter;
+import com.gzrijing.workassistant.adapter.MachineReturnEditReceivedAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.MachineData;
 import com.gzrijing.workassistant.entity.Machine;
@@ -27,7 +29,7 @@ public class MachineReturnActivity extends BaseActivity {
     private TextView tv_address;
     private TextView tv_remark;
     private ListView lv_list;
-    private MachineApplyingAdapter adapter;
+    private MachineReturnAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +46,10 @@ public class MachineReturnActivity extends BaseActivity {
         List<MachineData> machineDataList = DataSupport.where("returnId = ?", machineNo.getReturnId()).find(MachineData.class);
         for (MachineData data : machineDataList) {
             Machine machine = new Machine();
+            machine.setId(data.getNo());
             machine.setName(data.getName());
             machine.setUnit(data.getUnit());
-            machine.setNum(data.getNum());
+            machine.setApplyNum(data.getApplyNum());
             machineList.add(machine);
         }
     }
@@ -64,7 +67,7 @@ public class MachineReturnActivity extends BaseActivity {
         tv_remark.setText(machineNo.getRemarks());
 
         lv_list = (ListView) findViewById(R.id.machine_return_lv);
-        adapter = new MachineApplyingAdapter(this, machineList);
+        adapter = new MachineReturnAdapter(this, machineList);
         lv_list.setAdapter(adapter);
     }
 
