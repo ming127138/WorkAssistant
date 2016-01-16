@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +17,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessWorkerAdapter;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.service.GetInspectionService;
 import com.gzrijing.workassistant.service.GetSewageWellsService;
+import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +47,7 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
     private List<BusinessByWorker> orderList = new ArrayList<BusinessByWorker>();
     private BusinessWorkerAdapter adapter;
     private List<BusinessByWorker> orderListByWorker = new ArrayList<BusinessByWorker>();
+    private Handler handler = new Handler();
 
     public WorkerFragment() {
     }
@@ -97,15 +106,85 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void getInspectionOrder() {
-        Intent serviceIntent = new Intent(getActivity(), GetInspectionService.class);
-        serviceIntent.putExtra("userNo", userNo);
-        getActivity().startService(serviceIntent);
+        String url = null;
+        try {
+            url = "?cmd=GetPlanValve&userno=" + URLEncoder.encode(userNo, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("阀门，消防栓计划", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<BusinessByWorker> list = JsonParseUtils.getInspection(response);
+                        for(BusinessByWorker businessByWorker: list){
+                            orderListByWorker.add(businessByWorker);
+                            orderList.add(businessByWorker);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+
+
+//        Intent serviceIntent = new Intent(getActivity(), GetInspectionService.class);
+//        serviceIntent.putExtra("userNo", userNo);
+//        getActivity().startService(serviceIntent);
     }
 
     private void getSewageWellsOrder() {
-        Intent serviceIntent = new Intent(getActivity(), GetSewageWellsService.class);
-        serviceIntent.putExtra("userNo", userNo);
-        getActivity().startService(serviceIntent);
+        String url = null;
+        try {
+            url = "?cmd=GetPlanSlop&userno=" + URLEncoder.encode(userNo, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("污水井计划", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<BusinessByWorker> list = JsonParseUtils.getInspection(response);
+                        for(BusinessByWorker businessByWorker: list){
+                            orderListByWorker.add(businessByWorker);
+                            orderList.add(businessByWorker);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+
+
+//        Intent serviceIntent = new Intent(getActivity(), GetSewageWellsService.class);
+//        serviceIntent.putExtra("userNo", userNo);
+//        getActivity().startService(serviceIntent);
     }
 
     private void initViews() {

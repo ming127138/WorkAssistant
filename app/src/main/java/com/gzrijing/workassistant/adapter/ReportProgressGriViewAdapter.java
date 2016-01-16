@@ -3,7 +3,6 @@ package com.gzrijing.workassistant.adapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +13,10 @@ import android.widget.RelativeLayout;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.PicUrl;
-import com.gzrijing.workassistant.util.ImageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ReportProgressGriViewAdapter extends BaseAdapter {
 

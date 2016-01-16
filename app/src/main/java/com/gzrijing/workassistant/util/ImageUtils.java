@@ -133,6 +133,8 @@ public class ImageUtils {
     public static void pickImageFromCamera(final Activity activity) {
         imageUriFromCamera = createImageUri(activity);
 
+        Log.e("uri", imageUriFromCamera.toString());
+
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUriFromCamera);

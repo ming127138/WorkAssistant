@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -81,9 +82,23 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pipe_inspection_form);
 
+        Log.e("onCreate", "onCreate");
+
+        if(savedInstanceState != null){
+            ImageUtils.imageUriFromCamera = savedInstanceState.getParcelable("imageUriFromCamera");
+            Log.e("savedInstanceState",ImageUtils.imageUriFromCamera.toString());
+        }
+
         initData();
         initViews();
         setListeners();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable("imageUriFromCamera", ImageUtils.imageUriFromCamera);
     }
 
     private void initData() {
@@ -268,6 +283,7 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
 
             case R.id.pipe_inspection_form_submit_btn:
                 if(picUrls.size()>1){
+
                     submitImage();
                 }else{
                     ToastUtil.showToast(PipeInspectionFormActivity.this, "请添加附件再提交", Toast.LENGTH_SHORT);
@@ -301,6 +317,7 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
                     ImageUtils.deleteImageUri(this, ImageUtils.imageUriFromCamera);
                     return;
                 }
+                Log.e("imageUriFromCamera",ImageUtils.imageUriFromCamera.toString());
                 String path = ImageUtils.getPicPath(this, ImageUtils.imageUriFromCamera);
                 Log.e("path", path);
                 Bitmap bitmap = ImageCompressUtil.getimage(path);
@@ -323,7 +340,14 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
                     return;
                 }
                 Uri imageUri = data.getData();
-                String path1 = ImageUtils.getPicPath(this, imageUri);
+                Log.e("imageUri", imageUri.toString());
+
+                String path1;
+                if(imageUri.toString().split(":")[0].equals("content")){
+                    path1 = ImageUtils.getPicPath(this, imageUri);
+                }else{
+                    path1 = imageUri.toString().split(":")[1].substring(2);
+                }
                 Log.e("path", path1);
                 Bitmap bitmap1 = ImageCompressUtil.getimage(path1);
                 String fileName1 = path1.substring(path1.lastIndexOf("/") + 1);
@@ -421,6 +445,7 @@ public class PipeInspectionFormActivity extends BaseActivity implements View.OnC
 
     @Override
     protected void onDestroy() {
+        Log.e("onDestroy", "onDestroy");
         super.onDestroy();
         unregisterReceiver(mBroadcastReceiver);
     }
