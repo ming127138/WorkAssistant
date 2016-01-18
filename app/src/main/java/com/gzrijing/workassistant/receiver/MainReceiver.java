@@ -24,7 +24,6 @@ import com.gzrijing.workassistant.service.ListenerReportInfoProjectAmountService
 import com.gzrijing.workassistant.service.ListenerReturnMachineOrderService;
 import com.gzrijing.workassistant.service.ListenerSendMachineOrderService;
 import com.gzrijing.workassistant.service.ListenerSuppliesApplyStateService;
-import com.gzrijing.workassistant.service.ListenerSuppliesApprovalOrderService;
 import com.gzrijing.workassistant.service.ListenerSuppliesReceivedStateService;
 import com.gzrijing.workassistant.service.ListenerSuppliesReturnStateService;
 import com.igexin.sdk.PushConsts;
@@ -64,10 +63,6 @@ public class MainReceiver extends BroadcastReceiver {
                                 }
                                 if(cmd.equals("getmycons")){
                                     getWorkerBusiness();
-                                }
-                                if(cmd.equals("getmaterialneedlist")){
-                                    String orderId = jsonObject.getString("FileNo");
-                                    listenerSuppliesApprovalOrder(user, orderId);
                                 }
                                 if(cmd.equals("getmymaterialneedmain")){
                                     String orderId = jsonObject.getString("FileNo");
@@ -160,16 +155,6 @@ public class MainReceiver extends BroadcastReceiver {
      */
     private void getWorkerBusiness() {
         Intent intent = new Intent(MyApplication.getContext(), GetWorkerBusinessService.class);
-        MyApplication.getContext().startService(intent);
-    }
-
-    /**
-     * 监听是否有材料审核单要审核
-     */
-    private void listenerSuppliesApprovalOrder(String userNo, String orderId){
-        Intent intent = new Intent(MyApplication.getContext(), ListenerSuppliesApprovalOrderService.class);
-        intent.putExtra("userNo", userNo);
-        intent.putExtra("orderId", orderId);
         MyApplication.getContext().startService(intent);
     }
 

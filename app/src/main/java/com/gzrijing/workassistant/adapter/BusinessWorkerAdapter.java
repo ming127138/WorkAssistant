@@ -23,7 +23,6 @@ import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
-import com.gzrijing.workassistant.view.MachineApplyActivity;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
 import com.gzrijing.workassistant.view.ReportActivity;
 import com.gzrijing.workassistant.view.SuppliesApplyActivity;
@@ -86,8 +85,6 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                     R.id.listview_item_business_worker_tem_info_tv);
             v.suppliesApply = (Button) convertView.findViewById(
                     R.id.listview_item_business_worker_supplies_apply_btn);
-            v.machineApply = (Button) convertView.findViewById(
-                    R.id.listview_item_business_worker_machine_apply_btn);
             v.info = (Button) convertView.findViewById(
                     R.id.listview_item_business_worker_info_btn);
             v.flag = (TextView) convertView.findViewById(
@@ -108,7 +105,6 @@ public class BusinessWorkerAdapter extends BaseAdapter {
 
         if (orderList.get(position).getType().equals("供水管网巡查")) {
             v.info.setVisibility(View.GONE);
-            v.machineApply.setVisibility(View.GONE);
             v.suppliesApply.setVisibility(View.GONE);
         }
         if (orderList.get(position).isUrgent()) {
@@ -137,15 +133,6 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, SuppliesApplyActivity.class);
-                intent.putExtra("orderId", orderList.get(position).getOrderId());
-                context.startActivity(intent);
-            }
-        });
-
-        v.machineApply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, MachineApplyActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }
@@ -325,7 +312,6 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         private TextView temInfo;
         private TextView flag;
         private Button suppliesApply;
-        private Button machineApply;
         private Button info;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;

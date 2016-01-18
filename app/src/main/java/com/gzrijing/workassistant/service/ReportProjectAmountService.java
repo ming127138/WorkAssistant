@@ -2,25 +2,18 @@ package com.gzrijing.workassistant.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
-import com.gzrijing.workassistant.util.ToastUtil;
 import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -28,19 +21,18 @@ import java.util.ArrayList;
 
 public class ReportProjectAmountService extends IntentService {
 
-    private Handler handler = new Handler();
-
     public ReportProjectAmountService() {
         super("ReportProjectAmountService");
     }
 
     @Override
     protected void onHandleIntent(final Intent intent) {
-        final String flag = intent.getStringExtra("flag");
         String userNo = intent.getStringExtra("userNo");
         String orderId = intent.getStringExtra("orderId");
+        String type = intent.getStringExtra("type");
         String content = intent.getStringExtra("content");
         String civil = intent.getStringExtra("civil");
+        String flag = intent.getStringExtra("flag");
         ArrayList<Supplies> suppliesList = intent.getParcelableArrayListExtra("suppliesList");
 
         JSONArray jsonArray = new JSONArray();
@@ -59,8 +51,10 @@ public class ReportProjectAmountService extends IntentService {
                 .add("cmd", "doconsconfirm")
                 .add("userno", userNo)
                 .add("fileno", orderId)
+                .add("receivables", type)
                 .add("conscontent", content)
                 .add("earthworkcontent", civil)
+                .add("isneedcheck", flag)
                 .add("consmakingjson", jsonArray.toString())
                 .build();
 
@@ -75,7 +69,6 @@ public class ReportProjectAmountService extends IntentService {
                 } else {
                     Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportProjectAmountFragment");
                     intent1.putExtra("result", "汇报成功");
-                    intent1.putExtra("flag", flag);
                     sendBroadcast(intent1);
                 }
             }

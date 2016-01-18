@@ -151,7 +151,6 @@ public class ReportCompleteService extends IntentService {
         userNo = app.getString("userNo", "");
 
         String orderId = intent.getStringExtra("orderId");
-        String type = intent.getStringExtra("type");
         ArrayList<ReportComplete> infos = intent.getParcelableArrayListExtra("infos");
 
         for (ReportComplete info : infos) {
@@ -159,7 +158,7 @@ public class ReportCompleteService extends IntentService {
                 contentresult = info.getValue();
             }
             if (info.getKey().equals("排水口径")) {
-                drainsize = info.getValue()+"DN";
+                drainsize = "DN" + info.getValue();
             }
             if (info.getKey().equals("排水时间")) {
                 draintime = info.getValue();
@@ -212,7 +211,7 @@ public class ReportCompleteService extends IntentService {
                 .add("cmd", "dofinishcons")
                 .add("userno", userNo)
                 .add("fileno", orderId)
-                .add("receivables", type)
+                .add("receivables", "")
                 .add("contentresult", contentresult)
                 .add("drainsize", drainsize)
                 .add("draintime", draintime)

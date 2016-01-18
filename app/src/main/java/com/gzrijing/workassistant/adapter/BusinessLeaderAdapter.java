@@ -74,6 +74,10 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.layout.listview_item_business_leader, parent, false);
             v.orderId = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_order_id_tv);
+            v.completeInfo = (Button) convertView.findViewById(
+                    R.id.listview_item_business_leader_complete_info_btn);
+            v.suppliesQuery = (Button) convertView.findViewById(
+                    R.id.listview_item_business_leader_query_supplies_btn);
             v.machineApply = (Button) convertView.findViewById(
                     R.id.listview_item_business_leader_machine_apply_btn);
             v.progress = (Button) convertView.findViewById(
@@ -90,12 +94,8 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.id.listview_item_business_leader_state_tv);
             v.deadline = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_deadline_tv);
-            v.suppliesVerify = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_supplies_verify_tv);
             v.temInfo = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_tem_info_tv);
-            v.completeInfo = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_complete_info_tv);
             v.flag = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_flag_tv);
             v.bg_ll = (LinearLayout) convertView.findViewById(
@@ -111,7 +111,6 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         v.type.setText(orderList.get(position).getType());
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
-        v.suppliesVerify.setText(orderList.get(position).getSuppliesApplyNum()+"条新材料申请");
         v.temInfo.setText(orderList.get(position).getTemInfoNum()+"条新临时信息");
 
         if (orderList.get(position).isUrgent()) {
@@ -120,20 +119,28 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             v.urgent.setVisibility(View.GONE);
         }
 
-
-        v.machineApply.setOnClickListener(new View.OnClickListener() {
+        v.completeInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MachineApplyActivity.class);
+                Intent intent = new Intent(context, ReportInfoCompleteActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }
         });
 
-        v.suppliesVerify.setOnClickListener(new View.OnClickListener() {
+        v.suppliesQuery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, SuppliesVerifyActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
+        v.machineApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MachineApplyActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }
@@ -170,15 +177,6 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TemInfoActivity.class);
-                intent.putExtra("orderId", orderList.get(position).getOrderId());
-                context.startActivity(intent);
-            }
-        });
-
-        v.completeInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ReportInfoCompleteActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }
@@ -248,10 +246,10 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         private ImageView urgent;
         private TextView type;
         private TextView state;
-        private TextView suppliesVerify;
         private TextView deadline;
         private TextView temInfo;
-        private TextView completeInfo;
+        private Button completeInfo;
+        private Button suppliesQuery;
         private Button machineApply;
         private Button progress;
         private Button info;

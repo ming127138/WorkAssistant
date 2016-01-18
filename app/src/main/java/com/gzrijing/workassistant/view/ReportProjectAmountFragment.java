@@ -1,6 +1,5 @@
 package com.gzrijing.workassistant.view;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,6 +36,10 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     private View layoutView;
     private String orderId;
     private String userNo;
+    private LinearLayout ll_water;
+    private ImageView iv_water;
+    private LinearLayout ll_customer;
+    private ImageView iv_customer;
     private EditText et_content;
     private EditText et_civil;
     private ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
@@ -42,7 +47,7 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     private SuppliesAdapter adapter;
     private Button btn_need;
     private Button btn_wait;
-    private Button btn_print;
+    private boolean isCheck;
 
     public ReportProjectAmountFragment() {
     }
@@ -103,12 +108,15 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     }
 
     private void initViews() {
+        ll_water = (LinearLayout) layoutView.findViewById(R.id.fragment_report_project_amount_water_ll);
+        iv_water = (ImageView) layoutView.findViewById(R.id.fragment_report_project_amount_water_iv);
+        ll_customer = (LinearLayout) layoutView.findViewById(R.id.fragment_report_project_amount_customer_ll);
+        iv_customer = (ImageView) layoutView.findViewById(R.id.fragment_report_project_amount_customer_iv);
+
         et_content = (EditText) layoutView.findViewById(R.id.fragment_report_project_amount_content_et);
         et_civil = (EditText) layoutView.findViewById(R.id.fragment_report_project_amount_civil_et);
         btn_need = (Button) layoutView.findViewById(R.id.fragment_report_project_amount_submit_need_btn);
         btn_wait = (Button) layoutView.findViewById(R.id.fragment_report_project_amount_submit_wait_btn);
-        btn_print = (Button) layoutView.findViewById(R.id.fragment_report_project_amount_print_btn);
-        btn_print.setVisibility(View.VISIBLE);
 
         lv_supplies = (ListView) layoutView.findViewById(R.id.fragment_report_project_amount_supplies_lv);
         adapter = new SuppliesAdapter(getActivity(), suppliesList);
@@ -117,9 +125,10 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     }
 
     private void setListeners() {
+        ll_water.setOnClickListener(this);
+        ll_customer.setOnClickListener(this);
         btn_need.setOnClickListener(this);
         btn_wait.setOnClickListener(this);
-        btn_print.setOnClickListener(this);
 
     }
 
@@ -127,36 +136,52 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.fragment_report_project_amount_water_ll:
+                if (isCheck) {
+                    iv_water.setImageResource(R.drawable.spinner_item_check_on);
+                    iv_customer.setImageResource(R.drawable.spinner_item_check_off);
+                    isCheck = !isCheck;
+                }
+                break;
+
+            case R.id.fragment_report_project_amount_customer_ll:
+                if (!isCheck) {
+                    iv_water.setImageResource(R.drawable.spinner_item_check_off);
+                    iv_customer.setImageResource(R.drawable.spinner_item_check_on);
+                    isCheck = !isCheck;
+                }
+                break;
+
             case R.id.fragment_report_project_amount_submit_need_btn:
-                report("need");
+                report("1");
                 break;
 
             case R.id.fragment_report_project_amount_submit_wait_btn:
-                report("wait");
+                report("0");
                 break;
 
-            case R.id.fragment_report_project_amount_print_btn:
-                Intent intent = new Intent(getActivity(), PrintActivity.class);
-                intent.putExtra("userNo", userNo);
-                intent.putExtra("orderId", orderId);
-                intent.putExtra("content", et_content.getText().toString().trim());
-                intent.putExtra("civil", et_civil.getText().toString().trim());
-                intent.putParcelableArrayListExtra("suppliesList", suppliesList);
-                getActivity().startActivity(intent);
-                break;
         }
     }
 
     private void report(String flag) {
         btn_need.setVisibility(View.GONE);
         btn_wait.setVisibility(View.GONE);
+
+        String type;
+        if (isCheck) {
+            type = "客户";
+        } else {
+            type = "水务";
+        }
+
         Intent intent = new Intent(getActivity(), ReportProjectAmountService.class);
         intent.putExtra("userNo", userNo);
         intent.putExtra("orderId", orderId);
+        intent.putExtra("type", type);
         intent.putExtra("content", et_content.getText().toString().trim());
         intent.putExtra("civil", et_civil.getText().toString().trim());
         intent.putParcelableArrayListExtra("suppliesList", suppliesList);
-        intent.putExtra("flag", flag);
+        intent.putExtra("flag", flag);  //0=施工员审核通过，不通知组长   1=保存状态，通知组长审核
         getActivity().startService(intent);
     }
 
@@ -166,18 +191,7 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
             String action = intent.getAction();
             if (action.equals("action.com.gzrijing.workassistant.ReportProjectAmountFragment")) {
                 String result = intent.getStringExtra("result");
-                if (result.equals("汇报成功")) {
-                    ToastUtil.showToast(context, "汇报成功", Toast.LENGTH_SHORT);
-                    if (intent.getStringExtra("flag").equals("wait")) {
-                        btn_print.setVisibility(View.VISIBLE);
-                    }
-                }
-                if (result.equals("汇报失败")) {
-                    ToastUtil.showToast(context, "汇报失败", Toast.LENGTH_SHORT);
-                }
-                if (result.equals("与服务器断开连接")) {
-                    ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);
-                }
+                ToastUtil.showToast(context, result, Toast.LENGTH_SHORT);
                 btn_need.setVisibility(View.VISIBLE);
                 btn_wait.setVisibility(View.VISIBLE);
             }

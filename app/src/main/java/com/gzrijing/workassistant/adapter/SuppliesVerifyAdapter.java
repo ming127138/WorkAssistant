@@ -8,11 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SuppliesVerifyAdapter extends BaseAdapter {
 

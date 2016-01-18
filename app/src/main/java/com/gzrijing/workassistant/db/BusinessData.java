@@ -13,8 +13,6 @@ public class BusinessData extends DataSupport{
     private String state;                   //工程状态
     private String deadline;                //工程期限
     private boolean urgent;                 //工程是否紧急
-    private int machineApplyNum;            //标记有多少条未查看的机械申请单信息
-    private int suppliesApplyNum;           //标记有多少条未查看的材料申请单信息
     private int temInfoNum;                 //标记有多少条未查看的临时信息
     private String flag;                    //状态标识
     private List<SuppliesNoData> suppliesNoList = new ArrayList<SuppliesNoData>();  //材料单号
@@ -79,22 +77,6 @@ public class BusinessData extends DataSupport{
 
     public void setUrgent(boolean urgent) {
         this.urgent = urgent;
-    }
-
-    public int getMachineApplyNum() {
-        return machineApplyNum;
-    }
-
-    public void setMachineApplyNum(int machineApplyNum) {
-        this.machineApplyNum = machineApplyNum;
-    }
-
-    public int getSuppliesApplyNum() {
-        return suppliesApplyNum;
-    }
-
-    public void setSuppliesApplyNum(int suppliesApplyNum) {
-        this.suppliesApplyNum = suppliesApplyNum;
     }
 
     public int getTemInfoNum() {

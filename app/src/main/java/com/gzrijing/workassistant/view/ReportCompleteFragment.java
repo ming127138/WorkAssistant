@@ -51,11 +51,6 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     private String orderId;
     private String type;
     private ArrayList<ReportComplete> infos = new ArrayList<ReportComplete>();
-    private LinearLayout ll_water;
-    private ImageView iv_water;
-    private LinearLayout ll_customer;
-    private ImageView iv_customer;
-    private boolean isCheck = false;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private LinearLayout ll_item1;
@@ -116,7 +111,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     private TextView tv_key19;
     private EditText et_value19;
     private Button btn_report;
-    private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
+    private ArrayList<PicUrl> picUrls;
     private GridView gv_image;
     private ReportProgressGriViewAdapter adapter;
     private Uri imageUri;
@@ -127,7 +122,22 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            imageUri = savedInstanceState.getParcelable("imageUri");
+            picUrls = savedInstanceState.getParcelableArrayList("picUrls");
+        }else{
+            picUrls = new ArrayList<PicUrl>();
+            PicUrl picUrl = new PicUrl();
+            picUrls.add(picUrl);
+        }
         initData();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("imageUri", imageUri);
+        outState.putParcelableArrayList("picUrls", picUrls);
     }
 
     @Override
@@ -181,21 +191,12 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
             infos.add(info);
         }
 
-        PicUrl picUrl = new PicUrl();
-        picUrls.add(picUrl);
-
         IntentFilter mIntentFilter = new IntentFilter("action.com.gzrijing.workassistant.ReportComplete");
         getActivity().registerReceiver(mBroadcastReceiver, mIntentFilter);
-
 
     }
 
     private void initViews() {
-        ll_water = (LinearLayout) layoutView.findViewById(R.id.fragment_report_complete_water_ll);
-        iv_water = (ImageView) layoutView.findViewById(R.id.fragment_report_complete_water_iv);
-        ll_customer = (LinearLayout) layoutView.findViewById(R.id.fragment_report_complete_customer_ll);
-        iv_customer = (ImageView) layoutView.findViewById(R.id.fragment_report_complete_customer_iv);
-
         ll_item1 = (LinearLayout) layoutView.findViewById(R.id.fragment_report_complete_item1_ll);
         tv_key1 = (TextView) layoutView.findViewById(R.id.fragment_report_complete_item1_key_tv);
         et_value1 = (EditText) layoutView.findViewById(R.id.fragment_report_complete_item1_value_et);
@@ -344,9 +345,6 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     }
 
     private void setListeners() {
-        ll_water.setOnClickListener(this);
-        ll_customer.setOnClickListener(this);
-
         tv_value13.setOnClickListener(this);
         tv_value14.setOnClickListener(this);
         tv_value15.setOnClickListener(this);
@@ -417,22 +415,6 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.fragment_report_complete_water_ll:
-                if (isCheck) {
-                    iv_water.setImageResource(R.drawable.spinner_item_check_on);
-                    iv_customer.setImageResource(R.drawable.spinner_item_check_off);
-                    isCheck = !isCheck;
-                }
-                break;
-
-            case R.id.fragment_report_complete_customer_ll:
-                if (!isCheck) {
-                    iv_water.setImageResource(R.drawable.spinner_item_check_off);
-                    iv_customer.setImageResource(R.drawable.spinner_item_check_on);
-                    isCheck = !isCheck;
-                }
-                break;
-
             case R.id.fragment_report_complete_item13_value_tv:
                 getDate(tv_value13);
                 break;
@@ -524,19 +506,11 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
             }
         }
 
-        String type;
-        if(isCheck){
-            type = "用户";
-        }else{
-            type = "水务";
-        }
-
         btn_report.setVisibility(View.GONE);
 
         Intent intent = new Intent(getActivity(), ReportCompleteService.class);
         intent.putParcelableArrayListExtra("picUrls", picUrls);
         intent.putExtra("orderId", orderId);
-        intent.putExtra("type", type);
         intent.putParcelableArrayListExtra("infos", infos);
         getActivity().startService(intent);
     }
@@ -583,7 +557,6 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("uri", "ok");
         switch (requestCode) {
             case ImageUtils.REQUEST_CODE_FROM_CAMERA:
                 if (resultCode == getActivity().RESULT_CANCELED) {
@@ -612,7 +585,14 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
                     return;
                 }
                 Uri imageUri = data.getData();
-                String path1 = ImageUtils.getPicPath(getActivity(), imageUri);
+                Log.e("imageUri", imageUri.toString());
+
+                String path1;
+                if (imageUri.toString().split(":")[0].equals("content")) {
+                    path1 = ImageUtils.getPicPath(getActivity(), imageUri);
+                } else {
+                    path1 = imageUri.toString().split(":")[1].substring(2);
+                }
                 Log.e("path", path1);
                 Bitmap bitmap1 = ImageCompressUtil.getimage(path1);
                 String fileName1 = path1.substring(path1.lastIndexOf("/") + 1);

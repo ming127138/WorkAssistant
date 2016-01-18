@@ -13,13 +13,25 @@
         android:textSize="@dimen/sw_15dp" />
 
     <Button
-        android:id="@+id/listview_item_acceptance_print_btn"
-        android:layout_width="@dimen/sw_50dp"
+        android:id="@+id/listview_item_acceptance_print_client_btn"
+        android:layout_width="@dimen/sw_60dp"
         android:layout_height="@dimen/sw_25dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@drawable/btn_blue_frame"
-        android:text="打印"
+        android:text="客户打印"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/sw_12dp" />
+
+    <Button
+        android:id="@+id/listview_item_acceptance_print_water_btn"
+        android:layout_width="@dimen/sw_60dp"
+        android:layout_height="@dimen/sw_25dp"
+        android:layout_marginRight="@dimen/sw_10dp"
+        android:layout_toLeftOf="@+id/listview_item_acceptance_print_client_btn"
+        android:layout_centerVertical="true"
+        android:background="@drawable/btn_blue_frame"
+        android:text="水务打印"
         android:textColor="@color/blue"
         android:textSize="@dimen/sw_12dp" />
 

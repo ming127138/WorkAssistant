@@ -3,22 +3,25 @@ package com.gzrijing.workassistant.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Acceptance implements Parcelable {
-    private String orderId;     //工程编号
-    private String content;     //施工内容
-    private String civil;       //土建项目
-    private String checkDate;   //审核日期
-    private String state;       //状态
+    private String orderId;             //工程编号
+    private String orderType;           //工程类型
+    private ArrayList<Supplies> suppliesByClient = new ArrayList<Supplies>();       //客户收费材料
+    private ArrayList<Supplies> suppliesByWater = new ArrayList<Supplies>();        //水务收费材料
+    private ArrayList<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();  //详细信息
 
     public Acceptance() {
     }
 
-    public Acceptance(String orderId, String content, String civil, String checkDate, String state) {
+    public Acceptance(String orderId, String orderType, ArrayList<Supplies> suppliesByClient, ArrayList<Supplies> suppliesByWater, ArrayList<DetailedInfo> detailedInfos) {
         this.orderId = orderId;
-        this.content = content;
-        this.civil = civil;
-        this.checkDate = checkDate;
-        this.state = state;
+        this.orderType = orderType;
+        this.suppliesByClient = suppliesByClient;
+        this.suppliesByWater = suppliesByWater;
+        this.detailedInfos = detailedInfos;
     }
 
     public String getOrderId() {
@@ -29,37 +32,38 @@ public class Acceptance implements Parcelable {
         this.orderId = orderId;
     }
 
-    public String getContent() {
-        return content;
+    public String getOrderType() {
+        return orderType;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
     }
 
-    public String getCivil() {
-        return civil;
+    public ArrayList<Supplies> getSuppliesByClient() {
+        return suppliesByClient;
     }
 
-    public void setCivil(String civil) {
-        this.civil = civil;
+    public void setSuppliesByClient(ArrayList<Supplies> suppliesByClient) {
+        this.suppliesByClient = suppliesByClient;
     }
 
-    public String getCheckDate() {
-        return checkDate;
+    public ArrayList<Supplies> getSuppliesByWater() {
+        return suppliesByWater;
     }
 
-    public void setCheckDate(String checkDate) {
-        this.checkDate = checkDate;
+    public void setSuppliesByWater(ArrayList<Supplies> suppliesByWater) {
+        this.suppliesByWater = suppliesByWater;
     }
 
-    public String getState() {
-        return state;
+    public ArrayList<DetailedInfo> getDetailedInfos() {
+        return detailedInfos;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setDetailedInfos(ArrayList<DetailedInfo> detailedInfos) {
+        this.detailedInfos = detailedInfos;
     }
+
 
     @Override
     public int describeContents() {
@@ -69,21 +73,22 @@ public class Acceptance implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.orderId);
-        dest.writeString(this.content);
-        dest.writeString(this.civil);
-        dest.writeString(this.checkDate);
-        dest.writeString(this.state);
+        dest.writeString(this.orderType);
+        dest.writeTypedList(suppliesByClient);
+        dest.writeTypedList(suppliesByWater);
+        dest.writeList(this.detailedInfos);
     }
 
     protected Acceptance(Parcel in) {
         this.orderId = in.readString();
-        this.content = in.readString();
-        this.civil = in.readString();
-        this.checkDate = in.readString();
-        this.state = in.readString();
+        this.orderType = in.readString();
+        this.suppliesByClient = in.createTypedArrayList(Supplies.CREATOR);
+        this.suppliesByWater = in.createTypedArrayList(Supplies.CREATOR);
+        this.detailedInfos = new ArrayList<DetailedInfo>();
+        in.readList(this.detailedInfos, List.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Acceptance> CREATOR = new Parcelable.Creator<Acceptance>() {
+    public static final Creator<Acceptance> CREATOR = new Creator<Acceptance>() {
         public Acceptance createFromParcel(Parcel source) {
             return new Acceptance(source);
         }

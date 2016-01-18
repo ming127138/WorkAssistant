@@ -369,7 +369,7 @@ public class JsonParseUtils {
                     String gps = jsonObject1.getString("FileGps");
                     String longitude = "0";
                     String latitude = "0";
-                    if(!gps.equals("")){
+                    if (!gps.equals("")) {
                         longitude = gps.split("，")[0];
                         latitude = gps.split("，")[1];
                     }
@@ -1062,6 +1062,7 @@ public class JsonParseUtils {
 
     /**
      * 获取安全检查工程
+     *
      * @param jsonData
      * @return
      */
@@ -1078,7 +1079,7 @@ public class JsonParseUtils {
                 String formId = jsonObject.getString("TaskRID");
                 String longitude = "0";
                 String latitude = "0";
-                if(!gps.equals("")){
+                if (!gps.equals("")) {
                     longitude = gps.split("，")[0];
                     latitude = gps.split("，")[1];
                 }
@@ -1100,10 +1101,11 @@ public class JsonParseUtils {
 
     /**
      * 获取安全检查表项目
+     *
      * @param jsonData
      * @return
      */
-    public static ArrayList<SafetyInspectFirstItem> getSafetyInspectFormItem(String jsonData){
+    public static ArrayList<SafetyInspectFirstItem> getSafetyInspectFormItem(String jsonData) {
         ArrayList<SafetyInspectFirstItem> list = new ArrayList<SafetyInspectFirstItem>();
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
@@ -1114,7 +1116,7 @@ public class JsonParseUtils {
 
                 JSONArray jsonArray1 = jsonObject.getJSONArray("ItemDel");
                 ArrayList<SafetyInspectSecondItem> childList = new ArrayList<SafetyInspectSecondItem>();
-                for(int j = 0; j < jsonArray1.length(); j++){
+                for (int j = 0; j < jsonArray1.length(); j++) {
                     JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
                     String childId = jsonObject1.getString("ItemId");
                     String childName = jsonObject1.getString("ItemName");
@@ -1139,10 +1141,11 @@ public class JsonParseUtils {
 
     /**
      * 获取已检查的安全检查表项目
+     *
      * @param jsonData
      * @return
      */
-    public static ArrayList<SafetyInspectSecondItem> getSafetyInspectFormItemByChecked(String jsonData){
+    public static ArrayList<SafetyInspectSecondItem> getSafetyInspectFormItemByChecked(String jsonData) {
         ArrayList<SafetyInspectSecondItem> list = new ArrayList<SafetyInspectSecondItem>();
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
@@ -1165,10 +1168,11 @@ public class JsonParseUtils {
 
     /**
      * 获取安全检查表
+     *
      * @param jsonData
      * @return
      */
-    public static ArrayList<SafetyInspectForm> getSafetyInspectForm(String jsonData){
+    public static ArrayList<SafetyInspectForm> getSafetyInspectForm(String jsonData) {
         ArrayList<SafetyInspectForm> list = new ArrayList<SafetyInspectForm>();
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
@@ -1181,9 +1185,9 @@ public class JsonParseUtils {
 
                 String failure = jsonObject.getString("TaskDel");
                 ArrayList<SafetyInspectSecondItem> failureList = new ArrayList<SafetyInspectSecondItem>();
-                if(!failure.equals("")){
+                if (!failure.equals("")) {
                     JSONArray jsonArray1 = jsonObject.getJSONArray("TaskDel");
-                    for(int j = 0; j < jsonArray1.length(); j++){
+                    for (int j = 0; j < jsonArray1.length(); j++) {
                         JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
                         String id = jsonObject1.getString("ItemId");
                         String name = jsonObject1.getString("ItemName");
@@ -1196,9 +1200,9 @@ public class JsonParseUtils {
 
                 String picurlStr = jsonObject.getString("TaskPicD");
                 ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
-                if(!picurlStr.equals("")){
+                if (!picurlStr.equals("")) {
                     JSONArray jsonArray2 = jsonObject.getJSONArray("TaskPicD");
-                    for(int k = 0; k < jsonArray2.length(); k++){
+                    for (int k = 0; k < jsonArray2.length(); k++) {
                         JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
                         String picUri = jsonObject2.getString("PicUri");
                         PicUrl picUrl = new PicUrl();
@@ -1224,10 +1228,11 @@ public class JsonParseUtils {
 
     /**
      * 获取机械申请单列表（机械组长界面）
+     *
      * @param jsonData
      * @return
      */
-    public static  ArrayList<LeaderMachineApplyBill> getLeaderMachineApplyBill(String jsonData){
+    public static ArrayList<LeaderMachineApplyBill> getLeaderMachineApplyBill(String jsonData) {
         ArrayList<LeaderMachineApplyBill> list = new ArrayList<LeaderMachineApplyBill>();
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
@@ -1243,18 +1248,18 @@ public class JsonParseUtils {
                 String applyDate = jsonObject.getString("SaveDate");
                 String remark = jsonObject.getString("Remark");
                 String state = jsonObject.getString("State");
-                if(state.equals("保存")){
+                if (state.equals("保存")) {
                     state = "未审核";
                 }
-                if(state.equals("审核")){
+                if (state.equals("审核")) {
                     state = "已审核";
                 }
 
                 String machineNeedDetail = jsonObject.getString("MachineNeedDetail");
                 ArrayList<LeaderMachineApplyBillByMachine> machineList = new ArrayList<LeaderMachineApplyBillByMachine>();
-                if(!machineNeedDetail.equals("")){
+                if (!machineNeedDetail.equals("")) {
                     JSONArray jsonArray1 = jsonObject.getJSONArray("MachineNeedDetail");
-                    for(int j = 0; j < jsonArray1.length(); j++){
+                    for (int j = 0; j < jsonArray1.length(); j++) {
                         JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
                         String name = jsonObject1.getString("MachineName");
                         String unit = jsonObject1.getString("MachineUnit");
@@ -1292,10 +1297,11 @@ public class JsonParseUtils {
 
     /**
      * 查询某机械信息
+     *
      * @param jsonData
      * @return
      */
-    public static ArrayList<LeaderMachineState> getLeaderMachineState(String jsonData){
+    public static ArrayList<LeaderMachineState> getLeaderMachineState(String jsonData) {
         ArrayList<LeaderMachineState> list = new ArrayList<LeaderMachineState>();
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
@@ -1323,10 +1329,11 @@ public class JsonParseUtils {
 
     /**
      * 获取机械退回单列表（机械组长界面）
+     *
      * @param jsonData
      * @return
      */
-    public static  ArrayList<LeaderMachineReturnBill> getLeaderMachineReturnBill(String jsonData){
+    public static ArrayList<LeaderMachineReturnBill> getLeaderMachineReturnBill(String jsonData) {
         ArrayList<LeaderMachineReturnBill> list = new ArrayList<LeaderMachineReturnBill>();
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
@@ -1341,26 +1348,26 @@ public class JsonParseUtils {
                 String applyDate = jsonObject.getString("SaveDate");
                 String remark = jsonObject.getString("Remark");
                 String state = jsonObject.getString("State");
-                if(state.equals("保存")){
+                if (state.equals("保存")) {
                     state = "未审核";
                 }
-                if(state.equals("审核")){
+                if (state.equals("审核")) {
                     state = "已审核";
                 }
 
                 String machineNeedDetail = jsonObject.getString("MachineSendDetail");
                 ArrayList<LeaderMachineReturnBillByMachine> machineList = new ArrayList<LeaderMachineReturnBillByMachine>();
-                if(!machineNeedDetail.equals("")){
+                if (!machineNeedDetail.equals("")) {
                     JSONArray jsonArray1 = jsonObject.getJSONArray("MachineSendDetail");
-                    for(int j = 0; j < jsonArray1.length(); j++){
+                    for (int j = 0; j < jsonArray1.length(); j++) {
                         JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
                         String machineNo = jsonObject1.getString("MachineNo");
                         String name = jsonObject1.getString("MachineName");
                         String unit = jsonObject1.getString("MachineUnit");
                         String flag = jsonObject1.getString("SendName");
-                        if(flag.equals("")){
+                        if (flag.equals("")) {
                             flag = "0";
-                        }else{
+                        } else {
                             flag = "1";
                         }
 
@@ -1392,6 +1399,13 @@ public class JsonParseUtils {
         return list;
     }
 
+
+    /**
+     * 获取工程验收单
+     *
+     * @param jsonData
+     * @return
+     */
     public static ArrayList<Acceptance> getAcceptanceInfo(String jsonData) {
         ArrayList<Acceptance> list = new ArrayList<Acceptance>();
         try {
@@ -1399,17 +1413,78 @@ public class JsonParseUtils {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String orderId = jsonObject.getString("FileNo");
-                String content = jsonObject.getString("ConsContent");
-                String civil = jsonObject.getString("EarthWorkContent");
-                String checkDate = jsonObject.getString("CheckDate");
-                String state = jsonObject.getString("State");
+                String orderType = jsonObject.getString("ConsTypeName");
+
+                String KHMaking = jsonObject.getString("KHMaking");
+                ArrayList<Supplies> suppliesByClient = new ArrayList<Supplies>();
+                if (!KHMaking.equals("")) {
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("KHMaking");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String id = jsonObject1.getString("MakingNo");
+                        String name = jsonObject1.getString("MakingName");
+                        String spec = jsonObject1.getString("MakingSpace");
+                        String unit = jsonObject1.getString("MakingUnit");
+                        String num = jsonObject1.getString("MakingQty");
+
+                        Supplies supplies = new Supplies();
+                        supplies.setId(id);
+                        supplies.setName(name);
+                        supplies.setSpec(spec);
+                        supplies.setUnit(unit);
+                        supplies.setNum(num);
+                        suppliesByClient.add(supplies);
+                    }
+                }
+
+                String SWMaking = jsonObject.getString("SWMaking");
+                ArrayList<Supplies> suppliesByWater = new ArrayList<Supplies>();
+                if (!SWMaking.equals("")) {
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("SWMaking");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String id = jsonObject1.getString("MakingNo");
+                        String name = jsonObject1.getString("MakingName");
+                        String spec = jsonObject1.getString("MakingSpace");
+                        String unit = jsonObject1.getString("MakingUnit");
+                        String num = jsonObject1.getString("MakingQty");
+
+                        Supplies supplies = new Supplies();
+                        supplies.setId(id);
+                        supplies.setName(name);
+                        supplies.setSpec(spec);
+                        supplies.setUnit(unit);
+                        supplies.setNum(num);
+                        suppliesByWater.add(supplies);
+                    }
+                }
+
+                String detail = jsonObject.getString("Detail");
+                ArrayList<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();
+                if (!detail.equals("")) {
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("Detail");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String key = jsonObject1.getString("key");
+                        String value = jsonObject1.getString("value");
+
+                        if(!key.equals("报事照片数") && !key.equals("任务照片数") && !key.equals("工程确认照片数")
+                                && !key.equals("完工照片数") && !key.equals("定位照片数") && !key.equals("意外情况照片数")){
+                            DetailedInfo detailedInfo = new DetailedInfo();
+                            detailedInfo.setKey(key);
+                            detailedInfo.setValue(value);
+                            detailedInfos.add(detailedInfo);
+                        }
+
+                    }
+                }
 
                 Acceptance acceptance = new Acceptance();
                 acceptance.setOrderId(orderId);
-                acceptance.setContent(content);
-                acceptance.setCivil(civil);
-                acceptance.setCheckDate(checkDate);
-                acceptance.setState(state);
+                acceptance.setOrderType(orderType);
+                acceptance.setSuppliesByClient(suppliesByClient);
+                acceptance.setSuppliesByWater(suppliesByWater);
+                acceptance.setDetailedInfos(detailedInfos);
                 list.add(acceptance);
             }
         } catch (JSONException e) {

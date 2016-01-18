@@ -42,9 +42,9 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         btn_progress = (Button) findViewById(R.id.report_progress_btn);
-        btn_complete = (Button) findViewById(R.id.report_complete_btn);
-        btn_projectAmount = (Button) findViewById(R.id.report_project_amount_btn);
         btn_problem = (Button) findViewById(R.id.report_problem_btn);
+        btn_projectAmount = (Button) findViewById(R.id.report_project_amount_btn);
+        btn_complete = (Button) findViewById(R.id.report_complete_btn);
     }
 
     private void initData() {
@@ -58,9 +58,9 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
 
     private void setListeners() {
         btn_progress.setOnClickListener(this);
-        btn_complete.setOnClickListener(this);
-        btn_projectAmount.setOnClickListener(this);
         btn_problem.setOnClickListener(this);
+        btn_projectAmount.setOnClickListener(this);
+        btn_complete.setOnClickListener(this);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
                 setTabSelection(0);
                 break;
 
-            case R.id.report_complete_btn:
+            case R.id.report_problem_btn:
                 setTabSelection(1);
                 break;
 
@@ -78,7 +78,7 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
                 setTabSelection(2);
                 break;
 
-            case R.id.report_problem_btn:
+            case R.id.report_complete_btn:
                 setTabSelection(3);
                 break;
         }
@@ -91,11 +91,11 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
             case 0:
                 btn_progress.setBackgroundResource(R.drawable.btn_paging_left_on);
                 btn_progress.setTextColor(getResources().getColor(R.color.white));
-                btn_complete.setBackgroundResource(R.drawable.btn_paging_middle_off);
+                btn_complete.setBackgroundResource(R.drawable.btn_paging_right_off);
                 btn_complete.setTextColor(getResources().getColor(R.color.blue));
                 btn_projectAmount.setBackgroundResource(R.drawable.btn_paging_middle_off);
                 btn_projectAmount.setTextColor(getResources().getColor(R.color.blue));
-                btn_problem.setBackgroundResource(R.drawable.btn_paging_right_off);
+                btn_problem.setBackgroundResource(R.drawable.btn_paging_middle_off);
                 btn_problem.setTextColor(getResources().getColor(R.color.blue));
                 if (reportProgress == null) {
                     reportProgress = new ReportProgressFragment();
@@ -111,32 +111,31 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
             case 1:
                 btn_progress.setBackgroundResource(R.drawable.btn_paging_left_off);
                 btn_progress.setTextColor(getResources().getColor(R.color.blue));
-                btn_complete.setBackgroundResource(R.drawable.btn_paging_middle_on);
-                btn_complete.setTextColor(getResources().getColor(R.color.white));
+                btn_complete.setBackgroundResource(R.drawable.btn_paging_right_off);
+                btn_complete.setTextColor(getResources().getColor(R.color.blue));
                 btn_projectAmount.setBackgroundResource(R.drawable.btn_paging_middle_off);
                 btn_projectAmount.setTextColor(getResources().getColor(R.color.blue));
-                btn_problem.setBackgroundResource(R.drawable.btn_paging_right_off);
-                btn_problem.setTextColor(getResources().getColor(R.color.blue));
-                if (reportComplete == null) {
-                    reportComplete = new ReportCompleteFragment();
+                btn_problem.setBackgroundResource(R.drawable.btn_paging_middle_on);
+                btn_problem.setTextColor(getResources().getColor(R.color.white));
+                if (reportProblem == null) {
+                    reportProblem = new ReportProblemFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("orderId", orderId);
-                    bundle.putString("type", type);
-                    reportComplete.setArguments(bundle);
-                    transaction.add(R.id.fragment_report, reportComplete);
+                    reportProblem.setArguments(bundle);
+                    transaction.add(R.id.fragment_report, reportProblem);
                 } else {
-                    transaction.show(reportComplete);
+                    transaction.show(reportProblem);
                 }
                 break;
 
             case 2:
                 btn_progress.setBackgroundResource(R.drawable.btn_paging_left_off);
                 btn_progress.setTextColor(getResources().getColor(R.color.blue));
-                btn_complete.setBackgroundResource(R.drawable.btn_paging_middle_off);
+                btn_complete.setBackgroundResource(R.drawable.btn_paging_right_off);
                 btn_complete.setTextColor(getResources().getColor(R.color.blue));
                 btn_projectAmount.setBackgroundResource(R.drawable.btn_paging_middle_on);
                 btn_projectAmount.setTextColor(getResources().getColor(R.color.white));
-                btn_problem.setBackgroundResource(R.drawable.btn_paging_right_off);
+                btn_problem.setBackgroundResource(R.drawable.btn_paging_middle_off);
                 btn_problem.setTextColor(getResources().getColor(R.color.blue));
                 if (reportProjectAmount == null) {
                     reportProjectAmount = new ReportProjectAmountFragment();
@@ -152,20 +151,21 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
             case 3:
                 btn_progress.setBackgroundResource(R.drawable.btn_paging_left_off);
                 btn_progress.setTextColor(getResources().getColor(R.color.blue));
-                btn_complete.setBackgroundResource(R.drawable.btn_paging_middle_off);
-                btn_complete.setTextColor(getResources().getColor(R.color.blue));
+                btn_complete.setBackgroundResource(R.drawable.btn_paging_right_on);
+                btn_complete.setTextColor(getResources().getColor(R.color.white));
                 btn_projectAmount.setBackgroundResource(R.drawable.btn_paging_middle_off);
                 btn_projectAmount.setTextColor(getResources().getColor(R.color.blue));
-                btn_problem.setBackgroundResource(R.drawable.btn_paging_right_on);
-                btn_problem.setTextColor(getResources().getColor(R.color.white));
-                if (reportProblem == null) {
-                    reportProblem = new ReportProblemFragment();
+                btn_problem.setBackgroundResource(R.drawable.btn_paging_middle_off);
+                btn_problem.setTextColor(getResources().getColor(R.color.blue));
+                if (reportComplete == null) {
+                    reportComplete = new ReportCompleteFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("orderId", orderId);
-                    reportProblem.setArguments(bundle);
-                    transaction.add(R.id.fragment_report, reportProblem);
+                    bundle.putString("type", type);
+                    reportComplete.setArguments(bundle);
+                    transaction.add(R.id.fragment_report, reportComplete);
                 } else {
-                    transaction.show(reportProblem);
+                    transaction.show(reportComplete);
                 }
                 break;
 
@@ -177,14 +177,14 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
         if (reportProgress != null) {
             transaction.hide(reportProgress);
         }
-        if (reportComplete != null) {
-            transaction.hide(reportComplete);
+        if (reportProblem != null) {
+            transaction.hide(reportProblem);
         }
         if (reportProjectAmount != null) {
             transaction.hide(reportProjectAmount);
         }
-        if (reportProblem != null) {
-            transaction.hide(reportProblem);
+        if (reportComplete != null) {
+            transaction.hide(reportComplete);
         }
     }
 

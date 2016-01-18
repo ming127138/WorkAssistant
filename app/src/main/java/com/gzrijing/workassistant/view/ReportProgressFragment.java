@@ -43,7 +43,7 @@ public class ReportProgressFragment extends Fragment implements View.OnClickList
     private EditText et_content;
     private Button btn_report;
     private GridView gv_image;
-    private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
+    private ArrayList<PicUrl> picUrls;
     private ReportProgressGriViewAdapter adapter;
     private Uri imageUri;
 
@@ -53,6 +53,14 @@ public class ReportProgressFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            imageUri = savedInstanceState.getParcelable("imageUri");
+            picUrls = savedInstanceState.getParcelableArrayList("picUrls");
+        }else{
+            picUrls = new ArrayList<PicUrl>();
+            PicUrl picUrl = new PicUrl();
+            picUrls.add(picUrl);
+        }
         initData();
     }
 
@@ -64,11 +72,15 @@ public class ReportProgressFragment extends Fragment implements View.OnClickList
         Intent intent = getActivity().getIntent();
         orderId = intent.getStringExtra("orderId");
 
-        PicUrl picUrl = new PicUrl();
-        picUrls.add(picUrl);
-
         IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.reportProgressFragment");
         getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("imageUri", imageUri);
+        outState.putParcelableArrayList("picUrls", picUrls);
     }
 
     @Override
@@ -183,7 +195,14 @@ public class ReportProgressFragment extends Fragment implements View.OnClickList
                     return;
                 }
                 Uri imageUri = data.getData();
-                String path1 = ImageUtils.getPicPath(getActivity(), imageUri);
+                Log.e("imageUri", imageUri.toString());
+
+                String path1;
+                if (imageUri.toString().split(":")[0].equals("content")) {
+                    path1 = ImageUtils.getPicPath(getActivity(), imageUri);
+                } else {
+                    path1 = imageUri.toString().split(":")[1].substring(2);
+                }
                 Log.e("path", path1);
                 Bitmap bitmap1 = ImageCompressUtil.getimage(path1);
                 String fileName1 = path1.substring(path1.lastIndexOf("/") + 1);

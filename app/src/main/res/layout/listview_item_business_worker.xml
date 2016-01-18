@@ -140,22 +140,12 @@
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
 
-            <Button
-                android:id="@+id/listview_item_business_worker_machine_apply_btn"
-                android:layout_width="@dimen/sw_60dp"
-                android:layout_height="@dimen/sw_25dp"
-                android:layout_toLeftOf="@+id/listview_item_business_worker_supplies_apply_btn"
-                android:layout_marginRight="@dimen/sw_10dp"
-                android:background="@drawable/btn_blue_frame"
-                android:text="机械申请"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/sw_12dp"/>
 
             <Button
                 android:id="@+id/listview_item_business_worker_info_btn"
                 android:layout_width="@dimen/sw_60dp"
                 android:layout_height="@dimen/sw_25dp"
-                android:layout_toLeftOf="@+id/listview_item_business_worker_machine_apply_btn"
+                android:layout_toLeftOf="@+id/listview_item_business_worker_supplies_apply_btn"
                 android:layout_marginRight="@dimen/sw_10dp"
                 android:background="@drawable/btn_blue_frame"
                 android:text="详细信息"

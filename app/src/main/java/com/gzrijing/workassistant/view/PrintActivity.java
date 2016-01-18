@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
+import com.gzrijing.workassistant.entity.Acceptance;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.zj.btsdk.BluetoothService;
@@ -45,8 +47,8 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
     private static final int REQUEST_ENABLE_BT = 2;
     private static final int REQUEST_CONNECT_DEVICE = 1;  //获取设备消息
     private boolean isConnect;
-    private String userNo;
-    private String orderId;
+    private Parcelable acceptance;
+    private String flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,27 +69,8 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
 
     private void initData() {
         Intent intent = getIntent();
-        userNo = intent.getStringExtra("userNo");
-        orderId = intent.getStringExtra("orderId");
-        String content = intent.getStringExtra("content");
-        String civil = intent.getStringExtra("civil");
-        suppliesList = intent.getParcelableArrayListExtra("suppliesList");
-
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
-                .find(BusinessData.class, true).get(0);
-        List<DetailedInfoData> detailedDatas = businessData.getDetailedInfoList();
-        for (DetailedInfoData data : detailedDatas) {
-            DetailedInfo info = new DetailedInfo();
-            info.setKey(data.getKey());
-            info.setValue(data.getValue());
-            infos.add(info);
-        }
-        infos.remove(infos.size()-1);
-
-        DetailedInfo info1 = new DetailedInfo("施工内容", content);
-        DetailedInfo info2 = new DetailedInfo("土建工程", civil);
-        infos.add(info1);
-        infos.add(info2);
+        acceptance = intent.getParcelableExtra("acceptance");
+        flag = intent.getStringExtra("flag");
     }
 
     private void initViews() {

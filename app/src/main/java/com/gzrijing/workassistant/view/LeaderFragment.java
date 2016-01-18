@@ -74,8 +74,6 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
             order.setType(data.getType());
             order.setState(data.getState());
             order.setDeadline(data.getDeadline());
-            order.setMachineApplyNum(data.getMachineApplyNum());
-            order.setSuppliesApplyNum(data.getSuppliesApplyNum());
             order.setTemInfoNum(data.getTemInfoNum());
             order.setFlag(data.getFlag());
             orderListByLeader.add(order);
@@ -84,8 +82,6 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
         IntentFilter mIntentFilter = new IntentFilter();
         mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment");
         mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment.Distribute");
-        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment.SuppliesVerify");
-        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment.SuppliesVerify0");
         MyApplication.getContext().registerReceiver(mBroadcastReceiver, mIntentFilter);
     }
 
@@ -181,25 +177,6 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
                 adapter.notifyDataSetChanged();
             }
 
-            if(action.equals("action.com.gzrijing.workassistant.LeaderFragment.SuppliesVerify")){
-                String orderId = intent.getStringExtra("orderId");
-                for(BusinessByLeader order : orderListByLeader){
-                    if(order.getOrderId().equals(orderId)){
-                        order.setSuppliesApplyNum(order.getSuppliesApplyNum()+1);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            if(action.equals("action.com.gzrijing.workassistant.LeaderFragment.SuppliesVerify0")){
-                String orderId = intent.getStringExtra("orderId");
-                for(BusinessByLeader order : orderListByLeader){
-                    if(order.getOrderId().equals(orderId)){
-                        order.setSuppliesApplyNum(0);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-            }
         }
     };
 
