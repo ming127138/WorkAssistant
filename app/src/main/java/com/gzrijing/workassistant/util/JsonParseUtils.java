@@ -348,8 +348,8 @@ public class JsonParseUtils {
                 String type = jsonObject.getString("PlanClass");
                 String state = jsonObject.getString("State");
                 String beginTime = jsonObject.getString("BeginTime");
-                String endTime = jsonObject.getString("StopTime");
-                String deadline = beginTime + "——\n" + endTime;
+                String endTime = jsonObject.getString("StopTime").replace("/", "-");
+                String deadline = endTime;
 
                 BusinessByWorker businessByWorker = new BusinessByWorker();
                 businessByWorker.setOrderId(areaNo + "/" + areaName);
@@ -711,7 +711,7 @@ public class JsonParseUtils {
             JSONArray jsonArray = new JSONArray(jsonData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String id = jsonObject.getString("id");
+                String applyId = jsonObject.getString("BillNo");
                 String state = jsonObject.getString("State");
                 if (state.equals("保存")) {
                     state = "申请中";
@@ -726,7 +726,7 @@ public class JsonParseUtils {
                 String reason = jsonObject.getString("UnPassReason");
 
                 SuppliesNo suppliesNo = new SuppliesNo();
-                suppliesNo.setApplyId(id);
+                suppliesNo.setApplyId(applyId);
                 suppliesNo.setApplyState(state);
                 suppliesNo.setApprovalTime(approvalTime);
                 suppliesNo.setReason(reason);

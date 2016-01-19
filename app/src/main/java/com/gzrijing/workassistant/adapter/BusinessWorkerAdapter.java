@@ -1,11 +1,15 @@
 package com.gzrijing.workassistant.adapter;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +25,7 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.receiver.NotificationReceiver;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
@@ -33,6 +38,9 @@ import com.squareup.okhttp.RequestBody;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class BusinessWorkerAdapter extends BaseAdapter {
@@ -93,6 +101,8 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                     R.id.listview_item_business_worker_bg_ll);
             v.btn_rl = (RelativeLayout) convertView.findViewById(
                     R.id.listview_item_business_worker_rl);
+            v.timeLeft = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_time_left_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -102,6 +112,61 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         v.type.setText(orderList.get(position).getType());
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
+
+
+        String endTime = orderList.get(position).getDeadline();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss");
+            Date d = sdf.parse(endTime);
+            long time = d.getTime() - System.currentTimeMillis();
+            long day = time / (1000 * 60 * 60 * 24);
+            long dayNm = 0;
+            if (day > 0) {
+                dayNm = day;
+            }
+            long hour = (time - dayNm * 1000 * 60 * 60 * 24)
+                    / (1000 * 60 * 60);
+            long hourNm = 0;
+            if (hour > 0) {
+                hourNm = hour;
+            }
+            long min = (time - hour * 1000 * 60 * 60) / (1000 * 60);
+            long minNm = 0;
+            if (min > 0) {
+                minNm = min;
+            }
+            String surpTime = dayNm + "天" + hourNm + "时" + minNm + "分";
+            if (hourNm > 4) {
+                v.timeLeft.setText(surpTime);
+                v.bg_ll.setBackgroundResource(R.color.white);
+            }
+            if (hourNm <= 4 && hourNm >= 2) {
+                v.timeLeft.setText(surpTime);
+                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.orange));
+            }
+            if (hourNm < 2) {
+                v.timeLeft.setText(surpTime);
+                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.red));
+            }
+            if(dayNm == 0 && hourNm == 1 && minNm == 59){
+                NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+                Intent intent = new Intent(context, NotificationReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Notification notification = new NotificationCompat.Builder(context)
+                        .setContentText("你有一条快过期的工程")
+                        .setTicker("你有一条快过期的工程")
+                        .setContentIntent(pendingIntent)
+                        .setSmallIcon(android.R.drawable.ic_notification_clear_all)
+                        .build();
+                notification.defaults = Notification.DEFAULT_SOUND;
+                notification.flags = Notification.FLAG_INSISTENT;
+                manager.notify(1, notification);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         if (orderList.get(position).getType().equals("供水管网巡查")) {
             v.info.setVisibility(View.GONE);
@@ -114,11 +179,6 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         }
         final String flag = orderList.get(position).getFlag();
         v.flag.setText(flag);
-        if (flag.equals("确认收到") || flag.equals("处理")) {
-            v.bg_ll.setBackgroundResource(R.color.pink_bg);
-        } else {
-            v.bg_ll.setBackgroundResource(R.color.white);
-        }
 
         v.temInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,5 +375,6 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         private Button info;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;
+        private TextView timeLeft;
     }
 }

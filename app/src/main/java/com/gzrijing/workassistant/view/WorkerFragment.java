@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,7 +48,18 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
     private List<BusinessByWorker> orderList = new ArrayList<BusinessByWorker>();
     private BusinessWorkerAdapter adapter;
     private List<BusinessByWorker> orderListByWorker = new ArrayList<BusinessByWorker>();
-    private Handler handler = new Handler();
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case 0:
+                    adapter.notifyDataSetChanged();
+                    Message message = handler.obtainMessage(0);
+                    handler.sendMessageDelayed(message, 60 * 1000);
+            }
+            return false;
+        }
+    });
 
     public WorkerFragment() {
     }
@@ -205,6 +217,10 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
         lv_order = (ListView) layoutView.findViewById(R.id.fragment_worker_order_lv);
         adapter = new BusinessWorkerAdapter(getActivity(), orderList, userNo);
         lv_order.setAdapter(adapter);
+
+        Message message = handler.obtainMessage(0);
+        handler.sendMessageDelayed(message, 60 * 1000);
+
     }
 
     private void setListeners() {

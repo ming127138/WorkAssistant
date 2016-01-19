@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -21,34 +20,27 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.PrintInfoAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.DetailedInfoData;
 import com.gzrijing.workassistant.entity.Acceptance;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.zj.btsdk.BluetoothService;
 
-import org.litepal.crud.DataSupport;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class PrintActivity extends BaseActivity implements View.OnClickListener {
 
     private Button btn_connect;
     private ListView lv_info;
     private ListView lv_supplies;
-    private List<DetailedInfo> infos = new ArrayList<DetailedInfo>();
+    private ArrayList<Supplies> suppliesList;
     private PrintInfoAdapter adapter;
-    private ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
     private SuppliesApplyingAdapter receivedAdapter;
     BluetoothService mService = null;
     BluetoothDevice con_dev = null;
     private static final int REQUEST_ENABLE_BT = 2;
     private static final int REQUEST_CONNECT_DEVICE = 1;  //获取设备消息
     private boolean isConnect;
-    private Parcelable acceptance;
-    private String flag;
+    private Acceptance acceptance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +62,12 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
     private void initData() {
         Intent intent = getIntent();
         acceptance = intent.getParcelableExtra("acceptance");
-        flag = intent.getStringExtra("flag");
+        String flag = intent.getStringExtra("flag");
+        if (flag.equals("客户")) {
+            suppliesList = acceptance.getSuppliesByClient();
+        } else {
+            suppliesList = acceptance.getSuppliesByWater();
+        }
     }
 
     private void initViews() {
@@ -81,7 +78,7 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
         btn_connect = (Button) findViewById(R.id.print_connect_btn);
 
         lv_info = (ListView) findViewById(R.id.print_info_lv);
-        adapter = new PrintInfoAdapter(this, infos);
+        adapter = new PrintInfoAdapter(this, acceptance.getDetailedInfos());
         lv_info.setAdapter(adapter);
 
         lv_supplies = (ListView) findViewById(R.id.print_supplies_lv);
@@ -202,12 +199,13 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
             if (isConnect) {
                 mService.sendMessage("中山市润丰水业有限公司工程施工作业单\n", "GBK");
                 StringBuilder sb = new StringBuilder();
-                for (DetailedInfo info : infos) {
+                for (DetailedInfo info : acceptance.getDetailedInfos()) {
                     sb.append(info.getKey() + "：" + info.getValue() + "\n");
                 }
                 sb.append("\n耗材列表：\n");
                 sb.append("　　名称　　　规格　　　单位　　　数量\n");
                 sb.append("————————————————————————\n");
+
                 for (Supplies supplies : suppliesList) {
                     sb.append(" 　" + supplies.getName() + "　　" + supplies.getSpec() + "　　" + supplies.getUnit()
                             + "　　" + supplies.getNum() + "\n");

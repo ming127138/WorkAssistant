@@ -2,33 +2,25 @@ package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.DetailedInfoAdapter;
 import com.gzrijing.workassistant.adapter.ReportInfoCompleteAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
-import com.gzrijing.workassistant.service.GetLeaderBusinessService;
 import com.gzrijing.workassistant.util.HttpUtils;
-import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;

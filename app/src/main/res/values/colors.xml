@@ -12,6 +12,7 @@
     <color name="grey_text">#858E99</color>//133,142,153
     <color name="pink_bg">#FCE2AC</color>//252,226,172
     <color name="red">#E60012</color>//230,0,18
+    <color name="orange">#ff7f00</color>
 
 
     <!-- 二维码 -->

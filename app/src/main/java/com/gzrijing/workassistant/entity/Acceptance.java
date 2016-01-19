@@ -64,7 +64,6 @@ public class Acceptance implements Parcelable {
         this.detailedInfos = detailedInfos;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -76,7 +75,7 @@ public class Acceptance implements Parcelable {
         dest.writeString(this.orderType);
         dest.writeTypedList(suppliesByClient);
         dest.writeTypedList(suppliesByWater);
-        dest.writeList(this.detailedInfos);
+        dest.writeTypedList(detailedInfos);
     }
 
     protected Acceptance(Parcel in) {
@@ -84,8 +83,7 @@ public class Acceptance implements Parcelable {
         this.orderType = in.readString();
         this.suppliesByClient = in.createTypedArrayList(Supplies.CREATOR);
         this.suppliesByWater = in.createTypedArrayList(Supplies.CREATOR);
-        this.detailedInfos = new ArrayList<DetailedInfo>();
-        in.readList(this.detailedInfos, List.class.getClassLoader());
+        this.detailedInfos = in.createTypedArrayList(DetailedInfo.CREATOR);
     }
 
     public static final Creator<Acceptance> CREATOR = new Creator<Acceptance>() {

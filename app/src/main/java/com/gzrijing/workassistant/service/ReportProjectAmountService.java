@@ -18,7 +18,6 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-
 public class ReportProjectAmountService extends IntentService {
 
     public ReportProjectAmountService() {
@@ -50,6 +49,7 @@ public class ReportProjectAmountService extends IntentService {
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "doconsconfirm")
                 .add("userno", userNo)
+                .add("id", "")
                 .add("fileno", orderId)
                 .add("receivables", type)
                 .add("conscontent", content)

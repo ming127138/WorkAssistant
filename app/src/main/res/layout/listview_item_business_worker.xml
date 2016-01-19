@@ -105,6 +105,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingLeft="@dimen/sw_10dp"
+            android:paddingBottom="@dimen/sw_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="剩余时间："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/listview_item_business_time_left_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginLeft="@dimen/sw_10dp"
             android:layout_marginRight="@dimen/sw_10dp"
             android:layout_marginBottom="@dimen/sw_10dp">
@@ -139,7 +161,6 @@
                 android:text="材料申请"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
-
 
             <Button
                 android:id="@+id/listview_item_business_worker_info_btn"

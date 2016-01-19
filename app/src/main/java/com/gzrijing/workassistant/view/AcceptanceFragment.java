@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,8 +27,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AcceptanceFragment extends Fragment {
-
+public class AcceptanceFragment extends Fragment implements View.OnClickListener {
 
     private View layoutView;
     private ListView lv_accList;
@@ -34,6 +35,8 @@ public class AcceptanceFragment extends Fragment {
     private AcceptanceAdapter adapter;
     private String userNo;
     private Handler handler = new Handler();
+    private EditText et_orderId;
+    private Button btn_query;
 
     public AcceptanceFragment() {
     }
@@ -45,7 +48,6 @@ public class AcceptanceFragment extends Fragment {
                 "saveUser", getActivity().MODE_PRIVATE);
         userNo = app.getString("userNo", "");
 
-        initData();
     }
 
     @Override
@@ -53,13 +55,38 @@ public class AcceptanceFragment extends Fragment {
                              Bundle savedInstanceState) {
         layoutView = inflater.inflate(R.layout.fragment_acceptance, container, false);
         initViews();
+        setListeners();
         return layoutView;
     }
 
-    private void initData() {
+    private void initViews() {
+        et_orderId = (EditText) layoutView.findViewById(R.id.fragment_acceptance_orderId_id_et);
+        btn_query = (Button) layoutView.findViewById(R.id.fragment_acceptance_query_btn);
+
+        lv_accList = (ListView) layoutView.findViewById(R.id.fragment_acceptance_lv);
+        adapter = new AcceptanceAdapter(getActivity(), accList);
+        lv_accList.setAdapter(adapter);
+    }
+
+    private void setListeners() {
+        btn_query.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fragment_acceptance_query_btn:
+                query();
+                break;
+        }
+    }
+
+    private void query() {
+        String orderId = et_orderId.getText().toString().trim();
         String url = null;
         try {
-            url = "?cmd=getfinishconstruction&userno="+URLEncoder.encode(userNo, "UTF-8")+"&fileno=&enddate=&isfinish=1";
+            url = "?cmd=getfinishconstruction&userno=" + URLEncoder.encode(userNo, "UTF-8")
+                    + "&fileno=" + URLEncoder.encode(orderId, "UTF-8") + "&enddate=&isfinish=1";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -89,13 +116,5 @@ public class AcceptanceFragment extends Fragment {
                 });
             }
         });
-
     }
-
-    private void initViews() {
-        lv_accList = (ListView) layoutView.findViewById(R.id.acceptance_lv);
-        adapter = new AcceptanceAdapter(getActivity(), accList);
-        lv_accList.setAdapter(adapter);
-    }
-
 }
