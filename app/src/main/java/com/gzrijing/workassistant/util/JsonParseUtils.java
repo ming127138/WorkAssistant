@@ -1011,25 +1011,86 @@ public class JsonParseUtils {
      * @param jsonData
      * @return
      */
-    public static ArrayList<DetailedInfo> getReportCompleteInfo(String jsonData) {
-        ArrayList<DetailedInfo> list = new ArrayList<DetailedInfo>();
+    public static ArrayList<Acceptance> getReportCompleteInfo(String jsonData) {
+        ArrayList<Acceptance> list = new ArrayList<Acceptance>();
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                if (!jsonObject.getString("Detail").equals("")) {
+                String orderId = jsonObject.getString("FileNo");
+                String orderType = jsonObject.getString("ConsTypeName");
+
+                String KHMaking = jsonObject.getString("KHMaking");
+                ArrayList<Supplies> suppliesByClient = new ArrayList<Supplies>();
+                if (!KHMaking.equals("")) {
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("KHMaking");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String id = jsonObject1.getString("MakingNo");
+                        String name = jsonObject1.getString("MakingName");
+                        String spec = jsonObject1.getString("MakingSpace");
+                        String unit = jsonObject1.getString("MakingUnit");
+                        String num = jsonObject1.getString("MakingQty");
+
+                        Supplies supplies = new Supplies();
+                        supplies.setId(id);
+                        supplies.setName(name);
+                        supplies.setSpec(spec);
+                        supplies.setUnit(unit);
+                        supplies.setNum(num);
+                        suppliesByClient.add(supplies);
+                    }
+                }
+
+                String SWMaking = jsonObject.getString("SWMaking");
+                ArrayList<Supplies> suppliesByWater = new ArrayList<Supplies>();
+                if (!SWMaking.equals("")) {
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("SWMaking");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String id = jsonObject1.getString("MakingNo");
+                        String name = jsonObject1.getString("MakingName");
+                        String spec = jsonObject1.getString("MakingSpace");
+                        String unit = jsonObject1.getString("MakingUnit");
+                        String num = jsonObject1.getString("MakingQty");
+
+                        Supplies supplies = new Supplies();
+                        supplies.setId(id);
+                        supplies.setName(name);
+                        supplies.setSpec(spec);
+                        supplies.setUnit(unit);
+                        supplies.setNum(num);
+                        suppliesByWater.add(supplies);
+                    }
+                }
+
+                String detail = jsonObject.getString("Detail");
+                ArrayList<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();
+                if (!detail.equals("")) {
                     JSONArray jsonArray1 = jsonObject.getJSONArray("Detail");
                     for (int j = 0; j < jsonArray1.length(); j++) {
                         JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
                         String key = jsonObject1.getString("key");
                         String value = jsonObject1.getString("value");
-                        DetailedInfo info = new DetailedInfo();
-                        info.setKey(key);
-                        info.setValue(value);
-                        list.add(info);
+
+                        if(!key.equals("报事照片数") && !key.equals("任务照片数") && !key.equals("工程确认照片数")
+                                && !key.equals("完工照片数") && !key.equals("定位照片数") && !key.equals("意外情况照片数")){
+                            DetailedInfo detailedInfo = new DetailedInfo();
+                            detailedInfo.setKey(key);
+                            detailedInfo.setValue(value);
+                            detailedInfos.add(detailedInfo);
+                        }
+
                     }
                 }
 
+                Acceptance acceptance = new Acceptance();
+                acceptance.setOrderId(orderId);
+                acceptance.setOrderType(orderType);
+                acceptance.setSuppliesByClient(suppliesByClient);
+                acceptance.setSuppliesByWater(suppliesByWater);
+                acceptance.setDetailedInfos(detailedInfos);
+                list.add(acceptance);
             }
         } catch (JSONException e) {
             e.printStackTrace();

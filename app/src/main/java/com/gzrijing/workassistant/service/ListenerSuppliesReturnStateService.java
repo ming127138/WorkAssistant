@@ -8,28 +8,17 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.MachineNoData;
 import com.gzrijing.workassistant.db.SuppliesNoData;
-import com.gzrijing.workassistant.entity.MachineNo;
-import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
-import com.gzrijing.workassistant.util.HttpUtils;
-import com.gzrijing.workassistant.util.JsonParseUtils;
-import com.gzrijing.workassistant.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 public class ListenerSuppliesReturnStateService extends IntentService {
 
-    private Handler handler = new Handler();
     private String userNo;
     private String orderId;
 
@@ -41,20 +30,20 @@ public class ListenerSuppliesReturnStateService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
-        String billId = intent.getStringExtra("billId");
+        String billNo = intent.getStringExtra("billNo");
 
-        saveData(billId);
+        saveData(billNo);
         sendNotification();
 
     }
 
-    private void saveData(String billId) {
+    private void saveData(String billNo) {
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
                 .find(BusinessData.class, true).get(0);
         List<SuppliesNoData> suppliesNoDataList = businessData.getSuppliesNoList();
 
         for(SuppliesNoData suppliesNoData : suppliesNoDataList){
-            if(suppliesNoData.getReturnId() != null && suppliesNoData.getReturnId().equals(billId)){
+            if(suppliesNoData.getReturnId() != null && suppliesNoData.getReturnId().equals(billNo)){
                 ContentValues values = new ContentValues();
                 values.put("returnState", "可退回");
                 DataSupport.updateAll(SuppliesNoData.class, values, "returnId = ?", suppliesNoData.getReturnId());

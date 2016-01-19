@@ -75,8 +75,8 @@ public class MainReceiver extends BroadcastReceiver {
                                 }
                                 if(cmd.equals("getmaterialreturnstate")){
                                     String orderId = jsonObject.getString("FileNo");
-                                    String billId = jsonObject.getString("Billid");
-                                    listenerSuppliesReturnState(user, orderId, billId);
+                                    String billNo = jsonObject.getString("BillNo");
+                                    listenerSuppliesReturnState(user, orderId, billNo);
                                 }
                                 if(cmd.equals("getmymachineneed")){
                                     String orderId = jsonObject.getString("FileNo");
@@ -182,11 +182,11 @@ public class MainReceiver extends BroadcastReceiver {
     /**
      * 监听哪些材料可以退回
      */
-    private void listenerSuppliesReturnState(String userNo, String orderId, String billId){
+    private void listenerSuppliesReturnState(String userNo, String orderId, String billNo){
         Intent intent = new Intent(MyApplication.getContext(), ListenerSuppliesReturnStateService.class);
         intent.putExtra("userNo", userNo);
         intent.putExtra("orderId", orderId);
-        intent.putExtra("billId", billId);
+        intent.putExtra("billNo", billNo);
         MyApplication.getContext().startService(intent);
     }
 

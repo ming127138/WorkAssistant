@@ -7,13 +7,16 @@ import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ReportInfoCompleteAdapter;
+import com.gzrijing.workassistant.adapter.GridViewImageForReportInfoAdapter;
+import com.gzrijing.workassistant.adapter.PrintInfoAdapter;
+import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.DetailedInfo;
+import com.gzrijing.workassistant.entity.Acceptance;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
@@ -28,13 +31,19 @@ import java.util.ArrayList;
 public class ReportInfoCompleteActivity extends BaseActivity {
 
     private String orderId;
-    private ArrayList<DetailedInfo> infos = new ArrayList<DetailedInfo>();
+    private ArrayList<Acceptance> infos = new ArrayList<Acceptance>();
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
     private String userNo;
     private Handler handler = new Handler();
     private ListView lv_info;
-    private ReportInfoCompleteAdapter adapter;
     private ImageLoader mImageLoader;
+    private ListView lv_suppliesClient;
+    private ListView lv_suppliesWater;
+    private PrintInfoAdapter detailedAdapter;
+    private SuppliesApplyingAdapter clientAdapter;
+    private SuppliesApplyingAdapter waterAdapter;
+    private GridView gv_image;
+    private GridViewImageForReportInfoAdapter imageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +83,10 @@ public class ReportInfoCompleteActivity extends BaseActivity {
                                          public void run() {
                                              ArrayList<PicUrl> picUrlList = JsonParseUtils.getReportCompletePicUrl(response);
                                              picUrls.addAll(picUrlList);
-                                             adapter = new ReportInfoCompleteAdapter(ReportInfoCompleteActivity.this, infos, picUrls, userNo, orderId);
-                                             lv_info.setAdapter(adapter);
+                                             imageAdapter = new GridViewImageForReportInfoAdapter(ReportInfoCompleteActivity.this, picUrls);
+                                             gv_image.setAdapter(imageAdapter);
                                          }
                                      }
-
                         );
 
                     }
@@ -112,10 +120,16 @@ public class ReportInfoCompleteActivity extends BaseActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ArrayList<DetailedInfo> list = JsonParseUtils.getReportCompleteInfo(response);
+                        ArrayList<Acceptance> list = JsonParseUtils.getReportCompleteInfo(response);
                         infos.addAll(list);
-                        adapter = new ReportInfoCompleteAdapter(ReportInfoCompleteActivity.this, infos, picUrls, userNo, orderId);
-                        lv_info.setAdapter(adapter);
+                        if (!infos.toString().equals("[]")) {
+                            detailedAdapter = new PrintInfoAdapter(ReportInfoCompleteActivity.this, infos.get(0).getDetailedInfos());
+                            clientAdapter = new SuppliesApplyingAdapter(ReportInfoCompleteActivity.this, infos.get(0).getSuppliesByClient());
+                            waterAdapter = new SuppliesApplyingAdapter(ReportInfoCompleteActivity.this, infos.get(0).getSuppliesByWater());
+                            lv_info.setAdapter(detailedAdapter);
+                            lv_suppliesClient.setAdapter(clientAdapter);
+                            lv_suppliesWater.setAdapter(waterAdapter);
+                        }
                     }
                 });
 
@@ -139,6 +153,10 @@ public class ReportInfoCompleteActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv_info = (ListView) findViewById(R.id.report_info_complete_info_lv);
+        lv_suppliesClient = (ListView) findViewById(R.id.report_info_complete_client_supplies_lv);
+        lv_suppliesWater = (ListView) findViewById(R.id.report_info_complete_water_supplies_lv);
+
+        gv_image = (GridView) findViewById(R.id.report_info_complete_image_gv);
     }
 
     @Override
