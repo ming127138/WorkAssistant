@@ -318,7 +318,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                 jsonObject.put("MakingName", supplies.getName());
                 jsonObject.put("MakingSpace", supplies.getSpec());
                 jsonObject.put("MakingUnit", supplies.getSpec());
-                jsonObject.put("Qty", supplies.getNum());
+                jsonObject.put("Qty", supplies.getApplyNum());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -383,7 +383,8 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
             data.setName(createdList.get(i).getName());
             data.setSpec(createdList.get(i).getSpec());
             data.setUnit(createdList.get(i).getUnit());
-            data.setNum(createdList.get(i).getNum());
+            data.setApplyNum(createdList.get(i).getApplyNum());
+            data.setSendNum("0");
             data.save();
             businessData.getSuppliesDataList().add(data);
         }

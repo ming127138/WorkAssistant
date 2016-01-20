@@ -66,43 +66,59 @@ public class MainReceiver extends BroadcastReceiver {
                                 }
                                 if(cmd.equals("getmymaterialneedmain")){
                                     String orderId = jsonObject.getString("FileNo");
-                                    listenerSuppliesApplyState(user, orderId);
+                                    if(!orderId.equals("")){
+                                        listenerSuppliesApplyState(user, orderId);
+                                    }
                                 }
                                 if(cmd.equals("getmaterialsend")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
-                                    listenerSuppliesReceivedState(user, orderId, billNo);
+                                    if(!orderId.equals("")){
+                                        listenerSuppliesReceivedState(user, orderId, billNo);
+                                    }
                                 }
                                 if(cmd.equals("getmaterialreturnstate")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
-                                    listenerSuppliesReturnState(user, orderId, billNo);
+                                    if(!orderId.equals("")){
+                                        listenerSuppliesReturnState(user, orderId, billNo);
+                                    }
                                 }
                                 if(cmd.equals("getmymachineneed")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
-                                    listenerMachineApplyState(user, orderId, billNo);
+                                    if(!orderId.equals("")){
+                                        listenerMachineApplyState(user, orderId, billNo);
+                                    }
                                 }
                                 if(cmd.equals("getmymachinereceived")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
-                                    listenerMachineReceivedState(user, orderId, billNo);
+                                    if(!orderId.equals("")){
+                                        listenerMachineReceivedState(user, orderId, billNo);
+                                    }
                                 }
                                 if(cmd.equals("sendmachineok")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
                                     String machineNo = jsonObject.getString("MachineNo");
-                                    listenerMachineSendOk(user, orderId, billNo, machineNo);
+                                    if(!orderId.equals("")){
+                                        listenerMachineSendOk(user, orderId, billNo, machineNo);
+                                    }
                                 }
                                 if(cmd.equals("getmymachinereturn")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
-                                    listenerMachineReturnState(user, orderId, billNo);
+                                    if(!orderId.equals("")){
+                                        listenerMachineReturnState(user, orderId, billNo);
+                                    }
                                 }
                                 if(cmd.equals("backmachinebillok")){
                                     String orderId = jsonObject.getString("FileNo");
                                     String billNo = jsonObject.getString("BillNo");
-                                    listenerMachineBackOk(user, orderId, billNo);
+                                    if(!orderId.equals("")){
+                                        listenerMachineBackOk(user, orderId, billNo);
+                                    }
                                 }
                                 if(cmd.equals("getneedsendmachinelist")){
                                     listenerSendMachineOrder();
@@ -112,19 +128,27 @@ public class MainReceiver extends BroadcastReceiver {
                                 }
                                 if(cmd.equals("getsomeinstalltask")){
                                     String orderId = jsonObject.getString("FileNo");
-                                    listenerReportInfoProgress(orderId);
+                                    if(!orderId.equals("")){
+                                        listenerReportInfoProgress(orderId);
+                                    }
                                 }
                                 if(cmd.equals("getsomeinstallaccident")){
                                     String orderId = jsonObject.getString("FileNo");
-                                    listenerReportInfoProblem(orderId);
+                                    if(!orderId.equals("")){
+                                        listenerReportInfoProblem(orderId);
+                                    }
                                 }
                                 if(cmd.equals("getsomeinstallconfirmmain")){
                                     String orderId = jsonObject.getString("FileNo");
-                                    listenerReportInfoProjectAmount(orderId);
+                                    if(!orderId.equals("")){
+                                        listenerReportInfoProjectAmount(orderId);
+                                    }
                                 }
                                 if(cmd.equals("getfinishconstruction")){
                                     String orderId = jsonObject.getString("FileNo");
-                                    listenerReportInfoComplete(orderId);
+                                    if(!orderId.equals("")){
+                                        listenerReportInfoComplete(orderId);
+                                    }
                                 }
                                 if(cmd.equals("getmachineneedlist")){
                                     listenerLeaderMachineApplyBill();

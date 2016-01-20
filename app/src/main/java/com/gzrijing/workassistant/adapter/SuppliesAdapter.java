@@ -66,7 +66,7 @@ public class SuppliesAdapter extends BaseAdapter {
         v.name.setText(suppliesList.get(position).getName());
         v.spec.setText(suppliesList.get(position).getSpec());
         v.unit.setText(suppliesList.get(position).getUnit());
-        v.num.setText(suppliesList.get(position).getNum() + "");
+        v.num.setText(suppliesList.get(position).getApplyNum());
 
         v.num.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +80,7 @@ public class SuppliesAdapter extends BaseAdapter {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                suppliesList.get(position).setNum(et.getText().toString().trim());
+                                suppliesList.get(position).setApplyNum(et.getText().toString().trim());
                                 notifyDataSetChanged();
                             }
                         })

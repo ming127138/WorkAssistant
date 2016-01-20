@@ -3,12 +3,11 @@ package com.gzrijing.workassistant.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
+import com.gzrijing.workassistant.adapter.SuppliesReceivedAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.SuppliesData;
 import com.gzrijing.workassistant.entity.Supplies;
@@ -23,7 +22,7 @@ public class SuppliesReceivedActivity extends BaseActivity {
 
     private ListView lv_list;
     private ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
-    private SuppliesApplyingAdapter adapter;
+    private SuppliesReceivedAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,7 @@ public class SuppliesReceivedActivity extends BaseActivity {
             supplies.setName(data.getName());
             supplies.setSpec(data.getSpec());
             supplies.setUnit(data.getUnit());
-            supplies.setNum(data.getNum());
+            supplies.setSendNum(data.getSendNum());
             suppliesList.add(supplies);
         }
     }
@@ -54,7 +53,7 @@ public class SuppliesReceivedActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv_list = (ListView) findViewById(R.id.supplies_received_lv);
-        adapter = new SuppliesApplyingAdapter(this, suppliesList);
+        adapter = new SuppliesReceivedAdapter(this, suppliesList);
         lv_list.setAdapter(adapter);
     }
 

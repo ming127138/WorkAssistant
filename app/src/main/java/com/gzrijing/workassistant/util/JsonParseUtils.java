@@ -245,7 +245,6 @@ public class JsonParseUtils {
                 supplies.setName(name);
                 supplies.setSpec(spec);
                 supplies.setUnit(unit);
-                supplies.setNum("1");
                 suppliesList.add(supplies);
             }
         } catch (JSONException e) {
@@ -751,7 +750,7 @@ public class JsonParseUtils {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String receivedId = jsonObject.getString("BillNo");
-                String applyId = jsonObject.getString("NeedMainid");
+                String applyId = jsonObject.getString("MaterialNeedBillNo");
                 String state = jsonObject.getString("State");
                 if (state.equals("审核")) {
                     state = "可领用";
@@ -790,14 +789,16 @@ public class JsonParseUtils {
                     String name = jsonObject1.getString("MakingName");
                     String spec = jsonObject1.getString("MakingSpace");
                     String unit = jsonObject1.getString("MakingUnit");
-                    String num = jsonObject1.getString("Qty");
+                    String applyNum = jsonObject1.getString("NeedQty");
+                    String sendNum = jsonObject1.getString("Qty");
 
                     Supplies supplies = new Supplies();
                     supplies.setId(id);
                     supplies.setName(name);
                     supplies.setSpec(spec);
                     supplies.setUnit(unit);
-                    supplies.setNum(num);
+                    supplies.setApplyNum(applyNum);
+                    supplies.setSendNum(sendNum);
                     list.add(supplies);
                 }
             }

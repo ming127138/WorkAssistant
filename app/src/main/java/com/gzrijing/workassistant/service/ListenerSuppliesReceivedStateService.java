@@ -40,7 +40,6 @@ public class ListenerSuppliesReceivedStateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
         String billNo = intent.getStringExtra("billNo");
@@ -78,8 +77,8 @@ public class ListenerSuppliesReceivedStateService extends IntentService {
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
                 .find(BusinessData.class, true).get(0);
 
-        List<SuppliesNo> supplisNoList = JsonParseUtils.getLitenerSuppliesNoReceivedState(jsonData);
-        for (SuppliesNo suppliesNo : supplisNoList) {
+        List<SuppliesNo> suppliesNoList = JsonParseUtils.getLitenerSuppliesNoReceivedState(jsonData);
+        for (SuppliesNo suppliesNo : suppliesNoList) {
             SuppliesNoData suppliesNoData = new SuppliesNoData();
             suppliesNoData.setApplyId(suppliesNo.getApplyId());
             suppliesNoData.setReceivedId(suppliesNo.getReceivedId());
@@ -88,15 +87,26 @@ public class ListenerSuppliesReceivedStateService extends IntentService {
             businessData.getSuppliesNoList().add(suppliesNoData);
         }
 
+        List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
         List<Supplies> suppliesList = JsonParseUtils.getLitenerSuppliesReceivedState(jsonData);
         for(Supplies supplies : suppliesList){
+            for(SuppliesData suppliesData : suppliesDataList){
+                if(suppliesData.getReceivedId() == null && suppliesData.getApplyId().equals(suppliesNoList.get(0).getApplyId())
+                        && suppliesData.getName().equals(supplies.getName()) && suppliesData.getSpec().equals(supplies.getSpec())){
+                    ContentValues values = new ContentValues();
+                    values.put("sendNum", supplies.getSendNum());
+                    DataSupport.update(SuppliesData.class, values, suppliesData.getId());
+                }
+            }
+
             SuppliesData suppliesData = new SuppliesData();
-            suppliesData.setReceivedId(supplisNoList.get(0).getReceivedId());
+            suppliesData.setReceivedId(suppliesNoList.get(0).getReceivedId());
             suppliesData.setNo(supplies.getId());
             suppliesData.setName(supplies.getName());
             suppliesData.setSpec(supplies.getSpec());
             suppliesData.setUnit(supplies.getUnit());
-            suppliesData.setNum(supplies.getNum());
+            suppliesData.setApplyNum(supplies.getApplyNum());
+            suppliesData.setSendNum(supplies.getSendNum());
             suppliesData.save();
             businessData.getSuppliesDataList().add(suppliesData);
         }

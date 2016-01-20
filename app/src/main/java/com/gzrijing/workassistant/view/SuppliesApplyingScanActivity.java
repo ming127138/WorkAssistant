@@ -46,7 +46,7 @@ public class SuppliesApplyingScanActivity extends BaseActivity {
             supplies.setName(data.getName());
             supplies.setSpec(data.getSpec());
             supplies.setUnit(data.getUnit());
-            supplies.setNum(data.getNum());
+            supplies.setApplyNum(data.getApplyNum());
             suppliesList.add(supplies);
         }
     }

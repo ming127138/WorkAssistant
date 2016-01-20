@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesAdapter;
-import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
+import com.gzrijing.workassistant.adapter.SuppliesReceivedAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.SuppliesData;
@@ -49,7 +49,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
     private ArrayList<Supplies> returnList = new ArrayList<Supplies>();
     private ArrayList<Supplies> receivedList = new ArrayList<Supplies>();
     private MyListView lv_received;
-    private SuppliesApplyingAdapter receivedAdapter;
+    private SuppliesReceivedAdapter receivedAdapter;
     private SuppliesAdapter returnAdapter;
     private Handler handler = new Handler();
 
@@ -76,7 +76,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
                 supplies.setName(data.getName());
                 supplies.setSpec(data.getSpec());
                 supplies.setUnit(data.getUnit());
-                supplies.setNum(data.getNum());
+                supplies.setSendNum(data.getSendNum());
                 receivedList.add(supplies);
             }
         }
@@ -94,7 +94,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
         lv_return.setAdapter(returnAdapter);
 
         lv_received = (MyListView) findViewById(R.id.supplies_return_edit_received_lv);
-        receivedAdapter = new SuppliesApplyingAdapter(this, receivedList);
+        receivedAdapter = new SuppliesReceivedAdapter(this, receivedList);
         lv_received.setAdapter(receivedAdapter);
     }
 
@@ -110,7 +110,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
                 supplies.setName(received.getName());
                 supplies.setSpec(received.getSpec());
                 supplies.setUnit(received.getUnit());
-                supplies.setNum("1");
+                supplies.setApplyNum("1");
                 returnList.add(supplies);
                 returnAdapter.notifyDataSetChanged();
             }
@@ -160,7 +160,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
                 jsonObject.put("MakingName", supplies.getName());
                 jsonObject.put("MakingSpace", supplies.getSpec());
                 jsonObject.put("MakingUnit", supplies.getSpec());
-                jsonObject.put("Qty", supplies.getNum());
+                jsonObject.put("Qty", supplies.getApplyNum());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -231,7 +231,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
             data.setName(returnList.get(i).getName());
             data.setSpec(returnList.get(i).getSpec());
             data.setUnit(returnList.get(i).getUnit());
-            data.setNum(returnList.get(i).getNum());
+            data.setApplyNum(returnList.get(i).getApplyNum());
             data.save();
 
         }

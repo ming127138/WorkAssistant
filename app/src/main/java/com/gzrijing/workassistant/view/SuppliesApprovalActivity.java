@@ -8,7 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
+import com.gzrijing.workassistant.adapter.SuppliesApprovalAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.SuppliesData;
 import com.gzrijing.workassistant.entity.Supplies;
@@ -23,7 +23,7 @@ public class SuppliesApprovalActivity extends BaseActivity {
 
     private ListView lv_list;
     private ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
-    private SuppliesApplyingAdapter adapter;
+    private SuppliesApprovalAdapter adapter;
     private SuppliesNo suppliesNo;
     private TextView tv_useTime;
     private TextView tv_remark;
@@ -42,12 +42,15 @@ public class SuppliesApprovalActivity extends BaseActivity {
         suppliesNo = (SuppliesNo) intent.getParcelableExtra("suppliesNo");
         List<SuppliesData> suppliesDataList = DataSupport.where("applyId = ?", suppliesNo.getApplyId()).find(SuppliesData.class);
         for (SuppliesData data : suppliesDataList) {
-            Supplies supplies = new Supplies();
-            supplies.setName(data.getName());
-            supplies.setSpec(data.getSpec());
-            supplies.setUnit(data.getUnit());
-            supplies.setNum(data.getNum());
-            suppliesList.add(supplies);
+            if (data.getReceivedId() == null) {
+                Supplies supplies = new Supplies();
+                supplies.setName(data.getName());
+                supplies.setSpec(data.getSpec());
+                supplies.setUnit(data.getUnit());
+                supplies.setApplyNum(data.getApplyNum());
+                supplies.setSendNum(data.getSendNum());
+                suppliesList.add(supplies);
+            }
         }
     }
 
@@ -62,7 +65,7 @@ public class SuppliesApprovalActivity extends BaseActivity {
         tv_remark.setText(suppliesNo.getRemarks());
 
         lv_list = (ListView) findViewById(R.id.supplies_approval_lv);
-        adapter = new SuppliesApplyingAdapter(this, suppliesList);
+        adapter = new SuppliesApprovalAdapter(this, suppliesList);
         lv_list.setAdapter(adapter);
     }
 

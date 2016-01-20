@@ -8,16 +8,20 @@ public class Supplies implements Parcelable {
     private String name;        //材料名称
     private String spec;        //材料规格
     private String unit;        //材料单位
+    private String applyNum;    //申请数量
+    private String sendNum;     //发放数量
     private String num;         //数量
 
     public Supplies() {
     }
 
-    public Supplies(String id, String name, String spec, String unit, String num) {
+    public Supplies(String id, String name, String spec, String unit, String applyNum, String sendNum, String num) {
         this.id = id;
         this.name = name;
         this.spec = spec;
         this.unit = unit;
+        this.applyNum = applyNum;
+        this.sendNum = sendNum;
         this.num = num;
     }
 
@@ -53,6 +57,22 @@ public class Supplies implements Parcelable {
         this.unit = unit;
     }
 
+    public String getApplyNum() {
+        return applyNum;
+    }
+
+    public void setApplyNum(String applyNum) {
+        this.applyNum = applyNum;
+    }
+
+    public String getSendNum() {
+        return sendNum;
+    }
+
+    public void setSendNum(String sendNum) {
+        this.sendNum = sendNum;
+    }
+
     public String getNum() {
         return num;
     }
@@ -72,6 +92,8 @@ public class Supplies implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.spec);
         dest.writeString(this.unit);
+        dest.writeString(this.applyNum);
+        dest.writeString(this.sendNum);
         dest.writeString(this.num);
     }
 
@@ -80,6 +102,8 @@ public class Supplies implements Parcelable {
         this.name = in.readString();
         this.spec = in.readString();
         this.unit = in.readString();
+        this.applyNum = in.readString();
+        this.sendNum = in.readString();
         this.num = in.readString();
     }
 

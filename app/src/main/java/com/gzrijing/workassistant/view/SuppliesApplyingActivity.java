@@ -87,7 +87,7 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
             supplies.setName(data.getName());
             supplies.setSpec(data.getSpec());
             supplies.setUnit(data.getUnit());
-            supplies.setNum(data.getNum());
+            supplies.setApplyNum(data.getApplyNum());
             suppliesList.add(supplies);
         }
     }
@@ -218,7 +218,7 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
                 jsonObject.put("MakingName", supplies.getName());
                 jsonObject.put("MakingSpace", supplies.getSpec());
                 jsonObject.put("MakingUnit", supplies.getSpec());
-                jsonObject.put("Qty", supplies.getNum());
+                jsonObject.put("Qty", supplies.getApplyNum());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -292,7 +292,8 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
             data.setName(suppliesList.get(i).getName());
             data.setSpec(suppliesList.get(i).getSpec());
             data.setUnit(suppliesList.get(i).getUnit());
-            data.setNum(suppliesList.get(i).getNum());
+            data.setApplyNum(suppliesList.get(i).getApplyNum());
+            data.setSendNum("0");
             data.save();
             businessData.getSuppliesDataList().add(data);
         }
