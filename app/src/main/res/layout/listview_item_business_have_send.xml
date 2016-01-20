@@ -98,8 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/sw_10dp"
-            android:paddingRight="@dimen/sw_10dp">
+            android:paddingLeft="@dimen/sw_10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -121,17 +120,67 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/sw_10dp">
+            android:paddingLeft="@dimen/sw_10dp"
+            android:paddingTop="@dimen/sw_10dp"
+            android:paddingBottom="@dimen/sw_5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="汇报信息："
+                android:text="进度汇报信息："
                 android:textColor="@color/black"
                 android:textSize="@dimen/sw_15dp" />
 
             <TextView
-                android:id="@+id/listview_item_business_have_send_report_info_tv"
+                android:id="@+id/listview_item_business_have_send_progress_report_info_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看汇报信息"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/sw_10dp"
+            android:paddingTop="@dimen/sw_5dp"
+            android:paddingBottom="@dimen/sw_5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="问题汇报信息："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/listview_item_business_have_send_problem_report_info_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看汇报信息"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/sw_10dp"
+            android:paddingTop="@dimen/sw_5dp"
+            android:paddingBottom="@dimen/sw_5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工程量汇报信息："
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
+
+            <TextView
+                android:id="@+id/listview_item_business_have_send_project_amount_report_info_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="查看汇报信息"

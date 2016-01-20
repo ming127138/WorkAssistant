@@ -43,7 +43,7 @@ public class ReportInfoProblemAdapter extends BaseAdapter {
         if (convertView == null) {
             v = new ViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.listview_item_report_info_problem, parent, false);
+                    R.layout.listview_item_report_info_by_problem, parent, false);
             v.content = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_content_tv);
             v.state = (TextView) convertView.findViewById(R.id.listview_item_report_info_problem_state_tv);
             convertView.setTag(v);

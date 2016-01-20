@@ -33,7 +33,6 @@ public class BusinessHaveSendActivity extends BaseActivity {
 
     private String userNo;
     private String orderId;
-    private BusinessData businessData;
     private ListView lv_business;
     private List<BusinessHaveSend> BHSList = new ArrayList<BusinessHaveSend>();
     private BusinessHaveSendAdapter adapter;
@@ -57,8 +56,6 @@ public class BusinessHaveSendActivity extends BaseActivity {
         orderId = intent.getStringExtra("orderId");
 
         getBusinessHaveSend();
-
-//        getDBData();
 
     }
 
@@ -95,21 +92,6 @@ public class BusinessHaveSendActivity extends BaseActivity {
                 });
             }
         });
-    }
-
-    private void getDBData() {
-        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
-                .find(BusinessData.class, true).get(0);
-        List<BusinessHaveSendData> dataList = businessData.getBusinessHaveSendDataList();
-        for(BusinessHaveSendData data : dataList){
-            BusinessHaveSend bhs = new BusinessHaveSend();
-            bhs.setId(data.getOrderId());
-            bhs.setContent(data.getContent());
-            bhs.setState(data.getState());
-            bhs.setExecutors(data.getExecutors());
-            bhs.setDeadline(data.getDeadline());
-            BHSList.add(bhs);
-        }
     }
 
     private void initViews() {

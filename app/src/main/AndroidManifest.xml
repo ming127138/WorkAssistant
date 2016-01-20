@@ -30,9 +30,8 @@
     <permission
         android:name="getui.permission.GetuiService.com.gzrijing.workassistant"
         android:protectionLevel="normal" />
+
     <!-- 个推SDK权限配置结束 -->
-
-
     <application
         android:name=".base.MyApplication"
         android:allowBackup="true"
@@ -63,8 +62,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".base.BaseActivity" />
+        <activity android:name=".base.BaseActivity" />
         <activity
             android:name=".view.MainActivity"
             android:label="@string/title_activity_main"
@@ -79,8 +77,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.PipeInspectionFormActivity"
-            android:label="@string/title_activity_pipe_inspection_form"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_pipe_inspection_form"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.SubordinateActivity"
@@ -152,10 +150,6 @@
         <activity
             android:name=".view.ReportActivity"
             android:label="@string/title_activity_report"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.ReportInfoActivity"
-            android:label="@string/title_activity_report_info"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.ReportInfoProblemActivity"
@@ -345,6 +339,18 @@
         <activity
             android:name=".view.SendMachineReportActivity"
             android:label="送机汇报"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ReportInfoByProgressActivity"
+            android:label="进度汇报列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ReportInfoByProblemActivity"
+            android:label="问题汇报列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ReportInfoByProjectAmountActivity"
+            android:label="工程量汇报列表"
             android:screenOrientation="portrait" />
         <!-- app activity -->
 

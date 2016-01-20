@@ -27,7 +27,6 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportProgressGriViewAdapter;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.service.ReportProblemService;
-import com.gzrijing.workassistant.service.ReportProgressService;
 import com.gzrijing.workassistant.util.ImageCompressUtil;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.ToastUtil;

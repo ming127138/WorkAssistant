@@ -28,8 +28,6 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.DistributeGriViewAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.BusinessHaveSendData;
-import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;

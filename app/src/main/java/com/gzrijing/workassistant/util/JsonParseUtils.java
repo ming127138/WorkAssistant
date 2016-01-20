@@ -464,43 +464,44 @@ public class JsonParseUtils {
             JSONArray jsonArray = new JSONArray(jsonData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String id = jsonObject.getString("id");
                 String No = jsonObject.getString("BillNo");
                 String applicant = jsonObject.getString("SaveName");
                 String useTime = jsonObject.getString("UseDateTime");
                 String remarks = jsonObject.getString("Remark");
                 String state = jsonObject.getString("State");
+                String billType = jsonObject.getString("BillType");
+                if(billType.equals("工程材料")){
+                    SuppliesVerify suppliesVerify = new SuppliesVerify();
+                    suppliesVerify.setNo(No);
+                    suppliesVerify.setApplicant(applicant);
+                    suppliesVerify.setUseTime(useTime);
+                    suppliesVerify.setRemarks(remarks);
+                    suppliesVerify.setState(state);
 
-                SuppliesVerify suppliesVerify = new SuppliesVerify();
-                suppliesVerify.setId(id);
-                suppliesVerify.setNo(No);
-                suppliesVerify.setApplicant(applicant);
-                suppliesVerify.setUseTime(useTime);
-                suppliesVerify.setRemarks(remarks);
-                suppliesVerify.setState(state);
-
-                if (!jsonObject.getString("MaterialDetail").equals("")) {
-                    ArrayList<SuppliesVerifyInfo> infos = new ArrayList<SuppliesVerifyInfo>();
-                    JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
-                    for (int j = 0; j < jsonArray1.length(); j++) {
-                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
-                        String name = jsonObject1.getString("MakingName");
-                        String spec = jsonObject1.getString("MakingSpace");
-                        String unit = jsonObject1.getString("MakingUnit");
-                        String applyNum = jsonObject1.getString("NeedQty");
-                        String sendNum = jsonObject1.getString("SendQty");
-                        SuppliesVerifyInfo info = new SuppliesVerifyInfo();
-                        info.setName(name);
-                        info.setSendNum(spec);
-                        info.setUnit(unit);
-                        info.setApplyNum(applyNum);
-                        info.setSendNum(sendNum);
-                        infos.add(info);
+                    if (!jsonObject.getString("MaterialDetail").equals("")) {
+                        ArrayList<SuppliesVerifyInfo> infos = new ArrayList<SuppliesVerifyInfo>();
+                        JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
+                        for (int j = 0; j < jsonArray1.length(); j++) {
+                            JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                            String name = jsonObject1.getString("MakingName");
+                            String spec = jsonObject1.getString("MakingSpace");
+                            String unit = jsonObject1.getString("MakingUnit");
+                            String applyNum = jsonObject1.getString("NeedQty");
+                            String sendNum = jsonObject1.getString("SendQty");
+                            SuppliesVerifyInfo info = new SuppliesVerifyInfo();
+                            info.setName(name);
+                            info.setSpec(spec);
+                            info.setUnit(unit);
+                            info.setApplyNum(applyNum);
+                            info.setSendNum(sendNum);
+                            infos.add(info);
+                        }
+                        suppliesVerify.setSuppliesVerifyInfoList(infos);
                     }
-                    suppliesVerify.setSuppliesVerifyInfoList(infos);
+
+                    list.add(suppliesVerify);
                 }
 
-                list.add(suppliesVerify);
 
             }
         } catch (JSONException e) {

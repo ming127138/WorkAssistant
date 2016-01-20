@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.BusinessHaveSend;
-import com.gzrijing.workassistant.view.ReportInfoActivity;
+import com.gzrijing.workassistant.view.ReportInfoByProblemActivity;
+import com.gzrijing.workassistant.view.ReportInfoByProgressActivity;
+import com.gzrijing.workassistant.view.ReportInfoByProjectAmountActivity;
 
 import java.util.List;
 
@@ -57,8 +59,12 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
                     R.id.listview_item_business_have_send_executors_tv);
             v.deadline = (TextView) convertView.findViewById(
                     R.id.listview_item_business_have_send_deadline_tv);
-            v.reportInfo = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_have_send_report_info_tv);
+            v.progress = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_have_send_progress_report_info_tv);
+            v.problem = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_have_send_problem_report_info_tv);
+            v.projectAmount = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_have_send_project_amount_report_info_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -69,10 +75,28 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
         v.state.setText(BHSList.get(position).getState());
         v.executors.setText(BHSList.get(position).getExecutors());
         v.deadline.setText(BHSList.get(position).getDeadline());
-        v.reportInfo.setOnClickListener(new View.OnClickListener() {
+        v.progress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ReportInfoActivity.class);
+                Intent intent = new Intent(context, ReportInfoByProgressActivity.class);
+                intent.putExtra("id", BHSList.get(position).getId());
+                context.startActivity(intent);
+            }
+        });
+
+        v.problem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ReportInfoByProblemActivity.class);
+                intent.putExtra("id", BHSList.get(position).getId());
+                context.startActivity(intent);
+            }
+        });
+
+        v.projectAmount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ReportInfoByProjectAmountActivity.class);
                 intent.putExtra("id", BHSList.get(position).getId());
                 context.startActivity(intent);
             }
@@ -87,6 +111,8 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
         private TextView state;
         private TextView executors;
         private TextView deadline;
-        private TextView reportInfo;
+        private TextView progress;
+        private TextView problem;
+        private TextView projectAmount;
     }
 }
