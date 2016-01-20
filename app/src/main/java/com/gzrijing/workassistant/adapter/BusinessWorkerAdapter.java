@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,11 +114,9 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         v.state.setText(orderList.get(position).getState());
         v.deadline.setText(orderList.get(position).getDeadline());
 
-
         String endTime = orderList.get(position).getDeadline();
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date d = sdf.parse(endTime);
             long time = d.getTime() - System.currentTimeMillis();
             long day = time / (1000 * 60 * 60 * 24);
@@ -125,31 +124,28 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             if (day > 0) {
                 dayNm = day;
             }
-            long hour = (time - dayNm * 1000 * 60 * 60 * 24)
-                    / (1000 * 60 * 60);
+            long hour = (time - day * 1000 * 60 * 60 * 24) / (1000 * 60 * 60);
             long hourNm = 0;
             if (hour > 0) {
                 hourNm = hour;
             }
-            long min = (time - hour * 1000 * 60 * 60) / (1000 * 60);
+            long min = (time - day * 1000 * 60 * 60 * 24 - hour * 1000 * 60 * 60) / (1000 * 60);
             long minNm = 0;
             if (min > 0) {
                 minNm = min;
             }
             String surpTime = dayNm + "天" + hourNm + "时" + minNm + "分";
-            if (hourNm > 4) {
+            if (dayNm == 0 && hourNm < 4 && hourNm > 1) {
                 v.timeLeft.setText(surpTime);
-                v.bg_ll.setBackgroundResource(R.color.white);
-            }
-            if (hourNm <= 4 && hourNm >= 2) {
+                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.orangeShallow));
+            } else if (dayNm == 0 && hourNm < 2) {
                 v.timeLeft.setText(surpTime);
-                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.orange));
-            }
-            if (hourNm < 2) {
+                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.redShallow));
+            }else{
                 v.timeLeft.setText(surpTime);
-                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.red));
+                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.white));
             }
-            if(dayNm == 0 && hourNm == 1 && minNm == 59){
+            if (dayNm == 0 && hourNm == 1 && minNm == 59) {
                 NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
                 Intent intent = new Intent(context, NotificationReceiver.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

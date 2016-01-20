@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
 import com.gzrijing.workassistant.db.ImageData;
+import com.gzrijing.workassistant.db.TimeData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
@@ -31,10 +33,14 @@ import com.gzrijing.workassistant.view.WorkerFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class GetWorkerBusinessService extends IntentService {
@@ -54,10 +60,20 @@ public class GetWorkerBusinessService extends IntentService {
         SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
         userNo = sp.getString("userNo", "");
 
-        String date = "2015-10-01 00:00";
+        List<TimeData> timeDataList = DataSupport.select("time").where("userNo = ?", userNo).find(TimeData.class);
+        String time = "2016-1-10 10:00:00";
+        if(!timeDataList.toString().equals("[]")){
+            Log.e("time", timeDataList.get(0).getTime());
+            time = timeDataList.get(0).getTime();
+        }else {
+            TimeData timeData = new TimeData();
+            timeData.setTime(time);
+            timeData.setUserNo(userNo);
+            timeData.save();
+        }
         String url = null;
         try {
-            url = "?cmd=getmycons&userno=" + URLEncoder.encode(userNo, "UTF-8") + "&fileno=&begindate=" + URLEncoder.encode(date, "UTF-8");
+            url = "?cmd=getmycons&userno=" + URLEncoder.encode(userNo, "UTF-8") + "&fileno=&begindate=" + URLEncoder.encode(time, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -84,6 +100,12 @@ public class GetWorkerBusinessService extends IntentService {
 
 
     private void saveData(String data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = sdf.format(new Date(System.currentTimeMillis()));
+
+        ContentValues values = new ContentValues();
+        values.put("time", time);
+        DataSupport.updateAll(TimeData.class, values, "userNo = ?", userNo);
         List<BusinessByWorker> list = JsonParseUtils.getWorkerBusiness(data);
         for (final BusinessByWorker order : list) {
             BusinessData data1 = new BusinessData();

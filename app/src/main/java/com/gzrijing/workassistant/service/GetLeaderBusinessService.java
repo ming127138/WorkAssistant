@@ -4,39 +4,40 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
 import com.gzrijing.workassistant.db.ImageData;
+import com.gzrijing.workassistant.db.TimeData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
-import com.gzrijing.workassistant.util.ActivityManagerUtil;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
-import com.gzrijing.workassistant.view.LeaderFragment;
-import com.gzrijing.workassistant.view.SubordinateActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class GetLeaderBusinessService extends IntentService {
@@ -55,10 +56,23 @@ public class GetLeaderBusinessService extends IntentService {
         SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
         userNo = sp.getString("userNo", "");
 
-        String date = "2015-10-29 00:00";
+       List<TimeData> timeDataList = DataSupport.select("time").where("userNo = ?", userNo).find(TimeData.class);
+        String time = "2016-1-10 10:00:00";
+        Log.e("timeDataList", timeDataList.toString());
+        Log.e("size", timeDataList.size()+"");
+
+        if(!timeDataList.toString().equals("[]")){
+            Log.e("time", timeDataList.get(0).getTime());
+            time = timeDataList.get(0).getTime();
+        }else {
+            TimeData timeData = new TimeData();
+            timeData.setTime(time);
+            timeData.setUserNo(userNo);
+            timeData.save();
+        }
         String url = null;
         try {
-            url = "?cmd=getconstruction&userno="+URLEncoder.encode(userNo, "UTF-8")+"&begindate=" + URLEncoder.encode(date, "UTF-8");
+            url = "?cmd=getconstruction&userno=" + URLEncoder.encode(userNo, "UTF-8") + "&begindate=" + URLEncoder.encode(time, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -85,6 +99,13 @@ public class GetLeaderBusinessService extends IntentService {
 
 
     private void saveData(String data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = sdf.format(new Date(System.currentTimeMillis()));
+
+        ContentValues values = new ContentValues();
+        values.put("time", time);
+        DataSupport.updateAll(TimeData.class, values, "userNo = ?", userNo);
+
         List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(data);
         for (final BusinessByLeader order : list) {
             BusinessData data1 = new BusinessData();
@@ -105,8 +126,8 @@ public class GetLeaderBusinessService extends IntentService {
             }
             List<PicUrl> picUrls = order.getPicUrls();
             for (final PicUrl picUrl : picUrls) {
-                Log.e("picUrl", HttpUtils.imageURLPath + "/Pic/"+picUrl.getPicUrl());
-                mImageLoader.loadImage(HttpUtils.imageURLPath + "/Pic/"+picUrl.getPicUrl(), new SimpleImageLoadingListener() {
+                Log.e("picUrl", HttpUtils.imageURLPath + "/Pic/" + picUrl.getPicUrl());
+                mImageLoader.loadImage(HttpUtils.imageURLPath + "/Pic/" + picUrl.getPicUrl(), new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         super.onLoadingComplete(imageUri, view, loadedImage);
@@ -143,7 +164,7 @@ public class GetLeaderBusinessService extends IntentService {
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();
-        notification.defaults=Notification.DEFAULT_SOUND;
+        notification.defaults = Notification.DEFAULT_SOUND;
         notification.flags = Notification.FLAG_AUTO_CANCEL;
         manager.notify(0, notification);
     }

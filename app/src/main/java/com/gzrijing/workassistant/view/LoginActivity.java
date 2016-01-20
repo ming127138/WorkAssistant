@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.db.TimeData;
 import com.gzrijing.workassistant.entity.User;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
@@ -38,6 +39,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -125,13 +128,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_login_btn:
-//                SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
-//                Editor edit = sp.edit();
-//                edit.putString("userNo", "00004");
-//                edit.commit();
-//                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                intent.putExtra("fragId", "0");
-//                startActivity(intent);
                 login();
                 break;
 
