@@ -13,16 +13,11 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessHaveSendAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.BusinessHaveSendData;
-import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.BusinessHaveSend;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
-
-import org.litepal.crud.DataSupport;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -100,7 +95,7 @@ public class BusinessHaveSendActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv_business = (ListView) findViewById(R.id.business_have_send_lv);
-        adapter = new BusinessHaveSendAdapter(this, BHSList);
+        adapter = new BusinessHaveSendAdapter(this, BHSList, orderId);
         lv_business.setAdapter(adapter);
     }
 

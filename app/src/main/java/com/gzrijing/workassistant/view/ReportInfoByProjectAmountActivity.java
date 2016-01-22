@@ -7,16 +7,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ReportInfoProblemAdapter;
-import com.gzrijing.workassistant.adapter.ReportInfoProgressAdapter;
 import com.gzrijing.workassistant.adapter.ReportInfoProjectAmountAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
 import com.gzrijing.workassistant.service.GetReportInfoProjectAmountService;
 import com.gzrijing.workassistant.util.JsonParseUtils;
@@ -28,9 +23,13 @@ public class ReportInfoByProjectAmountActivity extends BaseActivity {
 
     private String togetherid;
     private Intent projectAmountIntent;
-    private ListView lv_projectAmount;
-    private List<ReportInfoProjectAmount> projectAmountList = new ArrayList<ReportInfoProjectAmount>();
-    private ReportInfoProjectAmountAdapter projectAmountAdapter;
+    private ListView lv_wait;
+    private ListView lv_ok;
+    private List<ReportInfoProjectAmount> waitList = new ArrayList<ReportInfoProjectAmount>();
+    private List<ReportInfoProjectAmount> okList = new ArrayList<ReportInfoProjectAmount>();
+    private ReportInfoProjectAmountAdapter waitAdapter;
+    private ReportInfoProjectAmountAdapter okAdapter;
+    private String orderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +38,12 @@ public class ReportInfoByProjectAmountActivity extends BaseActivity {
 
         initData();
         initViews();
-        setListeners();
     }
 
     private void initData() {
         Intent intent = getIntent();
         togetherid = intent.getStringExtra("id");
+        orderId = intent.getStringExtra("orderId");
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action.com.gzrijing.workassistant.ReportInfo.projectAmount");
@@ -65,38 +64,41 @@ public class ReportInfoByProjectAmountActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        lv_projectAmount = (ListView) findViewById(R.id.report_info_by_project_amount_lv);
+        lv_wait = (ListView) findViewById(R.id.report_info_by_project_amount_wait_lv);
+        waitAdapter = new ReportInfoProjectAmountAdapter(
+                ReportInfoByProjectAmountActivity.this, waitList, togetherid, orderId);
+        lv_wait.setAdapter(waitAdapter);
+
+        lv_ok = (ListView) findViewById(R.id.report_info_by_project_amount_ok_lv);
+        okAdapter = new ReportInfoProjectAmountAdapter(
+                ReportInfoByProjectAmountActivity.this, okList, togetherid, orderId);
+        lv_ok.setAdapter(okAdapter);
 
     }
 
-    private void setListeners() {
-        lv_projectAmount.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ReportInfoByProjectAmountActivity.this, ReportInfoProjectAmountActivity.class);
-                intent.putExtra("id", togetherid);
-                intent.putExtra("projectAmount", projectAmountList.get(position));
-                intent.putExtra("position", position);
-                startActivity(intent);
-            }
-        });
-    }
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals("action.com.gzrijing.workassistant.ReportInfo.projectAmount")){
+            if (action.equals("action.com.gzrijing.workassistant.ReportInfo.projectAmount")) {
                 String jsonData = intent.getStringExtra("jsonData");
-                List<ReportInfoProjectAmount> infos = JsonParseUtils.getProjectAmountReportInfo(jsonData);
-                projectAmountList.addAll(infos);
-                projectAmountAdapter = new ReportInfoProjectAmountAdapter(ReportInfoByProjectAmountActivity.this, projectAmountList);
-                lv_projectAmount.setAdapter(projectAmountAdapter);
+                List<ReportInfoProjectAmount> list = JsonParseUtils.getProjectAmountReportInfo(jsonData);
+                for(ReportInfoProjectAmount info : list){
+                    if(info.getState().equals("未审核")){
+                        waitList.add(info);
+                    }
+                    if(info.getState().equals("已审核")){
+                        okList.add(info);
+                    }
+                }
+                waitAdapter.notifyDataSetChanged();
+                okAdapter.notifyDataSetChanged();
             }
 
-            if(action.equals("action.com.gzrijing.workassistant.ReportInfo.projectAmount.refresh")){
-                projectAmountList.clear();
+            if (action.equals("action.com.gzrijing.workassistant.ReportInfo.projectAmount.refresh")) {
+                waitList.clear();
+                okList.clear();
                 initProjectAmountReportInfo();
-                projectAmountAdapter.notifyDataSetChanged();
             }
         }
     };

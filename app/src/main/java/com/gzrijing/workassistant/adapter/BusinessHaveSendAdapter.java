@@ -17,14 +17,16 @@ import com.gzrijing.workassistant.view.ReportInfoByProjectAmountActivity;
 import java.util.List;
 
 public class BusinessHaveSendAdapter extends BaseAdapter {
+    private String orderId;
     private Context context;
     private LayoutInflater listContainer;
     private List<BusinessHaveSend> BHSList;
 
-    public BusinessHaveSendAdapter(Context context, List<BusinessHaveSend> BHSList) {
+    public BusinessHaveSendAdapter(Context context, List<BusinessHaveSend> BHSList, String orderId) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.BHSList = BHSList;
+        this.orderId = orderId;
     }
 
     @Override
@@ -98,6 +100,7 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(context, ReportInfoByProjectAmountActivity.class);
                 intent.putExtra("id", BHSList.get(position).getId());
+                intent.putExtra("orderId", orderId);
                 context.startActivity(intent);
             }
         });

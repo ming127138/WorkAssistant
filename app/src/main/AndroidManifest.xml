@@ -568,6 +568,9 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
+        <activity android:name=".view.ReportInfoProblemByProcessActivity" />
+        <activity android:name=".view.ReportInfoProjectAmountByWaitActivity" />
+        <activity android:name=".view.ReportInfoProjectAmountByOkActivity"></activity>
     </application>
 
 </manifest>

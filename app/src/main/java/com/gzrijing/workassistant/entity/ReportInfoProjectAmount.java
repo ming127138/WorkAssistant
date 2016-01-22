@@ -5,18 +5,20 @@ import android.os.Parcelable;
 
 public class ReportInfoProjectAmount implements Parcelable {
     private String id;
+    private String feeType;         //收费性质 （客户， 水务）
     private String content;         //施工内容
     private String civil;           //土建内容
     private String state;           //状态（未审核，已审核，不通过）
-    private String reportName;       //汇报人
-    private String reportDate;       //汇报日期
+    private String reportName;      //汇报人
+    private String reportDate;      //汇报日期
     private String checkData;       //审核日期
 
     public ReportInfoProjectAmount() {
     }
 
-    public ReportInfoProjectAmount(String id, String content, String civil, String state, String reportName, String reportDate, String checkData) {
+    public ReportInfoProjectAmount(String id, String feeType, String content, String civil, String state, String reportName, String reportDate, String checkData) {
         this.id = id;
+        this.feeType = feeType;
         this.content = content;
         this.civil = civil;
         this.state = state;
@@ -31,6 +33,14 @@ public class ReportInfoProjectAmount implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getFeeType() {
+        return feeType;
+    }
+
+    public void setFeeType(String feeType) {
+        this.feeType = feeType;
     }
 
     public String getContent() {
@@ -89,6 +99,7 @@ public class ReportInfoProjectAmount implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
+        dest.writeString(this.feeType);
         dest.writeString(this.content);
         dest.writeString(this.civil);
         dest.writeString(this.state);
@@ -99,6 +110,7 @@ public class ReportInfoProjectAmount implements Parcelable {
 
     protected ReportInfoProjectAmount(Parcel in) {
         this.id = in.readString();
+        this.feeType = in.readString();
         this.content = in.readString();
         this.civil = in.readString();
         this.state = in.readString();

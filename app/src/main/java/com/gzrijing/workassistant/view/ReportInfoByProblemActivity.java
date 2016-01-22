@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
@@ -37,7 +35,6 @@ public class ReportInfoByProblemActivity extends BaseActivity {
 
         initData();
         initViews();
-        setListeners();
     }
 
     private void initData() {
@@ -67,20 +64,6 @@ public class ReportInfoByProblemActivity extends BaseActivity {
         lv_problem = (ListView) findViewById(R.id.report_info_by_problem_lv);
     }
 
-    private void setListeners() {
-        lv_problem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ReportInfoByProblemActivity.this, ReportInfoProblemActivity.class);
-                intent.putExtra("id", problemList.get(position).getId());
-                intent.putExtra("fileNo", problemList.get(position).getFileNo());
-                intent.putExtra("reportor", problemList.get(position).getReportor());
-                intent.putExtra("reportTime", problemList.get(position).getReportTime());
-                intent.putExtra("content", problemList.get(position).getContent());
-                startActivity(intent);
-            }
-        });
-    }
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -96,7 +79,6 @@ public class ReportInfoByProblemActivity extends BaseActivity {
             if(action.equals("action.com.gzrijing.workassistant.ReportInfo.problem.refresh")){
                 problemList.clear();
                 initProblemReportInfo();
-                problemAdapter.notifyDataSetChanged();
             }
 
         }

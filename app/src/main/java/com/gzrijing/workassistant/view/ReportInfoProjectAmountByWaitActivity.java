@@ -1,27 +1,30 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.PrintInfoAdapter;
-import com.gzrijing.workassistant.adapter.SuppliesAdapter;
+import com.gzrijing.workassistant.adapter.ReportInfoProjectAmountByWaitAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -39,34 +42,37 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportInfoProjectAmountActivity extends BaseActivity implements View.OnClickListener {
+public class ReportInfoProjectAmountByWaitActivity extends BaseActivity implements View.OnClickListener {
 
-    private String userNo;
-    private Intent serviceIntent;
+    private TextView tv_feeType;
+    private TextView tv_reportName;
+    private TextView tv_reportTime;
+    private EditText et_content;
+    private EditText et_civil;
     private ListView lv_supplies;
-    private SuppliesAdapter suppliesAdapter;
-    private List<Supplies> suppliesList = new ArrayList<Supplies>();
-    private List<DetailedInfo> infos = new ArrayList<DetailedInfo>();
-    private ListView lv_infos;
-    private PrintInfoAdapter infoAdapter;
-    private Button btn_approval;
-    private ReportInfoProjectAmount info;
     private LinearLayout ll_yes;
     private ImageView iv_yes;
     private LinearLayout ll_no;
     private ImageView iv_no;
-    private LinearLayout ll_isApproval;
+    private Button btn_submit;
+    private String userNo;
+    private ReportInfoProjectAmount info;
     private boolean isCheck = true;
+    private Intent serviceIntent;
+    private List<Supplies> suppliesList = new ArrayList<Supplies>();
+    private ReportInfoProjectAmountByWaitAdapter suppliesAdapter;
+    private ProgressDialog pDialog;
     private Handler handler = new Handler();
-    private int position;
+    private String orderId;
+    private int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report_info_project_amount);
+        setContentView(R.layout.activity_report_info_project_amount_by_wait);
 
         initData();
-        initView();
+        initViews();
         setListeners();
     }
 
@@ -76,27 +82,12 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
         userNo = app.getString("userNo", "");
 
         Intent intent = getIntent();
-        position = intent.getIntExtra("position", -1);
         String togetherid = intent.getStringExtra("id");
         info = intent.getParcelableExtra("projectAmount");
-        if (info.getCheckData().equals("")) {
-            String[] key = {"汇报人", "汇报时间", "施工内容", "土建项目"};
-            String[] value = {info.getReportName(), info.getReportDate(), info.getContent(), info.getCivil()};
-            for (int i = 0; i < key.length; i++) {
-                DetailedInfo detailedInfo = new DetailedInfo();
-                detailedInfo.setKey(key[i]);
-                detailedInfo.setValue(value[i]);
-                infos.add(detailedInfo);
-            }
-        } else {
-            String[] key = {"汇报人", "汇报时间", "审核时间", "施工内容", "土建项目"};
-            String[] value = {info.getReportName(), info.getReportDate(), info.getCheckData(), info.getContent(), info.getCivil()};
-            for (int i = 0; i < key.length; i++) {
-                DetailedInfo detailedInfo = new DetailedInfo();
-                detailedInfo.setKey(key[i]);
-                detailedInfo.setValue(value[i]);
-                infos.add(detailedInfo);
-            }
+        orderId = intent.getStringExtra("orderId");
+
+        if(info.getFeeType().equals("水务")){
+            index = 1;
         }
 
         IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.ReportInfoProjectAmount");
@@ -108,44 +99,49 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
         startService(serviceIntent);
     }
 
-    private void initView() {
+    private void initViews() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        lv_infos = (ListView) findViewById(R.id.report_info_project_amount_info_lv);
-        infoAdapter = new PrintInfoAdapter(this, infos);
-        lv_infos.setAdapter(infoAdapter);
+        tv_feeType = (TextView) findViewById(R.id.report_info_project_amount_by_wait_fee_type_tv);
+        tv_feeType.setText(info.getFeeType());
+        tv_reportName = (TextView) findViewById(R.id.report_info_project_amount_by_wait_report_name_tv);
+        tv_reportName.setText(info.getReportName());
+        tv_reportTime = (TextView) findViewById(R.id.report_info_project_amount_by_wait_report_time_tv);
+        tv_reportTime.setText(info.getReportDate());
+        et_content = (EditText) findViewById(R.id.report_info_project_amount_by_wait_content_et);
+        et_content.setText(info.getContent());
+        et_civil = (EditText) findViewById(R.id.report_info_project_amount_by_wait_civil_et);
+        et_civil.setText(info.getCivil());
 
-        lv_supplies = (ListView) findViewById(R.id.report_info_project_amount_supplies_lv);
-        suppliesAdapter = new SuppliesAdapter(this, suppliesList);
+        lv_supplies = (ListView) findViewById(R.id.report_info_project_amount_by_wait_supplies_lv);
+        suppliesAdapter = new ReportInfoProjectAmountByWaitAdapter(this, suppliesList);
         lv_supplies.setAdapter(suppliesAdapter);
 
-        ll_isApproval = (LinearLayout) findViewById(R.id.report_info_project_amount_is_approval_ll);
-        ll_yes = (LinearLayout) findViewById(R.id.report_info_project_amount_yes_ll);
-        iv_yes = (ImageView) findViewById(R.id.report_info_project_amount_yes_iv);
-        ll_no = (LinearLayout) findViewById(R.id.report_info_project_amount_no_ll);
-        iv_no = (ImageView) findViewById(R.id.report_info_project_amount_no_iv);
+        ll_yes = (LinearLayout) findViewById(R.id.report_info_project_amount_by_wait_yes_ll);
+        iv_yes = (ImageView) findViewById(R.id.report_info_project_amount_by_wait_yes_iv);
+        ll_no = (LinearLayout) findViewById(R.id.report_info_project_amount_by_wait_no_ll);
+        iv_no = (ImageView) findViewById(R.id.report_info_project_amount_by_wait_no_iv);
 
-
-        btn_approval = (Button) findViewById(R.id.report_info_project_amount_approval_btn);
-        if (info.getState().equals("已审核")) {
-            btn_approval.setVisibility(View.GONE);
-            ll_isApproval.setVisibility(View.GONE);
-        }
-
+        btn_submit = (Button) findViewById(R.id.report_info_project_amount_by_wait_submit_btn);
     }
 
     private void setListeners() {
+        tv_feeType.setOnClickListener(this);
         ll_yes.setOnClickListener(this);
         ll_no.setOnClickListener(this);
-        btn_approval.setOnClickListener(this);
+        btn_submit.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.report_info_project_amount_yes_ll:
+        switch (v.getId()){
+            case R.id.report_info_project_amount_by_wait_fee_type_tv:
+                selectFeeType();
+                break;
+
+            case R.id.report_info_project_amount_by_wait_yes_ll:
                 if (!isCheck) {
                     iv_yes.setImageResource(R.drawable.spinner_item_check_on);
                     iv_no.setImageResource(R.drawable.spinner_item_check_off);
@@ -153,7 +149,7 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
                 }
                 break;
 
-            case R.id.report_info_project_amount_no_ll:
+            case R.id.report_info_project_amount_by_wait_no_ll:
                 if (isCheck) {
                     iv_no.setImageResource(R.drawable.spinner_item_check_on);
                     iv_yes.setImageResource(R.drawable.spinner_item_check_off);
@@ -161,14 +157,39 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
                 }
                 break;
 
-            case R.id.report_info_project_amount_approval_btn:
-                approval();
+            case R.id.report_info_project_amount_by_wait_submit_btn:
+                submit();
                 break;
         }
     }
 
-    private void approval() {
-        btn_approval.setVisibility(View.GONE);
+    private void selectFeeType() {
+        new AlertDialog.Builder(this).setTitle("选择归属类型：").setSingleChoiceItems(
+                new String[]{"客户", "水务"}, index, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        index = which;
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(index == 0) {
+                            tv_feeType.setText("客户");
+                        }
+                        if(index == 1) {
+                            tv_feeType.setText("水务");
+                        }
+                    }
+                })
+                .setNegativeButton("取消", null).show();
+    }
+
+    private void submit() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("提交中...");
+        pDialog.show();
         String isPass;
         if (isCheck) {
             isPass = "1";
@@ -177,21 +198,28 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
         }
 
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < suppliesList.size(); i++) {
+        for (Supplies supplies : suppliesList) {
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", info.getId());
-                jsonObject.put("IsPass", isPass);
+                jsonObject.put("MakingNo", supplies.getId());
+                jsonObject.put("Qty", supplies.getNum());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
+
         Log.e("jsonData",jsonArray.toString());
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "docheckconsconfirm")
                 .add("userno", userNo)
+                .add("id", info.getId())
+                .add("fileno", orderId)
+                .add("conscontent", et_content.getText().toString().trim())
+                .add("earthworkcontent", et_civil.getText().toString().trim())
+                .add("receivables", tv_feeType.getText().toString())
+                .add("isPass", isPass)
                 .add("consconfirmjson", jsonArray.toString())
                 .build();
 
@@ -203,7 +231,7 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            ToastUtil.showToast(ReportInfoProjectAmountActivity.this, "提交成功", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(ReportInfoProjectAmountByWaitActivity.this, "提交成功", Toast.LENGTH_SHORT);
                             Intent intent = new Intent("action.com.gzrijing.workassistant.ReportInfo.projectAmount.refresh");
                             sendBroadcast(intent);
                             finish();
@@ -213,11 +241,11 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            ToastUtil.showToast(ReportInfoProjectAmountActivity.this, "提交失败", Toast.LENGTH_SHORT);
-                            btn_approval.setVisibility(View.VISIBLE);
+                            ToastUtil.showToast(ReportInfoProjectAmountByWaitActivity.this, "提交失败", Toast.LENGTH_SHORT);
                         }
                     });
                 }
+                pDialog.cancel();
             }
 
             @Override
@@ -225,10 +253,10 @@ public class ReportInfoProjectAmountActivity extends BaseActivity implements Vie
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(ReportInfoProjectAmountActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
-                        btn_approval.setVisibility(View.VISIBLE);
+                        ToastUtil.showToast(ReportInfoProjectAmountByWaitActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
+                pDialog.cancel();
             }
         });
     }

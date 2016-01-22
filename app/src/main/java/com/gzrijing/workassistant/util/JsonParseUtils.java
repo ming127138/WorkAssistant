@@ -16,6 +16,7 @@ import com.gzrijing.workassistant.entity.MachineNo;
 import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.entity.MachineVerifyInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
+import com.gzrijing.workassistant.entity.ProblemType;
 import com.gzrijing.workassistant.entity.Progress;
 import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.entity.ReportInfo;
@@ -636,16 +637,12 @@ public class JsonParseUtils {
                 String id = jsonObject.getString("id");
                 String content = jsonObject.getString("ConsContent");
                 String civil = jsonObject.getString("EarthWorkContent");
-                String stateStr = jsonObject.getString("State");
-                String state = "";
-                if (stateStr.equals("保存")) {
+                String state = jsonObject.getString("State");
+                if (state.equals("保存")) {
                     state = "未审核";
                 }
-                if (stateStr.equals("审核")) {
+                if (state.equals("审核")) {
                     state = "已审核";
-                }
-                if (stateStr.equals("不通过")) {
-                    state = "不通过";
                 }
                 String reportName = jsonObject.getString("SaveName");
                 String reportData = jsonObject.getString("SaveDate");
@@ -1556,5 +1553,31 @@ public class JsonParseUtils {
         return list;
     }
 
+
+    /**
+     * 获取意外情况的原因类型
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<ProblemType> getProblemType(String jsonData) {
+        ArrayList<ProblemType> list = new ArrayList<ProblemType>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String type = jsonObject.getString("AccidentReason");
+                String userNo = jsonObject.getString("UserNo");
+
+                ProblemType problemType = new ProblemType();
+                problemType.setType(type);
+                problemType.setUserNo(userNo);
+                list.add(problemType);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
 }

@@ -15,13 +15,13 @@ import com.gzrijing.workassistant.view.ReportInfoProgressActivity;
 
 import java.util.List;
 
-public class ReportInfoProgressAdapter extends BaseAdapter {
+public class ReportInfoByProgressAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater listContainer;
     private List<ReportInfo> list;
 
-    public ReportInfoProgressAdapter(Context context, List<ReportInfo> list) {
+    public ReportInfoByProgressAdapter(Context context, List<ReportInfo> list) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.list = list;

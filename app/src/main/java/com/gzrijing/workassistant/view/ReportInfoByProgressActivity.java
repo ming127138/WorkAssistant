@@ -7,12 +7,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ReportInfoProgressAdapter;
+import com.gzrijing.workassistant.adapter.ReportInfoByProgressAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.service.GetReportInfoProgressService;
@@ -27,7 +25,7 @@ public class ReportInfoByProgressActivity extends BaseActivity {
     private Intent progressIntent;
     private ListView lv_progress;
     private List<ReportInfo> progressList = new ArrayList<ReportInfo>();
-    private ReportInfoProgressAdapter progressAdapter;
+    private ReportInfoByProgressAdapter progressAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +70,13 @@ public class ReportInfoByProgressActivity extends BaseActivity {
                 String jsonData = intent.getStringExtra("jsonData");
                 List<ReportInfo> infos = JsonParseUtils.getProgressReportInfo(jsonData);
                 progressList.addAll(infos);
-                progressAdapter = new ReportInfoProgressAdapter(ReportInfoByProgressActivity.this, progressList);
+                progressAdapter = new ReportInfoByProgressAdapter(ReportInfoByProgressActivity.this, progressList);
                 lv_progress.setAdapter(progressAdapter);
             }
 
             if(action.equals("action.com.gzrijing.workassistant.ReportInfo.progress.refresh")){
                 progressList.clear();
                 initProgressReportInfo();
-                progressAdapter.notifyDataSetChanged();
             }
         }
     };
