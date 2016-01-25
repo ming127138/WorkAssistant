@@ -230,10 +230,6 @@
             android:label="退料列表"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.ReportInfoProjectAmountActivity"
-            android:label="工程量信息"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.SendMachineActivity"
             android:label="送机列表"
             android:screenOrientation="portrait" />
@@ -570,7 +566,11 @@
 
         <activity android:name=".view.ReportInfoProblemByProcessActivity" />
         <activity android:name=".view.ReportInfoProjectAmountByWaitActivity" />
-        <activity android:name=".view.ReportInfoProjectAmountByOkActivity"></activity>
+        <activity android:name=".view.ReportInfoProjectAmountByOkActivity" />
+        <activity android:name=".view.QueryProjectAmountActivity" />
+        <activity android:name=".view.QueryProjectAmountByInfoActivity" />
+        <activity android:name=".view.AccidentsActivity" />
+        <activity android:name=".view.AccidentsProcessActivity"></activity>
     </application>
 
 </manifest>

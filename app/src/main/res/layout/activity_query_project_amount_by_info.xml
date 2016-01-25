@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.gzrijing.workassistant.view.ReportInfoProjectAmountByOkActivity">
+    tools:context="com.gzrijing.workassistant.view.QueryProjectAmountByInfoActivity">
 
     <include layout="@layout/toolbar"/>
 
@@ -26,33 +26,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="　汇报人："
+                    android:text="　审核人："
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_report_name_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sw_15dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/sw_10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="汇报时间："
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sw_15dp"/>
-
-                <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_report_time_tv"
+                    android:id="@+id/query_project_amount_by_info_approval_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -73,7 +52,7 @@
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_approval_time_tv"
+                    android:id="@+id/query_project_amount_by_info_approval_time_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -94,7 +73,7 @@
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_fee_type_tv"
+                    android:id="@+id/query_project_amount_by_info_fee_type_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -115,7 +94,7 @@
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_content_tv"
+                    android:id="@+id/query_project_amount_by_info_content_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -136,7 +115,7 @@
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_civil_tv"
+                    android:id="@+id/query_project_amount_by_info_civil_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -201,7 +180,7 @@
                 android:background="@color/black" />
 
             <com.gzrijing.workassistant.widget.MyListView
-                android:id="@+id/report_info_project_amount_by_ok_supplies_lv"
+                android:id="@+id/query_project_amount_by_info_supplies_lv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

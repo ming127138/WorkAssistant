@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
-import com.gzrijing.workassistant.view.ReportInfoProjectAmountActivity;
 import com.gzrijing.workassistant.view.ReportInfoProjectAmountByOkActivity;
 import com.gzrijing.workassistant.view.ReportInfoProjectAmountByWaitActivity;
 

@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.util;
 
 import com.gzrijing.workassistant.entity.Acceptance;
+import com.gzrijing.workassistant.entity.Accident;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.BusinessHaveSend;
@@ -18,6 +19,7 @@ import com.gzrijing.workassistant.entity.MachineVerifyInfo;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.ProblemType;
 import com.gzrijing.workassistant.entity.Progress;
+import com.gzrijing.workassistant.entity.QueryProjectAmount;
 import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
@@ -1579,5 +1581,82 @@ public class JsonParseUtils {
         }
         return list;
     }
+
+    /**
+     * 获取组长确认的工程量表格 - 内容
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<QueryProjectAmount> getQueryProjectAmount(String jsonData) {
+        ArrayList<QueryProjectAmount> list = new ArrayList<QueryProjectAmount>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.getString("id");
+                String content = jsonObject.getString("ConsContent");
+                String civil = jsonObject.getString("EarthWorkContent");
+                String approvalName = jsonObject.getString("SaveName");
+                String approvalTime = jsonObject.getString("CheckDate");
+                String feeType = jsonObject.getString("Receivables");
+                String state = jsonObject.getString("State");
+
+                QueryProjectAmount info = new QueryProjectAmount();
+                info.setId(id);
+                info.setApprovalName(approvalName);
+                info.setApprovalTime(approvalTime);
+                info.setFeeType(feeType);
+                info.setContent(content);
+                info.setCivil(civil);
+                info.setState(state);
+
+                list.add(info);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取意外情况
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<Accident> getAccidents(String jsonData) {
+        ArrayList<Accident> list = new ArrayList<Accident>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.getString("id");
+                String orderId = jsonObject.getString("FileNo");
+                String type = jsonObject.getString("AccidentReason");
+                String state = jsonObject.getString("FileState");
+                String reason = jsonObject.getString("HandleReason");
+                String handleName = jsonObject.getString("HandleName");
+                String problemName = jsonObject.getString("SaveName");
+                String problemTime = jsonObject.getString("SaveDate");
+
+                Accident accident = new Accident();
+                accident.setId(id);
+                accident.setOrderId(orderId);
+                accident.setType(type);
+                accident.setState(state);
+                accident.setReason(reason);
+                accident.setHandleName(handleName);
+                accident.setProblemName(problemName);
+                accident.setProblemtime(problemTime);
+
+                list.add(accident);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 
 }

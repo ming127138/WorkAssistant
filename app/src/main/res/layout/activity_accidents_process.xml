@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.gzrijing.workassistant.view.ReportInfoProjectAmountByOkActivity">
+    tools:context="com.gzrijing.workassistant.view.AccidentsProcessActivity">
 
     <include layout="@layout/toolbar"/>
 
@@ -26,12 +26,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="　汇报人："
+                    android:text="工程编号："
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_report_name_tv"
+                    android:id="@+id/accidents_process_order_id_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -47,12 +47,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="汇报时间："
+                    android:text="问题类型："
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_report_time_tv"
+                    android:id="@+id/accidents_process_problem_type_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -68,12 +68,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="审核时间："
+                    android:text="工程状态："
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_approval_time_tv"
+                    android:id="@+id/accidents_process_state_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -89,12 +89,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="收费性质："
+                    android:text="问题描述："
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_fee_type_tv"
+                    android:id="@+id/accidents_process_reason_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -110,12 +110,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="施工内容："
+                    android:text="　负责人："
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_content_tv"
+                    android:id="@+id/accidents_process_handle_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -131,12 +131,33 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="土建项目："
+                    android:text="问题发起人："
                     android:textColor="@color/black"
                     android:textSize="@dimen/sw_15dp"/>
 
                 <TextView
-                    android:id="@+id/report_info_project_amount_by_ok_civil_tv"
+                    android:id="@+id/accidents_process_problem_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sw_10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="问题发起时间："
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp"/>
+
+                <TextView
+                    android:id="@+id/accidents_process_problem_time_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -147,63 +168,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/sw_10dp"
-                android:text="材料列表："
+                android:text="处理结果："
                 android:textColor="@color/black"
-                android:textSize="@dimen/sw_15dp" />
+                android:textSize="@dimen/sw_15dp"/>
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/accidents_process_handle_result_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/sw_5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:gravity="center"
-                    android:text="名称"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sw_12dp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:gravity="center"
-                    android:text="规格"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sw_12dp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="单位"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sw_12dp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="数量"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sw_12dp" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/black" />
-
-            <com.gzrijing.workassistant.widget.MyListView
-                android:id="@+id/report_info_project_amount_by_ok_supplies_lv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:minHeight="@dimen/sw_100dp"
+                android:background="@drawable/bg_text"
+                android:layout_margin="@dimen/sw_5dp"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/edit_cursor_blue"
+                android:textSize="@dimen/sw_15dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

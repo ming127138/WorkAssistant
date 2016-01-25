@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.adapter.ReportInfoProjectAmountByWaitAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesAdapter;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.SuppliesData;
@@ -44,7 +45,7 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     private EditText et_civil;
     private ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
     private ListView lv_supplies;
-    private SuppliesAdapter adapter;
+    private ReportInfoProjectAmountByWaitAdapter adapter;
     private Button btn_need;
     private Button btn_wait;
     private boolean isCheck;
@@ -119,7 +120,7 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
         btn_wait = (Button) layoutView.findViewById(R.id.fragment_report_project_amount_submit_wait_btn);
 
         lv_supplies = (ListView) layoutView.findViewById(R.id.fragment_report_project_amount_supplies_lv);
-        adapter = new SuppliesAdapter(getActivity(), suppliesList);
+        adapter = new ReportInfoProjectAmountByWaitAdapter(getActivity(), suppliesList);
         lv_supplies.setAdapter(adapter);
 
     }

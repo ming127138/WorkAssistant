@@ -30,6 +30,7 @@ import com.gzrijing.workassistant.receiver.NotificationReceiver;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
+import com.gzrijing.workassistant.view.QueryProjectAmountActivity;
 import com.gzrijing.workassistant.view.ReportActivity;
 import com.gzrijing.workassistant.view.SuppliesApplyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
@@ -96,6 +97,8 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                     R.id.listview_item_business_worker_supplies_apply_btn);
             v.info = (Button) convertView.findViewById(
                     R.id.listview_item_business_worker_info_btn);
+            v.queryProjectAmount = (Button) convertView.findViewById(
+                    R.id.listview_item_business_worker_project_amount_btn);
             v.flag = (TextView) convertView.findViewById(
                     R.id.listview_item_business_worker_flag_tv);
             v.bg_ll = (LinearLayout) convertView.findViewById(
@@ -203,17 +206,20 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             }
         });
 
+        v.queryProjectAmount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, QueryProjectAmountActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
         v.btn_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (flag.equals("确认收到")) {
                     sendSure(position);
-//                    orderList.get(position).setFlag("处理");
-//                    ContentValues values = new ContentValues();
-//                    values.put("flag", "处理");
-//                    DataSupport.updateAll(BusinessData.class, values,
-//                            "orderId = ?", orderList.get(position).getOrderId());
-//                    notifyDataSetChanged();
                 }
 
                 if (flag.equals("处理")) {
@@ -222,24 +228,6 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     sendDone(position);
-//                                    if (orderList.get(position).getType().equals("供水管网巡检")) {
-//                                        orderList.get(position).setFlag("巡检");
-//                                        orderList.get(position).setState("正在处理");
-//                                        ContentValues values = new ContentValues();
-//                                        values.put("flag", "巡检");
-//                                        values.put("state", "正在处理");
-//                                        DataSupport.updateAll(BusinessData.class, values,
-//                                                "orderId = ?", orderList.get(position).getOrderId());
-//                                    } else {
-//                                        orderList.get(position).setFlag("汇报");
-//                                        orderList.get(position).setState("正在处理");
-//                                        ContentValues values = new ContentValues();
-//                                        values.put("flag", "汇报");
-//                                        values.put("state", "正在处理");
-//                                        DataSupport.updateAll(BusinessData.class, values,
-//                                                "orderId = ?", orderList.get(position).getOrderId());
-//                                    }
-//                                    notifyDataSetChanged();
                                 }
                             })
                             .setNegativeButton("取消", null)
@@ -369,6 +357,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         private TextView flag;
         private Button suppliesApply;
         private Button info;
+        private Button queryProjectAmount;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;
         private TextView timeLeft;
