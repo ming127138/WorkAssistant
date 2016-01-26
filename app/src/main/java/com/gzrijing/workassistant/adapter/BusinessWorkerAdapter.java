@@ -101,6 +101,8 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                     R.id.listview_item_business_worker_project_amount_btn);
             v.flag = (TextView) convertView.findViewById(
                     R.id.listview_item_business_worker_flag_tv);
+            v.head_rl = (RelativeLayout) convertView.findViewById(
+                    R.id.listview_item_business_worker_head_rl);
             v.bg_ll = (LinearLayout) convertView.findViewById(
                     R.id.listview_item_business_worker_bg_ll);
             v.btn_rl = (RelativeLayout) convertView.findViewById(
@@ -140,13 +142,13 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             String surpTime = dayNm + "天" + hourNm + "时" + minNm + "分";
             if (dayNm == 0 && hourNm < 4 && hourNm > 1) {
                 v.timeLeft.setText(surpTime);
-                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.orangeShallow));
+                v.head_rl.setBackgroundColor(convertView.getResources().getColor(R.color.orangeShallow));
             } else if (dayNm == 0 && hourNm < 2) {
                 v.timeLeft.setText(surpTime);
-                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.redShallow));
+                v.head_rl.setBackgroundColor(convertView.getResources().getColor(R.color.redShallow));
             }else{
                 v.timeLeft.setText(surpTime);
-                v.bg_ll.setBackgroundColor(convertView.getResources().getColor(R.color.white));
+                v.head_rl.setBackgroundColor(convertView.getResources().getColor(R.color.blue));
             }
             if (dayNm == 0 && hourNm == 1 && minNm == 59) {
                 NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
@@ -170,6 +172,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         if (orderList.get(position).getType().equals("供水管网巡查")) {
             v.info.setVisibility(View.GONE);
             v.suppliesApply.setVisibility(View.GONE);
+            v.queryProjectAmount.setVisibility(View.GONE);
         }
         if (orderList.get(position).isUrgent()) {
             v.urgent.setVisibility(View.VISIBLE);
@@ -358,6 +361,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         private Button suppliesApply;
         private Button info;
         private Button queryProjectAmount;
+        private RelativeLayout head_rl;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;
         private TextView timeLeft;

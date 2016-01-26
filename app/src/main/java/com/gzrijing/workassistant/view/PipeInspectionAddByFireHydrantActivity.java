@@ -91,7 +91,6 @@ public class PipeInspectionAddByFireHydrantActivity extends BaseActivity impleme
 
             case R.id.pipe_inspection_add_by_fire_hydrant_item8_btn:
                 initMyLocation();
-
                 break;
         }
 
@@ -223,6 +222,7 @@ public class PipeInspectionAddByFireHydrantActivity extends BaseActivity impleme
                             marker.setLongitude(Double.valueOf(tv_item8.getText().toString().split("，")[0]));
                             marker.setLatitude(Double.valueOf(tv_item8.getText().toString().split("，")[1]));
                             marker.setType("0");
+                            marker.setCheckFlag("0");
                             Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.add");
                             intent.putExtra("marker", marker);
                             sendBroadcast(intent);

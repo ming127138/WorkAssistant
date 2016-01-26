@@ -6,6 +6,7 @@
     android:padding="@dimen/sw_15dp">
 
     <RelativeLayout
+        android:id="@+id/listview_item_business_worker_head_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue" >

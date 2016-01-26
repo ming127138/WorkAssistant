@@ -60,6 +60,7 @@ public class AccidentsAdapter extends BaseAdapter {
             v = (ViewHolder) convertView.getTag();
         }
 
+        v.content.setText(list.get(position).getReason());
         v.process.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

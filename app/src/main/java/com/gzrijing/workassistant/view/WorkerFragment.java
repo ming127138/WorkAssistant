@@ -89,6 +89,7 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment");
+        intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment.state");
         intentFilter.addAction("action.com.gzrijing.workassistant.WorkerFragment.Inspection");
         intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.add");
         intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.update");
@@ -300,6 +301,22 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                 getWorkerOreder();
                 getInspectionOrder();
                 getSewageWellsOrder();
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.WorkerFragment.state")){
+                String orderId = intent.getStringExtra("orderId");
+                String state = intent.getStringExtra("state");
+                for(BusinessByWorker order : orderListByWorker){
+                    if(orderId.equals(order.getOrderId())){
+                        order.setState(state);
+                    }
+                }
+                for(BusinessByWorker order : orderList){
+                    if(orderId.equals(order.getOrderId())){
+                        order.setState(state);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
             }
 
         }

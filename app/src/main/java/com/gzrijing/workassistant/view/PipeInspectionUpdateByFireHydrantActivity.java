@@ -161,6 +161,7 @@ public class PipeInspectionUpdateByFireHydrantActivity extends BaseActivity impl
                             marker.setLongitude(Double.valueOf(tv_item8.getText().toString().split("，")[0]));
                             marker.setLatitude(Double.valueOf(tv_item8.getText().toString().split("，")[1]));
                             marker.setType("0");
+                            marker.setCheckFlag("0");
                             Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.update");
                             intent.putExtra("position", position);
                             intent.putExtra("marker", marker);

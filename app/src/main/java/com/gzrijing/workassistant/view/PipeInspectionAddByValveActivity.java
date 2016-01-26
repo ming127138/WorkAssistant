@@ -227,6 +227,7 @@ public class PipeInspectionAddByValveActivity extends BaseActivity implements Vi
                             marker.setLongitude(Double.valueOf(tv_item7.getText().toString().split("，")[0]));
                             marker.setLatitude(Double.valueOf(tv_item7.getText().toString().split("，")[1]));
                             marker.setType("1");
+                            marker.setCheckFlag("0");
                             Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.add");
                             intent.putExtra("marker", marker);
                             sendBroadcast(intent);

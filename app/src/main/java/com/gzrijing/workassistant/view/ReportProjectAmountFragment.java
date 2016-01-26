@@ -88,7 +88,7 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
                         supplies.setName(suppliesData.getName());
                         supplies.setSpec(suppliesData.getSpec());
                         supplies.setUnit(suppliesData.getUnit());
-                        supplies.setSendNum(suppliesData.getSendNum());
+                        supplies.setNum(suppliesData.getSendNum());
                         suppliesList.add(supplies);
                     }
                 }

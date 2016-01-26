@@ -60,7 +60,7 @@ public class ReportInfoProjectAmountAdapter extends BaseAdapter {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.content.setText(list.get(position).getFeeType()+"工程量单");
+        v.content.setText(list.get(position).getFeeType()+"的工程量单");
 
         if(list.get(position).getState().equals("未审核")){
             v.approval.setText("审核");

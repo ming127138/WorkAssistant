@@ -157,6 +157,7 @@ public class PipeInspectionUpdateByValveActivity extends BaseActivity implements
                             marker.setLongitude(Double.valueOf(tv_item7.getText().toString().split("，")[0]));
                             marker.setLatitude(Double.valueOf(tv_item7.getText().toString().split("，")[1]));
                             marker.setType("1");
+                            marker.setCheckFlag("0");
                             Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.update");
                             intent.putExtra("marker", marker);
                             intent.putExtra("position", position);

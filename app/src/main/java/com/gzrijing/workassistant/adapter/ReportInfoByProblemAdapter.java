@@ -10,23 +10,26 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.entity.BusinessHaveSend;
 import com.gzrijing.workassistant.entity.ReportInfo;
-import com.gzrijing.workassistant.view.ReportInfoByProblemActivity;
 import com.gzrijing.workassistant.view.ReportInfoProblemActivity;
 import com.gzrijing.workassistant.view.ReportInfoProblemByProcessActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ReportInfoProblemAdapter extends BaseAdapter {
+public class ReportInfoByProblemAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater listContainer;
     private List<ReportInfo> list;
+    private ArrayList<BusinessHaveSend> BHSList;
 
-    public ReportInfoProblemAdapter(Context context, List<ReportInfo> list) {
+    public ReportInfoByProblemAdapter(Context context, List<ReportInfo> list, ArrayList<BusinessHaveSend> BHSList) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.list = list;
+        this.BHSList = BHSList;
     }
 
     @Override
@@ -78,10 +81,12 @@ public class ReportInfoProblemAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ReportInfoProblemByProcessActivity.class);
+                intent.putParcelableArrayListExtra("BHSList", BHSList);
                 intent.putExtra("fileNo", list.get(position).getFileNo());
                 context.startActivity(intent);
             }
         });
+
         return convertView;
     }
 

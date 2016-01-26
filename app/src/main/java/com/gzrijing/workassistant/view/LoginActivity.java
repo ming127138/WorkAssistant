@@ -207,6 +207,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     edit.commit();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("fragId", "0");
+                    intent.putExtra("userName", user.getUserName());
                     startActivity(intent);
                     Toast.makeText(LoginActivity.this, "欢迎" + user.getUserName() + "登录",
                             Toast.LENGTH_SHORT).show();

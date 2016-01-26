@@ -1,10 +1,15 @@
 package com.gzrijing.workassistant.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -37,7 +42,6 @@ public class QueryProjectAmountActivity extends BaseActivity {
 
         initData();
         initViews();
-        setListeners();
     }
 
     private void initData() {
@@ -47,6 +51,9 @@ public class QueryProjectAmountActivity extends BaseActivity {
 
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
+
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.QueryProjectAmount");
+        registerReceiver(mBroadcastReceiver, intentFilter);
 
         getProjectAmount();
     }
@@ -63,10 +70,12 @@ public class QueryProjectAmountActivity extends BaseActivity {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
+                Log.e("response", response);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         ArrayList<QueryProjectAmount> list = JsonParseUtils.getQueryProjectAmount(response);
+                        projectAmountList.clear();
                         projectAmountList.addAll(list);
                         adapter.notifyDataSetChanged();
                     }
@@ -96,7 +105,31 @@ public class QueryProjectAmountActivity extends BaseActivity {
 
     }
 
-    private void setListeners() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals("action.com.gzrijing.workassistant.QueryProjectAmount")) {
+                getProjectAmount();
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
     }
 }

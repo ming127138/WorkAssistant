@@ -27,7 +27,7 @@ public class GetReportInfoProjectAmountSuppliesService extends Service {
         String togetherid = intent.getStringExtra("togetherid");
         String confirmid = intent.getStringExtra("confirmid");
 
-        String url = "?cmd=getsomeinstallconfirmdetail&togetherid=" + togetherid + "&confirmid=" + confirmid;
+        String url = "?cmd=getsomeinstallconfirmdetail&togetherid=" + togetherid + "&confirmid=" + confirmid + "&fileno=";
 
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override

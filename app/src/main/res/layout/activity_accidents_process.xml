@@ -176,6 +176,7 @@
                 android:id="@+id/accidents_process_handle_result_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="top"
                 android:minHeight="@dimen/sw_100dp"
                 android:background="@drawable/bg_text"
                 android:layout_margin="@dimen/sw_5dp"

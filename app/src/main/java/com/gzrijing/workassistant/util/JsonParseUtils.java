@@ -378,6 +378,7 @@ public class JsonParseUtils {
                     String valveNo = jsonObject1.getString("ValveNo");
                     String valveGNo = jsonObject1.getString("ValveGNo");
                     String vfType = jsonObject1.getString("VfClass");
+                    String checkFlag = jsonObject1.getString("CheckFlag");
                     Inspection inspection = new Inspection();
                     inspection.setNo(No);
                     inspection.setName(name);
@@ -388,6 +389,7 @@ public class JsonParseUtils {
                     inspection.setValveNo(valveNo);
                     inspection.setValveGNo(valveGNo);
                     inspection.setType(vfType);
+                    inspection.setCheckFlag(checkFlag);
                     inspectionList.add(inspection);
                 }
 
@@ -521,8 +523,8 @@ public class JsonParseUtils {
      * @return
      */
 
-    public static List<BusinessHaveSend> getBusinessHaveSend(String jsonData) {
-        List<BusinessHaveSend> list = new ArrayList<BusinessHaveSend>();
+    public static ArrayList<BusinessHaveSend> getBusinessHaveSend(String jsonData) {
+        ArrayList<BusinessHaveSend> list = new ArrayList<BusinessHaveSend>();
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -639,6 +641,7 @@ public class JsonParseUtils {
                 String id = jsonObject.getString("id");
                 String content = jsonObject.getString("ConsContent");
                 String civil = jsonObject.getString("EarthWorkContent");
+                String feeType = jsonObject.getString("Receivables");
                 String state = jsonObject.getString("State");
                 if (state.equals("保存")) {
                     state = "未审核";
@@ -654,6 +657,7 @@ public class JsonParseUtils {
                 info.setId(id);
                 info.setContent(content);
                 info.setCivil(civil);
+                info.setFeeType(feeType);
                 info.setState(state);
                 info.setReportName(reportName);
                 info.setReportDate(reportData);
@@ -1601,6 +1605,12 @@ public class JsonParseUtils {
                 String approvalTime = jsonObject.getString("CheckDate");
                 String feeType = jsonObject.getString("Receivables");
                 String state = jsonObject.getString("State");
+                if(state.equals("保存")){
+                    state = "未审核";
+                }
+                if(state.equals("审核")){
+                    state = "已审核";
+                }
 
                 QueryProjectAmount info = new QueryProjectAmount();
                 info.setId(id);
@@ -1633,7 +1643,7 @@ public class JsonParseUtils {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String id = jsonObject.getString("id");
                 String orderId = jsonObject.getString("FileNo");
-                String type = jsonObject.getString("AccidentReason");
+                String type = jsonObject.getString("Reason");
                 String state = jsonObject.getString("FileState");
                 String reason = jsonObject.getString("HandleReason");
                 String handleName = jsonObject.getString("HandleName");

@@ -13,11 +13,12 @@ public class Inspection implements Parcelable {
     private String valveNo;     //阀门型号
     private String valveGNo;    //阀门井型号
     private String type;        //1是阀门 0是消防栓
+    private String checkFlag;   //1是已检查，0未检查
 
     public Inspection() {
     }
 
-    public Inspection(String no, String name, String model, String address, double latitude, double longitude, String valveNo, String valveGNo, String type) {
+    public Inspection(String no, String name, String model, String address, double latitude, double longitude, String valveNo, String valveGNo, String type, String checkFlag) {
         No = no;
         this.name = name;
         this.model = model;
@@ -27,6 +28,7 @@ public class Inspection implements Parcelable {
         this.valveNo = valveNo;
         this.valveGNo = valveGNo;
         this.type = type;
+        this.checkFlag = checkFlag;
     }
 
     public String getNo() {
@@ -101,6 +103,14 @@ public class Inspection implements Parcelable {
         this.type = type;
     }
 
+    public String getCheckFlag() {
+        return checkFlag;
+    }
+
+    public void setCheckFlag(String checkFlag) {
+        this.checkFlag = checkFlag;
+    }
+
 
     @Override
     public int describeContents() {
@@ -118,6 +128,7 @@ public class Inspection implements Parcelable {
         dest.writeString(this.valveNo);
         dest.writeString(this.valveGNo);
         dest.writeString(this.type);
+        dest.writeString(this.checkFlag);
     }
 
     protected Inspection(Parcel in) {
@@ -130,9 +141,10 @@ public class Inspection implements Parcelable {
         this.valveNo = in.readString();
         this.valveGNo = in.readString();
         this.type = in.readString();
+        this.checkFlag = in.readString();
     }
 
-    public static final Parcelable.Creator<Inspection> CREATOR = new Parcelable.Creator<Inspection>() {
+    public static final Creator<Inspection> CREATOR = new Creator<Inspection>() {
         public Inspection createFromParcel(Parcel source) {
             return new Inspection(source);
         }

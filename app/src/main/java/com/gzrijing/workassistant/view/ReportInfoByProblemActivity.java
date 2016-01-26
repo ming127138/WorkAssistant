@@ -10,8 +10,9 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.ReportInfoProblemAdapter;
+import com.gzrijing.workassistant.adapter.ReportInfoByProblemAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.entity.BusinessHaveSend;
 import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.service.GetReportInfoProblemService;
 import com.gzrijing.workassistant.util.JsonParseUtils;
@@ -24,7 +25,8 @@ public class ReportInfoByProblemActivity extends BaseActivity {
     private ListView lv_problem;
     private String togetherid;
     private Intent problemIntent;
-    private ReportInfoProblemAdapter problemAdapter;
+    private ReportInfoByProblemAdapter problemAdapter;
+    private ArrayList<BusinessHaveSend> BHSList;
 
     private List<ReportInfo> problemList = new ArrayList<ReportInfo>();
 
@@ -40,6 +42,7 @@ public class ReportInfoByProblemActivity extends BaseActivity {
     private void initData() {
         Intent intent = getIntent();
         togetherid = intent.getStringExtra("id");
+        BHSList = intent.getParcelableArrayListExtra("BHSList");
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action.com.gzrijing.workassistant.ReportInfo.problem");
@@ -72,7 +75,7 @@ public class ReportInfoByProblemActivity extends BaseActivity {
                 String jsonData = intent.getStringExtra("jsonData");
                 List<ReportInfo> infos = JsonParseUtils.getProblemReportInfo(jsonData);
                 problemList.addAll(infos);
-                problemAdapter = new ReportInfoProblemAdapter(ReportInfoByProblemActivity.this, problemList);
+                problemAdapter = new ReportInfoByProblemAdapter(ReportInfoByProblemActivity.this, problemList, BHSList);
                 lv_problem.setAdapter(problemAdapter);
             }
 

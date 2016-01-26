@@ -17,6 +17,7 @@ import com.gzrijing.workassistant.service.ListenerMachineBackOkService;
 import com.gzrijing.workassistant.service.ListenerMachineReceivedStateService;
 import com.gzrijing.workassistant.service.ListenerMachineReturnStateService;
 import com.gzrijing.workassistant.service.ListenerMachineSendOkService;
+import com.gzrijing.workassistant.service.ListenerOrderStateService;
 import com.gzrijing.workassistant.service.ListenerReportInfoCompleteService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProblemService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProgressService;
@@ -155,6 +156,13 @@ public class MainReceiver extends BroadcastReceiver {
                                 }
                                 if(cmd.equals("getmachinebacklist")){
                                     listenerLeaderMachineReturnBill();
+                                }
+                                if(cmd.equals("listenerFileState")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    String state = jsonObject.getString("State");
+                                    if(!orderId.equals("")){
+                                        listenerOrderState(user, orderId, state);
+                                    }
                                 }
                             }
                         }
@@ -335,6 +343,17 @@ public class MainReceiver extends BroadcastReceiver {
      */
     private void listenerLeaderMachineReturnBill(){
         Intent intent = new Intent(MyApplication.getContext(), ListenerLeaderMachineReturnBillService.class);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听工程状态
+     */
+    private void listenerOrderState(String userNo, String orderId, String state){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerOrderStateService.class);
+        intent.putExtra("userNo", userNo);
+        intent.putExtra("orderId", orderId);
+        intent.putExtra("state", state);
         MyApplication.getContext().startService(intent);
     }
 

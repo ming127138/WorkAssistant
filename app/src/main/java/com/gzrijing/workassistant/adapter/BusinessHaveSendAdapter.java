@@ -14,15 +14,15 @@ import com.gzrijing.workassistant.view.ReportInfoByProblemActivity;
 import com.gzrijing.workassistant.view.ReportInfoByProgressActivity;
 import com.gzrijing.workassistant.view.ReportInfoByProjectAmountActivity;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class BusinessHaveSendAdapter extends BaseAdapter {
     private String orderId;
     private Context context;
     private LayoutInflater listContainer;
-    private List<BusinessHaveSend> BHSList;
+    private ArrayList<BusinessHaveSend> BHSList;
 
-    public BusinessHaveSendAdapter(Context context, List<BusinessHaveSend> BHSList, String orderId) {
+    public BusinessHaveSendAdapter(Context context, ArrayList<BusinessHaveSend> BHSList, String orderId) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.BHSList = BHSList;
@@ -90,6 +90,7 @@ public class BusinessHaveSendAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ReportInfoByProblemActivity.class);
+                intent.putParcelableArrayListExtra("BHSList", BHSList);
                 intent.putExtra("id", BHSList.get(position).getId());
                 context.startActivity(intent);
             }

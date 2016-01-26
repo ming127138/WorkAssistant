@@ -29,7 +29,7 @@ public class BusinessHaveSendActivity extends BaseActivity {
     private String userNo;
     private String orderId;
     private ListView lv_business;
-    private List<BusinessHaveSend> BHSList = new ArrayList<BusinessHaveSend>();
+    private ArrayList<BusinessHaveSend> BHSList = new ArrayList<BusinessHaveSend>();
     private BusinessHaveSendAdapter adapter;
     private Handler handler = new Handler();
 
@@ -69,7 +69,7 @@ public class BusinessHaveSendActivity extends BaseActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        List<BusinessHaveSend> list = JsonParseUtils.getBusinessHaveSend(response);
+                        ArrayList<BusinessHaveSend> list = JsonParseUtils.getBusinessHaveSend(response);
                         BHSList.addAll(list);
                         adapter.notifyDataSetChanged();
                     }

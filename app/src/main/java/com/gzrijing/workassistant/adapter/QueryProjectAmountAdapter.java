@@ -66,7 +66,9 @@ public class QueryProjectAmountAdapter extends BaseAdapter {
         } else {
             v = (ViewHolder) convertView.getTag();
         }
+
         v.content.setText(list.get(position).getFeeType());
+        v.query.setText(list.get(position).getState());
 
         v.query.setOnClickListener(new View.OnClickListener() {
             @Override

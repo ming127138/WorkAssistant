@@ -348,6 +348,34 @@
             android:name=".view.ReportInfoByProjectAmountActivity"
             android:label="工程量汇报列表"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ReportInfoProblemByProcessActivity"
+            android:label="问题处理"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ReportInfoProjectAmountByWaitActivity"
+            android:label="待审核工程量信息"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ReportInfoProjectAmountByOkActivity"
+            android:label="已审核工程量信息"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.QueryProjectAmountActivity"
+            android:label="工程量列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.QueryProjectAmountByInfoActivity"
+            android:label="工程量信息"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.AccidentsActivity"
+            android:label="意外情况列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.AccidentsProcessActivity"
+            android:label="意外情况处理"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -452,6 +480,9 @@
             android:exported="false" />
         <service
             android:name=".service.ListenerMachineBackOkService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerOrderStateService"
             android:exported="false" />
 
         <!-- app service -->
@@ -564,13 +595,7 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".view.ReportInfoProblemByProcessActivity" />
-        <activity android:name=".view.ReportInfoProjectAmountByWaitActivity" />
-        <activity android:name=".view.ReportInfoProjectAmountByOkActivity" />
-        <activity android:name=".view.QueryProjectAmountActivity" />
-        <activity android:name=".view.QueryProjectAmountByInfoActivity" />
-        <activity android:name=".view.AccidentsActivity" />
-        <activity android:name=".view.AccidentsProcessActivity"></activity>
+        <activity android:name=".view.GetGPSActivity"></activity>
     </application>
 
 </manifest>

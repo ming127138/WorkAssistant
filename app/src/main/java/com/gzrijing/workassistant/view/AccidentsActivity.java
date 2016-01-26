@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -62,13 +63,14 @@ public class AccidentsActivity extends BaseActivity {
         pDialog.show();
         String url = null;
         try {
-            url = "?cmd=getaccident&userno=" + URLEncoder.encode(userNo, "UTF-8") + "&handleuno=&fileno=&isfinish=0";
+            url = "?cmd=getaccident&userno=" + URLEncoder.encode(userNo, "UTF-8") + "&handleuno=&fileno=&isfinish=0&accidentid=";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
+                Log.e("response", response);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

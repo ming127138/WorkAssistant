@@ -137,14 +137,6 @@
                 android:scrollbars="none"
                 android:verticalSpacing="@dimen/sw_10dp" >
             </com.gzrijing.workassistant.widget.WrapHeightGridView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/sw_10dp"
-                android:text="添加录音："
-                android:textColor="@color/black"
-                android:textSize="@dimen/sw_15dp"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

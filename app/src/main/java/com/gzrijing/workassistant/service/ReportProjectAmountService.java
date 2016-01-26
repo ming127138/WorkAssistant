@@ -32,6 +32,10 @@ public class ReportProjectAmountService extends IntentService {
         String content = intent.getStringExtra("content");
         String civil = intent.getStringExtra("civil");
         String flag = intent.getStringExtra("flag");
+        String id = intent.getStringExtra("id");
+        if(id == null){
+            id = "";
+        }
         ArrayList<Supplies> suppliesList = intent.getParcelableArrayListExtra("suppliesList");
 
         JSONArray jsonArray = new JSONArray();
@@ -49,7 +53,7 @@ public class ReportProjectAmountService extends IntentService {
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "doconsconfirm")
                 .add("userno", userNo)
-                .add("id", "")
+                .add("id", id)
                 .add("fileno", orderId)
                 .add("receivables", type)
                 .add("conscontent", content)

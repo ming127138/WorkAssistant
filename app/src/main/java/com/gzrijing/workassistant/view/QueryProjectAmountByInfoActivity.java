@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -75,6 +76,7 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
+                Log.e("response", response);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -103,7 +105,7 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tv_approvalName = (TextView) findViewById(R.id.query_project_amount_by_info_approval_name_tv);
-        tv_approvalName.setText(projectAmount.getId());
+        tv_approvalName.setText(projectAmount.getApprovalName());
         tv_approvalTime = (TextView) findViewById(R.id.query_project_amount_by_info_approval_time_tv);
         tv_approvalTime.setText(projectAmount.getApprovalTime());
         tv_feeType = (TextView) findViewById(R.id.query_project_amount_by_info_fee_type_tv);
@@ -158,6 +160,7 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
         intent.putExtra("civil", tv_civil.getText().toString());
         intent.putParcelableArrayListExtra("suppliesList", suppliesList);
         intent.putExtra("flag", "1");  //0=施工员审核通过，不通知组长   1=保存状态，通知组长审核
+        intent.putExtra("id", projectAmount.getId());
         startService(intent);
     }
 
@@ -170,6 +173,8 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
                 ToastUtil.showToast(context, result, Toast.LENGTH_SHORT);
                 pDialog.cancel();
                 if(result.equals("汇报成功")){
+                    Intent intent1 = new Intent("action.com.gzrijing.workassistant.QueryProjectAmount");
+                    sendBroadcast(intent1);
                     finish();
                 }
             }

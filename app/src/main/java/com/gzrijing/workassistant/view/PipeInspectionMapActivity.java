@@ -37,7 +37,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Inspection;
-import com.gzrijing.workassistant.entity.Marker;
 import com.gzrijing.workassistant.listener.MyOrientationListener;
 
 import java.util.ArrayList;
@@ -205,17 +204,36 @@ public class PipeInspectionMapActivity extends BaseActivity {
         LatLng point = new LatLng(marker.getLatitude(), marker.getLongitude());
         BitmapDescriptor bitmap = null;
         if (marker.getType().equals("0")) {
-            // 构建Marker图标
-            bitmap = BitmapDescriptorFactory
-                    .fromResource(R.drawable.map_flag_green);
+            if(marker.getCheckFlag().equals("0")){
+                bitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.map_flag_green);
+            }
+            if(marker.getCheckFlag().equals("1")){
+                bitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.map_flag_gray_0);
+            }
         }
         if (marker.getType().equals("1")) {
-            bitmap = BitmapDescriptorFactory
-                    .fromResource(R.drawable.map_flag_blue);
+            if(marker.getCheckFlag().equals("0")){
+                bitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.map_flag_blue);
+            }
+            if(marker.getCheckFlag().equals("1")){
+                bitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.map_flag_gray_1);
+            }
+
         }
         if (marker.getType().equals("2")) {
-            bitmap = BitmapDescriptorFactory
-                    .fromResource(R.drawable.map_flag_black);
+            if(marker.getCheckFlag().equals("0")){
+                bitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.map_flag_black);
+            }
+            if(marker.getCheckFlag().equals("1")){
+                bitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.map_flag_gray_2);
+            }
+
         }
         // 构建MarkerOption，用于在地图上添加Marker
         OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
@@ -406,7 +424,7 @@ public class PipeInspectionMapActivity extends BaseActivity {
 
             if(action.equals("action.com.gzrijing.workassistant.PipeInspectMap.inspection")){
                 int position = intent.getIntExtra("position", -1);
-                markers.remove(position);
+                markers.get(position).setCheckFlag("1");
                 mBaiduMap.clear();
                 initMarker();
             }

@@ -156,6 +156,7 @@ public class PipeInspectionUpdateByWaterWellActivity extends BaseActivity implem
                             marker.setLongitude(Double.valueOf(tv_item7.getText().toString().split("，")[0]));
                             marker.setLatitude(Double.valueOf(tv_item7.getText().toString().split("，")[1]));
                             marker.setType("2");
+                            marker.setCheckFlag("0");
                             Intent intent = new Intent("action.com.gzrijing.workassistant.PipeInspectMap.update");
                             intent.putExtra("position", position);
                             intent.putExtra("marker", marker);

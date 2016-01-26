@@ -12,10 +12,6 @@ import android.widget.GridView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MoreGridViewAdapter;
-import com.gzrijing.workassistant.db.BusinessData;
-
-import org.litepal.crud.DataSupport;
-
 
 public class MoreFragment extends Fragment {
 
@@ -43,8 +39,8 @@ public class MoreFragment extends Fragment {
     }
 
     private void initData() {
-        iconIds = new int[]{R.drawable.icon_notice, R.drawable.icon_notice, R.drawable.icon_notice, R.drawable.icon_notice, R.drawable.icon_notice};
-        texts = new String[]{"通知公告", "送机列表", "退机列表", "安全检查", "清理数据"};
+        iconIds = new int[]{R.drawable.icon_notice, R.drawable.icon_notice, R.drawable.icon_notice, R.drawable.icon_notice};
+        texts = new String[]{"通知公告", "送机列表", "退机列表", "安全检查"};
     }
 
     private void initViews() {
@@ -77,9 +73,6 @@ public class MoreFragment extends Fragment {
                     getActivity().startActivity(intent);
                 }
 
-                if(position == 4){
-                    DataSupport.deleteAll(BusinessData.class);
-                }
             }
         });
     }

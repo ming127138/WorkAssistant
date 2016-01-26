@@ -210,7 +210,6 @@ public class ReportInfoProjectAmountByWaitActivity extends BaseActivity implemen
 
         }
 
-        Log.e("jsonData",jsonArray.toString());
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "docheckconsconfirm")
                 .add("userno", userNo)
@@ -220,7 +219,7 @@ public class ReportInfoProjectAmountByWaitActivity extends BaseActivity implemen
                 .add("earthworkcontent", et_civil.getText().toString().trim())
                 .add("receivables", tv_feeType.getText().toString())
                 .add("isPass", isPass)
-                .add("consconfirmjson", jsonArray.toString())
+                .add("consmakingjson", jsonArray.toString())
                 .build();
 
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {

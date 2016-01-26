@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.entity.BusinessHaveSend;
 import com.gzrijing.workassistant.entity.ProblemType;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
@@ -34,12 +37,17 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
     private String userNo;
     private TextView tv_type;
     private TextView tv_state;
+    private TextView tv_influence;
+    private EditText et_relationOrderId;
     private EditText et_reason;
     private Button btn_submit;
+    private ArrayList<BusinessHaveSend> BHSList;
     private ArrayList<ProblemType> problemTypeList = new ArrayList<ProblemType>();
     private Handler handler = new Handler();
     private int typeIndex = 0;
     private int stateIndex = 0;
+    private boolean[] checkedItems;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +66,18 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
 
         Intent intent = getIntent();
         orderId = intent.getStringExtra("fileNo");
+        BHSList = intent.getParcelableArrayListExtra("BHSList");
+
+        checkedItems = new boolean[BHSList.size()];
 
         getProblemType();
     }
 
     private void getProblemType() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在加载数据...");
+        pDialog.show();
         String url = null;
         try {
             url = "?cmd=getaccidentreason&userno=" + URLEncoder.encode(userNo, "UTF-8");
@@ -74,6 +89,7 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
             public void onFinish(String response) {
                 ArrayList<ProblemType> list = JsonParseUtils.getProblemType(response);
                 problemTypeList.addAll(list);
+                pDialog.cancel();
             }
 
             @Override
@@ -85,6 +101,7 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
                                 "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
+                pDialog.cancel();
             }
         });
     }
@@ -96,6 +113,8 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
 
         tv_type = (TextView) findViewById(R.id.report_info_problem_by_process_type_tv);
         tv_state = (TextView) findViewById(R.id.report_info_problem_by_process_state_tv);
+        tv_influence = (TextView) findViewById(R.id.report_info_problem_by_process_influence_tv);
+        et_relationOrderId = (EditText) findViewById(R.id.report_info_problem_by_process_relation_order_id_et);
         et_reason = (EditText) findViewById(R.id.report_info_problem_by_process_reason_et);
         btn_submit = (Button) findViewById(R.id.report_info_problem_by_process_submit_btn);
 
@@ -104,6 +123,7 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
     private void setListeners() {
         tv_type.setOnClickListener(this);
         tv_state.setOnClickListener(this);
+        tv_influence.setOnClickListener(this);
         btn_submit.setOnClickListener(this);
     }
 
@@ -118,18 +138,51 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
                 selectState();
                 break;
 
-            case R.id.report_info_problem_by_process_reason_et:
+            case R.id.report_info_problem_by_process_influence_tv:
+                selectInfluence();
+                break;
+
+            case R.id.report_info_problem_by_process_submit_btn:
                 submit();
                 break;
         }
     }
 
+    private void selectInfluence() {
+        String[] influence = new String[BHSList.size()];
+        for (int i = 0; i < BHSList.size(); i++) {
+            influence[i] = BHSList.get(i).getId() + "--" + BHSList.get(i).getContent();
+        }
+        new AlertDialog.Builder(this).setTitle("选择影响工程").setMultiChoiceItems(
+                influence, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        checkedItems[which] = isChecked;
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        StringBuilder sb = new StringBuilder();
+                        for(int i = 0 ; i< checkedItems.length;i++){
+                            if(checkedItems[i]){
+                                sb.append(BHSList.get(i).getId()+",");
+                            }
+                        }
+                        String str = sb.toString().substring(0, sb.length()-1);
+                        tv_influence.setText(str);
+                    }
+                }).show();
+
+    }
+
     private void selectType() {
-        if(problemTypeList.size() != 0){
-            String[] type = new String[problemTypeList.size()];
+        if (problemTypeList.size() != 0) {
+            final String[] type = new String[problemTypeList.size()];
             for (int i = 0; i < problemTypeList.size(); i++) {
                 type[i] = problemTypeList.get(i).getType();
             }
+            final int index = typeIndex;
             new AlertDialog.Builder(this).setTitle("选择归属类型：").setSingleChoiceItems(
                     type, typeIndex, new DialogInterface.OnClickListener() {
                         @Override
@@ -143,11 +196,17 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
                             tv_type.setText(problemTypeList.get(typeIndex).getType());
                         }
                     })
-                    .setNegativeButton("取消", null).show();
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            typeIndex = index;
+                        }
+                    }).show();
         }
     }
 
     private void selectState() {
+        final int index = stateIndex;
         new AlertDialog.Builder(this).setTitle("选择归属类型：").setSingleChoiceItems(
                 new String[]{"暂缓执行", "停止", "取消"}, stateIndex, new DialogInterface.OnClickListener() {
                     @Override
@@ -158,21 +217,30 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(stateIndex == 0) {
+                        if (stateIndex == 0) {
                             tv_state.setText("暂缓执行");
                         }
-                        if(stateIndex == 1) {
+                        if (stateIndex == 1) {
                             tv_state.setText("停止");
                         }
-                        if(stateIndex == 2) {
+                        if (stateIndex == 2) {
                             tv_state.setText("取消");
                         }
                     }
                 })
-                .setNegativeButton("取消", null).show();
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        stateIndex = index;
+                    }
+                }).show();
     }
 
     private void submit() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在提交...");
+        pDialog.show();
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "dosaveconsaccidentfreedom")
                 .add("userno", userNo)
@@ -181,14 +249,26 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
                 .add("accidentreason", tv_type.getText().toString())
                 .add("handleuno", problemTypeList.get(typeIndex).getUserNo())
                 .add("handlereason", et_reason.getText().toString().trim())
-                .add("relationfileno", et_reason.getText().toString().trim())
+                .add("relationfileno", et_relationOrderId.getText().toString().trim())
+                .add("appointinstallid", tv_influence.getText().toString())
                 .build();
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
-            public void onFinish(String response) {
-                if(response.equals("ok")){
-
-                }
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.substring(0, 1).equals("E")) {
+                            ToastUtil.showToast(ReportInfoProblemByProcessActivity.this,
+                                    "提交失败", Toast.LENGTH_SHORT);
+                        }else{
+                            ToastUtil.showToast(ReportInfoProblemByProcessActivity.this,
+                                    "提交成功", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
+                pDialog.cancel();
             }
 
             @Override
@@ -200,6 +280,7 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
                                 "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
+                pDialog.cancel();
             }
         });
     }

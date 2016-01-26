@@ -29,6 +29,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private AcceptanceFragment acceptanceFragment;
     private MoreFragment moreFragment;
     private long firstTime = 0;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         PushManager.getInstance().initialize(getApplicationContext());
         Intent intent = getIntent();
         int id = Integer.parseInt(intent.getStringExtra("fragId"));
+        userName = intent.getStringExtra("userName");
         if (id == 0) {
             fragmentManager = getSupportFragmentManager();
             setTabSelection(0);
@@ -119,7 +121,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         hideFragments(transaction);
         switch (index) {
             case 0:
-                mToolbar.setTitle("业务");
+                mToolbar.setTitle(userName + "的业务");
                 iv_business.setImageResource(R.drawable.main_bottom_business_on);
                 if (businessFragment == null) {
                     businessFragment = new BusinessFragment();
@@ -193,6 +195,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * 按两次back键退出程序
+     *
      * @param keyCode
      * @param event
      * @return
