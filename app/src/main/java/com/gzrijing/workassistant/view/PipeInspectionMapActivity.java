@@ -210,7 +210,7 @@ public class PipeInspectionMapActivity extends BaseActivity {
             }
             if(marker.getCheckFlag().equals("1")){
                 bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.map_flag_gray_0);
+                        .fromResource(R.drawable.map_flag_gray_one);
             }
         }
         if (marker.getType().equals("1")) {
@@ -220,7 +220,7 @@ public class PipeInspectionMapActivity extends BaseActivity {
             }
             if(marker.getCheckFlag().equals("1")){
                 bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.map_flag_gray_1);
+                        .fromResource(R.drawable.map_flag_gray_two);
             }
 
         }
@@ -231,7 +231,7 @@ public class PipeInspectionMapActivity extends BaseActivity {
             }
             if(marker.getCheckFlag().equals("1")){
                 bitmap = BitmapDescriptorFactory
-                        .fromResource(R.drawable.map_flag_gray_2);
+                        .fromResource(R.drawable.map_flag_gray_three);
             }
 
         }
