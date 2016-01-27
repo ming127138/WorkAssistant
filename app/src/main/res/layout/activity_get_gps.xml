@@ -17,6 +17,7 @@
         android:textSize="@dimen/sw_15dp"/>
 
     <TextView
+        android:id="@+id/get_gps_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/sw_5dp"
@@ -26,6 +27,7 @@
         android:textSize="@dimen/sw_15dp"/>
 
     <Button
+        android:id="@+id/get_gps_btn"
         android:layout_width="@dimen/sw_80dp"
         android:layout_height="@dimen/sw_30dp"
         android:layout_marginTop="@dimen/sw_10dp"

@@ -29,6 +29,7 @@ import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
+import com.gzrijing.workassistant.view.GetGPSActivity;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
 import com.gzrijing.workassistant.view.QueryProjectAmountActivity;
 import com.gzrijing.workassistant.view.ReportActivity;
@@ -97,6 +98,8 @@ public class BusinessWorkerAdapter extends BaseAdapter {
                     R.id.listview_item_business_worker_supplies_apply_btn);
             v.info = (Button) convertView.findViewById(
                     R.id.listview_item_business_worker_info_btn);
+            v.gps = (Button) convertView.findViewById(
+                    R.id.listview_item_business_worker_gps_btn);
             v.queryProjectAmount = (Button) convertView.findViewById(
                     R.id.listview_item_business_worker_project_amount_btn);
             v.flag = (TextView) convertView.findViewById(
@@ -173,6 +176,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             v.info.setVisibility(View.GONE);
             v.suppliesApply.setVisibility(View.GONE);
             v.queryProjectAmount.setVisibility(View.GONE);
+            v.gps.setVisibility(View.GONE);
         }
         if (orderList.get(position).isUrgent()) {
             v.urgent.setVisibility(View.VISIBLE);
@@ -181,6 +185,11 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         }
         final String flag = orderList.get(position).getFlag();
         v.flag.setText(flag);
+        if(flag.equals("确认收到")){
+            v.bg_ll.setBackgroundResource(R.color.pink_bg);
+        }else{
+            v.bg_ll.setBackgroundResource(R.color.white);
+        }
 
         v.temInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +213,15 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailedInfoActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
+        v.gps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, GetGPSActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }
@@ -360,6 +378,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         private TextView flag;
         private Button suppliesApply;
         private Button info;
+        private Button gps;
         private Button queryProjectAmount;
         private RelativeLayout head_rl;
         private LinearLayout bg_ll;

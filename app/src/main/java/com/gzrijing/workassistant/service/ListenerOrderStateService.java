@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
@@ -26,6 +27,8 @@ public class ListenerOrderStateService extends IntentService {
         String orderId = intent.getStringExtra("orderId");
         String state = intent.getStringExtra("state");
 
+        Log.e("orderId", orderId);
+
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
                 .find(BusinessData.class, true).get(0);
 
@@ -35,8 +38,8 @@ public class ListenerOrderStateService extends IntentService {
 
 
         Intent intent1 = new Intent("action.com.gzrijing.workassistant.WorkerFragment.state");
-        intent.putExtra("orderId", orderId);
-        intent.putExtra("state", state);
+        intent1.putExtra("orderId", orderId);
+        intent1.putExtra("state", state);
         sendBroadcast(intent1);
 
         sendNotification(orderId);
