@@ -201,6 +201,17 @@
                 android:text="已派任务"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
+
+            <Button
+                android:id="@+id/listview_item_business_leader_my_order_btn"
+                android:layout_width="@dimen/sw_60dp"
+                android:layout_height="@dimen/sw_25dp"
+                android:layout_toLeftOf="@+id/listview_item_business_leader_have_send_btn"
+                android:layout_marginRight="@dimen/sw_10dp"
+                android:background="@drawable/btn_blue_frame"
+                android:text="我的任务"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_12dp"/>
         </RelativeLayout>
 
         <ImageView

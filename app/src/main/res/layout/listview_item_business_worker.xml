@@ -182,7 +182,7 @@
                 android:layout_toLeftOf="@+id/listview_item_business_worker_info_btn"
                 android:layout_marginRight="@dimen/sw_10dp"
                 android:background="@drawable/btn_blue_frame"
-                android:text="获取坐标"
+                android:text="工程定位"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
         </RelativeLayout>

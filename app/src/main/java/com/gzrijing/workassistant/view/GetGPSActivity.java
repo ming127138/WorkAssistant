@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,10 +49,13 @@ public class GetGPSActivity extends BaseActivity {
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
 
-
     }
 
     private void initViews() {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         tv_gps = (TextView) findViewById(R.id.get_gps_tv);
         btn_getGps = (Button) findViewById(R.id.get_gps_btn);
     }

@@ -30,14 +30,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private MoreFragment moreFragment;
     private long firstTime = 0;
     private String userName;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initViews();
         initData();
+        initViews();
         setListeners();
     }
 
@@ -47,8 +48,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //开启个推服务
         PushManager.getInstance().initialize(getApplicationContext());
         Intent intent = getIntent();
-        int id = Integer.parseInt(intent.getStringExtra("fragId"));
+        id = Integer.parseInt(intent.getStringExtra("fragId"));
         userName = intent.getStringExtra("userName");
+    }
+
+    private void initViews() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
+        mToolbar.setTitle(userName + "的业务");
+        setSupportActionBar(mToolbar);
+
+        iv_business = (ImageView) findViewById(R.id.main_business_iv);
+        iv_manage = (ImageView) findViewById(R.id.main_manage_iv);
+        iv_acceptance = (ImageView) findViewById(R.id.main_acceptance_iv);
+        iv_more = (ImageView) findViewById(R.id.main_more_iv);
+
         if (id == 0) {
             fragmentManager = getSupportFragmentManager();
             setTabSelection(0);
@@ -62,17 +76,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             fragmentManager = getSupportFragmentManager();
             setTabSelection(3);
         }
-    }
-
-    private void initViews() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
-        setSupportActionBar(mToolbar);
-
-        iv_business = (ImageView) findViewById(R.id.main_business_iv);
-        iv_manage = (ImageView) findViewById(R.id.main_manage_iv);
-        iv_acceptance = (ImageView) findViewById(R.id.main_acceptance_iv);
-        iv_more = (ImageView) findViewById(R.id.main_more_iv);
     }
 
     private void setListeners() {

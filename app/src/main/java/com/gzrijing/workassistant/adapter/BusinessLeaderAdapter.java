@@ -22,6 +22,7 @@ import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.view.BusinessHaveSendActivity;
+import com.gzrijing.workassistant.view.BusinessLeaderByMyOrderActivity;
 import com.gzrijing.workassistant.view.MachineApplyActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.DistributeActivity;
@@ -86,6 +87,8 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.id.listview_item_business_leader_info_btn);
             v.haveSend = (Button) convertView.findViewById(
                     R.id.listview_item_business_leader_have_send_btn);
+            v.myOrder = (Button) convertView.findViewById(
+                    R.id.listview_item_business_leader_my_order_btn);
             v.urgent = (ImageView) convertView.findViewById(
                     R.id.listview_item_business_leader_urgent_iv);
             v.type = (TextView) convertView.findViewById(
@@ -173,6 +176,15 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             }
         });
 
+        v.myOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, BusinessLeaderByMyOrderActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
         v.temInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,6 +266,7 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         private Button progress;
         private Button info;
         private Button haveSend;
+        private Button myOrder;
         private TextView flag;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;

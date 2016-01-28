@@ -376,6 +376,18 @@
             android:name=".view.AccidentsProcessActivity"
             android:label="意外情况处理"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.GetGPSActivity"
+            android:label="获取坐标"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessLeaderByMyOrderActivity"
+            android:label="我的任务"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessLeaderByMyOrderDetailedInfoActivity"
+            android:label="详细信息"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -595,7 +607,6 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".view.GetGPSActivity"></activity>
     </application>
 
 </manifest>

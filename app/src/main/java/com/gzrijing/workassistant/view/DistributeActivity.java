@@ -282,6 +282,10 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
 
         Log.e("json", jsonArray.toString());
 
+        String jsonData = "";
+        if(!jsonArray.toString().equals("[]")){
+            jsonData = jsonArray.toString();
+        }
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "doappoint")
                 .add("userno", userNo)
@@ -289,7 +293,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
                 .add("installuserno", executors)
                 .add("installcontent", et_remarks.getText().toString().trim())
                 .add("estimatefinishdate", tv_deadline.getText().toString())
-                .add("picuri", jsonArray.toString())
+                .add("picuri", jsonData)
                 .build();
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override

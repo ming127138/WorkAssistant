@@ -190,7 +190,7 @@ public class JsonParseUtils {
                     businessByWorker.setFlag(state);
                 }
 
-                List<DetailedInfo> infos = new ArrayList<DetailedInfo>();
+                ArrayList<DetailedInfo> infos = new ArrayList<DetailedInfo>();
                 JSONArray jsonArray1 = jsonObject.getJSONArray("Detail");
                 for (int j = 0; j < jsonArray1.length(); j++) {
                     JSONObject jsonObject1 = jsonArray1.getJSONObject(j);

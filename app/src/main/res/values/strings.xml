@@ -44,9 +44,8 @@
 
     <string-array name="leader_fragment_state_item">
         <item>全部</item>
-        <item>正常</item>
-        <item>停止</item>
-        <item>取消</item>
+        <item>未派工</item>
+        <item>已派工</item>
         <item>完成</item>
     </string-array>
 
