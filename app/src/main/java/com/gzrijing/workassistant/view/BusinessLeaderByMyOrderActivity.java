@@ -11,9 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.BusinessLeaderAdapter;
 import com.gzrijing.workassistant.adapter.BusinessLeaderByMyOrderAdapter;
-import com.gzrijing.workassistant.adapter.BusinessWorkerAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;

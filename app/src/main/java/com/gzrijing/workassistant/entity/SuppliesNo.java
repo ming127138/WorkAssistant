@@ -3,6 +3,8 @@ package com.gzrijing.workassistant.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class SuppliesNo implements Parcelable {
     private String applyId;         //申请单号
     private String receivedId;      //发放单号
@@ -17,11 +19,12 @@ public class SuppliesNo implements Parcelable {
     private String returnTime;      //退回申请时间
     private String reason;          //不批准原因
     private String remarks;         //备注
+    private ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();   //材料
 
     public SuppliesNo() {
     }
 
-    public SuppliesNo(String applyId, String receivedId, String returnId, String applyState, String receivedState, String returnState, String applyTime, String useTime, String approvalTime, String receivedTime, String returnTime, String reason, String remarks) {
+    public SuppliesNo(String applyId, String receivedId, String returnId, String applyState, String receivedState, String returnState, String applyTime, String useTime, String approvalTime, String receivedTime, String returnTime, String reason, String remarks, ArrayList<Supplies> suppliesList) {
         this.applyId = applyId;
         this.receivedId = receivedId;
         this.returnId = returnId;
@@ -35,6 +38,7 @@ public class SuppliesNo implements Parcelable {
         this.returnTime = returnTime;
         this.reason = reason;
         this.remarks = remarks;
+        this.suppliesList = suppliesList;
     }
 
     public String getApplyId() {
@@ -141,6 +145,14 @@ public class SuppliesNo implements Parcelable {
         this.remarks = remarks;
     }
 
+    public ArrayList<Supplies> getSuppliesList() {
+        return suppliesList;
+    }
+
+    public void setSuppliesList(ArrayList<Supplies> suppliesList) {
+        this.suppliesList = suppliesList;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -161,6 +173,7 @@ public class SuppliesNo implements Parcelable {
         dest.writeString(this.returnTime);
         dest.writeString(this.reason);
         dest.writeString(this.remarks);
+        dest.writeTypedList(suppliesList);
     }
 
     protected SuppliesNo(Parcel in) {
@@ -177,6 +190,7 @@ public class SuppliesNo implements Parcelable {
         this.returnTime = in.readString();
         this.reason = in.readString();
         this.remarks = in.readString();
+        this.suppliesList = in.createTypedArrayList(Supplies.CREATOR);
     }
 
     public static final Creator<SuppliesNo> CREATOR = new Creator<SuppliesNo>() {

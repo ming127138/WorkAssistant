@@ -8,9 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,13 +28,13 @@ import com.gzrijing.workassistant.adapter.SuppliesApplyCreatedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReceivedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReturnAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.SuppliesData;
 import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.MyListView;
@@ -50,6 +49,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,12 +58,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class SuppliesApplyActivity extends BaseActivity implements View.OnClickListener {
+public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity implements View.OnClickListener {
 
     private final static int SUPPLIES_RECEIVED = 3001;
     private final static int SUPPLIES_RETURN = 3002;
     private String userNo;
     private String orderId;
+    private String type;
     private Button btn_edit;
     private Button btn_apply;
     private TextView tv_useTime;
@@ -88,13 +90,11 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Handler handler = new Handler();
-    private BusinessData businessData;
-    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_supplies_apply);
+        setContentView(R.layout.activity_business_leader_by_my_order_supplies_apply);
 
         initData();
         initViews();
@@ -109,62 +109,105 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         orderId = intent.getStringExtra("orderId");
         type = intent.getStringExtra("type");
 
-        getDBData();
+        getSuppliesApply();
+        getSuppliesReceived();
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action.com.gzrijing.workassistant.SuppliesApply.refresh");
         registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
-    private void getDBData() {
-        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
-        List<SuppliesNoData> suppliesNoData = businessData.getSuppliesNoList();
-        for (SuppliesNoData data : suppliesNoData) {
-            if (data.getApplyId() != null && !data.getApplyId().equals("")) {
-                if(data.getApplyState()!= null){
-                    if (data.getApplyState().equals("申请中") || data.getApplyState().equals("不批准")) {
-                        SuppliesNo applying = new SuppliesNo();
-                        applying.setApplyId(data.getApplyId());
-                        applying.setApplyState(data.getApplyState());
-                        applying.setApplyTime(data.getApplyTime());
-                        applying.setUseTime(data.getUseTime());
-                        applying.setRemarks(data.getRemarks());
-                        applying.setReason(data.getReason());
-                        applyingList.add(applying);
-                    }
-
-                    if (data.getApplyState().equals("已审批")) {
-                        SuppliesNo approval = new SuppliesNo();
-                        approval.setApplyId(data.getApplyId());
-                        approval.setApplyState(data.getApplyState());
-                        approval.setApplyTime(data.getApplyTime());
-                        approval.setUseTime(data.getUseTime());
-                        approval.setRemarks(data.getRemarks());
-                        approval.setApprovalTime(data.getApprovalTime());
-                        approvalList.add(approval);
-                    }
-                }
-                if (data.getReceivedState() != null) {
-                    if (data.getReceivedState().equals("可领用") || data.getReceivedState().equals("已领出")) {
-                        SuppliesNo received = new SuppliesNo();
-                        received.setApplyId(data.getApplyId());
-                        received.setReceivedId(data.getReceivedId());
-                        received.setReceivedState(data.getReceivedState());
-                        received.setReceivedTime(data.getReceivedTime());
-                        receivedList.add(received);
-                    }
-                }
-            } else {
-                if (!data.getReturnId().equals("")) {
-                    SuppliesNo returnNo = new SuppliesNo();
-                    returnNo.setReturnId(data.getReturnId());
-                    returnNo.setReturnTime(data.getReturnTime());
-                    returnNo.setReturnState(data.getReturnState());
-                    returnList.add(returnNo);
-                }
-            }
+    private void getSuppliesReceived() {
+        String url = null;
+        try {
+            url = "?cmd=getmymaterialneedmain&userno=" + URLEncoder.encode(userNo, "UTF-8") +
+                    "&checkdate=&fileno=" + URLEncoder.encode(orderId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<SuppliesNo> list = JsonParseUtils.getMyOrderSuppliesNoByApply(response);
+                        applyingList.clear();
+                        approvalList.clear();
+                        receivedList.clear();
+                        for (SuppliesNo suppliesNo : list) {
+                            if (!suppliesNo.getApplyId().equals("")) {
+                                if (suppliesNo.getApplyState().equals("申请中") && suppliesNo.getApplyState().equals("不批准")) {
+                                    applyingList.add(suppliesNo);
+                                    applyingAdapter.notifyDataSetChanged();
+                                }
+                                if(suppliesNo.getApplyState().equals("已审核")){
+                                    approvalList.add(suppliesNo);
+                                    approvalAdapter.notifyDataSetChanged();
+                                }
+                            }else{
+                                if(!suppliesNo.getReturnId().equals("")){
+                                    returnList.add(suppliesNo);
+                                    returnAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
     }
+
+    private void getSuppliesApply() {
+        String url = null;
+        try {
+            url = "?cmd=getmaterialsend&userno=" + URLEncoder.encode(userNo, "UTF-8") +
+                    "&checkdate=&fileno=" + URLEncoder.encode(orderId, "UTF-8") +
+                    "&billno=";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<SuppliesNo> list = JsonParseUtils.getMyOrderSuppliesNoBySend(response);
+                        receivedList.clear();
+                        receivedList.addAll(list);
+                        receivedAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+    }
+
 
     private void initViews() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -215,15 +258,15 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String state = applyingList.get(position).getApplyState();
                 if (state.equals("不批准")) {
-                    Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesApplyingActivity.class);
-                    intent.putExtra("suppliesNo", (Parcelable) applyingList.get(position));
+                    Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesApplyingActivity.class);
+                    intent.putExtra("suppliesNo", applyingList.get(position));
                     intent.putExtra("position", position);
                     intent.putExtra("userNo", userNo);
                     intent.putExtra("orderId", orderId);
                     startActivityForResult(intent, 20);
                 } else {
-                    Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesApplyingScanActivity.class);
-                    intent.putExtra("suppliesNo", (Parcelable) applyingList.get(position));
+                    Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesApplyingScanActivity.class);
+                    intent.putExtra("suppliesNo", applyingList.get(position));
                     startActivity(intent);
                 }
             }
@@ -232,8 +275,8 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         lv_approval.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesApprovalActivity.class);
-                intent.putExtra("suppliesNo", (Parcelable) approvalList.get(position));
+                Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesApprovalActivity.class);
+                intent.putExtra("suppliesNo", approvalList.get(position));
                 startActivity(intent);
             }
         });
@@ -241,8 +284,8 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         lv_received.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesReceivedActivity.class);
-                intent.putExtra("suppliesNo", (Parcelable) receivedList.get(position));
+                Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesReceivedActivity.class);
+                intent.putExtra("suppliesNo", receivedList.get(position));
                 startActivity(intent);
             }
         });
@@ -250,8 +293,8 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         lv_return.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SuppliesApplyActivity.this, SuppliesReturnActivity.class);
-                intent.putExtra("suppliesNo", (Parcelable) returnList.get(position));
+                Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesReturnActivity.class);
+                intent.putExtra("suppliesNo", returnList.get(position));
                 startActivity(intent);
             }
         });
@@ -348,7 +391,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            ToastUtil.showToast(SuppliesApplyActivity.this, "申请失败", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "申请失败", Toast.LENGTH_SHORT);
                         }
                     });
                 } else {
@@ -367,7 +410,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(SuppliesApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }
@@ -389,7 +432,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
             data.setApplyNum(createdList.get(i).getApplyNum());
             data.setSendNum("0");
             data.save();
-            businessData.getSuppliesDataList().add(data);
+//          businessData.getSuppliesDataList().add(data);
         }
 
         SuppliesNoData data1 = new SuppliesNoData();
@@ -399,8 +442,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         data1.setRemarks(et_remarks.getText().toString().trim());
         data1.setApplyState("申请中");
         data1.save();
-        businessData.getSuppliesNoList().add(data1);
-        businessData.save();
+//      businessData.save();
 
         SuppliesNo suppliesNo = new SuppliesNo();
         suppliesNo.setApplyId(applyId);
@@ -551,11 +593,11 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                                     suppliesNo.setReceivedState("已领出");
                                     suppliesNo.setReceivedTime(receivedTime);
                                     receivedAdapter.notifyDataSetChanged();
-                                    ToastUtil.showToast(SuppliesApplyActivity.this, "发放单ID:"+id+",领出成功", Toast.LENGTH_SHORT);
+                                    ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "发放单ID:" + id + ",领出成功", Toast.LENGTH_SHORT);
                                 }
                             }
                         } else {
-                            ToastUtil.showToast(SuppliesApplyActivity.this, "领出失败", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "领出失败", Toast.LENGTH_SHORT);
                         }
                     }
                 });
@@ -566,7 +608,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(SuppliesApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }
@@ -594,11 +636,11 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                                 if (suppliesNo.getReturnId().equals(id)) {
                                     suppliesNo.setReturnState("已退回");
                                     returnAdapter.notifyDataSetChanged();
-                                    ToastUtil.showToast(SuppliesApplyActivity.this, "退回单ID:"+id+",退回成功", Toast.LENGTH_SHORT);
+                                    ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "退回单ID:" + id + ",退回成功", Toast.LENGTH_SHORT);
                                 }
                             }
                         } else {
-                            ToastUtil.showToast(SuppliesApplyActivity.this, "退回失败", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "退回失败", Toast.LENGTH_SHORT);
                         }
                     }
                 });
@@ -610,7 +652,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(SuppliesApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }
@@ -627,7 +669,6 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                 approvalList.clear();
                 receivedList.clear();
                 returnList.clear();
-                getDBData();
                 applyingAdapter.notifyDataSetChanged();
                 approvalAdapter.notifyDataSetChanged();
                 receivedAdapter.notifyDataSetChanged();

@@ -388,6 +388,18 @@
             android:name=".view.BusinessLeaderByMyOrderDetailedInfoActivity"
             android:label="详细信息"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessLeaderByMyOrderSuppliesApplyActivity"
+            android:label="材料申请"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessLeaderByMyOrderSuppliesApplyingActivity"
+            android:label="材料申请"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.QueryBeforeSuppliesActivity"
+            android:label="查询工程耗材"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 

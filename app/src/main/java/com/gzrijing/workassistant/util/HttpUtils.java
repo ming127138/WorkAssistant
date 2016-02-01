@@ -19,15 +19,15 @@ public class HttpUtils {
     /**
      * get请求路径
      */
-    private static final String URLPath = "http://120.24.62.15:90/main.ashx";
+    private static final String URLPath = "http://120.24.62.15:83/main.ashx";
     /**
      * post请求路径
      */
-    private static final String postURLPath = "http://120.24.62.15:90/mainpost.ashx";
+    private static final String postURLPath = "http://120.24.62.15:83/mainpost.ashx";
     /**
      * 图片请求路径
      */
-    public static final String imageURLPath = "http://120.24.62.15:90";
+    public static final String imageURLPath = "http://120.24.62.15:83";
 
     private static OkHttpClient mOkHttpClient = new OkHttpClient();
 

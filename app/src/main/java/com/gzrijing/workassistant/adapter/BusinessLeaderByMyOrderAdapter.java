@@ -30,6 +30,7 @@ import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.view.BusinessLeaderByMyOrderActivity;
 import com.gzrijing.workassistant.view.BusinessLeaderByMyOrderDetailedInfoActivity;
+import com.gzrijing.workassistant.view.BusinessLeaderByMyOrderSuppliesApplyActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
 import com.gzrijing.workassistant.view.GetGPSActivity;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
@@ -204,8 +205,9 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
         v.suppliesApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, SuppliesApplyActivity.class);
+                Intent intent = new Intent(context, BusinessLeaderByMyOrderSuppliesApplyActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
+                intent.putExtra("type", orderList.get(position).getType());
                 context.startActivity(intent);
             }
         });

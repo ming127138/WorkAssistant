@@ -16,6 +16,7 @@ import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.MachineNo;
 import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.entity.MachineVerifyInfo;
+import com.gzrijing.workassistant.entity.OrderTypeSupplies;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.ProblemType;
 import com.gzrijing.workassistant.entity.Progress;
@@ -475,7 +476,7 @@ public class JsonParseUtils {
                 String remarks = jsonObject.getString("Remark");
                 String state = jsonObject.getString("State");
                 String billType = jsonObject.getString("BillType");
-                if(billType.equals("工程材料")){
+                if (billType.equals("工程材料")) {
                     SuppliesVerify suppliesVerify = new SuppliesVerify();
                     suppliesVerify.setNo(No);
                     suppliesVerify.setApplicant(applicant);
@@ -734,6 +735,157 @@ public class JsonParseUtils {
                 suppliesNo.setApprovalTime(approvalTime);
                 suppliesNo.setReason(reason);
                 list.add(suppliesNo);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取我的工单的材料申请单
+     *
+     * @param jsonData
+     * @return
+     */
+    public static List<SuppliesNo> getMyOrderSuppliesNoByApply(String jsonData) {
+        List<SuppliesNo> list = new ArrayList<SuppliesNo>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String billType = jsonObject.getString("billType");
+                String applyId = "";
+                String returnId = "";
+                String applyState = "";
+                String returnState = "";
+                if (billType.equals("工程材料")) {
+                    applyId = jsonObject.getString("BillNo");
+                    applyState = jsonObject.getString("State");
+                    if (applyState.equals("保存")) {
+                        applyState = "申请中";
+                    }
+                    if (applyState.equals("审核")) {
+                        applyState = "已审批";
+                    }
+                    if (applyState.equals("不通过")) {
+                        applyState = "不批准";
+                    }
+                }
+                if (billType.equals("工程退料")) {
+                    returnId = jsonObject.getString("BillNo");
+                    returnState = jsonObject.getString("State");
+                    if (returnState.equals("保存")) {
+                        returnState = "申请中";
+                    }
+                    if (returnState.equals("审核")) {
+                        returnState = "可退回";
+                    }
+                    if (returnState.equals("不通过")) {
+                        returnState = "不批准";
+                    }
+                }
+
+                String approvalTime = jsonObject.getString("CheckDate");
+                String reason = jsonObject.getString("UnPassReason");
+
+                ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
+                JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
+                int count = 0;
+                for (int j = 0; j < jsonArray1.length(); j++) {
+                    JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                    String no = jsonObject1.getString("MakingNo");
+                    String name = jsonObject1.getString("MakingName");
+                    String spec = jsonObject1.getString("MakingSpace");
+                    String unit = jsonObject1.getString("MakingUnit");
+                    String applyNum = jsonObject1.getString("NeedQty");
+                    String surplusNum = jsonObject1.getString("DiffQty");
+                    if (surplusNum.equals("0.00")) {
+                        count++;
+                    }
+
+                    Supplies supplies = new Supplies();
+                    supplies.setId(no);
+                    supplies.setName(name);
+                    supplies.setSpec(spec);
+                    supplies.setUnit(unit);
+                    supplies.setApplyNum(applyNum);
+                    supplies.setSendNum("0");
+                }
+
+                if (count > 0 && count == jsonArray1.length()) {
+                    returnState = "已退回";
+                }
+
+                SuppliesNo suppliesNo = new SuppliesNo();
+                suppliesNo.setApplyId(applyId);
+                suppliesNo.setReturnId(returnId);
+                suppliesNo.setApplyState(applyState);
+                suppliesNo.setReturnState(returnState);
+                suppliesNo.setApprovalTime(approvalTime);
+                suppliesNo.setReason(reason);
+                list.add(suppliesNo);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取我的工单的材料发放单
+     *
+     * @param jsonData
+     * @return
+     */
+    public static List<SuppliesNo> getMyOrderSuppliesNoBySend(String jsonData) {
+        List<SuppliesNo> list = new ArrayList<SuppliesNo>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String billType = jsonObject.getString("BillType");
+                if (billType.equals("工程材料")) {
+                    String applyId = jsonObject.getString("MaterialNeedBillNo");
+                    String receivedState = jsonObject.getString("State");
+                    if (receivedState.equals("审核")) {
+                        receivedState = "可领用";
+                    } else if (receivedState.equals("执行")) {
+                        receivedState = "已领出";
+                    } else {
+                        continue;
+                    }
+                    String billNo = jsonObject.getString("BillNo");
+                    String receivedTime = jsonObject.getString("FinishDate");
+                    String str = jsonObject.getString("MaterialDetail");
+                    ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
+                    if (!str.equals("")) {
+                        JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
+                        for (int j = 0; j < jsonArray1.length(); j++) {
+                            JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                            String no = jsonObject1.getString("MakingNo");
+                            String name = jsonObject1.getString("MakingName");
+                            String spec = jsonObject1.getString("MakingSpace");
+                            String unit = jsonObject1.getString("MakingUnit");
+                            String sendNum = jsonObject1.getString("Qty");
+
+                            Supplies supplies = new Supplies();
+                            supplies.setId(no);
+                            supplies.setName(name);
+                            supplies.setSpec(spec);
+                            supplies.setUnit(unit);
+                            supplies.setSendNum(sendNum);
+                            suppliesList.add(supplies);
+                        }
+                    }
+                    SuppliesNo suppliesNo = new SuppliesNo();
+                    suppliesNo.setApplyId(applyId);
+                    suppliesNo.setReceivedId(billNo);
+                    suppliesNo.setReceivedState(receivedState);
+                    suppliesNo.setReceivedTime(receivedTime);
+                    suppliesNo.setSuppliesList(suppliesList);
+                    list.add(suppliesNo);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1078,8 +1230,8 @@ public class JsonParseUtils {
                         String key = jsonObject1.getString("key");
                         String value = jsonObject1.getString("value");
 
-                        if(!key.equals("报事照片数") && !key.equals("任务照片数") && !key.equals("工程确认照片数")
-                                && !key.equals("完工照片数") && !key.equals("定位照片数") && !key.equals("意外情况照片数")){
+                        if (!key.equals("报事照片数") && !key.equals("任务照片数") && !key.equals("工程确认照片数")
+                                && !key.equals("完工照片数") && !key.equals("定位照片数") && !key.equals("意外情况照片数")) {
                             DetailedInfo detailedInfo = new DetailedInfo();
                             detailedInfo.setKey(key);
                             detailedInfo.setValue(value);
@@ -1534,8 +1686,8 @@ public class JsonParseUtils {
                         String key = jsonObject1.getString("key");
                         String value = jsonObject1.getString("value");
 
-                        if(!key.equals("报事照片数") && !key.equals("任务照片数") && !key.equals("工程确认照片数")
-                                && !key.equals("完工照片数") && !key.equals("定位照片数") && !key.equals("意外情况照片数")){
+                        if (!key.equals("报事照片数") && !key.equals("任务照片数") && !key.equals("工程确认照片数")
+                                && !key.equals("完工照片数") && !key.equals("定位照片数") && !key.equals("意外情况照片数")) {
                             DetailedInfo detailedInfo = new DetailedInfo();
                             detailedInfo.setKey(key);
                             detailedInfo.setValue(value);
@@ -1605,10 +1757,10 @@ public class JsonParseUtils {
                 String approvalTime = jsonObject.getString("CheckDate");
                 String feeType = jsonObject.getString("Receivables");
                 String state = jsonObject.getString("State");
-                if(state.equals("保存")){
+                if (state.equals("保存")) {
                     state = "未审核";
                 }
-                if(state.equals("审核")){
+                if (state.equals("审核")) {
                     state = "已审核";
                 }
 
@@ -1661,6 +1813,73 @@ public class JsonParseUtils {
                 accident.setProblemtime(problemTime);
 
                 list.add(accident);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取做过的工程类型的口径
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<String> getCaliber(String jsonData) {
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String caliber = jsonObject.getString("DrainSize");
+                list.add(caliber);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取某工程类型所用材料
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<OrderTypeSupplies> getOrderTypeSupplies(String jsonData) {
+        ArrayList<OrderTypeSupplies> list = new ArrayList<OrderTypeSupplies>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String orderId = jsonObject.getString("FileNo");
+                String suppliesJson = jsonObject.getString("MaterialDetail");
+                ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
+                if(!suppliesJson.equals("")){
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
+                    for(int j=0;j<jsonArray1.length();j++){
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String no = jsonObject1.getString("MakingNo");
+                        String name = jsonObject1.getString("MakingName");
+                        String spec = jsonObject1.getString("MakingSpace");
+                        String unit = jsonObject1.getString("MakingUnit");
+                        String applyNum = jsonObject1.getString("NeedQty");
+
+                        Supplies supplies = new Supplies();
+                        supplies.setId(no);
+                        supplies.setName(name);
+                        supplies.setSpec(spec);
+                        supplies.setUnit(unit);
+                        supplies.setApplyNum(applyNum);
+                        suppliesList.add(supplies);
+                    }
+                }
+
+                OrderTypeSupplies orderTypeSupplies = new OrderTypeSupplies();
+                orderTypeSupplies.setOrderId(orderId);
+                orderTypeSupplies.setSuppliesList(suppliesList);
+                list.add(orderTypeSupplies);
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -39,12 +39,14 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
     private EditText et_unit;
     private EditText et_keyword;
     private Button btn_keyword;
+    private Button btn_before;
     private ListView lv_supplies;
     private ListView lv_query;
     private List<Supplies> suppliesQueries;
     private ArrayList<Supplies> suppliesList;
     private SuppliesAdapter adapter;
     private SuppliesQueryAdapter queryAdapter;
+    private String type;
 
     private Handler handler = new Handler() {
         @Override
@@ -76,6 +78,7 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
 
     private void initData() {
         Intent intent = getIntent();
+        type = intent.getStringExtra("type");
         suppliesList = intent.getParcelableArrayListExtra("suppliesList");
         suppliesQueries = new ArrayList<Supplies>();
 
@@ -93,6 +96,7 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
         et_unit = (EditText) findViewById(R.id.supplies_unit_et);
         et_keyword = (EditText) findViewById(R.id.supplies_query_keyword_et);
         btn_keyword = (Button) findViewById(R.id.supplies_query_keyword_btn);
+        btn_before = (Button) findViewById(R.id.supplies_query_before_supplies_btn);
 
         lv_supplies = (ListView) findViewById(R.id.supplies_supplies_lv);
         adapter = new SuppliesAdapter(this, suppliesList);
@@ -107,6 +111,7 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
         iv_delAll.setOnClickListener(this);
         btn_add.setOnClickListener(this);
         btn_keyword.setOnClickListener(this);
+        btn_before.setOnClickListener(this);
 
         lv_query.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -120,6 +125,13 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
                 supplies.setApplyNum("1");
                 suppliesList.add(supplies);
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        adapter.setmOnclickCallBack(new SuppliesAdapter.OnClickCallBack() {
+            @Override
+            public void click(String name) {
+                queryKeyword(name);
             }
         });
     }
@@ -137,20 +149,26 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
                 break;
 
             case R.id.supplies_query_keyword_btn:
-                queryKeyword();
+                String keyword = et_keyword.getText().toString().trim();
+                queryKeyword(keyword);
+                break;
+
+            case R.id.supplies_query_before_supplies_btn:
+                Intent intent = new Intent(this, QueryBeforeSuppliesActivity.class);
+                intent.putExtra("type", type);
+                startActivityForResult(intent, 10);
                 break;
         }
     }
 
-    private void queryKeyword() {
-        String keyWork = et_keyword.getText().toString().trim();
-        if (keyWork.equals("")) {
+    private void queryKeyword(String keyword) {
+        if (keyword.equals("")) {
             ToastUtil.showToast(this, "请填上关键字", Toast.LENGTH_SHORT);
             return;
         }
         String url = null;
         try {
-            url = "?cmd=getmaking&makingno=&makingname=" + URLEncoder.encode(keyWork, "UTF-8");
+            url = "?cmd=getmaking&makingno=&makingname=" + URLEncoder.encode(keyword, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -198,6 +216,20 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
         et_name.setText("");
         et_spec.setText("");
         et_unit.setText("");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 10){
+            if(resultCode == 10){
+                ArrayList<Supplies> list = data.getParcelableArrayListExtra("suppliesList");
+                if(!list.toString().equals("")){
+                    suppliesList.clear();
+                    suppliesList.addAll(list);
+                }
+            }
+        }
     }
 
     @Override

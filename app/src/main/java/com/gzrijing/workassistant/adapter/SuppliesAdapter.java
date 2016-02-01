@@ -24,6 +24,7 @@ public class SuppliesAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater listContainer;
     private List<Supplies> suppliesList;
+    private OnClickCallBack mOnclickCallBack;
 
     public SuppliesAdapter(Context context, List<Supplies> suppliesList) {
         listContainer = LayoutInflater.from(context);
@@ -103,6 +104,13 @@ public class SuppliesAdapter extends BaseAdapter {
             }
         });
 
+        v.name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnclickCallBack.click(suppliesList.get(position).getName());
+            }
+        });
+
         return convertView;
     }
 
@@ -124,5 +132,13 @@ public class SuppliesAdapter extends BaseAdapter {
         private TextView spec;
         private TextView unit;
         private TextView num;
+    }
+
+    public void setmOnclickCallBack(OnClickCallBack mOnclickCallBack) {
+        this.mOnclickCallBack = mOnclickCallBack;
+    }
+
+    public interface OnClickCallBack{
+        void click(String name);
     }
 }
