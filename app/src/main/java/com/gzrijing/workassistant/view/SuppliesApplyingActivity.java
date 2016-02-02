@@ -217,7 +217,7 @@ public class SuppliesApplyingActivity extends BaseActivity implements View.OnCli
                 jsonObject.put("MakingNo", supplies.getId());
                 jsonObject.put("MakingName", supplies.getName());
                 jsonObject.put("MakingSpace", supplies.getSpec());
-                jsonObject.put("MakingUnit", supplies.getSpec());
+                jsonObject.put("MakingUnit", supplies.getUnit());
                 jsonObject.put("Qty", supplies.getApplyNum());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {

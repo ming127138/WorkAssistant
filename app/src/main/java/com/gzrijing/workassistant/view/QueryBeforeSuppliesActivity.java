@@ -106,7 +106,7 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
 
         elv_supplies = (ExpandableListView) findViewById(R.id.query_before_supplies_elv);
         adapter = new QueryBeforeSuppliesExpandableAdapter(this, groupList);
-
+        elv_supplies.setAdapter(adapter);
 
     }
 
@@ -140,7 +140,7 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                            tv_caliber.setText(item[which]);
+                            tv_caliber.setText(item[index]);
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -219,5 +219,6 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
         Intent intent = getIntent();
         intent.putParcelableArrayListExtra("suppliesList", suppliesList);
         setResult(10, intent);
+        finish();
     }
 }

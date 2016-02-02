@@ -74,7 +74,7 @@ public class SuppliesAdapter extends BaseAdapter {
             public void onClick(View view) {
                 final EditText et = new EditText(context);
                 et.setTextColor(context.getResources().getColor(R.color.black));
-                et.setInputType(InputType.TYPE_CLASS_NUMBER);
+                et.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
                final AlertDialog dialog = new AlertDialog.Builder(context)
                         .setTitle("请输入数量")
                         .setView(et)

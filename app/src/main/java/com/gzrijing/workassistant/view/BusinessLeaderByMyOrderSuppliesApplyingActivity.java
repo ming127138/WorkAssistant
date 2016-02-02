@@ -21,9 +21,6 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.SuppliesData;
-import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -38,14 +35,12 @@ import com.squareup.okhttp.RequestBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.litepal.crud.DataSupport;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class BusinessLeaderByMyOrderSuppliesApplyingActivity extends BaseActivity implements View.OnClickListener {
     private int position;
@@ -79,17 +74,8 @@ public class BusinessLeaderByMyOrderSuppliesApplyingActivity extends BaseActivit
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
         position = intent.getIntExtra("position", -1);
-        suppliesNo = (SuppliesNo) intent.getParcelableExtra("suppliesNo");
-        List<SuppliesData> suppliesDataList = DataSupport.where("applyId = ?", suppliesNo.getApplyId()).find(SuppliesData.class);
-        for (SuppliesData data : suppliesDataList) {
-            Supplies supplies = new Supplies();
-            supplies.setId(data.getNo());
-            supplies.setName(data.getName());
-            supplies.setSpec(data.getSpec());
-            supplies.setUnit(data.getUnit());
-            supplies.setApplyNum(data.getApplyNum());
-            suppliesList.add(supplies);
-        }
+        suppliesNo = intent.getParcelableExtra("suppliesNo");
+        suppliesList.addAll(suppliesNo.getSuppliesList());
     }
 
     private void initViews() {
@@ -217,7 +203,7 @@ public class BusinessLeaderByMyOrderSuppliesApplyingActivity extends BaseActivit
                 jsonObject.put("MakingNo", supplies.getId());
                 jsonObject.put("MakingName", supplies.getName());
                 jsonObject.put("MakingSpace", supplies.getSpec());
-                jsonObject.put("MakingUnit", supplies.getSpec());
+                jsonObject.put("MakingUnit", supplies.getUnit());
                 jsonObject.put("Qty", supplies.getApplyNum());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
@@ -281,37 +267,24 @@ public class BusinessLeaderByMyOrderSuppliesApplyingActivity extends BaseActivit
         Calendar rightNow = Calendar.getInstance();
         String applyTime = dateFormat.format(rightNow.getTime());
 
-        DataSupport.deleteAll(SuppliesData.class, "applyId = ?", suppliesNo.getApplyId());
-        DataSupport.deleteAll(SuppliesNoData.class, "applyId = ?", suppliesNo.getApplyId());
-
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
+        ArrayList<Supplies> list = new ArrayList<Supplies>();
         for (int i = 0; i < suppliesList.size(); i++) {
-            SuppliesData data = new SuppliesData();
-            data.setNo(suppliesList.get(i).getId());
-            data.setApplyId(applyId);
-            data.setName(suppliesList.get(i).getName());
-            data.setSpec(suppliesList.get(i).getSpec());
-            data.setUnit(suppliesList.get(i).getUnit());
-            data.setApplyNum(suppliesList.get(i).getApplyNum());
-            data.setSendNum("0");
-            data.save();
-            businessData.getSuppliesDataList().add(data);
+            Supplies supplies = new Supplies();
+            supplies.setId(suppliesList.get(i).getId());
+            supplies.setName(suppliesList.get(i).getName());
+            supplies.setSpec(suppliesList.get(i).getSpec());
+            supplies.setUnit(suppliesList.get(i).getUnit());
+            supplies.setApplyNum(suppliesList.get(i).getApplyNum());
+            supplies.setSendNum("0");
+            list.add(supplies);
         }
-        SuppliesNoData data1 = new SuppliesNoData();
-        data1.setApplyId(applyId);
-        data1.setApplyTime(applyTime);
-        data1.setUseTime(tv_useTime.getText().toString());
-        data1.setRemarks(et_remarks.getText().toString().trim());
-        data1.setApplyState("申请中");
-        data1.save();
-        businessData.getSuppliesNoList().add(data1);
-        businessData.save();
 
         SuppliesNo suppliesNo = new SuppliesNo();
         suppliesNo.setApplyId(applyId);
         suppliesNo.setApplyTime(applyTime);
         suppliesNo.setUseTime(tv_useTime.getText().toString());
         suppliesNo.setRemarks(et_remarks.getText().toString().trim());
+        suppliesNo.setSuppliesList(list);
         suppliesNo.setApplyState("申请中");
 
         return suppliesNo;

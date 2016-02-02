@@ -3,7 +3,6 @@ package com.gzrijing.workassistant.adapter;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,26 +21,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
-import com.gzrijing.workassistant.view.BusinessLeaderByMyOrderActivity;
 import com.gzrijing.workassistant.view.BusinessLeaderByMyOrderDetailedInfoActivity;
 import com.gzrijing.workassistant.view.BusinessLeaderByMyOrderSuppliesApplyActivity;
-import com.gzrijing.workassistant.view.DetailedInfoActivity;
 import com.gzrijing.workassistant.view.GetGPSActivity;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
 import com.gzrijing.workassistant.view.QueryProjectAmountActivity;
 import com.gzrijing.workassistant.view.ReportActivity;
-import com.gzrijing.workassistant.view.SuppliesApplyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
-
-import org.litepal.crud.DataSupport;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -187,7 +180,7 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
         }
         final String flag = orderList.get(position).getFlag();
         v.flag.setText(flag);
-        if(flag.equals("确认收到")){
+        if(flag.equals("确认收到") || flag.equals("处理")){
             v.bg_ll.setBackgroundResource(R.color.pink_bg);
         }else{
             v.bg_ll.setBackgroundResource(R.color.white);
@@ -289,10 +282,6 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
             public void onFinish(final String response) {
                 if (response.equals("ok")) {
                     orderList.get(position).setFlag("处理");
-                    ContentValues values = new ContentValues();
-                    values.put("flag", "处理");
-                    DataSupport.updateAll(BusinessData.class, values,
-                            "user = ? and orderId = ?", userNo, orderList.get(position).getOrderId());
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -333,16 +322,8 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
                 if (response.equals("ok")) {
                     if (orderList.get(position).getType().equals("供水管网巡查")) {
                         orderList.get(position).setFlag("巡检");
-                        ContentValues values = new ContentValues();
-                        values.put("flag", "巡检");
-                        DataSupport.updateAll(BusinessData.class, values,
-                                "user = ? and orderId = ?", userNo, orderList.get(position).getOrderId());
                     } else {
                         orderList.get(position).setFlag("汇报");
-                        ContentValues values = new ContentValues();
-                        values.put("flag", "汇报");
-                        DataSupport.updateAll(BusinessData.class, values,
-                                "user = ? and orderId = ?", userNo, orderList.get(position).getOrderId());
                     }
                     handler.post(new Runnable() {
                         @Override

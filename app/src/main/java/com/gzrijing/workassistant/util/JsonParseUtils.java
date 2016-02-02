@@ -176,6 +176,16 @@ public class JsonParseUtils {
                 } else {
                     state = accident;
                 }
+                String flag = jsonObject.getString("State").trim();
+                if(flag.equals("未接收")){
+                    flag = "确认收到";
+                }
+                if(flag.equals("已接受")){
+                    flag = "处理";
+                }
+                if(flag.equals("正在处理")){
+                    flag = "汇报";
+                }
                 String deadline = jsonObject.getString("EstimateFinishDate").replace("/", "-");
                 boolean urgent = jsonObject.getBoolean("IsUrgent");
 
@@ -185,11 +195,7 @@ public class JsonParseUtils {
                 businessByWorker.setState(state);
                 businessByWorker.setDeadline(deadline);
                 businessByWorker.setUrgent(urgent);
-                if (state.equals("正常")) {
-                    businessByWorker.setFlag("确认收到");
-                } else {
-                    businessByWorker.setFlag(state);
-                }
+                businessByWorker.setFlag(flag);
 
                 ArrayList<DetailedInfo> infos = new ArrayList<DetailedInfo>();
                 JSONArray jsonArray1 = jsonObject.getJSONArray("Detail");
@@ -754,14 +760,17 @@ public class JsonParseUtils {
             JSONArray jsonArray = new JSONArray(jsonData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String billType = jsonObject.getString("billType");
+                String billType = jsonObject.getString("BillType");
                 String applyId = "";
                 String returnId = "";
                 String applyState = "";
                 String returnState = "";
+                String applyTime = "";
+                String returnTime = "";
                 if (billType.equals("工程材料")) {
                     applyId = jsonObject.getString("BillNo");
                     applyState = jsonObject.getString("State");
+                    applyTime = jsonObject.getString("SaveDate");
                     if (applyState.equals("保存")) {
                         applyState = "申请中";
                     }
@@ -775,6 +784,7 @@ public class JsonParseUtils {
                 if (billType.equals("工程退料")) {
                     returnId = jsonObject.getString("BillNo");
                     returnState = jsonObject.getString("State");
+                    returnTime = jsonObject.getString("SaveDate");
                     if (returnState.equals("保存")) {
                         returnState = "申请中";
                     }
@@ -787,7 +797,9 @@ public class JsonParseUtils {
                 }
 
                 String approvalTime = jsonObject.getString("CheckDate");
+                String useTime = jsonObject.getString("UseDateTime");
                 String reason = jsonObject.getString("UnPassReason");
+                String remark = jsonObject.getString("Remark");
 
                 ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
                 JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
@@ -799,6 +811,7 @@ public class JsonParseUtils {
                     String spec = jsonObject1.getString("MakingSpace");
                     String unit = jsonObject1.getString("MakingUnit");
                     String applyNum = jsonObject1.getString("NeedQty");
+                    String sendNum = jsonObject1.getString("SendQty");
                     String surplusNum = jsonObject1.getString("DiffQty");
                     if (surplusNum.equals("0.00")) {
                         count++;
@@ -810,20 +823,26 @@ public class JsonParseUtils {
                     supplies.setSpec(spec);
                     supplies.setUnit(unit);
                     supplies.setApplyNum(applyNum);
-                    supplies.setSendNum("0");
+                    supplies.setSendNum(sendNum);
+                    suppliesList.add(supplies);
                 }
 
-                if (count > 0 && count == jsonArray1.length()) {
+                if (billType.equals("工程退料") && count > 0 && count == jsonArray1.length()) {
                     returnState = "已退回";
                 }
 
                 SuppliesNo suppliesNo = new SuppliesNo();
                 suppliesNo.setApplyId(applyId);
-                suppliesNo.setReturnId(returnId);
                 suppliesNo.setApplyState(applyState);
+                suppliesNo.setApplyTime(applyTime);
+                suppliesNo.setUseTime(useTime);
+                suppliesNo.setReturnId(returnId);
                 suppliesNo.setReturnState(returnState);
+                suppliesNo.setReturnTime(returnTime);
                 suppliesNo.setApprovalTime(approvalTime);
                 suppliesNo.setReason(reason);
+                suppliesNo.setRemarks(remark);
+                suppliesNo.setSuppliesList(suppliesList);
                 list.add(suppliesNo);
             }
         } catch (JSONException e) {
@@ -1856,9 +1875,9 @@ public class JsonParseUtils {
                 String orderId = jsonObject.getString("FileNo");
                 String suppliesJson = jsonObject.getString("MaterialDetail");
                 ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
-                if(!suppliesJson.equals("")){
+                if (!suppliesJson.equals("")) {
                     JSONArray jsonArray1 = jsonObject.getJSONArray("MaterialDetail");
-                    for(int j=0;j<jsonArray1.length();j++){
+                    for (int j = 0; j < jsonArray1.length(); j++) {
                         JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
                         String no = jsonObject1.getString("MakingNo");
                         String name = jsonObject1.getString("MakingName");

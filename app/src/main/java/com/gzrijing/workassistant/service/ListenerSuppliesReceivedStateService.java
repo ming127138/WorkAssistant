@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -40,37 +41,45 @@ public class ListenerSuppliesReceivedStateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
+        String userRank = sp.getString("userRank", "");
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
         String billNo = intent.getStringExtra("billNo");
 
-        String url = null;
-        try {
-            url = "?cmd=getmaterialsend&userno=" + URLEncoder.encode(userNo, "UTF-8") +
-                    "&checkdate=&fileno=" + URLEncoder.encode(orderId, "UTF-8") +
-                    "&billno=" + URLEncoder.encode(billNo, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if(userRank.equals("0")){
+            String url = null;
+            try {
+                url = "?cmd=getmaterialsend&userno=" + URLEncoder.encode(userNo, "UTF-8") +
+                        "&checkdate=&fileno=" + URLEncoder.encode(orderId, "UTF-8") +
+                        "&billno=" + URLEncoder.encode(billNo, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+                @Override
+                public void onFinish(String response) {
+                    Log.e("response", response);
+                    saveData(response);
+                    sendNotification();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showToast(ListenerSuppliesReceivedStateService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        }
+                    });
+                }
+            });
+        }else{
+            Intent intent1 = new Intent("action.com.gzrijing.workassistant.SuppliesApply.refresh");
+            sendBroadcast(intent1);
+            sendNotification();
         }
-
-        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                Log.e("response", response);
-                saveData(response);
-                sendNotification();
-            }
-
-            @Override
-            public void onError(Exception e) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtil.showToast(ListenerSuppliesReceivedStateService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
-                    }
-                });
-            }
-        });
     }
 
     private void saveData(String jsonData) {

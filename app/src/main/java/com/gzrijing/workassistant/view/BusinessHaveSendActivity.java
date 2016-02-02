@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class BusinessHaveSendActivity extends BaseActivity {
     private ArrayList<BusinessHaveSend> BHSList = new ArrayList<BusinessHaveSend>();
     private BusinessHaveSendAdapter adapter;
     private Handler handler = new Handler();
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,10 @@ public class BusinessHaveSendActivity extends BaseActivity {
     }
 
     private void getBusinessHaveSend() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在加载数据");
+        pDialog.show();
         String url = null;
         try {
             url = "?cmd=getinstalllocatetask&fileno=" + URLEncoder.encode(orderId, "UTF-8");
@@ -74,6 +80,7 @@ public class BusinessHaveSendActivity extends BaseActivity {
                         adapter.notifyDataSetChanged();
                     }
                 });
+                pDialog.cancel();
 
             }
 
@@ -85,6 +92,7 @@ public class BusinessHaveSendActivity extends BaseActivity {
                         ToastUtil.showToast(BusinessHaveSendActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
+                pDialog.cancel();
             }
         });
     }

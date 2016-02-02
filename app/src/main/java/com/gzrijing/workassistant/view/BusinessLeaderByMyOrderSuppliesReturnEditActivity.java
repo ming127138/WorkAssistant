@@ -1,9 +1,9 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,9 +17,6 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SuppliesAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesReceivedAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.SuppliesData;
-import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -32,15 +29,13 @@ import com.squareup.okhttp.RequestBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.litepal.crud.DataSupport;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
-public class SuppliesReturnEditActivity extends BaseActivity implements View.OnClickListener {
+public class BusinessLeaderByMyOrderSuppliesReturnEditActivity extends BaseActivity implements View.OnClickListener {
 
     private String userNo;
     private String orderId;
@@ -56,7 +51,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_supplies_return_edit);
+        setContentView(R.layout.activity_business_leader_by_my_order_supplies_return_edit);
 
         initData();
         initViews();
@@ -69,16 +64,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
         orderId = intent.getStringExtra("orderId");
         ArrayList<SuppliesNo> suppliesNoList = intent.getParcelableArrayListExtra("suppliesNoList");
         for (SuppliesNo suppliesNo : suppliesNoList) {
-            List<SuppliesData> suppliesDataList = DataSupport.where("receivedId = ?", suppliesNo.getReceivedId()).find(SuppliesData.class);
-            for (SuppliesData data : suppliesDataList) {
-                Supplies supplies = new Supplies();
-                supplies.setId(data.getNo());
-                supplies.setName(data.getName());
-                supplies.setSpec(data.getSpec());
-                supplies.setUnit(data.getUnit());
-                supplies.setSendNum(data.getSendNum());
-                receivedList.add(supplies);
-            }
+            receivedList.addAll(suppliesNo.getSuppliesList());
         }
     }
 
@@ -187,7 +173,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            ToastUtil.showToast(SuppliesReturnEditActivity.this, "申请失败", Toast.LENGTH_SHORT);
+                            ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesReturnEditActivity.this, "申请失败", Toast.LENGTH_SHORT);
                         }
                     });
                 }else{
@@ -195,7 +181,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
                         @Override
                         public void run() {
                             SuppliesNo suppliesNo = savaSuppliesNo(response);
-                            Intent  intent = getIntent();
+                            Intent intent = getIntent();
                             intent.putExtra("suppliesNo", (Parcelable)suppliesNo);
                             setResult(30, intent);
                             finish();
@@ -210,7 +196,7 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(SuppliesReturnEditActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesReturnEditActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
             }
@@ -222,27 +208,14 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
         Calendar rightNow = Calendar.getInstance();
         String returnTime = dateFormat.format(rightNow.getTime());
 
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
-
         for (int i = 0; i < returnList.size(); i++) {
-            SuppliesData data = new SuppliesData();
-            data.setNo(returnList.get(i).getId());
-            data.setReturnId(returnId);
-            data.setName(returnList.get(i).getName());
-            data.setSpec(returnList.get(i).getSpec());
-            data.setUnit(returnList.get(i).getUnit());
-            data.setApplyNum(returnList.get(i).getApplyNum());
-            data.save();
-
+            Supplies supplies = new Supplies();
+            supplies.setId(returnList.get(i).getId());
+            supplies.setName(returnList.get(i).getName());
+            supplies.setSpec(returnList.get(i).getSpec());
+            supplies.setUnit(returnList.get(i).getUnit());
+            supplies.setApplyNum(returnList.get(i).getApplyNum());
         }
-
-        SuppliesNoData data1 = new SuppliesNoData();
-        data1.setReturnId(returnId);
-        data1.setReturnTime(returnTime);
-        data1.setReturnState("申请中");
-        data1.save();
-        businessData.getSuppliesNoList().add(data1);
-        businessData.save();
 
         SuppliesNo suppliesNo = new SuppliesNo();
         suppliesNo.setReturnId(returnId);
@@ -251,5 +224,4 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
 
         return suppliesNo;
     }
-
 }

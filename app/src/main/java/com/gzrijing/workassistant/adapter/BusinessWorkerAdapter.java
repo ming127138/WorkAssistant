@@ -185,7 +185,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         }
         final String flag = orderList.get(position).getFlag();
         v.flag.setText(flag);
-        if(flag.equals("确认收到")){
+        if(flag.equals("确认收到") || flag.equals("处理")){
             v.bg_ll.setBackgroundResource(R.color.pink_bg);
         }else{
             v.bg_ll.setBackgroundResource(R.color.white);

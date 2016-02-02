@@ -227,6 +227,7 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
                 if(!list.toString().equals("")){
                     suppliesList.clear();
                     suppliesList.addAll(list);
+                    adapter.notifyDataSetChanged();
                 }
             }
         }

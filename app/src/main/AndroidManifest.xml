@@ -400,6 +400,26 @@
             android:name=".view.QueryBeforeSuppliesActivity"
             android:label="查询工程耗材"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessLeaderByMyOrderSuppliesApplyingScanActivity"
+            android:label="材料列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessLeaderByMyOrderSuppliesApprovalActivity"
+            android:label="材料列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessLeaderByMyOrderSuppliesReceivedActivity"
+            android:label="领料列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessLeaderByMyOrderSuppliesReturnEditActivity"
+            android:label="退料编辑"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessLeaderByMyOrderSuppliesReturnActivity"
+            android:label="退料列表"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 

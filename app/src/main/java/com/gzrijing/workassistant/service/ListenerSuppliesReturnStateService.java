@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
 
@@ -28,12 +29,21 @@ public class ListenerSuppliesReturnStateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
+        String userRank = sp.getString("userRank", "");
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
         String billNo = intent.getStringExtra("billNo");
 
-        saveData(billNo);
-        sendNotification();
+        if(userRank.equals("0")){
+            saveData(billNo);
+            sendNotification();
+        }else{
+            Intent intent1 = new Intent("action.com.gzrijing.workassistant.SuppliesApply.refresh");
+            sendBroadcast(intent1);
+            sendNotification();
+        }
+
 
     }
 
@@ -63,8 +73,8 @@ public class ListenerSuppliesReturnStateService extends IntentService {
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle(orderId)
-                .setContentText("有一条材料退回单信息更新")
-                .setTicker("有一条材料退回单信息更新")
+                .setContentText("材料退回单信息更新")
+                .setTicker("材料退回单信息更新")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();

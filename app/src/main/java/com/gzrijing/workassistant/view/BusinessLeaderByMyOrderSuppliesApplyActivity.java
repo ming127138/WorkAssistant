@@ -2,7 +2,6 @@ package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,8 +27,6 @@ import com.gzrijing.workassistant.adapter.SuppliesApplyCreatedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReceivedAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyReturnAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.db.SuppliesData;
-import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -47,7 +44,6 @@ import com.squareup.okhttp.RequestBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.litepal.crud.DataSupport;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -117,7 +113,7 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
         registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
-    private void getSuppliesReceived() {
+    private void getSuppliesApply() {
         String url = null;
         try {
             url = "?cmd=getmymaterialneedmain&userno=" + URLEncoder.encode(userNo, "UTF-8") +
@@ -134,12 +130,13 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
                     @Override
                     public void run() {
                         List<SuppliesNo> list = JsonParseUtils.getMyOrderSuppliesNoByApply(response);
+                        Log.e("size", list.size()+"");
                         applyingList.clear();
                         approvalList.clear();
                         receivedList.clear();
                         for (SuppliesNo suppliesNo : list) {
                             if (!suppliesNo.getApplyId().equals("")) {
-                                if (suppliesNo.getApplyState().equals("申请中") && suppliesNo.getApplyState().equals("不批准")) {
+                                if (suppliesNo.getApplyState().equals("申请中") || suppliesNo.getApplyState().equals("不批准")) {
                                     applyingList.add(suppliesNo);
                                     applyingAdapter.notifyDataSetChanged();
                                 }
@@ -171,7 +168,7 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
         });
     }
 
-    private void getSuppliesApply() {
+    private void getSuppliesReceived() {
         String url = null;
         try {
             url = "?cmd=getmaterialsend&userno=" + URLEncoder.encode(userNo, "UTF-8") +
@@ -258,14 +255,14 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String state = applyingList.get(position).getApplyState();
                 if (state.equals("不批准")) {
-                    Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesApplyingActivity.class);
+                    Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, BusinessLeaderByMyOrderSuppliesApplyingActivity.class);
                     intent.putExtra("suppliesNo", applyingList.get(position));
                     intent.putExtra("position", position);
                     intent.putExtra("userNo", userNo);
                     intent.putExtra("orderId", orderId);
                     startActivityForResult(intent, 20);
                 } else {
-                    Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesApplyingScanActivity.class);
+                    Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, BusinessLeaderByMyOrderSuppliesApplyingScanActivity.class);
                     intent.putExtra("suppliesNo", applyingList.get(position));
                     startActivity(intent);
                 }
@@ -275,7 +272,7 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
         lv_approval.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesApprovalActivity.class);
+                Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, BusinessLeaderByMyOrderSuppliesApprovalActivity.class);
                 intent.putExtra("suppliesNo", approvalList.get(position));
                 startActivity(intent);
             }
@@ -284,7 +281,7 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
         lv_received.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesReceivedActivity.class);
+                Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, BusinessLeaderByMyOrderSuppliesReceivedActivity.class);
                 intent.putExtra("suppliesNo", receivedList.get(position));
                 startActivity(intent);
             }
@@ -293,7 +290,7 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
         lv_return.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, SuppliesReturnActivity.class);
+                Intent intent = new Intent(BusinessLeaderByMyOrderSuppliesApplyActivity.this, BusinessLeaderByMyOrderSuppliesReturnActivity.class);
                 intent.putExtra("suppliesNo", returnList.get(position));
                 startActivity(intent);
             }
@@ -332,7 +329,7 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
                         suppliesNoList.add(suppliesNo);
                     }
                 }
-                Intent intent3 = new Intent(this, SuppliesReturnEditActivity.class);
+                Intent intent3 = new Intent(this, BusinessLeaderByMyOrderSuppliesReturnEditActivity.class);
                 intent3.putExtra("userNo", userNo);
                 intent3.putExtra("orderId", orderId);
                 intent3.putParcelableArrayListExtra("suppliesNoList", suppliesNoList);
@@ -363,7 +360,7 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
                 jsonObject.put("MakingNo", supplies.getId());
                 jsonObject.put("MakingName", supplies.getName());
                 jsonObject.put("MakingSpace", supplies.getSpec());
-                jsonObject.put("MakingUnit", supplies.getSpec());
+                jsonObject.put("MakingUnit", supplies.getUnit());
                 jsonObject.put("Qty", supplies.getApplyNum());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
@@ -422,27 +419,17 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
         Calendar rightNow = Calendar.getInstance();
         String applyTime = dateFormat.format(rightNow.getTime());
 
+        ArrayList<Supplies> suppliesList = new ArrayList<Supplies>();
         for (int i = 0; i < createdList.size(); i++) {
-            SuppliesData data = new SuppliesData();
-            data.setNo(createdList.get(i).getId());
-            data.setApplyId(applyId);
-            data.setName(createdList.get(i).getName());
-            data.setSpec(createdList.get(i).getSpec());
-            data.setUnit(createdList.get(i).getUnit());
-            data.setApplyNum(createdList.get(i).getApplyNum());
-            data.setSendNum("0");
-            data.save();
-//          businessData.getSuppliesDataList().add(data);
+            Supplies supplies = new Supplies();
+            supplies.setId(createdList.get(i).getId());
+            supplies.setName(createdList.get(i).getName());
+            supplies.setSpec(createdList.get(i).getSpec());
+            supplies.setUnit(createdList.get(i).getUnit());
+            supplies.setApplyNum(createdList.get(i).getApplyNum());
+            supplies.setSendNum("0");
+            suppliesList.add(supplies);
         }
-
-        SuppliesNoData data1 = new SuppliesNoData();
-        data1.setApplyId(applyId);
-        data1.setApplyTime(applyTime);
-        data1.setUseTime(tv_useTime.getText().toString());
-        data1.setRemarks(et_remarks.getText().toString().trim());
-        data1.setApplyState("申请中");
-        data1.save();
-//      businessData.save();
 
         SuppliesNo suppliesNo = new SuppliesNo();
         suppliesNo.setApplyId(applyId);
@@ -450,6 +437,7 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
         suppliesNo.setUseTime(tv_useTime.getText().toString());
         suppliesNo.setRemarks(et_remarks.getText().toString().trim());
         suppliesNo.setApplyState("申请中");
+        suppliesNo.setSuppliesList(suppliesList);
         applyingList.add(suppliesNo);
 
         btn_apply.setVisibility(View.GONE);
@@ -584,10 +572,6 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
                         if (response.equals("ok")) {
                             Calendar rightNow = Calendar.getInstance();
                             String receivedTime = dateFormat.format(rightNow.getTime());
-                            ContentValues values = new ContentValues();
-                            values.put("receivedState", "已领出");
-                            values.put("receivedTime", receivedTime);
-                            DataSupport.updateAll(SuppliesNoData.class, values, "receivedId = ?", id);
                             for (SuppliesNo suppliesNo : receivedList) {
                                 if (suppliesNo.getReceivedId().equals(id)) {
                                     suppliesNo.setReceivedState("已领出");
@@ -629,9 +613,6 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
                     @Override
                     public void run() {
                         if (response.equals("ok")) {
-                            ContentValues values = new ContentValues();
-                            values.put("returnState", "已退回");
-                            DataSupport.updateAll(SuppliesNoData.class, values, "returnId = ?", id);
                             for (SuppliesNo suppliesNo : returnList) {
                                 if (suppliesNo.getReturnId().equals(id)) {
                                     suppliesNo.setReturnState("已退回");
@@ -665,14 +646,8 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals("action.com.gzrijing.workassistant.SuppliesApply.refresh")) {
-                applyingList.clear();
-                approvalList.clear();
-                receivedList.clear();
-                returnList.clear();
-                applyingAdapter.notifyDataSetChanged();
-                approvalAdapter.notifyDataSetChanged();
-                receivedAdapter.notifyDataSetChanged();
-                returnAdapter.notifyDataSetChanged();
+                getSuppliesApply();
+                getSuppliesReceived();
             }
         }
     };
