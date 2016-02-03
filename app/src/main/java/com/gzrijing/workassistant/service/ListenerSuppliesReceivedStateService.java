@@ -96,18 +96,8 @@ public class ListenerSuppliesReceivedStateService extends IntentService {
             businessData.getSuppliesNoList().add(suppliesNoData);
         }
 
-        List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
         List<Supplies> suppliesList = JsonParseUtils.getLitenerSuppliesReceivedState(jsonData);
         for(Supplies supplies : suppliesList){
-            for(SuppliesData suppliesData : suppliesDataList){
-                if(suppliesData.getReceivedId() == null && suppliesData.getApplyId().equals(suppliesNoList.get(0).getApplyId())
-                        && suppliesData.getName().equals(supplies.getName()) && suppliesData.getSpec().equals(supplies.getSpec())){
-                    ContentValues values = new ContentValues();
-                    values.put("sendNum", supplies.getSendNum());
-                    DataSupport.update(SuppliesData.class, values, suppliesData.getId());
-                }
-            }
-
             SuppliesData suppliesData = new SuppliesData();
             suppliesData.setReceivedId(suppliesNoList.get(0).getReceivedId());
             suppliesData.setNo(supplies.getId());

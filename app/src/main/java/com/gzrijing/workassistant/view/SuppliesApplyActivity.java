@@ -546,11 +546,53 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                             values.put("receivedState", "已领出");
                             values.put("receivedTime", receivedTime);
                             DataSupport.updateAll(SuppliesNoData.class, values, "receivedId = ?", id);
+
                             for (SuppliesNo suppliesNo : receivedList) {
                                 if (suppliesNo.getReceivedId().equals(id)) {
                                     suppliesNo.setReceivedState("已领出");
                                     suppliesNo.setReceivedTime(receivedTime);
+
+                                    for (SuppliesNo approval : approvalList) {
+                                        if (suppliesNo.getApplyId().equals(approval.getApplyId())) {
+
+                                            ArrayList<Supplies> receivedSuppliesList = new ArrayList<Supplies>();
+                                            List<SuppliesData> receivedSuppliesData = DataSupport.where("receivedId = ?", id).find(SuppliesData.class);
+                                            for (SuppliesData data : receivedSuppliesData) {
+                                                Supplies supplies = new Supplies();
+                                                supplies.setName(data.getName());
+                                                supplies.setSpec(data.getSpec());
+                                                supplies.setUnit(data.getUnit());
+                                                supplies.setSendNum(data.getSendNum());
+                                                receivedSuppliesList.add(supplies);
+                                            }
+                                            List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
+                                            for(Supplies supplies : receivedSuppliesList){
+                                                for(SuppliesData suppliesData : suppliesDataList){
+                                                    if(suppliesData.getReceivedId() == null && suppliesData.getApplyId().equals(suppliesNo.getApplyId())
+                                                            && suppliesData.getName().equals(supplies.getName()) && suppliesData.getSpec().equals(supplies.getSpec())){
+                                                        ContentValues values1 = new ContentValues();
+                                                        values.put("sendNum", String.valueOf(
+                                                                Float.valueOf(suppliesData.getSendNum()) + Float.valueOf(supplies.getSendNum())));
+                                                        DataSupport.update(SuppliesData.class, values1, suppliesData.getId());
+                                                    }
+                                                }
+                                            }
+
+                                            for (Supplies receivedSupplies : suppliesNo.getSuppliesList()) {
+                                                for (Supplies approvalSupplies : approval.getSuppliesList()) {
+                                                    if (receivedSupplies.getName().equals(approvalSupplies.getName())
+                                                            && receivedSupplies.getSpec().equals(approvalSupplies.getSpec())) {
+                                                        String sendNum = String.valueOf(
+                                                                Float.valueOf(approvalSupplies.getSendNum()) + Float.valueOf(receivedSupplies.getSendNum()));
+                                                        approvalSupplies.setSendNum(sendNum);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     receivedAdapter.notifyDataSetChanged();
+                                    approvalAdapter.notifyDataSetChanged();
                                     ToastUtil.showToast(SuppliesApplyActivity.this, "发放单ID:"+id+",领出成功", Toast.LENGTH_SHORT);
                                 }
                             }
@@ -578,7 +620,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "domaterialback")
                 .add("userno", userNo)
-                .add("id", id)
+                .add("billno", id)
                 .build();
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override

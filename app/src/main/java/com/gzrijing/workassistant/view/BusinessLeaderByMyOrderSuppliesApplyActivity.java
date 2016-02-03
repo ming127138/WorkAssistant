@@ -130,22 +130,22 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
                     @Override
                     public void run() {
                         List<SuppliesNo> list = JsonParseUtils.getMyOrderSuppliesNoByApply(response);
-                        Log.e("size", list.size()+"");
+                        Log.e("size", list.size() + "");
                         applyingList.clear();
                         approvalList.clear();
-                        receivedList.clear();
+                        returnList.clear();
                         for (SuppliesNo suppliesNo : list) {
                             if (!suppliesNo.getApplyId().equals("")) {
                                 if (suppliesNo.getApplyState().equals("申请中") || suppliesNo.getApplyState().equals("不批准")) {
                                     applyingList.add(suppliesNo);
                                     applyingAdapter.notifyDataSetChanged();
                                 }
-                                if(suppliesNo.getApplyState().equals("已审核")){
+                                if (suppliesNo.getApplyState().equals("已审批")) {
                                     approvalList.add(suppliesNo);
                                     approvalAdapter.notifyDataSetChanged();
                                 }
-                            }else{
-                                if(!suppliesNo.getReturnId().equals("")){
+                            } else {
+                                if (!suppliesNo.getReturnId().equals("")) {
                                     returnList.add(suppliesNo);
                                     returnAdapter.notifyDataSetChanged();
                                 }
@@ -576,7 +576,23 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
                                 if (suppliesNo.getReceivedId().equals(id)) {
                                     suppliesNo.setReceivedState("已领出");
                                     suppliesNo.setReceivedTime(receivedTime);
+
+                                    for (SuppliesNo approval : approvalList) {
+                                        if (suppliesNo.getApplyId().equals(approval.getApplyId())) {
+                                            for (Supplies receivedSupplies : suppliesNo.getSuppliesList()) {
+                                                for (Supplies approvalSupplies : approval.getSuppliesList()) {
+                                                    if (receivedSupplies.getName().equals(approvalSupplies.getName())
+                                                            && receivedSupplies.getSpec().equals(approvalSupplies.getSpec())) {
+                                                        approvalSupplies.setSendNum(String.valueOf(
+                                                                Float.valueOf(approvalSupplies.getSendNum()) + Float.valueOf(receivedSupplies.getSendNum())));
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     receivedAdapter.notifyDataSetChanged();
+                                    approvalAdapter.notifyDataSetChanged();
                                     ToastUtil.showToast(BusinessLeaderByMyOrderSuppliesApplyActivity.this, "发放单ID:" + id + ",领出成功", Toast.LENGTH_SHORT);
                                 }
                             }
@@ -604,11 +620,12 @@ public class BusinessLeaderByMyOrderSuppliesApplyActivity extends BaseActivity i
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "domaterialback")
                 .add("userno", userNo)
-                .add("id", id)
+                .add("billno", id)
                 .build();
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
+                Log.e("response", response);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
