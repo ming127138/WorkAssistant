@@ -114,8 +114,9 @@ public class GetLeaderBusinessService extends IntentService {
             data1.setUrgent(order.isUrgent());
             data1.setType(order.getType());
             data1.setState(order.getState());
+            data1.setReceivedTime(order.getReceivedTime());
             data1.setDeadline(order.getDeadline());
-            data1.setFlag("确认收到");
+            data1.setFlag(order.getFlag());
             List<DetailedInfo> infos = order.getDetailedInfos();
             for (DetailedInfo info : infos) {
                 DetailedInfoData data2 = new DetailedInfoData();

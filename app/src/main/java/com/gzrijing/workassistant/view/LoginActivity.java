@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -24,6 +25,7 @@ import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.MD5Encryptor;
+import com.igexin.sdk.PushManager;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -39,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -56,6 +59,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String isMemory; // isMemory变量用来判断SharedPreferences有没有数据
     private String file = "saveUserAndPwd";// 用于保存账号密码的SharedPreferences的文件
     private SharedPreferences sp; // 声明一个SharedPreferences
+    private String clientId;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void initData() {
-//        DataSupport.deleteAll(BusinessData.class);
+        //初始化推送服务
+        PushManager.getInstance().initialize(getApplicationContext());
+        clientId = PushManager.getInstance().getClientid(getApplicationContext());
+
         getUserNamePwd();
     }
 
@@ -144,6 +152,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void login() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在登陆...");
+        pDialog.show();
         String userName = et_user.getText().toString().trim();
         String password = et_pwd.getText().toString().trim().toLowerCase();
         if (password.equals(pwd)) {
@@ -153,12 +165,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             password = md5.substring(0, md5.length() - 2)
                     + password.substring(password.length() - 2);
         }
-
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "login")
                 .add("userno", userName)
                 .add("pwd", password)
-                .add("clientid", MyApplication.getClientid())
+                .add("clientid", clientId)
                 .build();
         final String finalPWD = password;
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
@@ -192,10 +203,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 case 0:
                     Toast.makeText(LoginActivity.this, "与服务器断开连接",
                             Toast.LENGTH_SHORT).show();
+                    pDialog.cancel();
                     break;
                 case 1:
                     Toast.makeText(LoginActivity.this, "用户账号与密码不匹配",
                             Toast.LENGTH_SHORT).show();
+                    pDialog.cancel();
                     break;
                 case 2:
                     User user = (User) msg.obj;
@@ -211,6 +224,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     startActivity(intent);
                     Toast.makeText(LoginActivity.this, "欢迎" + user.getUserName() + "登录",
                             Toast.LENGTH_SHORT).show();
+                    pDialog.cancel();
                     finish();
                     break;
             }

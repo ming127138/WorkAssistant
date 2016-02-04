@@ -8,6 +8,7 @@ public class BusinessByLeader {
     private String orderId;                 //工程编码
     private String type;                    //工程类型
     private String state;                   //工程状态
+    private String receivedTime;            //接单时间
     private String deadline;                //工程期限
     private boolean urgent;                 //工程是否紧急
     private int temInfoNum;                 //标记有多少条未查看的临时信息
@@ -18,10 +19,11 @@ public class BusinessByLeader {
     public BusinessByLeader() {
     }
 
-    public BusinessByLeader(String orderId, String type, String state, String deadline, boolean urgent, int temInfoNum, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls) {
+    public BusinessByLeader(String orderId, String type, String state, String receivedTime, String deadline, boolean urgent, int temInfoNum, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls) {
         this.orderId = orderId;
         this.type = type;
         this.state = state;
+        this.receivedTime = receivedTime;
         this.deadline = deadline;
         this.urgent = urgent;
         this.temInfoNum = temInfoNum;
@@ -52,6 +54,14 @@ public class BusinessByLeader {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getReceivedTime() {
+        return receivedTime;
+    }
+
+    public void setReceivedTime(String receivedTime) {
+        this.receivedTime = receivedTime;
     }
 
     public String getDeadline() {

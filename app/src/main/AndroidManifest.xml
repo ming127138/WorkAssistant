@@ -639,6 +639,10 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
+        <activity
+            android:name=".view.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
+        <activity android:name=".view.WelcomeActivity"></activity>
     </application>
 
 </manifest>

@@ -23,10 +23,12 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessWorkerAdapter;
 import com.gzrijing.workassistant.db.BusinessData;
+import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.service.GetInspectionService;
 import com.gzrijing.workassistant.service.GetSewageWellsService;
+import com.gzrijing.workassistant.util.DateUtil;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
@@ -36,6 +38,9 @@ import org.litepal.crud.DataSupport;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class WorkerFragment extends Fragment implements AdapterView.OnItemSelectedListener{
@@ -112,6 +117,7 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
             order.setUrgent(data.isUrgent());
             order.setType(data.getType());
             order.setState(data.getState());
+            order.setReceivedTime(data.getReceivedTime());
             order.setDeadline(data.getDeadline());
             order.setFlag(data.getFlag());
             orderListByWorker.add(order);
@@ -136,6 +142,9 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                         for(BusinessByWorker businessByWorker: list){
                             orderListByWorker.add(businessByWorker);
                             orderList.add(businessByWorker);
+                        }
+                        if(!orderList.toString().equals("[]")){
+                            sequence(orderList);
                         }
                         adapter.notifyDataSetChanged();
                     }
@@ -177,6 +186,9 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                         for(BusinessByWorker businessByWorker: list){
                             orderListByWorker.add(businessByWorker);
                             orderList.add(businessByWorker);
+                        }
+                        if(!orderList.toString().equals("[]")){
+                            sequence(orderList);
                         }
                         adapter.notifyDataSetChanged();
                     }
@@ -259,7 +271,25 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                 }
             }
         }
+        if(!orderList.toString().equals("[]")){
+            sequence(orderList);
+        }
         adapter.notifyDataSetChanged();
+    }
+
+    private void sequence (List<BusinessByWorker> orders){
+        Collections.sort(orders, new Comparator<BusinessByWorker>() {
+            @Override
+            public int compare(BusinessByWorker lhs, BusinessByWorker rhs) {
+                Date date1 = DateUtil.stringToDate2(lhs.getReceivedTime());
+                Date date2 = DateUtil.stringToDate2(rhs.getReceivedTime());
+                // 对日期字段进行升序，如果欲降序可采用after方法
+                if (date1.before(date2)) {
+                    return 1;
+                }
+                return -1;
+            }
+        });
     }
 
     @Override
@@ -283,6 +313,9 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                     orderListByWorker.add(businessByWorker);
                     orderList.add(businessByWorker);
                 }
+                if(!orderList.toString().equals("[]")){
+                    sequence(orderList);
+                }
                 adapter.notifyDataSetChanged();
             }
 
@@ -291,6 +324,9 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                 List<BusinessByWorker> list = JsonParseUtils.getWorkerBusiness(jsonData);
                 orderList.addAll(list);
                 orderListByWorker.addAll(list);
+                if(!orderList.toString().equals("[]")){
+                    sequence(orderList);
+                }
                 adapter.notifyDataSetChanged();
             }
             if(action.equals("action.com.gzrijing.workassistant.PipeInspectMap.add")

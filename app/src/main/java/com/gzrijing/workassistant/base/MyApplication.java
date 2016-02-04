@@ -15,7 +15,6 @@ public class MyApplication extends LitePalApplication {
     private static Context context;
     private static SQLiteDatabase db;
     private static ImageLoaderConfiguration configuration;
-    private static PushManager pushManager;
 
     @Override
     public void onCreate() {
@@ -32,16 +31,7 @@ public class MyApplication extends LitePalApplication {
         }
         //Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(configuration);
-        if(pushManager == null){
-            pushManager = PushManager.getInstance();
-        }
-        pushManager.initialize(this);
 
-    }
-
-    public static String getClientid(){
-        String clientid = pushManager.getClientid(context);
-        return clientid;
     }
 
     public static Context getContext() {

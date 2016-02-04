@@ -43,10 +43,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initData() {
-        //关闭个推服务
-        PushManager.getInstance().stopService(getApplicationContext());
-        //开启个推服务
-        PushManager.getInstance().initialize(getApplicationContext());
         Intent intent = getIntent();
         id = Integer.parseInt(intent.getStringExtra("fragId"));
         userName = intent.getStringExtra("userName");

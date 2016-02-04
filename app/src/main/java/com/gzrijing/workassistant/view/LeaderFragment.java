@@ -23,11 +23,16 @@ import com.gzrijing.workassistant.adapter.BusinessLeaderAdapter;
 import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
+import com.gzrijing.workassistant.entity.Progress;
+import com.gzrijing.workassistant.util.DateUtil;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class LeaderFragment extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -73,6 +78,7 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
             order.setUrgent(data.isUrgent());
             order.setType(data.getType());
             order.setState(data.getState());
+            order.setReceivedTime(data.getReceivedTime());
             order.setDeadline(data.getDeadline());
             order.setTemInfoNum(data.getTemInfoNum());
             order.setFlag(data.getFlag());
@@ -140,7 +146,25 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
                 }
             }
         }
+        if(!orderList.toString().equals("[]")){
+            sequence(orderList);
+        }
         adapter.notifyDataSetChanged();
+    }
+
+    private void sequence (List<BusinessByLeader> orders){
+        Collections.sort(orders, new Comparator<BusinessByLeader>() {
+            @Override
+            public int compare(BusinessByLeader lhs, BusinessByLeader rhs) {
+                Date date1 = DateUtil.stringToDate2(lhs.getReceivedTime());
+                Date date2 = DateUtil.stringToDate2(rhs.getReceivedTime());
+                // 对日期字段进行升序，如果欲降序可采用after方法
+                if (date1.before(date2)) {
+                    return 1;
+                }
+                return -1;
+            }
+        });
     }
 
     @Override
@@ -164,6 +188,9 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
                 List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(jsonData);
                 orderList.addAll(list);
                 orderListByLeader.addAll(list);
+                if(!orderList.toString().equals("[]")){
+                    sequence(orderList);
+                }
                 adapter.notifyDataSetChanged();
             }
 

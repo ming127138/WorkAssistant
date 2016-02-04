@@ -1,12 +1,15 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +22,16 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportInfoProjectAmountByWaitAdapter;
-import com.gzrijing.workassistant.adapter.SuppliesAdapter;
-import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.SuppliesData;
-import com.gzrijing.workassistant.db.SuppliesNoData;
 import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.service.ReportProjectAmountService;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
-import org.litepal.crud.DataSupport;
-
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ReportProjectAmountFragment extends Fragment implements View.OnClickListener {
 
@@ -49,6 +50,8 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     private Button btn_need;
     private Button btn_wait;
     private boolean isCheck;
+    private Handler handler = new Handler();
+    private ProgressDialog pDialog;
 
     public ReportProjectAmountFragment() {
     }
@@ -75,25 +78,39 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     }
 
     private void getSupplies() {
-        BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
-                .find(BusinessData.class, true).get(0);
-        List<SuppliesNoData> suppliesNoDataList = businessData.getSuppliesNoList();
-        List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
-        for (SuppliesNoData suppliesNodata : suppliesNoDataList) {
-            if (suppliesNodata.getReceivedState() != null && suppliesNodata.getReceivedState().equals("已领出")) {
-                for (SuppliesData suppliesData : suppliesDataList) {
-                    if (suppliesData.getReceivedId() != null && suppliesData.getReceivedId().equals(suppliesNodata.getReceivedId())) {
-                        Supplies supplies = new Supplies();
-                        supplies.setId(suppliesData.getNo());
-                        supplies.setName(suppliesData.getName());
-                        supplies.setSpec(suppliesData.getSpec());
-                        supplies.setUnit(suppliesData.getUnit());
-                        supplies.setNum(suppliesData.getSendNum());
-                        suppliesList.add(supplies);
-                    }
-                }
-            }
+        String url = null;
+        try {
+            url = "?cmd=getconfirmleftmaterial&userno=" + URLEncoder.encode(userNo, "UTF-8")
+                    + "&fileno=" + URLEncoder.encode(orderId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ArrayList<Supplies> list = JsonParseUtils.getReportProjectAmountSupplies(response);
+                        suppliesList.clear();
+                        suppliesList.addAll(list);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+
     }
 
     @Override
@@ -165,8 +182,10 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
     }
 
     private void report(String flag) {
-        btn_need.setVisibility(View.GONE);
-        btn_wait.setVisibility(View.GONE);
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在提交...");
+        pDialog.show();
 
         String type;
         if (isCheck) {
@@ -193,8 +212,10 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
             if (action.equals("action.com.gzrijing.workassistant.ReportProjectAmountFragment")) {
                 String result = intent.getStringExtra("result");
                 ToastUtil.showToast(context, result, Toast.LENGTH_SHORT);
-                btn_need.setVisibility(View.VISIBLE);
-                btn_wait.setVisibility(View.VISIBLE);
+                pDialog.cancel();
+                if(result.equals("汇报成功")){
+                    getSupplies();
+                }
             }
         }
     };

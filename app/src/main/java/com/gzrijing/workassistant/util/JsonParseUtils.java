@@ -85,6 +85,7 @@ public class JsonParseUtils {
                 String orderId = jsonObject.getString("FileNo");
                 String type = jsonObject.getString("ConsTypeName");
                 String state = jsonObject.getString("State");
+                String receivedTime = jsonObject.getString("CheckDate").replace("/", "-");
                 String deadline = jsonObject.getString("EstimateFinishDate").replace("/", "-");
                 boolean urgent = jsonObject.getBoolean("IsUrgent");
 
@@ -92,6 +93,7 @@ public class JsonParseUtils {
                 businessByLeader.setOrderId(orderId);
                 businessByLeader.setType(type);
                 businessByLeader.setState(state);
+                businessByLeader.setReceivedTime(receivedTime);
                 businessByLeader.setDeadline(deadline);
                 businessByLeader.setUrgent(urgent);
                 if (state.equals("未派工")) {
@@ -177,15 +179,16 @@ public class JsonParseUtils {
                     state = accident;
                 }
                 String flag = jsonObject.getString("State").trim();
-                if(flag.equals("未接收")){
+                if (flag.equals("未接受")) {
                     flag = "确认收到";
                 }
-                if(flag.equals("已接受")){
+                if (flag.equals("已接受")) {
                     flag = "处理";
                 }
-                if(flag.equals("正在处理")){
+                if (flag.equals("正在处理")) {
                     flag = "汇报";
                 }
+                String receivedTime = jsonObject.getString("CheckDate").replace("/", "-");
                 String deadline = jsonObject.getString("EstimateFinishDate").replace("/", "-");
                 boolean urgent = jsonObject.getBoolean("IsUrgent");
 
@@ -193,6 +196,7 @@ public class JsonParseUtils {
                 businessByWorker.setOrderId(orderId);
                 businessByWorker.setType(type);
                 businessByWorker.setState(state);
+                businessByWorker.setReceivedTime(receivedTime);
                 businessByWorker.setDeadline(deadline);
                 businessByWorker.setUrgent(urgent);
                 businessByWorker.setFlag(flag);
@@ -356,7 +360,7 @@ public class JsonParseUtils {
                 String areaName = jsonObject.getString("AreaName");
                 String type = jsonObject.getString("PlanClass");
                 String state = jsonObject.getString("State");
-                String beginTime = jsonObject.getString("BeginTime");
+                String beginTime = jsonObject.getString("BeginTime").replace("/", "-");
                 String endTime = jsonObject.getString("StopTime").replace("/", "-");
                 String deadline = endTime;
 
@@ -364,6 +368,7 @@ public class JsonParseUtils {
                 businessByWorker.setOrderId(areaNo + "/" + areaName);
                 businessByWorker.setType(type);
                 businessByWorker.setState(state);
+                businessByWorker.setReceivedTime(beginTime);
                 businessByWorker.setDeadline(deadline);
                 businessByWorker.setFlag("巡检");
 
@@ -982,6 +987,40 @@ public class JsonParseUtils {
         }
         return list;
     }
+
+    /**
+     * 获取工程量材料--（已领材料）
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<Supplies> getReportProjectAmountSupplies(String jsonData) {
+        ArrayList<Supplies> list = new ArrayList<Supplies>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.getString("MakingNo");
+                String name = jsonObject.getString("MakingName");
+                String spec = jsonObject.getString("MakingSpace");
+                String unit = jsonObject.getString("MakingUnit");
+                String num = jsonObject.getString("NeedQty");
+
+                Supplies supplies = new Supplies();
+                supplies.setId(id);
+                supplies.setName(name);
+                supplies.setSpec(spec);
+                supplies.setUnit(unit);
+                supplies.setNum(num);
+                list.add(supplies);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 
     /**
      * 获取监听机械申请单状态

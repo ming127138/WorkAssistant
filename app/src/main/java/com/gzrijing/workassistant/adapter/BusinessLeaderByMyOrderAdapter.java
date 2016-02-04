@@ -85,6 +85,8 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
                     R.id.listview_item_business_worker_type_tv);
             v.state = (TextView) convertView.findViewById(
                     R.id.listview_item_business_worker_state_tv);
+            v.receivedTime = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_worker_received_time_tv);
             v.deadline = (TextView) convertView.findViewById(
                     R.id.listview_item_business_worker_deadline_tv);
             v.temInfo = (TextView) convertView.findViewById(
@@ -115,6 +117,7 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
         v.orderId.setText(orderList.get(position).getOrderId());
         v.type.setText(orderList.get(position).getType());
         v.state.setText(orderList.get(position).getState());
+        v.receivedTime.setText(orderList.get(position).getReceivedTime());
         v.deadline.setText(orderList.get(position).getDeadline());
 
         String endTime = orderList.get(position).getDeadline();
@@ -358,6 +361,7 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
         private ImageView urgent;
         private TextView type;
         private TextView state;
+        private TextView receivedTime;
         private TextView deadline;
         private TextView temInfo;
         private TextView flag;

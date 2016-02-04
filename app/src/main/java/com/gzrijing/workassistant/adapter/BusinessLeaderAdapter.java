@@ -95,6 +95,8 @@ public class BusinessLeaderAdapter extends BaseAdapter {
                     R.id.listview_item_business_leader_type_tv);
             v.state = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_state_tv);
+            v.receivedTime = (TextView) convertView.findViewById(
+                    R.id.listview_item_business_leader_received_time_tv);
             v.deadline = (TextView) convertView.findViewById(
                     R.id.listview_item_business_leader_deadline_tv);
             v.temInfo = (TextView) convertView.findViewById(
@@ -113,6 +115,7 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         v.orderId.setText(orderList.get(position).getOrderId());
         v.type.setText(orderList.get(position).getType());
         v.state.setText(orderList.get(position).getState());
+        v.receivedTime.setText(orderList.get(position).getReceivedTime());
         v.deadline.setText(orderList.get(position).getDeadline());
         v.temInfo.setText(orderList.get(position).getTemInfoNum()+"条新临时信息");
 
@@ -258,6 +261,7 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         private ImageView urgent;
         private TextView type;
         private TextView state;
+        private TextView receivedTime;
         private TextView deadline;
         private TextView temInfo;
         private Button completeInfo;
