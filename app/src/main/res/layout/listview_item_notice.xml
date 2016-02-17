@@ -9,9 +9,18 @@
         android:id="@+id/listview_item_notice_title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="XXXXXXXXXX标题"
+        android:text="标题"
         android:textColor="@color/black"
         android:textSize="@dimen/sw_20dp"/>
+
+    <TextView
+        android:id="@+id/listview_item_notice_promulgator_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="发布者"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sw_15dp"/>
 
     <TextView
         android:id="@+id/listview_item_notice_date_tv"

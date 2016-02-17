@@ -45,18 +45,21 @@ public class NoticeAdapter extends BaseAdapter {
             convertView = listContainer.inflate(
                     R.layout.listview_item_notice, parent, false);
             v.title = (TextView) convertView.findViewById(R.id.listview_item_notice_title_tv);
+            v.promulgator = (TextView) convertView.findViewById(R.id.listview_item_notice_promulgator_tv);
             v.date = (TextView) convertView.findViewById(R.id.listview_item_notice_date_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
         v.title.setText(list.get(position).getTitle());
+        v.promulgator.setText(list.get(position).getDepartment()+"："+list.get(position).getPromulgator());
         v.date.setText(list.get(position).getDate());
         return convertView;
     }
 
     class ViewHolder {
         private TextView title;
+        private TextView promulgator;
         private TextView date;
     }
 }

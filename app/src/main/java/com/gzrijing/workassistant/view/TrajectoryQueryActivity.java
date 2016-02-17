@@ -157,7 +157,7 @@ public class TrajectoryQueryActivity extends BaseActivity implements View.OnClic
                 for (int i = 0; i < locInfos.size(); i++) {
                     if (point.latitude == locInfos.get(i).getLatitude()
                             && point.longitude == locInfos.get(i).getLongitude()) {
-                        tv_name.setText(locInfos.get(i).getName());
+                        tv_name.setText("姓名："+locInfos.get(i).getName());
                         tv_tel.setText("电话：" + locInfos.get(i).getTel());
                         tv_lastTime.setText("最后记录时间："
                                 + locInfos.get(i).getLastTime());
@@ -248,27 +248,6 @@ public class TrajectoryQueryActivity extends BaseActivity implements View.OnClic
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
-        mMapView.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
-        mMapView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // 在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
-        mMapView.onPause();
-    }
-
     private List<LatLng> getLatLng() {
         double[] data = {23.043356, 113.31571, 23.043281, 113.315661,
                 23.043215, 113.315616, 23.043161, 113.315576, 23.043098,
@@ -327,5 +306,26 @@ public class TrajectoryQueryActivity extends BaseActivity implements View.OnClic
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+        mMapView.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
+        mMapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // 在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
+        mMapView.onPause();
     }
 }

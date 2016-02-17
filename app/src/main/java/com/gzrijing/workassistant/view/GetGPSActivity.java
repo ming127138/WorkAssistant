@@ -78,7 +78,7 @@ public class GetGPSActivity extends BaseActivity {
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy); //设置定位模式
         option.setOpenGps(true); // 是否打开GPS
         option.setCoorType("bd09ll"); // 设置返回值的坐标类型。
-        option.setScanSpan(900); // 设置定时定位的时间间隔。单位毫秒
+        option.setScanSpan(900); // 设置定时定位的时间间隔。单位毫秒，<1000，只检查一次
         locationClient.setLocOption(option);
         locationClient.start();
     }
@@ -150,9 +150,19 @@ public class GetGPSActivity extends BaseActivity {
 
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
-            public void onFinish(String response) {
+            public void onFinish(final String response) {
                 Log.e("response", response);
                 pDialog.cancel();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(response.equals("ok")){
+                            ToastUtil.showToast(GetGPSActivity.this, "定位成功", Toast.LENGTH_SHORT);
+                        }else{
+                            ToastUtil.showToast(GetGPSActivity.this, "定位失败", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
 
             }
 

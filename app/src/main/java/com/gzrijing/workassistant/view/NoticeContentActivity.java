@@ -31,7 +31,7 @@ public class NoticeContentActivity extends BaseActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        notice = (Notice)intent.getParcelableExtra("notice");
+        notice = intent.getParcelableExtra("notice");
     }
 
     private void initViews() {
@@ -44,7 +44,7 @@ public class NoticeContentActivity extends BaseActivity {
         tv_content = (TextView) findViewById(R.id.notice_content_content_tv);
         tv_content.setText(notice.getContent());
         tv_promulgator = (TextView) findViewById(R.id.notice_content_promulgator_tv);
-        tv_promulgator.setText(notice.getPromulgator());
+        tv_promulgator.setText(notice.getDepartment() + "：" + notice.getPromulgator());
         tv_date = (TextView) findViewById(R.id.notice_content_date_tv);
         tv_date.setText(notice.getDate());
     }

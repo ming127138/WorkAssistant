@@ -8,14 +8,23 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
 import com.igexin.sdk.PushManager;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -32,6 +41,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private long firstTime = 0;
     private String userName;
     private int id;
+    private LocationClient locationClient;
+    private MyLocationListener mMyLocationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +52,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initData();
         initViews();
         setListeners();
+        initMyLocation();
     }
 
     private void initData() {
@@ -220,4 +232,64 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return super.onKeyUp(keyCode, event);
     }
 
+    /**
+     * 获取定位坐标
+     */
+    private void initMyLocation() {
+        locationClient = new LocationClient(this);
+        mMyLocationListener = new MyLocationListener();
+        locationClient.registerLocationListener(mMyLocationListener);
+        // 设置定位条件
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy); //设置定位模式
+        option.setOpenGps(true); // 是否打开GPS
+        option.setCoorType("bd09ll"); // 设置返回值的坐标类型。
+        option.setScanSpan(60 * 1000); // 设置定时定位的时间间隔。单位毫秒
+        locationClient.setLocOption(option);
+        locationClient.start();
+    }
+
+    public class MyLocationListener implements BDLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            if (bdLocation == null) {
+                return;
+            }
+            Log.e("Latitude", bdLocation.getLatitude() + "");
+            Log.e("Longitude", bdLocation.getLongitude() + "");
+            double latitude = bdLocation.getLatitude();
+            double longitude = bdLocation.getLongitude();
+            Log.e("location", latitude + "," + longitude);
+            //uploadLocation(latitude, longitude);
+        }
+    }
+
+    /**
+     * 上传坐标
+     * @param latitude
+     * @param longitude
+     */
+    private void uploadLocation(double latitude, double longitude) {
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "login")
+                .add("userno", latitude + "," + longitude)
+                .build();
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationClient.stop();
+    }
 }

@@ -16,6 +16,7 @@ import com.gzrijing.workassistant.entity.Machine;
 import com.gzrijing.workassistant.entity.MachineNo;
 import com.gzrijing.workassistant.entity.MachineVerify;
 import com.gzrijing.workassistant.entity.MachineVerifyInfo;
+import com.gzrijing.workassistant.entity.Notice;
 import com.gzrijing.workassistant.entity.OrderTypeSupplies;
 import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.ProblemType;
@@ -1965,6 +1966,38 @@ public class JsonParseUtils {
                 user.setUserName(userName);
                 list.add(user);
 
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取日常通知信息
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<Notice> getNotice(String jsonData) {
+        ArrayList<Notice> list = new ArrayList<Notice>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String title = jsonObject.getString("NoticeTitle");
+                String content = jsonObject.getString("NoticeDetail");
+                String promulgator = jsonObject.getString("SaveName");
+                String date = jsonObject.getString("SaveDate");
+                String department = jsonObject.getString("UserSit");
+
+                Notice notice = new Notice();
+                notice.setTitle(title);
+                notice.setContent(content);
+                notice.setPromulgator(promulgator);
+                notice.setDate(date);
+                notice.setDepartment(department);
+                list.add(notice);
             }
         } catch (JSONException e) {
             e.printStackTrace();

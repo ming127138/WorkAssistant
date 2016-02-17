@@ -1,18 +1,30 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.baidu.platform.comapi.map.F;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.NoticeAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Notice;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
+import com.gzrijing.workassistant.util.ToastUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +33,9 @@ public class NoticeActivity extends BaseActivity {
     private ListView lv_notice;
     private List<Notice> noticeList = new ArrayList<Notice>();
     private NoticeAdapter adapter;
+    private String userNo;
+    private Handler handler = new Handler();
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +48,50 @@ public class NoticeActivity extends BaseActivity {
     }
 
     private void initData() {
-        for (int i = 1; i < 5; i++) {
-            Notice notice = new Notice();
-            notice.setTitle("XXXXXX标题"+i);
-            notice.setContent("　　XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX内容" + i);
-            notice.setPromulgator("发布者" + i);
-            notice.setDate("2015-10-29");
-            noticeList.add(notice);
+        SharedPreferences app = getSharedPreferences(
+                "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
+
+        getNotice();
+    }
+
+    private void getNotice() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在上传图片");
+        pDialog.show();
+        String url = null;
+        try {
+            url = "?cmd=getmydailynotice&userno=" + URLEncoder.encode(userNo, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                Log.e("response", response);
+                ArrayList<Notice> list = JsonParseUtils.getNotice(response);
+                noticeList.addAll(list);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                pDialog.cancel();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                pDialog.cancel();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(NoticeActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
     }
 
     private void initViews() {
