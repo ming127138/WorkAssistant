@@ -2,43 +2,52 @@ package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.entity.User;
+import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
+import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
-public class EntrustActivity extends BaseActivity implements View.OnClickListener{
+public class EntrustActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout ll_onDuty;
-    private ImageView iv_onDuty;
-    private LinearLayout ll_replace;
-    private ImageView iv_replace;
-    private TextView tv_person;
-    private EditText et_person;
+    private TextView tv_replaceLeader;
     private TextView tv_beginTime;
     private TextView tv_endTime;
-    private boolean flag;
     private WheelMain wheelMain;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    private Toast mToast;
+    private String userNo;
+    private String userSit;
+    private ArrayList<User> userList = new ArrayList<User>();
+    private Handler handler = new Handler();
+    private String[] item;
+    private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +60,48 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initData() {
+        SharedPreferences app = getSharedPreferences(
+                "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
+        userSit = app.getString("userSit", "");
 
+        getReplaceLeader();
+
+    }
+
+    private void getReplaceLeader() {
+        String url = null;
+        try {
+            url = "?cmd=getreplaceuser&userno=" + URLEncoder.encode(userNo, "UTF-8")
+                    + "&worksit=" + URLEncoder.encode(userSit, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                ArrayList<User> list = JsonParseUtils.getReplaceLeader(response);
+                userList.addAll(list);
+                if (userList.size() > 0) {
+                    item = new String[userList.size()];
+                    for (int i = 0; i < userList.size(); i++) {
+                        item[i] = userList.get(i).getUserName();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(EntrustActivity.this, "与服务器断开", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
     }
 
     private void initViews() {
@@ -59,19 +109,13 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ll_onDuty = (LinearLayout) findViewById(R.id.entrust_on_duty_ll);
-        iv_onDuty = (ImageView) findViewById(R.id.entrust_on_duty_iv);
-        ll_replace = (LinearLayout) findViewById(R.id.entrust_replace_ll);
-        iv_replace = (ImageView) findViewById(R.id.entrust_replace_iv);
-        tv_person = (TextView) findViewById(R.id.entrust_person_tv);
-        et_person = (EditText) findViewById(R.id.entrust_person_et);
+        tv_replaceLeader = (TextView) findViewById(R.id.entrust_replace_leader_tv);
         tv_beginTime = (TextView) findViewById(R.id.entrust_begin_time_tv);
         tv_endTime = (TextView) findViewById(R.id.entrust_end_time_tv);
     }
 
     private void setListeners() {
-        ll_onDuty.setOnClickListener(this);
-        ll_replace.setOnClickListener(this);
+        tv_replaceLeader.setOnClickListener(this);
         tv_beginTime.setOnClickListener(this);
         tv_endTime.setOnClickListener(this);
     }
@@ -79,22 +123,8 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.entrust_on_duty_ll:
-                if (flag) {
-                    iv_onDuty.setImageResource(R.drawable.spinner_item_check_on);
-                    iv_replace.setImageResource(R.drawable.spinner_item_check_off);
-                    tv_person.setText("　值班人");
-                    flag = !flag;
-                }
-                break;
-
-            case R.id.entrust_replace_ll:
-                if (!flag) {
-                    iv_replace.setImageResource(R.drawable.spinner_item_check_on);
-                    iv_onDuty.setImageResource(R.drawable.spinner_item_check_off);
-                    tv_person.setText("　代班人");
-                    flag = !flag;
-                }
+            case R.id.entrust_replace_leader_tv:
+                selectReplaceLeader();
                 break;
 
             case R.id.entrust_begin_time_tv:
@@ -105,6 +135,29 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
                 getTime(tv_endTime);
                 break;
         }
+    }
+
+    private void selectReplaceLeader() {
+        final int flag = index;
+        new android.support.v7.app.AlertDialog.Builder(this).setTitle("选择代班人：").setSingleChoiceItems(
+                item, index, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        index = which;
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        tv_replaceLeader.setText(item[index]);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        index = flag;
+                    }
+                }).show();
     }
 
     private void getTime(final TextView tv_time) {
@@ -163,42 +216,65 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
             return true;
         }
 
-        if(id == R.id.action_entrust){
-            if(et_person.getText().toString().trim().equals("")){
-                if (mToast == null) {
-                    mToast = Toast.makeText(this, "请填写"+tv_person.getText().toString(), Toast.LENGTH_SHORT);
-                } else {
-                    mToast.setText("请填写"+tv_person.getText().toString());
-                    mToast.setDuration(Toast.LENGTH_SHORT);
-                }
-                mToast.show();
-                return true;
-            }
-
-            if(tv_beginTime.getText().toString().equals("")){
-                if (mToast == null) {
-                    mToast = Toast.makeText(this, "请选择开始时间", Toast.LENGTH_SHORT);
-                } else {
-                    mToast.setText("请选择开始时间");
-                    mToast.setDuration(Toast.LENGTH_SHORT);
-                }
-                mToast.show();
-                return true;
-            }
-
-            if(tv_endTime.getText().toString().equals("")){
-                if (mToast == null) {
-                    mToast = Toast.makeText(this, "请选择结束时间", Toast.LENGTH_SHORT);
-                } else {
-                    mToast.setText("请选择结束时间");
-                    mToast.setDuration(Toast.LENGTH_SHORT);
-                }
-                mToast.show();
-                return true;
-            }
+        if (id == R.id.action_entrust) {
+            entruste();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void entruste() {
+        if (tv_replaceLeader.getText().toString().equals("")) {
+            ToastUtil.showToast(this, "请选择代班人", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        if (tv_beginTime.getText().toString().equals("")) {
+            ToastUtil.showToast(this, "请选择开始时间", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        if (tv_endTime.getText().toString().equals("")) {
+            ToastUtil.showToast(this, "请选择结束时间", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("cmd", "dosavereplacesitleader")
+                .add("userno", userNo)
+                .add("worksit", userSit)
+                .add("replaceuserno", userList.get(index).getUserNo())
+                .add("begindate", tv_beginTime.getText().toString())
+                .add("enddate", tv_endTime.getText().toString())
+                .build();
+
+        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(response.equals("ok")){
+                            ToastUtil.showToast(EntrustActivity.this, "委托成功", Toast.LENGTH_SHORT);
+                        }else{
+                            ToastUtil.showToast(EntrustActivity.this, "委托失败", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(EntrustActivity.this, "与服务器断开", Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+
     }
 }

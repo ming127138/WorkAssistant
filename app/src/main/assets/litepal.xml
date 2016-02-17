@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="workassistant"></dbname>
-    <version value="41"></version>
+    <version value="43"></version>
     <list>
         <mapping class="com.gzrijing.workassistant.db.BusinessData"></mapping>
         <mapping class="com.gzrijing.workassistant.db.MachineData"></mapping>
@@ -12,5 +12,6 @@
         <mapping class="com.gzrijing.workassistant.db.ImageData"></mapping>
         <mapping class="com.gzrijing.workassistant.db.BusinessHaveSendData"></mapping>
         <mapping class="com.gzrijing.workassistant.db.TimeData"></mapping>
+        <mapping class="com.gzrijing.workassistant.db.ServiceOpenAndClose"></mapping>
     </list>
 </litepal>

@@ -1,15 +1,14 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,33 +16,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.base.MyApplication;
-import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.db.TimeData;
+import com.gzrijing.workassistant.db.ServiceOpenAndClose;
 import com.gzrijing.workassistant.entity.User;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.MD5Encryptor;
 import com.igexin.sdk.PushManager;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import org.litepal.crud.DataSupport;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -76,6 +59,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void initData() {
         //初始化推送服务
         PushManager.getInstance().initialize(getApplicationContext());
+        ServiceOpenAndClose serviceOpenAndClose = DataSupport.find(ServiceOpenAndClose.class, 1);
+        if(serviceOpenAndClose == null){
+            ServiceOpenAndClose service = new ServiceOpenAndClose();
+            service.setPushService("1");
+            service.save();
+        }else{
+            ContentValues values = new ContentValues();
+            values.put("pushService", "1");
+            DataSupport.update(ServiceOpenAndClose.class, values, 1);
+        }
         clientId = PushManager.getInstance().getClientid(getApplicationContext());
 
         getUserNamePwd();
@@ -152,6 +145,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void login() {
+        if(clientId == null){
+            Toast.makeText(LoginActivity.this, "与服务器断开连接",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setMessage("正在登陆...");
@@ -217,10 +215,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     edit.putString("userNo", user.getUserNo());
                     edit.putString("userName", user.getUserName());
                     edit.putString("userRank", user.getUserRank());
+                    edit.putString("userSit", user.getUserSit());
                     edit.commit();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("fragId", "0");
-                    intent.putExtra("userName", user.getUserName());
                     startActivity(intent);
                     Toast.makeText(LoginActivity.this, "欢迎" + user.getUserName() + "登录",
                             Toast.LENGTH_SHORT).show();

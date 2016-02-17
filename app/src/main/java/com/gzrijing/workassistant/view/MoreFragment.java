@@ -12,7 +12,6 @@ import android.widget.GridView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.MoreGridViewAdapter;
-import com.igexin.sdk.PushManager;
 
 public class MoreFragment extends Fragment {
 
@@ -41,7 +40,7 @@ public class MoreFragment extends Fragment {
 
     private void initData() {
         iconIds = new int[]{R.drawable.icon_notice, R.drawable.icon_notice, R.drawable.icon_notice, R.drawable.icon_notice, R.drawable.icon_notice};
-        texts = new String[]{"通知公告", "送机列表", "退机列表", "安全检查", "退出登陆"};
+        texts = new String[]{"通知公告", "送机列表", "退机列表", "安全检查", "　设置　"};
     }
 
     private void initViews() {
@@ -75,15 +74,12 @@ public class MoreFragment extends Fragment {
                 }
 
                 if(position == 4){
-                    exitApp();
+                    Intent intent = new Intent(getActivity(), SettingActivity.class);
+                    getActivity().startActivity(intent);
                 }
 
             }
         });
-    }
-
-    private void exitApp() {
-        PushManager.getInstance().stopService(getActivity().getApplicationContext());
     }
 
 }

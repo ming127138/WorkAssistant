@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -43,9 +44,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initData() {
+        SharedPreferences app = getSharedPreferences(
+                "saveUser", MODE_PRIVATE);
+        userName = app.getString("userName", "");
+
         Intent intent = getIntent();
         id = Integer.parseInt(intent.getStringExtra("fragId"));
-        userName = intent.getStringExtra("userName");
     }
 
     private void initViews() {

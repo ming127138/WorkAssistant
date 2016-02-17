@@ -1945,5 +1945,32 @@ public class JsonParseUtils {
         return list;
     }
 
+    /**
+     * 获取代班人员列表
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<User> getReplaceLeader(String jsonData) {
+        ArrayList<User> list = new ArrayList<User>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String userNo = jsonObject.getString("UserNo");
+                String userName = jsonObject.getString("UserName");
+
+                User user = new User();
+                user.setUserNo(userNo);
+                user.setUserName(userName);
+                list.add(user);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 
 }

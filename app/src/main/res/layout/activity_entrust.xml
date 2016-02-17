@@ -11,87 +11,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/sw_5dp">
-
-
-        <LinearLayout
-            android:id="@+id/entrust_on_duty_ll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/sw_20dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/entrust_on_duty_iv"
-                android:layout_width="@dimen/sw_20dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/spinner_item_check_on" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/sw_5dp"
-                android:text="值班"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sw_15dp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/entrust_replace_ll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/sw_30dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/entrust_replace_iv"
-                android:layout_width="@dimen/sw_20dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/spinner_item_check_off" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/sw_5dp"
-                android:text="代班"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sw_15dp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sw_5dp"
         android:padding="@dimen/sw_5dp"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/entrust_person_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="　值班人"
+            android:text="　代班人："
             android:textColor="@color/black"
             android:textSize="@dimen/sw_15dp" />
 
         <TextView
+            android:id="@+id/entrust_replace_leader_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="："
+            android:hint="点击代班人"
+            android:gravity="center_horizontal"
+            android:background="@drawable/edit_line_blue"
             android:textColor="@color/black"
-            android:textSize="@dimen/sw_15dp" />
-
-        <EditText
-            android:id="@+id/entrust_person_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_line_white_blue"
-            android:textColor="@color/black"
-            android:textCursorDrawable="@drawable/edit_cursor_blue"
-            android:textSize="@dimen/sw_15dp" />
+            android:textSize="@dimen/sw_15dp"/>
     </LinearLayout>
 
     <LinearLayout
