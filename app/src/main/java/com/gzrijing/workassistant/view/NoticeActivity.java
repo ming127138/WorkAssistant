@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.baidu.platform.comapi.map.F;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.NoticeAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;

@@ -68,7 +68,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void initViews() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
         mToolbar.setTitle(userName + "的业务");
         setSupportActionBar(mToolbar);
 
