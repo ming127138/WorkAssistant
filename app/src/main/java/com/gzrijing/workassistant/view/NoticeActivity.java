@@ -58,7 +58,7 @@ public class NoticeActivity extends BaseActivity {
     private void getNotice() {
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pDialog.setMessage("正在上传图片");
+        pDialog.setMessage("正在加载数据...");
         pDialog.show();
         String url = null;
         try {

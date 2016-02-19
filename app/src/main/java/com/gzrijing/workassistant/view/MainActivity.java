@@ -43,6 +43,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private int id;
     private LocationClient locationClient;
     private MyLocationListener mMyLocationListener;
+    private String userNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void initData() {
         SharedPreferences app = getSharedPreferences(
                 "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
         userName = app.getString("userName", "");
 
         Intent intent = getIntent();
@@ -260,7 +262,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             double latitude = bdLocation.getLatitude();
             double longitude = bdLocation.getLongitude();
             Log.e("location", latitude + "," + longitude);
-            //uploadLocation(latitude, longitude);
+            uploadLocation(latitude, longitude);
         }
     }
 
@@ -271,13 +273,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     private void uploadLocation(double latitude, double longitude) {
         RequestBody requestBody = new FormEncodingBuilder()
-                .add("cmd", "login")
-                .add("userno", latitude + "," + longitude)
+                .add("cmd", "UserGpsCheckFun")
+                .add("UserNo", userNo)
+                .add("GpsNo", latitude + "," + longitude)
                 .build();
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-
+                Log.e("response", response);
             }
 
             @Override

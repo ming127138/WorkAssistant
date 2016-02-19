@@ -32,6 +32,7 @@ import com.gzrijing.workassistant.entity.SafetyInspectSecondItem;
 import com.gzrijing.workassistant.entity.SafetyInspectTask;
 import com.gzrijing.workassistant.entity.SendMachine;
 import com.gzrijing.workassistant.entity.Subordinate;
+import com.gzrijing.workassistant.entity.SubordinateLocation;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
@@ -1998,6 +1999,49 @@ public class JsonParseUtils {
                 notice.setDate(date);
                 notice.setDepartment(department);
                 list.add(notice);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取下属位置信息
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<SubordinateLocation> getSubordinateLocationInfo(String jsonData) {
+        ArrayList<SubordinateLocation> list = new ArrayList<SubordinateLocation>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String gps = jsonObject.getString("GpsNo");
+                double latitude = 0;
+                double longitude = 0;
+                if(!gps.equals("")){
+                    String[] str = gps.split(",");
+                    latitude = Double.valueOf(str[0]);
+                    longitude = Double.valueOf(str[1]);
+                }
+
+                String userNo = jsonObject.getString("UserNo");
+                String name = jsonObject.getString("UserName");
+                String tel = jsonObject.getString("UserTel");
+                String lastTime = jsonObject.getString("GpsNoTime");
+                String doingTask = jsonObject.getString("UserTask");
+
+                SubordinateLocation subordinateLocation = new SubordinateLocation();
+                subordinateLocation.setLatitude(latitude);
+                subordinateLocation.setLongitude(longitude);
+                subordinateLocation.setUserNo(userNo);
+                subordinateLocation.setName(name);
+                subordinateLocation.setTel(tel);
+                subordinateLocation.setLastTime(lastTime);
+                subordinateLocation.setDoingTask(doingTask);
+                list.add(subordinateLocation);
             }
         } catch (JSONException e) {
             e.printStackTrace();
