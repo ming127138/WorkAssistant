@@ -3,6 +3,8 @@ package com.gzrijing.workassistant.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class MachineNo implements Parcelable {
     private String applyId;         //机械申请单号
     private String returnId;        //机械退回单号
@@ -18,11 +20,12 @@ public class MachineNo implements Parcelable {
     private String returnApplyTime; //机械退回申请时间
     private String returnAddress;   //机械退回地点
     private String reason;          //不批准原因
+    private ArrayList<Machine> machineList = new ArrayList<Machine>();
 
     public MachineNo() {
     }
 
-    public MachineNo(String applyId, String returnId, String applyTime, String useTime, String returnTime, String useAddress, String remarks, String approvalTime, String applyState, String returnState, String returnType, String returnApplyTime, String returnAddress, String reason) {
+    public MachineNo(String applyId, String returnId, String applyTime, String useTime, String returnTime, String useAddress, String remarks, String approvalTime, String applyState, String returnState, String returnType, String returnApplyTime, String returnAddress, String reason, ArrayList<Machine> machineList) {
         this.applyId = applyId;
         this.returnId = returnId;
         this.applyTime = applyTime;
@@ -37,6 +40,7 @@ public class MachineNo implements Parcelable {
         this.returnApplyTime = returnApplyTime;
         this.returnAddress = returnAddress;
         this.reason = reason;
+        this.machineList = machineList;
     }
 
     public String getApplyId() {
@@ -151,6 +155,14 @@ public class MachineNo implements Parcelable {
         this.reason = reason;
     }
 
+    public ArrayList<Machine> getMachineList() {
+        return machineList;
+    }
+
+    public void setMachineList(ArrayList<Machine> machineList) {
+        this.machineList = machineList;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -172,6 +184,7 @@ public class MachineNo implements Parcelable {
         dest.writeString(this.returnApplyTime);
         dest.writeString(this.returnAddress);
         dest.writeString(this.reason);
+        dest.writeTypedList(machineList);
     }
 
     protected MachineNo(Parcel in) {
@@ -189,6 +202,7 @@ public class MachineNo implements Parcelable {
         this.returnApplyTime = in.readString();
         this.returnAddress = in.readString();
         this.reason = in.readString();
+        this.machineList = in.createTypedArrayList(Machine.CREATOR);
     }
 
     public static final Creator<MachineNo> CREATOR = new Creator<MachineNo>() {

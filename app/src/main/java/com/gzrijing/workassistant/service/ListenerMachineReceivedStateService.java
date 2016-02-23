@@ -107,7 +107,7 @@ public class ListenerMachineReceivedStateService extends IntentService {
                 machineData.setNo(machine.getId());
                 machineData.setName(machine.getName());
                 machineData.setUnit(machine.getUnit());
-                machineData.setSendNum(1);
+                machineData.setSendNum(machine.getSendNum());
                 machineData.setReceivedState(machine.getState());
                 machineData.save();
                 businessData.getMachineDataList().add(machineData);

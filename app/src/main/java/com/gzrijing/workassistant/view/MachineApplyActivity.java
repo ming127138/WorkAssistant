@@ -2,7 +2,6 @@ package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,7 +40,6 @@ import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.MyListView;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
-import com.gzrijing.workassistant.zxing.view.MipcaActivityCapture;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 
@@ -59,8 +57,6 @@ import java.util.List;
 
 public class MachineApplyActivity extends BaseActivity implements View.OnClickListener {
 
-    private final static int MACHINE_RECEIVED = 2001;
-    private final static int MACHINE_RETURN = 2002;
     private String userNo;
     private String orderId;
     private Button btn_applyEdit;
@@ -70,7 +66,6 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
     private EditText et_applyRemarks;
     private Button btn_apply;
     private Button btn_returnEdit;
-    private Button btn_return;
     private MyListView lv_created;
     private MyListView lv_applying;
     private MyListView lv_received;
@@ -508,151 +503,6 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
                 returnAdapter.notifyDataSetChanged();
             }
         }
-
-        if (requestCode == MACHINE_RECEIVED) {
-            if (resultCode == RESULT_OK) {
-                Bundle bundle = data.getExtras();
-                // 显示扫描到的内容
-                String id = bundle.getString("result");
-                receivedConfirm(id);
-            }
-        }
-
-        if (requestCode == MACHINE_RETURN) {
-            if (resultCode == RESULT_OK) {
-                Bundle bundle = data.getExtras();
-                // 显示扫描到的内容
-                String id = bundle.getString("result");
-                returnConfirm(id);
-            }
-        }
-    }
-
-    private void receivedConfirm(final String id) {
-        Log.e("qrcode", id);
-        final String applyId = id.split(",")[0];
-        final String machineNo = id.split(",")[1];
-        JSONArray jsonArray = new JSONArray();
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("PicType", "WnW_MachineSend");
-            jsonObject.put("FileNo", orderId);
-            jsonObject.put("BillNo", applyId);
-            jsonObject.put("MachineNo", machineNo);
-            jsonArray.put(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        final RequestBody requestBody = new FormEncodingBuilder()
-                .add("cmd", "doreceivematerialandmachine")
-                .add("userno", userNo)
-                .add("detail", jsonArray.toString())
-                .build();
-
-        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
-            @Override
-            public void onFinish(final String response) {
-                Log.e("respone", response);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response.equals("ok")) {
-                            ContentValues values = new ContentValues();
-                            values.put("receivedState", "已领出");
-                            DataSupport.updateAll(MachineData.class, values, "applyId = ? and No = ?", applyId, machineNo);
-                            for (Machine machine : receivedList) {
-                                if (machine.getId().equals(machineNo)) {
-                                    machine.setState("已领出");
-                                    receivedAdapter.notifyDataSetChanged();
-                                    ToastUtil.showToast(MachineApplyActivity.this, machineNo + "领出成功", Toast.LENGTH_SHORT);
-                                }
-                            }
-                        } else {
-                            ToastUtil.showToast(MachineApplyActivity.this, "领出失败", Toast.LENGTH_SHORT);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onError(Exception e) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtil.showToast(MachineApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
-                    }
-                });
-            }
-        });
-    }
-
-    private void returnConfirm(final String id) {
-        final List<MachineData> machineDataList = DataSupport.where("returnId = ?", id).find(MachineData.class);
-        JSONArray jsonArray = new JSONArray();
-        for (MachineData data : machineDataList) {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("BillNo", id);
-                jsonObject.put("MachineName", data.getName());
-                jsonObject.put("BackQty", "1");
-                jsonArray.put(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        RequestBody requestBody = new FormEncodingBuilder()
-                .add("cmd", "domachineback")
-                .add("userno", userNo)
-                .add("machinedetail", jsonArray.toString())
-                .build();
-        HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
-            @Override
-            public void onFinish(final String response) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (response.equals("ok")) {
-                            ContentValues values = new ContentValues();
-                            values.put("returnState", "已退回");
-                            DataSupport.updateAll(MachineNoData.class, values, "returnId = ?", id);
-                            for (MachineNo machineNo : returnList) {
-                                if (machineNo.getReturnId().equals(id)) {
-                                    machineNo.setReturnState("已退回");
-                                    returnAdapter.notifyDataSetChanged();
-                                }
-                            }
-                            for (MachineData data : machineDataList) {
-                                ContentValues values1 = new ContentValues();
-                                values.put("receivedState", "已退回");
-                                DataSupport.updateAll(MachineData.class, values1, "returnId = ? and No = ?", id, data.getNo());
-                                for (Machine machine : receivedList) {
-                                    if (data.getNo().equals(machine.getId())) {
-                                        machine.setState("已退回");
-                                    }
-                                }
-                            }
-                            receivedAdapter.notifyDataSetChanged();
-                        } else {
-                            ToastUtil.showToast(MachineApplyActivity.this, "退回失败", Toast.LENGTH_SHORT);
-                        }
-                    }
-                });
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtil.showToast(MachineApplyActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
-                    }
-                });
-            }
-        });
 
     }
 

@@ -1023,6 +1023,165 @@ public class JsonParseUtils {
         return list;
     }
 
+    /**
+     * 获取某工程的机械申请单
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<MachineNo> getMachineApplyNo(String jsonData) {
+        ArrayList<MachineNo> list = new ArrayList<MachineNo>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String billType = jsonObject.getString("BillType");
+                String applyId = "";
+                String returnId = "";
+                String applyState = "";
+                String returnState = "";
+                String applyTime = "";
+                String returnApplyTime = "";
+                String useAddress = "";
+                String returnAddress = "";
+                ArrayList<Machine> machineList = new ArrayList<Machine>();
+                if (billType.equals("工程机械申请")) {
+                    applyId = jsonObject.getString("BillNo");
+                    applyState = jsonObject.getString("State");
+                    applyTime = jsonObject.getString("SaveDate");
+                    useAddress = jsonObject.getString("ProAddress");
+                    if (applyState.equals("保存")) {
+                        applyState = "申请中";
+                    }
+                    if (applyState.equals("审核")) {
+                        applyState = "已审批";
+                    }
+                    if (applyState.equals("停止")) {
+                        applyState = "不批准";
+                    }
+
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("MachineNeedDetail");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String name = jsonObject1.getString("MachineName");
+                        String unit = jsonObject1.getString("MachineUnit");
+                        String applyNum = jsonObject1.getString("Qty");
+                        String sendNum = jsonObject1.getString("SendQty");
+
+                        Machine machine = new Machine();
+                        machine.setName(name);
+                        machine.setUnit(unit);
+                        machine.setApplyNum(Integer.valueOf(applyNum));
+                        machine.setSendNum(Integer.valueOf(sendNum));
+                        machineList.add(machine);
+                    }
+
+                }
+
+                if (billType.equals("正常机械退还") || billType.equals("损坏机械退还")) {
+                    returnId = jsonObject.getString("BillNo");
+                    returnState = jsonObject.getString("State");
+                    returnApplyTime = jsonObject.getString("SaveDate");
+                    returnAddress = jsonObject.getString("ProAddress");
+                    if (returnState.equals("保存")) {
+                        returnState = "申请中";
+                    }
+                    if (returnState.equals("审核")) {
+                        returnState = "可退回";
+                    }
+                    if (returnState.equals("停止")) {
+                        returnState = "不批准";
+                    }
+                    if (billType.equals("正常机械退还")) {
+                        billType = "正常";
+                    }
+                    if (billType.equals("损坏机械退还")) {
+                        billType = "损坏";
+                    }
+
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("MachineSendDetail");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String no = jsonObject1.getString("MachineNo");
+                        String name = jsonObject1.getString("MachineName");
+                        String unit = jsonObject1.getString("MachineUnit");
+                        String applyNum = jsonObject1.getString("Qty");
+
+                        Machine machine = new Machine();
+                        machine.setId(no);
+                        machine.setName(name);
+                        machine.setUnit(unit);
+                        machine.setApplyNum(Integer.valueOf(applyNum));
+                        machineList.add(machine);
+                    }
+                }
+
+                String approvalTime = jsonObject.getString("CheckDate");
+                String useTime = jsonObject.getString("BeginDate");
+                String returnTime = jsonObject.getString("EstimateFinishDate");
+                String reason = jsonObject.getString("UnPassReason");
+                String remark = jsonObject.getString("Remark");
+
+                MachineNo machineNo = new MachineNo();
+                machineNo.setApplyId(applyId);
+                machineNo.setReturnId(returnId);
+                machineNo.setApplyTime(applyTime);
+                machineNo.setUseTime(useTime);
+                machineNo.setReturnTime(returnTime);
+                machineNo.setUseAddress(useAddress);
+                machineNo.setRemarks(remark);
+                machineNo.setApprovalTime(approvalTime);
+                machineNo.setApplyState(applyState);
+                machineNo.setReturnState(returnState);
+                machineNo.setReturnType(billType);
+                machineNo.setReturnApplyTime(returnApplyTime);
+                machineNo.setReturnAddress(returnAddress);
+                machineNo.setReason(reason);
+                machineNo.setMachineList(machineList);
+                list.add(machineNo);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取某工程的已发放的机械
+     *
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<Machine> getMachineByReceived(String jsonData) {
+        ArrayList<Machine> list = new ArrayList<Machine>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String no = jsonObject.getString("MachineNo");
+                String name = jsonObject.getString("MachineName");
+                String unit = jsonObject.getString("MachineUnit");
+                String sendNum = jsonObject.getString("Qty");
+                String state = jsonObject.getString("State");
+                if(state.equals("送机中")){
+                    state = "已安排";
+                }
+                if(state.equals("已送到")){
+                    state = "已送达";
+                }
+                Machine machine = new Machine();
+                machine.setId(no);
+                machine.setName(name);
+                machine.setUnit(unit);
+                machine.setSendNum(Integer.valueOf(sendNum));
+                machine.setState(state);
+                list.add(machine);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     /**
      * 获取监听机械申请单状态
@@ -1083,12 +1242,14 @@ public class JsonParseUtils {
                         String id = jsonObject1.getString("MachineNo");
                         String name = jsonObject1.getString("MachineName");
                         String unit = jsonObject1.getString("MachineUnit");
+                        String sendNum = jsonObject1.getString("Qty");
 
                         Machine machine = new Machine();
                         machine.setApplyId(applyId);
                         machine.setId(id);
                         machine.setName(name);
                         machine.setUnit(unit);
+                        machine.setSendNum(Integer.valueOf(sendNum));
                         machine.setState("已安排");
                         list.add(machine);
                     }
@@ -2021,7 +2182,7 @@ public class JsonParseUtils {
                 String gps = jsonObject.getString("GpsNo");
                 double latitude = 0;
                 double longitude = 0;
-                if(!gps.equals("")){
+                if (!gps.equals("")) {
                     String[] str = gps.split(",");
                     latitude = Double.valueOf(str[0]);
                     longitude = Double.valueOf(str[1]);

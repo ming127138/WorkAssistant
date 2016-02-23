@@ -39,6 +39,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class GetWorkerBusinessService extends IntentService {
 
@@ -103,6 +104,7 @@ public class GetWorkerBusinessService extends IntentService {
 
     private void saveData(String data) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+08"));
         String time = sdf.format(new Date(System.currentTimeMillis()));
 
         ContentValues values = new ContentValues();
@@ -118,7 +120,7 @@ public class GetWorkerBusinessService extends IntentService {
             data1.setState(order.getState());
             data1.setReceivedTime(order.getReceivedTime());
             data1.setDeadline(order.getDeadline());
-            data1.setFlag("确认收到");
+            data1.setFlag(order.getFlag());
             List<DetailedInfo> infos = order.getDetailedInfos();
             for (DetailedInfo info : infos) {
                 DetailedInfoData data2 = new DetailedInfoData();

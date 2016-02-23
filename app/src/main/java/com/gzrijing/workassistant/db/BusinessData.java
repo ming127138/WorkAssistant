@@ -5,7 +5,7 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BusinessData extends DataSupport{
+public class BusinessData extends DataSupport {
     private int id;
     private String user;                    //用户名
     private String orderId;                 //工程编码
@@ -22,7 +22,6 @@ public class BusinessData extends DataSupport{
     private List<MachineData> machineDataList = new ArrayList<MachineData>();   //机械清单
     private List<DetailedInfoData> detailedInfoList = new ArrayList<DetailedInfoData>();//工程详细信息
     private List<ImageData> imageDataList = new ArrayList<ImageData>();     //工程图片
-    private List<BusinessHaveSendData> businessHaveSendDataList = new ArrayList<BusinessHaveSendData>(); //已派工程
 
     public int getId() {
         return id;
@@ -150,13 +149,5 @@ public class BusinessData extends DataSupport{
 
     public void setImageDataList(List<ImageData> imageDataList) {
         this.imageDataList = imageDataList;
-    }
-
-    public List<BusinessHaveSendData> getBusinessHaveSendDataList() {
-        return businessHaveSendDataList;
-    }
-
-    public void setBusinessHaveSendDataList(List<BusinessHaveSendData> businessHaveSendDataList) {
-        this.businessHaveSendDataList = businessHaveSendDataList;
     }
 }

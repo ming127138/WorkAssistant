@@ -10,7 +10,7 @@ public class Machine implements Parcelable {
     private String unit;        //机械单位
     private int applyNum;       //申请数量
     private int sendNum;        //安排数量
-    private String state;       //机械状态(查询时的机械状态，已安排，已领出)
+    private String state;       //机械状态(查询时的机械状态，已安排，已送达)
 
     public Machine() {
     }

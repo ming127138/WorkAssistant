@@ -39,6 +39,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class GetLeaderBusinessService extends IntentService {
 
@@ -56,15 +57,12 @@ public class GetLeaderBusinessService extends IntentService {
         SharedPreferences sp = getSharedPreferences("saveUser", MODE_PRIVATE);
         userNo = sp.getString("userNo", "");
 
-       List<TimeData> timeDataList = DataSupport.select("time").where("userNo = ?", userNo).find(TimeData.class);
+        List<TimeData> timeDataList = DataSupport.select("time").where("userNo = ?", userNo).find(TimeData.class);
         String time = "2016-1-10 10:00:00";
-        Log.e("timeDataList", timeDataList.toString());
-        Log.e("size", timeDataList.size()+"");
-
-        if(!timeDataList.toString().equals("[]")){
+        if (!timeDataList.toString().equals("[]")) {
             Log.e("time", timeDataList.get(0).getTime());
             time = timeDataList.get(0).getTime();
-        }else {
+        } else {
             TimeData timeData = new TimeData();
             timeData.setTime(time);
             timeData.setUserNo(userNo);
@@ -100,6 +98,7 @@ public class GetLeaderBusinessService extends IntentService {
 
     private void saveData(String data) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+08"));
         String time = sdf.format(new Date(System.currentTimeMillis()));
 
         ContentValues values = new ContentValues();
