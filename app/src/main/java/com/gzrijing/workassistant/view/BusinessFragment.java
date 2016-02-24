@@ -33,7 +33,6 @@ import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
-import com.gzrijing.workassistant.service.ListenerMachineApplyStateService;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
@@ -89,7 +88,8 @@ public class BusinessFragment extends Fragment {
 
         if (savedInstanceState == null) {
             Log.e("userRank", userRank);
-            List<TimeData> timeData = DataSupport.where("userNo", userNo).find(TimeData.class);
+            Log.e("userNo", userNo);
+            List<TimeData> timeData = DataSupport.where("userNo = ?", userNo).find(TimeData.class);
             if (timeData.size() > 0) {
                 Fragment fragment = getChildFragmentManager().findFragmentByTag(userRank);
                 if (fragment == null) {
@@ -161,6 +161,7 @@ public class BusinessFragment extends Fragment {
 
         List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(data);
         for (final BusinessByLeader order : list) {
+            count+=2;
             BusinessData data1 = new BusinessData();
             data1.setUser(userNo);
             data1.setOrderId(order.getOrderId());
@@ -199,7 +200,6 @@ public class BusinessFragment extends Fragment {
                 data1.getImageDataList().add(data3);
             }
             data1.save();
-            count+=2;
             getMachine(order.getOrderId(), data1);
         }
     }
@@ -259,7 +259,9 @@ public class BusinessFragment extends Fragment {
                 businessData.save();
                 count--;
                 if(count == 0){
-                    pDialog.dismiss();
+                    if(pDialog != null){
+                        pDialog.dismiss();
+                    }
                     Fragment fragment = getChildFragmentManager().findFragmentByTag(userRank);
                     if (fragment == null) {
                         setTabSelection(Integer.valueOf(userRank));
@@ -272,6 +274,9 @@ public class BusinessFragment extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        if(pDialog != null){
+                            pDialog.dismiss();
+                        }
                         ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
                         DataSupport.deleteAll(BusinessData.class);
                         DataSupport.deleteAll(TimeData.class);
@@ -307,7 +312,9 @@ public class BusinessFragment extends Fragment {
                 businessData.save();
                 count--;
                 if(count == 0){
-                    pDialog.dismiss();
+                    if(pDialog != null){
+                        pDialog.dismiss();
+                    }
                     Fragment fragment = getChildFragmentManager().findFragmentByTag(userRank);
                     if (fragment == null) {
                         setTabSelection(Integer.valueOf(userRank));
@@ -320,6 +327,9 @@ public class BusinessFragment extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        if(pDialog != null){
+                            pDialog.dismiss();
+                        }
                         ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
                         DataSupport.deleteAll(BusinessData.class);
                         DataSupport.deleteAll(TimeData.class);
@@ -373,6 +383,7 @@ public class BusinessFragment extends Fragment {
 
         List<BusinessByWorker> list = JsonParseUtils.getWorkerBusiness(data);
         for (final BusinessByWorker order : list) {
+            count+=2;
             BusinessData data1 = new BusinessData();
             data1.setUser(userNo);
             data1.setOrderId(order.getOrderId());
@@ -410,7 +421,6 @@ public class BusinessFragment extends Fragment {
                 data1.getImageDataList().add(data3);
             }
             data1.save();
-            count+=2;
             getSupplies(order.getOrderId(), data1);
         }
 
@@ -471,7 +481,9 @@ public class BusinessFragment extends Fragment {
                         businessData.save();
                         count--;
                         if(count == 0){
-                            pDialog.dismiss();
+                            if(pDialog != null){
+                                pDialog.dismiss();
+                            }
                             Fragment fragment = getChildFragmentManager().findFragmentByTag(userRank);
                             if (fragment == null) {
                                 setTabSelection(Integer.valueOf(userRank));
@@ -486,6 +498,9 @@ public class BusinessFragment extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        if(pDialog != null){
+                            pDialog.dismiss();
+                        }
                         ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
                         DataSupport.deleteAll(BusinessData.class);
                         DataSupport.deleteAll(TimeData.class);
@@ -538,7 +553,9 @@ public class BusinessFragment extends Fragment {
                         businessData.save();
                         count--;
                         if(count == 0){
-                            pDialog.dismiss();
+                            if(pDialog != null){
+                                pDialog.dismiss();
+                            }
                             Fragment fragment = getChildFragmentManager().findFragmentByTag(userRank);
                             if (fragment == null) {
                                 setTabSelection(Integer.valueOf(userRank));
@@ -553,6 +570,9 @@ public class BusinessFragment extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        if(pDialog != null){
+                            pDialog.dismiss();
+                        }
                         ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
                         DataSupport.deleteAll(BusinessData.class);
                         DataSupport.deleteAll(TimeData.class);
