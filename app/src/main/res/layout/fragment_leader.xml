@@ -51,10 +51,10 @@
             android:textSize="@dimen/sw_15dp" />
     </LinearLayout>
 
-    <ListView
+    <com.gzrijing.workassistant.widget.ListViewCompat
         android:id="@+id/fragment_leader_order_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_content"></ListView>
+        android:background="@color/grey_content" />
 
 </LinearLayout>

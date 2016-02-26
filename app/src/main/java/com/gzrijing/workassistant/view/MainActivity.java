@@ -22,7 +22,6 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
-import com.igexin.sdk.PushManager;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 

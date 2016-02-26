@@ -8,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,12 +48,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
 public class DistributeActivity extends BaseActivity implements View.OnClickListener {
 
@@ -70,6 +73,9 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     private ArrayList<PicUrl> imageUrls = new ArrayList<PicUrl>(); //这个工程的所有图片
     private DistributeGriViewAdapter adapter;
     private Intent imageIntent;
+    private TextView tv_record;
+    private TextView tv_delRecord;
+    private File recordFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +121,8 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         ll_executor = (LinearLayout) findViewById(R.id.distribute_executor_ll);
         tv_deadline = (TextView) findViewById(R.id.distribute_deadline_tv);
         ll_deadline = (LinearLayout) findViewById(R.id.distribute_deadline_ll);
+        tv_record = (TextView) findViewById(R.id.distribute_record_tv);
+        tv_delRecord = (TextView) findViewById(R.id.distribute_del_record_tv);
 
         gv_image = (GridView) findViewById(R.id.distribute_image_gv);
     }
@@ -122,6 +130,8 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     private void setListeners() {
         ll_executor.setOnClickListener(this);
         ll_deadline.setOnClickListener(this);
+        tv_record.setOnClickListener(this);
+        tv_delRecord.setOnClickListener(this);
 
         gv_image.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -151,6 +161,29 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
             case R.id.distribute_deadline_ll:
                 getDeadline();
                 break;
+
+            case R.id.distribute_record_tv:
+                getRecord();
+                break;
+
+            case R.id.distribute_del_record_tv:
+                delRecord();
+                break;
+        }
+    }
+
+    private void delRecord() {
+        recordFile.delete();
+        recordFile = null;
+        tv_delRecord.setVisibility(View.GONE);
+        tv_record.setText("");
+        tv_record.setHint("点击添加");
+    }
+
+    private void getRecord() {
+        if(tv_record.getText().toString().equals("")){
+            Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+            startActivityForResult(intent, 30);
         }
     }
 
@@ -224,6 +257,20 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
                 adapter.notifyDataSetChanged();
             }
         }
+
+        if (requestCode == 30) {
+            if (resultCode == RESULT_OK) {
+                Uri recordUri = data.getData();
+                String path = recordUri.getPath();
+                String fileName = path.substring(path.lastIndexOf("/") + 1);
+                Log.e("path", path);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String time = sdf.format(new Date(System.currentTimeMillis()));
+                tv_record.setText(time + "." + fileName.split("\\.")[1]);
+                recordFile = new File(path);
+                tv_delRecord.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -283,7 +330,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         Log.e("json", jsonArray.toString());
 
         String jsonData = "";
-        if(!jsonArray.toString().equals("[]")){
+        if (!jsonArray.toString().equals("[]")) {
             jsonData = jsonArray.toString();
         }
         RequestBody requestBody = new FormEncodingBuilder()

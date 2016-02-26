@@ -70,10 +70,20 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
                 "saveUser", getActivity().MODE_PRIVATE);
         userNo = app.getString("userNo", "");
 
+        getDBData();
+
+        IntentFilter mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment");
+        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment.Distribute");
+        MyApplication.getContext().registerReceiver(mBroadcastReceiver, mIntentFilter);
+    }
+
+    private void getDBData() {
         orderListByLeader.clear();
         List<BusinessData> list = DataSupport.where("user = ?", userNo).find(BusinessData.class);
         for (BusinessData data : list) {
             BusinessByLeader order = new BusinessByLeader();
+            order.setId(data.getId());
             order.setOrderId(data.getOrderId());
             order.setUrgent(data.isUrgent());
             order.setType(data.getType());
@@ -84,12 +94,8 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
             order.setFlag(data.getFlag());
             orderListByLeader.add(order);
         }
-
-        IntentFilter mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment");
-        mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment.Distribute");
-        MyApplication.getContext().registerReceiver(mBroadcastReceiver, mIntentFilter);
     }
+
 
     private void initViews() {
         sp_business = (Spinner) layoutView.findViewById(R.id.fragment_leader_business_sp);
@@ -183,11 +189,12 @@ public class LeaderFragment extends Fragment implements AdapterView.OnItemSelect
             String action = intent.getAction();
             Log.e("action", action);
             if(action.equals("action.com.gzrijing.workassistant.LeaderFragment")){
-                String jsonData = intent.getStringExtra("jsonData");
-                Log.e("jsonData", jsonData);
-                List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(jsonData);
-                orderList.addAll(list);
-                orderListByLeader.addAll(list);
+//                String jsonData = intent.getStringExtra("jsonData");
+//                Log.e("jsonData", jsonData);
+//                List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(jsonData);
+                getDBData();
+                orderList.clear();
+                orderList.addAll(orderListByLeader);
                 if(!orderList.toString().equals("[]")){
                     sequence(orderList);
                 }

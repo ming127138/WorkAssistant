@@ -30,6 +30,7 @@ import com.gzrijing.workassistant.view.ReportInfoCompleteActivity;
 import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
+import com.gzrijing.workassistant.widget.SlideView;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 
@@ -37,12 +38,13 @@ import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
-public class BusinessLeaderAdapter extends BaseAdapter {
+public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSlideListener{
     private Context context;
     private LayoutInflater listContainer;
     private List<BusinessByLeader> orderList;
     private String userNo;
     private Handler handler = new Handler();
+    private SlideView mLastSlideViewWithStatusOn;
 
     public BusinessLeaderAdapter(Context context, List<BusinessByLeader> orderList, String userNo) {
         this.context = context;
@@ -69,48 +71,23 @@ public class BusinessLeaderAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder v = null;
-        if (convertView == null) {
-            v = new ViewHolder();
-            convertView = listContainer.inflate(
+        SlideView slideView = (SlideView) convertView;
+        if (slideView == null) {
+            View itemView = listContainer.inflate(
                     R.layout.listview_item_business_leader, parent, false);
-            v.orderId = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_order_id_tv);
-            v.completeInfo = (Button) convertView.findViewById(
-                    R.id.listview_item_business_leader_complete_info_btn);
-            v.suppliesQuery = (Button) convertView.findViewById(
-                    R.id.listview_item_business_leader_query_supplies_btn);
-            v.machineApply = (Button) convertView.findViewById(
-                    R.id.listview_item_business_leader_machine_apply_btn);
-            v.progress = (Button) convertView.findViewById(
-                    R.id.listview_item_business_leader_progress_btn);
-            v.info = (Button) convertView.findViewById(
-                    R.id.listview_item_business_leader_info_btn);
-            v.haveSend = (Button) convertView.findViewById(
-                    R.id.listview_item_business_leader_have_send_btn);
-            v.myOrder = (Button) convertView.findViewById(
-                    R.id.listview_item_business_leader_my_order_btn);
-            v.urgent = (ImageView) convertView.findViewById(
-                    R.id.listview_item_business_leader_urgent_iv);
-            v.type = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_type_tv);
-            v.state = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_state_tv);
-            v.receivedTime = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_received_time_tv);
-            v.deadline = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_deadline_tv);
-            v.temInfo = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_tem_info_tv);
-            v.flag = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_leader_flag_tv);
-            v.bg_ll = (LinearLayout) convertView.findViewById(
-                    R.id.listview_item_business_leader_bg_ll);
-            v.btn_rl = (RelativeLayout) convertView.findViewById(
-                    R.id.listview_item_business_leader_rl);
-            convertView.setTag(v);
+
+            slideView = new SlideView(context);
+            slideView.setContentView(itemView);
+            v = new ViewHolder(slideView);
+            slideView.setOnSlideListener(this);
+            slideView.setTag(v);
         } else {
-            v = (ViewHolder) convertView.getTag();
+            v = (ViewHolder) slideView.getTag();
         }
+
+        BusinessByLeader item = orderList.get(position);
+        item.setSlideView(slideView);
+        item.getSlideView().shrink();
 
         v.orderId.setText(orderList.get(position).getOrderId());
         v.type.setText(orderList.get(position).getType());
@@ -219,7 +196,16 @@ public class BusinessLeaderAdapter extends BaseAdapter {
             }
         });
 
-        return convertView;
+        v.deleteHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                DataSupport.delete(BusinessData.class, orderList.get(position).getId());
+                orderList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
+        return slideView;
     }
 
     private void sendSure(final int position) {
@@ -256,6 +242,18 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         });
     }
 
+    @Override
+    public void onSlide(View view, int status) {
+        if (mLastSlideViewWithStatusOn != null
+                && mLastSlideViewWithStatusOn != view) {
+            mLastSlideViewWithStatusOn.shrink();
+        }
+
+        if (status == SLIDE_STATUS_ON) {
+            mLastSlideViewWithStatusOn = (SlideView) view;
+        }
+    }
+
     class ViewHolder {
         private TextView orderId;
         private ImageView urgent;
@@ -274,5 +272,44 @@ public class BusinessLeaderAdapter extends BaseAdapter {
         private TextView flag;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;
+        public ViewGroup deleteHolder;
+
+        ViewHolder(View view) {
+            orderId = (TextView) view.findViewById(
+                    R.id.listview_item_business_leader_order_id_tv);
+            completeInfo = (Button) view.findViewById(
+                    R.id.listview_item_business_leader_complete_info_btn);
+            suppliesQuery = (Button) view.findViewById(
+                    R.id.listview_item_business_leader_query_supplies_btn);
+            machineApply = (Button) view.findViewById(
+                    R.id.listview_item_business_leader_machine_apply_btn);
+            progress = (Button) view.findViewById(
+                    R.id.listview_item_business_leader_progress_btn);
+            info = (Button) view.findViewById(
+                    R.id.listview_item_business_leader_info_btn);
+            haveSend = (Button) view.findViewById(
+                    R.id.listview_item_business_leader_have_send_btn);
+            myOrder = (Button) view.findViewById(
+                    R.id.listview_item_business_leader_my_order_btn);
+            urgent = (ImageView) view.findViewById(
+                    R.id.listview_item_business_leader_urgent_iv);
+            type = (TextView) view.findViewById(
+                    R.id.listview_item_business_leader_type_tv);
+            state = (TextView) view.findViewById(
+                    R.id.listview_item_business_leader_state_tv);
+            receivedTime = (TextView) view.findViewById(
+                    R.id.listview_item_business_leader_received_time_tv);
+            deadline = (TextView) view.findViewById(
+                    R.id.listview_item_business_leader_deadline_tv);
+            temInfo = (TextView) view.findViewById(
+                    R.id.listview_item_business_leader_tem_info_tv);
+            flag = (TextView) view.findViewById(
+                    R.id.listview_item_business_leader_flag_tv);
+            bg_ll = (LinearLayout) view.findViewById(
+                    R.id.listview_item_business_leader_bg_ll);
+            btn_rl = (RelativeLayout) view.findViewById(
+                    R.id.listview_item_business_leader_rl);
+            deleteHolder = (ViewGroup) view.findViewById(R.id.holder);
+        }
     }
 }

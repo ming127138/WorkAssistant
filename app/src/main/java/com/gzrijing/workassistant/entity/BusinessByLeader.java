@@ -1,10 +1,13 @@
 package com.gzrijing.workassistant.entity;
 
 
+import com.gzrijing.workassistant.widget.SlideView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class BusinessByLeader {
+    private int id;                         //数据库ID
     private String orderId;                 //工程编码
     private String type;                    //工程类型
     private String state;                   //工程状态
@@ -15,11 +18,13 @@ public class BusinessByLeader {
     private String flag;
     private List<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();   //详细信息
     private List<PicUrl> picUrls = new ArrayList<PicUrl>();     //图片URL
+    private SlideView slideView;
 
     public BusinessByLeader() {
     }
 
-    public BusinessByLeader(String orderId, String type, String state, String receivedTime, String deadline, boolean urgent, int temInfoNum, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls) {
+    public BusinessByLeader(int id, String orderId, String type, String state, String receivedTime, String deadline, boolean urgent, int temInfoNum, String flag, List<DetailedInfo> detailedInfos, List<PicUrl> picUrls, SlideView slideView) {
+        this.id = id;
         this.orderId = orderId;
         this.type = type;
         this.state = state;
@@ -30,6 +35,15 @@ public class BusinessByLeader {
         this.flag = flag;
         this.detailedInfos = detailedInfos;
         this.picUrls = picUrls;
+        this.slideView = slideView;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getOrderId() {
@@ -110,5 +124,13 @@ public class BusinessByLeader {
 
     public void setPicUrls(List<PicUrl> picUrls) {
         this.picUrls = picUrls;
+    }
+
+    public SlideView getSlideView() {
+        return slideView;
+    }
+
+    public void setSlideView(SlideView slideView) {
+        this.slideView = slideView;
     }
 }
