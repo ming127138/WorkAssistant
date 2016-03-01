@@ -23,11 +23,8 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessWorkerAdapter;
 import com.gzrijing.workassistant.db.BusinessData;
-import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
-import com.gzrijing.workassistant.service.GetInspectionService;
-import com.gzrijing.workassistant.service.GetSewageWellsService;
 import com.gzrijing.workassistant.util.DateUtil;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
@@ -120,6 +117,7 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
             order.setReceivedTime(data.getReceivedTime());
             order.setDeadline(data.getDeadline());
             order.setFlag(data.getFlag());
+            order.setRecordFileName(data.getRecordFileName());
             orderListByWorker.add(order);
         }
     }
@@ -162,10 +160,6 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
             }
         });
 
-
-//        Intent serviceIntent = new Intent(getActivity(), GetInspectionService.class);
-//        serviceIntent.putExtra("userNo", userNo);
-//        getActivity().startService(serviceIntent);
     }
 
     private void getSewageWellsOrder() {
@@ -206,10 +200,6 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
             }
         });
 
-
-//        Intent serviceIntent = new Intent(getActivity(), GetSewageWellsService.class);
-//        serviceIntent.putExtra("userNo", userNo);
-//        getActivity().startService(serviceIntent);
     }
 
     private void initViews() {

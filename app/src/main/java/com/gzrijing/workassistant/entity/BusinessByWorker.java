@@ -10,7 +10,8 @@ public class BusinessByWorker {
     private String deadline;                //工程期限
     private boolean urgent;                 //工程是否紧急
     private int temInfoNum;                 //标记有多少条未查看的临时信息
-    private String flag;
+    private String flag;                    //状态标识
+    private String recordFileName;          //录音文件名
     private ArrayList<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();   //详细信息
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();     //图片URL
     private ArrayList<Inspection> InspectionInfos = new ArrayList<Inspection>(); //巡查任务点
@@ -18,7 +19,7 @@ public class BusinessByWorker {
     public BusinessByWorker() {
     }
 
-    public BusinessByWorker(String orderId, String type, String state, String receivedTime, String deadline, boolean urgent, int temInfoNum, String flag, ArrayList<DetailedInfo> detailedInfos, ArrayList<PicUrl> picUrls, ArrayList<Inspection> inspectionInfos) {
+    public BusinessByWorker(String orderId, String type, String state, String receivedTime, String deadline, boolean urgent, int temInfoNum, String flag, String recordFileName, ArrayList<DetailedInfo> detailedInfos, ArrayList<PicUrl> picUrls, ArrayList<Inspection> inspectionInfos) {
         this.orderId = orderId;
         this.type = type;
         this.state = state;
@@ -27,6 +28,7 @@ public class BusinessByWorker {
         this.urgent = urgent;
         this.temInfoNum = temInfoNum;
         this.flag = flag;
+        this.recordFileName = recordFileName;
         this.detailedInfos = detailedInfos;
         this.picUrls = picUrls;
         InspectionInfos = inspectionInfos;
@@ -94,6 +96,14 @@ public class BusinessByWorker {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getRecordFileName() {
+        return recordFileName;
+    }
+
+    public void setRecordFileName(String recordFileName) {
+        this.recordFileName = recordFileName;
     }
 
     public ArrayList<DetailedInfo> getDetailedInfos() {

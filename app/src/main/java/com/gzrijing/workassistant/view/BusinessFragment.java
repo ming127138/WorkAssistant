@@ -33,10 +33,12 @@ import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.gzrijing.workassistant.service.GetWorkerBusinessService;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
+import com.gzrijing.workassistant.util.VoiceUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -143,6 +145,7 @@ public class BusinessFragment extends Fragment {
                     @Override
                     public void run() {
                         ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -160,6 +163,9 @@ public class BusinessFragment extends Fragment {
         DataSupport.updateAll(TimeData.class, values, "userNo = ?", userNo);
 
         List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(data);
+        if(list.size() == 0){
+            pDialog.dismiss();
+        }
         for (final BusinessByLeader order : list) {
             count+=2;
             BusinessData data1 = new BusinessData();
@@ -366,6 +372,7 @@ public class BusinessFragment extends Fragment {
                     @Override
                     public void run() {
                         ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -382,6 +389,9 @@ public class BusinessFragment extends Fragment {
         DataSupport.updateAll(TimeData.class, values, "userNo = ?", userNo);
 
         List<BusinessByWorker> list = JsonParseUtils.getWorkerBusiness(data);
+        if(list.size() == 0){
+            pDialog.dismiss();
+        }
         for (final BusinessByWorker order : list) {
             count+=2;
             BusinessData data1 = new BusinessData();
@@ -393,6 +403,35 @@ public class BusinessFragment extends Fragment {
             data1.setReceivedTime(order.getReceivedTime());
             data1.setDeadline(order.getDeadline());
             data1.setFlag(order.getFlag());
+            data1.setRecordFileName(order.getRecordFileName());
+            if (order.getRecordFileName() != null && !order.getRecordFileName().equals("")) {
+                String url = HttpUtils.voiceURLPath + order.getRecordFileName();
+                File file = VoiceUtil.getVoicePath(getActivity(), userNo, order.getOrderId());
+                HttpUtils.downloadFile(url, file, new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(final String response) {
+                        Log.e("voice", response);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!response.equals("ok")) {
+                                    ToastUtil.showToast(getActivity(), order.getOrderId() + "下载录音文件失败", Toast.LENGTH_SHORT);
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
+                            }
+                        });
+                    }
+                });
+            }
             List<DetailedInfo> infos = order.getDetailedInfos();
             for (DetailedInfo info : infos) {
                 DetailedInfoData data2 = new DetailedInfoData();

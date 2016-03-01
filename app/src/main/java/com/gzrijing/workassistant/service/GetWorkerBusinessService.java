@@ -27,6 +27,7 @@ import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
+import com.gzrijing.workassistant.util.VoiceUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -59,12 +60,12 @@ public class GetWorkerBusinessService extends IntentService {
         userNo = sp.getString("userNo", "");
         String userRank = sp.getString("userRank", "");
 
-        if(userRank.equals("0")){
+        if (userRank.equals("0")) {
             List<TimeData> timeDataList = DataSupport.select("time").where("userNo = ?", userNo).find(TimeData.class);
             String time = "2016-1-10 10:00:00";
-            if(!timeDataList.toString().equals("[]")){
+            if (!timeDataList.toString().equals("[]")) {
                 time = timeDataList.get(0).getTime();
-            }else {
+            } else {
                 TimeData timeData = new TimeData();
                 timeData.setTime(time);
                 timeData.setUserNo(userNo);
@@ -95,7 +96,7 @@ public class GetWorkerBusinessService extends IntentService {
                     });
                 }
             });
-        }else{
+        } else {
             sendNotification1();
         }
 
@@ -110,6 +111,7 @@ public class GetWorkerBusinessService extends IntentService {
         ContentValues values = new ContentValues();
         values.put("time", time);
         DataSupport.updateAll(TimeData.class, values, "userNo = ?", userNo);
+
         List<BusinessByWorker> list = JsonParseUtils.getWorkerBusiness(data);
         for (final BusinessByWorker order : list) {
             BusinessData data1 = new BusinessData();
@@ -121,6 +123,36 @@ public class GetWorkerBusinessService extends IntentService {
             data1.setReceivedTime(order.getReceivedTime());
             data1.setDeadline(order.getDeadline());
             data1.setFlag(order.getFlag());
+            data1.setRecordFileName(order.getRecordFileName());
+            if (order.getRecordFileName() != null && !order.getRecordFileName().equals("")) {
+                String url = HttpUtils.voiceURLPath + order.getRecordFileName();
+                File dir = VoiceUtil.getVoicePath(this, userNo, order.getOrderId());
+                HttpUtils.downloadFile(url, dir, new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(final String response) {
+                        Log.e("response", response);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!response.equals("ok")) {
+                                    ToastUtil.showToast(GetWorkerBusinessService.this, order.getOrderId() + "下载录音文件失败", Toast.LENGTH_SHORT);
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.showToast(GetWorkerBusinessService.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                            }
+                        });
+                    }
+                });
+            }
+
             List<DetailedInfo> infos = order.getDetailedInfos();
             for (DetailedInfo info : infos) {
                 DetailedInfoData data2 = new DetailedInfoData();
@@ -129,6 +161,7 @@ public class GetWorkerBusinessService extends IntentService {
                 data2.save();
                 data1.getDetailedInfoList().add(data2);
             }
+
             List<PicUrl> picUrls = order.getPicUrls();
             for (final PicUrl picUrl : picUrls) {
                 mImageLoader.loadImage(HttpUtils.imageURLPath + "/Pic/" + picUrl.getPicUrl(), new SimpleImageLoadingListener() {

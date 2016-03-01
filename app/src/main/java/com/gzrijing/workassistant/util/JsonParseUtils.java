@@ -1,5 +1,7 @@
 package com.gzrijing.workassistant.util;
 
+import android.util.Log;
+
 import com.gzrijing.workassistant.entity.Acceptance;
 import com.gzrijing.workassistant.entity.Accident;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
@@ -230,6 +232,17 @@ public class JsonParseUtils {
                     }
 
                     businessByWorker.setPicUrls(picUrls);
+                }
+                if (!jsonObject.getString("SoundUri").equals("")) {
+                    JSONArray jsonArray2 = jsonObject.getJSONArray("SoundUri");
+                    for (int k = 0; k < jsonArray2.length(); k++) {
+                        JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
+                        String url = jsonObject2.getString("SoundUri");
+                        int index = url.lastIndexOf("/");
+                        url = url.substring(index + 1);
+                        Log.e("url", url);
+                        businessByWorker.setRecordFileName(url);
+                    }
                 }
                 businessByWorker.setDetailedInfos(infos);
                 list.add(businessByWorker);

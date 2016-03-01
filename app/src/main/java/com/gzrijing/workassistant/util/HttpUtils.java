@@ -3,6 +3,7 @@ package com.gzrijing.workassistant.util;
 import android.util.Log;
 
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
+import com.nostra13.universalimageloader.utils.L;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -28,6 +29,10 @@ public class HttpUtils {
      * 图片请求路径
      */
     public static final String imageURLPath = "http://120.24.62.15:83";
+    /**
+     * 音频请求路径
+     */
+    public static final String voiceURLPath = "http://120.24.62.15:83//Sound/";
 
     private static OkHttpClient mOkHttpClient = new OkHttpClient();
 
@@ -77,7 +82,7 @@ public class HttpUtils {
     }
 
 
-    public static void downloadFile(final String url, final String fileDir,
+    public static void downloadFile(final String url, final File dir,
                                     final HttpCallbackListener listener) {
         new Thread(new Runnable() {
             @Override
@@ -86,6 +91,7 @@ public class HttpUtils {
                 mOkHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Request request, IOException e) {
+                        Log.e("voice request", request.toString());
                         if (listener != null) {
                             listener.onError(e);
                         }
@@ -100,7 +106,7 @@ public class HttpUtils {
                             FileOutputStream fos = null;
                             try {
                                 is = response.body().byteStream();
-                                File file = new File(fileDir, getFileName(url));
+                                File file = new File(dir, getFileName(url));
                                 fos = new FileOutputStream(file);
                                 while ((len = is.read(buf)) != -1) {
                                     fos.write(buf, 0, len);
@@ -110,6 +116,7 @@ public class HttpUtils {
                                     listener.onFinish("ok");
                                 }
                             } catch (IOException e) {
+                                Log.e("eeeee", e.toString());
                                 if (listener != null) {
                                     listener.onError(e);
                                 }
@@ -138,5 +145,6 @@ public class HttpUtils {
         int separatorIndex = path.lastIndexOf("/");
         return (separatorIndex < 0) ? path : path.substring(separatorIndex + 1, path.length());
     }
+
 
 }

@@ -16,6 +16,7 @@ public class BusinessData extends DataSupport {
     private boolean urgent;                 //工程是否紧急
     private int temInfoNum;                 //标记有多少条未查看的临时信息
     private String flag;                    //状态标识
+    private String recordFileName;          //录音文件名
     private List<SuppliesNoData> suppliesNoList = new ArrayList<SuppliesNoData>();  //材料单号
     private List<MachineNoData> machineNoList = new ArrayList<MachineNoData>(); //机械单号
     private List<SuppliesData> suppliesDataList = new ArrayList<SuppliesData>();//材料清单
@@ -101,6 +102,14 @@ public class BusinessData extends DataSupport {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getRecordFileName() {
+        return recordFileName;
+    }
+
+    public void setRecordFileName(String recordFileName) {
+        this.recordFileName = recordFileName;
     }
 
     public List<SuppliesNoData> getSuppliesNoList() {

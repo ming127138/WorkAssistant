@@ -31,6 +31,7 @@ public class DetailedInfoActivity extends BaseActivity {
     private List<DetailedInfo> infos = new ArrayList<DetailedInfo>();
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
     private DetailedInfoAdapter adapter;
+    private String recordFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +65,19 @@ public class DetailedInfoActivity extends BaseActivity {
             picUrls.add(picUrl);
         }
 
+        recordFileName = businessData.getRecordFileName();
+        if (recordFileName != null && !recordFileName.equals("")) {
+            DetailedInfo info = new DetailedInfo();
+            info.setKey("录音文件：");
+            info.setValue("录音附件点击查看." + recordFileName.split("\\.")[1]);
+            infos.add(info);
+        }
+
         if (picUrls.size() > 0) {
             DetailedInfo info = new DetailedInfo();
             infos.add(info);
         }
+
     }
 
     private void initViews() {
@@ -76,7 +86,7 @@ public class DetailedInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv_info = (ListView) findViewById(R.id.detailed_info_lv);
-        adapter = new DetailedInfoAdapter(this, infos, picUrls, userNo, orderId);
+        adapter = new DetailedInfoAdapter(this, infos, picUrls, recordFileName, userNo, orderId);
         lv_info.setAdapter(adapter);
     }
 

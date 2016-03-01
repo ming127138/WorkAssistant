@@ -22,6 +22,7 @@ import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.MD5Encryptor;
+import com.gzrijing.workassistant.util.ToastUtil;
 import com.igexin.sdk.PushManager;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
@@ -60,11 +61,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //初始化推送服务
         PushManager.getInstance().initialize(getApplicationContext());
         ServiceOpenAndClose serviceOpenAndClose = DataSupport.find(ServiceOpenAndClose.class, 1);
-        if(serviceOpenAndClose == null){
+        if (serviceOpenAndClose == null) {
             ServiceOpenAndClose service = new ServiceOpenAndClose();
             service.setPushService("1");
             service.save();
-        }else{
+        } else {
             ContentValues values = new ContentValues();
             values.put("pushService", "1");
             DataSupport.update(ServiceOpenAndClose.class, values, 1);
@@ -145,9 +146,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void login() {
-        if(clientId == null){
-            Toast.makeText(LoginActivity.this, "与服务器断开连接",
-                    Toast.LENGTH_SHORT).show();
+        if (clientId == null) {
+            ToastUtil.showToast(this, "clientId == null, 请重启应用", Toast.LENGTH_SHORT);
             return;
         }
         pDialog = new ProgressDialog(this);
@@ -199,13 +199,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    Toast.makeText(LoginActivity.this, "与服务器断开连接",
-                            Toast.LENGTH_SHORT).show();
+                    ToastUtil.showToast(LoginActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     pDialog.cancel();
                     break;
                 case 1:
-                    Toast.makeText(LoginActivity.this, "用户账号与密码不匹配",
-                            Toast.LENGTH_SHORT).show();
+                    ToastUtil.showToast(LoginActivity.this, "用户账号与密码不匹配", Toast.LENGTH_SHORT);
                     pDialog.cancel();
                     break;
                 case 2:
@@ -220,8 +218,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("fragId", "0");
                     startActivity(intent);
-                    Toast.makeText(LoginActivity.this, "欢迎" + user.getUserName() + "登录",
-                            Toast.LENGTH_SHORT).show();
+                    ToastUtil.showToast(LoginActivity.this, "欢迎" + user.getUserName() + "登录", Toast.LENGTH_SHORT);
                     pDialog.cancel();
                     finish();
                     break;

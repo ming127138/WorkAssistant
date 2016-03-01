@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +43,8 @@ import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
 import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
 
 import org.json.JSONArray;
@@ -49,6 +53,9 @@ import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,6 +83,9 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     private TextView tv_record;
     private TextView tv_delRecord;
     private File recordFile;
+    private Handler handler = new Handler();
+    private ProgressDialog pDialog;
+    private MediaPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +155,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
                 }
             }
         });
+
     }
 
     @Override
@@ -181,9 +192,25 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     }
 
     private void getRecord() {
-        if(tv_record.getText().toString().equals("")){
+        if (tv_record.getText().toString().equals("")) {
             Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
             startActivityForResult(intent, 30);
+        } else {
+            player = MediaPlayer.create(this, Uri.parse(recordFile.getPath()));
+            player.start();
+            pDialog = new ProgressDialog(this);
+            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pDialog.setMessage("正在播放录音...");
+            pDialog.show();
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.release();
+                    if(pDialog != null){
+                        pDialog.dismiss();
+                    }
+                }
+            });
         }
     }
 
@@ -306,6 +333,10 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     }
 
     private void distribute() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在加载数据...");
+        pDialog.show();
         StringBuilder sb = new StringBuilder();
         for (Subordinate sub : subordinates) {
             if (sub.isCheck()) {
@@ -333,7 +364,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         if (!jsonArray.toString().equals("[]")) {
             jsonData = jsonArray.toString();
         }
-        RequestBody requestBody = new FormEncodingBuilder()
+        final RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "doappoint")
                 .add("userno", userNo)
                 .add("fileno", orderId)
@@ -344,16 +375,23 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
                 .build();
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
-            public void onFinish(String response) {
+            public void onFinish(final String response) {
                 Log.e("response", response);
-                Message msg;
-                if (response.substring(0, 1).equals("E")) {
-                    msg = handler.obtainMessage(1);
-                } else {
-                    msg = handler.obtainMessage(0);
-                    msg.obj = response;
-                }
-                handler.sendMessage(msg);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.substring(0, 1).equals("E")) {
+                            ToastUtil.showToast(DistributeActivity.this, "派工失败", Toast.LENGTH_SHORT);
+                            pDialog.dismiss();
+                        } else {
+                            if (recordFile == null) {
+                                saveInfo(response);
+                            } else {
+                                uploadRecord(response);
+                            }
+                        }
+                    }
+                });
             }
 
             @Override
@@ -362,29 +400,71 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void run() {
                         ToastUtil.showToast(DistributeActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }
         });
     }
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    String id = (String) msg.obj;
-                    saveInfo(id);
-                    break;
+    private void uploadRecord(String id) {
+        String[] key = {"cmd", "userno", "fileno", "togetherid"};
+        String[] value = {"uploadappointinstallsound", userNo, orderId, id};
 
-                case 1:
-                    ToastUtil.showToast(DistributeActivity.this, "派工失败", Toast.LENGTH_SHORT);
-                    break;
-            }
+        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+        for (int i = 0; i < key.length; i++) {
+            builder.addFormDataPart(key[i], value[i]);
         }
-    };
+
+        String fileName = recordFile.getName();
+        RequestBody fileBody = RequestBody.create(MediaType.parse(guessMimeType(fileName)), recordFile);
+        builder.addFormDataPart("", fileName, fileBody);
+
+        HttpUtils.sendHttpPostRequest(builder.build(), new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("responseVoice", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.substring(0, 1).equals("E")) {
+                            ToastUtil.showToast(DistributeActivity.this, "上传录音失败", Toast.LENGTH_SHORT);
+                            pDialog.dismiss();
+                        } else {
+                            recordFile.delete();
+                            recordFile = null;
+                            saveInfo(response);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(DistributeActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
+    private String guessMimeType(String path) {
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String contentTypeFor = fileNameMap.getContentTypeFor(path);
+        if (contentTypeFor == null) {
+            contentTypeFor = "application/octet-stream";
+        }
+        return contentTypeFor;
+    }
 
     private void saveInfo(String id) {
+        if (pDialog != null) {
+            pDialog.dismiss();
+        }
         ContentValues values = new ContentValues();
         values.put("state", "已派工");
         DataSupport.updateAll(BusinessData.class, values, "user = ? and orderId = ?", userNo, orderId);
@@ -404,7 +484,6 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
                 imageUrls = JsonParseUtils.getImageUrl(response);
                 adapter = new DistributeGriViewAdapter(DistributeActivity.this, picUrls, imageUrls);
                 gv_image.setAdapter(adapter);
-
             }
         }
     };
