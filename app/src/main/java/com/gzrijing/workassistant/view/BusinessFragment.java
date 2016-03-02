@@ -373,6 +373,8 @@ public class BusinessFragment extends Fragment {
                     public void run() {
                         ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
                         pDialog.dismiss();
+                        DataSupport.deleteAll(BusinessData.class);
+                        DataSupport.deleteAll(TimeData.class);
                     }
                 });
             }
@@ -427,6 +429,8 @@ public class BusinessFragment extends Fragment {
                             @Override
                             public void run() {
                                 ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
+                                DataSupport.deleteAll(BusinessData.class);
+                                DataSupport.deleteAll(TimeData.class);
                             }
                         });
                     }

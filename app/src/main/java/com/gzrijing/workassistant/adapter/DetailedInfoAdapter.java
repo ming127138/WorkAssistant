@@ -88,7 +88,31 @@ public class DetailedInfoAdapter extends BaseAdapter {
             key.setText(list.get(position).getKey());
             value.setText(list.get(position).getValue());
             if (recordFileName != null && !recordFileName.equals("")) {
-                if (position + 2 == list.size()) {
+                if (picUrls.size() > 0 && position + 2 == list.size()) {
+                    value.setTextColor(convertView.getResources().getColor(R.color.blue));
+                    value.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            File recordDir = VoiceUtil.getVoicePath(context, userNo, orderId);
+                            File recordFile = new File(recordDir, recordFileName);
+                            player = MediaPlayer.create(context, Uri.parse(recordFile.getPath()));
+                            player.start();
+                            pDialog = new ProgressDialog(context);
+                            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            pDialog.setMessage("正在播放录音...");
+                            pDialog.show();
+                            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    mp.release();
+                                    pDialog.dismiss();
+                                }
+                            });
+                        }
+                    });
+                }
+
+                if (picUrls.size() == 0 && position + 1 == list.size()) {
                     value.setTextColor(convertView.getResources().getColor(R.color.blue));
                     value.setOnClickListener(new View.OnClickListener() {
                         @Override

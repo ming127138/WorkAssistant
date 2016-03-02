@@ -30,9 +30,8 @@
     <permission
         android:name="getui.permission.GetuiService.com.gzrijing.workassistant"
         android:protectionLevel="normal" />
+
     <!-- 个推SDK权限配置结束 -->
-
-
     <application
         android:name=".base.MyApplication"
         android:allowBackup="true"
@@ -424,6 +423,10 @@
         <activity
             android:name=".view.SettingActivity"
             android:label="设置"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.BusinessHaveSendByAllActivity"
+            android:label="已派任务"
             android:screenOrientation="portrait" />
         <!-- app activity -->
 

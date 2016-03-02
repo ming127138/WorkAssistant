@@ -88,8 +88,8 @@ public class ReportProblemFragment extends Fragment implements View.OnClickListe
                 "saveUser", getActivity().MODE_PRIVATE);
         userNo = app.getString("userNo", "");
 
-        Intent intent = getActivity().getIntent();
-        orderId = intent.getStringExtra("orderId");
+        Bundle bundle = getArguments();
+        orderId = bundle.getString("orderId");
 
         IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.reportProblemFragment");
         getActivity().registerReceiver(mBroadcastReceiver, intentFilter);

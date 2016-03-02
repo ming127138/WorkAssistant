@@ -30,8 +30,8 @@ dependencies {
     compile files('libs/GetuiSDK2.7.0.0.jar')
     compile files('libs/universal-image-loader-1.9.4.jar')
     compile files('libs/zxing.jar')
+    compile files('libs/butterknife-7.0.1.jar')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
-    compile files('libs/butterknife-7.0.1.jar')
 }

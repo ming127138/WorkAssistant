@@ -67,8 +67,8 @@ public class ReportProjectAmountFragment extends Fragment implements View.OnClic
                 "saveUser", getActivity().MODE_PRIVATE);
         userNo = app.getString("userNo", "");
 
-        Intent intent = getActivity().getIntent();
-        orderId = intent.getStringExtra("orderId");
+        Bundle bundle = getArguments();
+        orderId = bundle.getString("orderId");
 
         getSupplies();
 

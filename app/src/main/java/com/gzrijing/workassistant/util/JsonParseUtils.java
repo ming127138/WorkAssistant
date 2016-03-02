@@ -7,6 +7,7 @@ import com.gzrijing.workassistant.entity.Accident;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.entity.BusinessHaveSend;
+import com.gzrijing.workassistant.entity.BusinessHaveSendByAll;
 import com.gzrijing.workassistant.entity.DetailedInfo;
 import com.gzrijing.workassistant.entity.Inspection;
 import com.gzrijing.workassistant.entity.LeaderMachineApplyBill;
@@ -24,7 +25,6 @@ import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.ProblemType;
 import com.gzrijing.workassistant.entity.Progress;
 import com.gzrijing.workassistant.entity.QueryProjectAmount;
-import com.gzrijing.workassistant.entity.ReportComplete;
 import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
 import com.gzrijing.workassistant.entity.ReturnMachine;
@@ -2216,6 +2216,35 @@ public class JsonParseUtils {
                 subordinateLocation.setLastTime(lastTime);
                 subordinateLocation.setDoingTask(doingTask);
                 list.add(subordinateLocation);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取所有已派发的工程
+     */
+    public static ArrayList<BusinessHaveSendByAll> getBusinessHaveSendByAll(String jsonData) {
+        ArrayList<BusinessHaveSendByAll> list = new ArrayList<BusinessHaveSendByAll>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String orderId = jsonObject.getString("FileNo");
+                String branchId = jsonObject.getString("AppointInstallID");
+                String workerName = jsonObject.getString("InstallUser");
+                String workerContent = jsonObject.getString("InstallContent");
+                String deadline = jsonObject.getString("EstimateFinishDate").replace("/", "-");
+
+                BusinessHaveSendByAll business = new BusinessHaveSendByAll();
+                business.setOrderId(orderId);
+                business.setBranchId(branchId);
+                business.setWorkerName(workerName);
+                business.setWorkContent(workerContent);
+                business.setDeadline(deadline);
+                list.add(business);
             }
         } catch (JSONException e) {
             e.printStackTrace();

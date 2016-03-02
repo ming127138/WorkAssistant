@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.view.AccidentsActivity;
+import com.gzrijing.workassistant.view.BusinessHaveSendByAllActivity;
 import com.gzrijing.workassistant.view.EntrustActivity;
 import com.gzrijing.workassistant.view.LeaderMachineApplyBillListActivity;
 import com.gzrijing.workassistant.view.LeaderMachineReturnBillListActivity;
@@ -87,6 +88,11 @@ public class ManageGridViewAdapter extends BaseAdapter {
 
                 if(position == 4){
                     Intent intent = new Intent(context, LeaderMachineReturnBillListActivity.class);
+                    context.startActivity(intent);
+                }
+
+                if(position == 5){
+                    Intent intent = new Intent(context, BusinessHaveSendByAllActivity.class);
                     context.startActivity(intent);
                 }
 
