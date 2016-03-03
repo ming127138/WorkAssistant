@@ -13,8 +13,12 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.SortByWorkerNameExpandableAdapter;
 import com.gzrijing.workassistant.entity.BusinessHaveSendByAll;
 import com.gzrijing.workassistant.entity.Subordinate;
+import com.gzrijing.workassistant.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 public class SortByWorkerNameFragment extends Fragment {
 
@@ -52,6 +56,23 @@ public class SortByWorkerNameFragment extends Fragment {
                     }
                 }
             }
+        }
+        sequence();
+    }
+
+    private void sequence() {
+        if (subordinateList != null && subordinateList.size() > 1) {
+            Collections.sort(subordinateList, new Comparator<Subordinate>() {
+                @Override
+                public int compare(Subordinate lhs, Subordinate rhs) {
+                    int size1 = lhs.getBusinessList().size();
+                    int size2 = rhs.getBusinessList().size();
+                    if (size1 > size2) {
+                        return 1;
+                    }
+                    return -1;
+                }
+            });
         }
     }
 
