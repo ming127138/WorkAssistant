@@ -6,7 +6,7 @@
 
     <ExpandableListView
         android:id="@+id/sort_by_worker_name_fragment_elv"
+        android:groupIndicator="@null"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
 </FrameLayout>

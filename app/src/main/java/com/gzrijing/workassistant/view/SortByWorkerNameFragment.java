@@ -1,7 +1,6 @@
 package com.gzrijing.workassistant.view;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.adapter.SortByWorkerNameExpandableAdapter;
 import com.gzrijing.workassistant.entity.BusinessHaveSendByAll;
 import com.gzrijing.workassistant.entity.Subordinate;
 
@@ -37,6 +37,22 @@ public class SortByWorkerNameFragment extends Fragment {
         Bundle bundle = getArguments();
         businessList = bundle.getParcelableArrayList("businessList");
         subordinateList = bundle.getParcelableArrayList("subordinateList");
+
+        for (Subordinate subordinate : subordinateList) {
+            for (BusinessHaveSendByAll business : businessList) {
+                if (business.getWorkerName().indexOf(",") == -1
+                        && subordinate.getName().equals(business.getWorkerName())) {
+                    subordinate.getBusinessList().add(business);
+                } else {
+                    String[] str = business.getWorkerName().split(",");
+                    for (int i = 0; i < str.length; i++) {
+                        if (str[i].equals(subordinate.getName())) {
+                            subordinate.getBusinessList().add(business);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -51,7 +67,8 @@ public class SortByWorkerNameFragment extends Fragment {
 
     private void initViews() {
         elv_business = (ExpandableListView) layoutView.findViewById(R.id.sort_by_worker_name_fragment_elv);
-
+        SortByWorkerNameExpandableAdapter adapter = new SortByWorkerNameExpandableAdapter(getActivity(), subordinateList);
+        elv_business.setAdapter(adapter);
     }
 
 }

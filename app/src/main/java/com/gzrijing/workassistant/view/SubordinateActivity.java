@@ -160,13 +160,13 @@ public class SubordinateActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isCheck) {
                     for (Subordinate subordinate : subordinates) {
-                        subordinate.setIsCheck(false);
+                        subordinate.setCheck(false);
                     }
                     names.clear();
                     iv_checkAll.setImageResource(R.drawable.login_checkbox_off);
                 } else {
                     for (int i = 0; i < subordinates.size(); i++) {
-                        subordinates.get(i).setIsCheck(true);
+                        subordinates.get(i).setCheck(true);
                         names.put(i, subordinates.get(i).getName());
                     }
                     iv_checkAll.setImageResource(R.drawable.login_checkbox_on);

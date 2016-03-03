@@ -79,10 +79,10 @@ public class SubordinateAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (isCheck) {
-                    subordinates.get(position).setIsCheck(false);
+                    subordinates.get(position).setCheck(false);
                     names.remove(position);
                 } else {
-                    subordinates.get(position).setIsCheck(true);
+                    subordinates.get(position).setCheck(true);
                     names.put(position, subordinates.get(position).getName());
                 }
                 notifyDataSetChanged();

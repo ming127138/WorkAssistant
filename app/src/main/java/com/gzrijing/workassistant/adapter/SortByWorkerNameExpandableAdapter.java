@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.entity.OrderTypeSupplies;
-import com.gzrijing.workassistant.entity.Supplies;
+import com.gzrijing.workassistant.entity.BusinessHaveSendByAll;
+import com.gzrijing.workassistant.entity.Subordinate;
 
 import java.util.ArrayList;
 
@@ -18,10 +18,9 @@ public class SortByWorkerNameExpandableAdapter extends BaseExpandableListAdapter
 
     private Context context;
     private LayoutInflater listContainer;
-    private ArrayList<OrderTypeSupplies> groupList;
+    private ArrayList<Subordinate> groupList;
 
-    public SortByWorkerNameExpandableAdapter(Context context,
-                                             ArrayList<OrderTypeSupplies> groupList) {
+    public SortByWorkerNameExpandableAdapter(Context context, ArrayList<Subordinate> groupList) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.groupList = groupList;
@@ -35,7 +34,7 @@ public class SortByWorkerNameExpandableAdapter extends BaseExpandableListAdapter
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return groupList.get(groupPosition).getSuppliesList().size();
+        return groupList.get(groupPosition).getBusinessList().size();
     }
 
     @Override
@@ -45,7 +44,7 @@ public class SortByWorkerNameExpandableAdapter extends BaseExpandableListAdapter
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return groupList.get(groupPosition).getSuppliesList().get(childPosition);
+        return groupList.get(groupPosition).getBusinessList().get(childPosition);
     }
 
     @Override
@@ -69,40 +68,28 @@ public class SortByWorkerNameExpandableAdapter extends BaseExpandableListAdapter
     }
 
     @Override
-    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         GroupViewHolder v = null;
         if (convertView == null) {
             v = new GroupViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.elv_group_item_query_before_supplies, parent, false);
-            v.check = (ImageView) convertView.findViewById(R.id.elv_group_item_query_before_supplies_check_iv);
-            v.orderId = (TextView) convertView.findViewById(R.id.elv_group_item_query_before_supplies_order_id_tv);
+                    R.layout.elv_group_item_sort_by_worker_name, parent, false);
+            v.image = (ImageView) convertView.findViewById(R.id.elv_group_item_sort_by_worker_name_iv);
+            v.name = (TextView) convertView.findViewById(R.id.elv_group_item_sort_by_worker_name_name_tv);
+            v.num = (TextView) convertView.findViewById(R.id.elv_group_item_sort_by_worker_name_num_tv);
             convertView.setTag(v);
         } else {
             v = (GroupViewHolder) convertView.getTag();
         }
 
-        v.orderId.setText(groupList.get(groupPosition).getOrderId());
-        if(groupList.get(groupPosition).isCheck()){
-            v.check.setImageResource(R.drawable.login_checkbox_on);
-        }else{
-            v.check.setImageResource(R.drawable.login_checkbox_off);
-        }
+        v.name.setText(groupList.get(groupPosition).getName());
+        v.num.setText(groupList.get(groupPosition).getBusinessList().size()+"个任务");
 
-        v.check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(groupList.get(groupPosition).isCheck()){
-                   groupList.get(groupPosition).setCheck(false);
-                }else{
-                    for(OrderTypeSupplies group : groupList){
-                        group.setCheck(false);
-                    }
-                    groupList.get(groupPosition).setCheck(true);
-                }
-                notifyDataSetChanged();
-            }
-        });
+        if(isExpanded){
+            v.image.setImageResource(R.drawable.icon_arrow_down);
+        }else {
+            v.image.setImageResource(R.drawable.icon_red_dot);
+        }
         return convertView;
     }
 
@@ -112,34 +99,32 @@ public class SortByWorkerNameExpandableAdapter extends BaseExpandableListAdapter
         if (convertView == null) {
             v = new ChildViewHolder();
             convertView = listContainer.inflate(
-                    R.layout.elv_child_item_query_before_supplies, parent, false);
-            v.name = (TextView) convertView.findViewById(R.id.elv_child_item_query_before_supplies_name_tv);
-            v.spec = (TextView) convertView.findViewById(R.id.elv_child_item_query_before_supplies_spec_tv);
-            v.unit = (TextView) convertView.findViewById(R.id.elv_child_item_query_before_supplies_unit_tv);
-            v.applyNum = (TextView) convertView.findViewById(R.id.elv_child_item_query_before_supplies_num_tv);
+                    R.layout.elv_child_item_sort_by_worker_name, parent, false);
+            v.orderId = (TextView) convertView.findViewById(R.id.elv_child_item_sort_by_worker_name_order_id_tv);
+            v.content = (TextView) convertView.findViewById(R.id.elv_child_item_sort_by_worker_name_content_tv);
+            v.deadline = (TextView) convertView.findViewById(R.id.elv_child_item_sort_by_worker_name_deadline_tv);
             convertView.setTag(v);
         } else {
             v = (ChildViewHolder) convertView.getTag();
         }
 
-        Supplies child = groupList.get(groupPosition).getSuppliesList().get(childPosition);
-        v.name.setText(child.getName());
-        v.spec.setText(child.getSpec());
-        v.unit.setText(child.getUnit());
-        v.applyNum.setText(child.getApplyNum());
+        BusinessHaveSendByAll child = groupList.get(groupPosition).getBusinessList().get(childPosition);
+        v.orderId.setText(child.getOrderId()+"————"+child.getBranchId());
+        v.content.setText(child.getWorkContent());
+        v.deadline.setText(child.getDeadline());
 
         return convertView;
     }
 
     class GroupViewHolder {
-        private ImageView check;
-        private TextView orderId;
+        private ImageView image;
+        private TextView name;
+        private TextView num;
     }
 
     class ChildViewHolder {
-        private TextView name;
-        private TextView spec;
-        private TextView unit;
-        private TextView applyNum;
+        private TextView orderId;
+        private TextView content;
+        private TextView deadline;
     }
 }
