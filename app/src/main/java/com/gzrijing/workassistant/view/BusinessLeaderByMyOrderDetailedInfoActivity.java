@@ -20,6 +20,7 @@ public class BusinessLeaderByMyOrderDetailedInfoActivity extends BaseActivity {
     private ArrayList<DetailedInfo> detailedInfos;
     private ArrayList<PicUrl> picUrlList = new ArrayList<PicUrl>();
     private BusinessLeaderByMyOrderDetailedInfoAdapter adapter;
+    private String recordFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,15 @@ public class BusinessLeaderByMyOrderDetailedInfoActivity extends BaseActivity {
         Intent intent = getIntent();
         detailedInfos = intent.getParcelableArrayListExtra("detailedInfo");
         ArrayList<PicUrl> picUrls = intent.getParcelableArrayListExtra("picUrlList");
+        recordFileName = intent.getStringExtra("recordFileName");
+
+        if (recordFileName != null && !recordFileName.equals("")) {
+            DetailedInfo info = new DetailedInfo();
+            info.setKey("录音文件：");
+            info.setValue("录音附件点击查看." + recordFileName.split("\\.")[1]);
+            detailedInfos.add(info);
+        }
+
         for (PicUrl picUrl : picUrls) {
             String picPath = "/Pic/" + picUrl.getPicUrl();
             picUrl.setPicUrl(picPath);
@@ -53,7 +63,7 @@ public class BusinessLeaderByMyOrderDetailedInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv_info = (ListView) findViewById(R.id.business_leader_by_my_order_detailed_info_lv);
-        adapter = new BusinessLeaderByMyOrderDetailedInfoAdapter(this, detailedInfos, picUrlList);
+        adapter = new BusinessLeaderByMyOrderDetailedInfoAdapter(this, detailedInfos, picUrlList, recordFileName);
         lv_info.setAdapter(adapter);
     }
 

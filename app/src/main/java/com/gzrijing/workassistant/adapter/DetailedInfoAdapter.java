@@ -100,6 +100,7 @@ public class DetailedInfoAdapter extends BaseAdapter {
                             pDialog = new ProgressDialog(context);
                             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                             pDialog.setMessage("正在播放录音...");
+                            pDialog.setCancelable(false);
                             pDialog.show();
                             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                 @Override
@@ -124,6 +125,7 @@ public class DetailedInfoAdapter extends BaseAdapter {
                             pDialog = new ProgressDialog(context);
                             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                             pDialog.setMessage("正在播放录音...");
+                            pDialog.setCancelable(false);
                             pDialog.show();
                             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                 @Override

@@ -214,6 +214,7 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
                 Intent intent = new Intent(context, BusinessLeaderByMyOrderDetailedInfoActivity.class);
                 intent.putParcelableArrayListExtra("detailedInfo", orderList.get(position).getDetailedInfos());
                 intent.putParcelableArrayListExtra("picUrlList", orderList.get(position).getPicUrls());
+                intent.putExtra("recordFileName", orderList.get(position).getRecordFileName());
                 context.startActivity(intent);
             }
         });
