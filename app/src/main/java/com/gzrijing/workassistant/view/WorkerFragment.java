@@ -110,6 +110,7 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
         List<BusinessData> list = DataSupport.where("user = ?", userNo).find(BusinessData.class);
         for (BusinessData data : list) {
             BusinessByWorker order = new BusinessByWorker();
+            order.setId(data.getId());
             order.setOrderId(data.getOrderId());
             order.setUrgent(data.isUrgent());
             order.setType(data.getType());

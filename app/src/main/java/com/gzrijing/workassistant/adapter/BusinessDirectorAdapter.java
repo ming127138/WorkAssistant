@@ -25,14 +25,11 @@ import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.util.VoiceUtil;
 import com.gzrijing.workassistant.view.BusinessHaveSendActivity;
-import com.gzrijing.workassistant.view.BusinessLeaderByMyOrderActivity;
-import com.gzrijing.workassistant.view.MachineApplyActivity;
-import com.gzrijing.workassistant.view.ProgressActivity;
-import com.gzrijing.workassistant.view.DistributeActivity;
-import com.gzrijing.workassistant.view.ReportInfoCompleteActivity;
-import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
-import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
+import com.gzrijing.workassistant.view.DistributeActivity;
+import com.gzrijing.workassistant.view.ProgressActivity;
+import com.gzrijing.workassistant.view.ReportInfoCompleteActivity;
+import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.widget.SlideView;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
@@ -41,7 +38,7 @@ import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
-public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSlideListener{
+public class BusinessDirectorAdapter extends BaseAdapter implements SlideView.OnSlideListener{
     private Context context;
     private LayoutInflater listContainer;
     private List<BusinessByLeader> orderList;
@@ -49,7 +46,7 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
     private Handler handler = new Handler();
     private SlideView mLastSlideViewWithStatusOn;
 
-    public BusinessLeaderAdapter(Context context, List<BusinessByLeader> orderList, String userNo) {
+    public BusinessDirectorAdapter(Context context, List<BusinessByLeader> orderList, String userNo) {
         this.context = context;
         listContainer = LayoutInflater.from(context);
         this.orderList = orderList;
@@ -72,12 +69,12 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
     }
 
     @Override
-    public View getView(final int position, final View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder v = null;
         SlideView slideView = (SlideView) convertView;
         if (slideView == null) {
             View itemView = listContainer.inflate(
-                    R.layout.listview_item_business_leader, parent, false);
+                    R.layout.listview_item_business_director, parent, false);
 
             slideView = new SlideView(context);
             slideView.setContentView(itemView);
@@ -114,25 +111,6 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
             }
         });
 
-        v.suppliesQuery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, SuppliesVerifyActivity.class);
-                intent.putExtra("orderId", orderList.get(position).getOrderId());
-                context.startActivity(intent);
-            }
-        });
-
-        v.machineApply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, MachineApplyActivity.class);
-                intent.putExtra("id", orderList.get(position).getId());
-                intent.putExtra("orderId", orderList.get(position).getOrderId());
-                context.startActivity(intent);
-            }
-        });
-
         v.info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,15 +134,6 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, BusinessHaveSendActivity.class);
-                intent.putExtra("orderId", orderList.get(position).getOrderId());
-                context.startActivity(intent);
-            }
-        });
-
-        v.myOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, BusinessLeaderByMyOrderActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }
@@ -272,12 +241,9 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
         private TextView deadline;
         private TextView temInfo;
         private Button completeInfo;
-        private Button suppliesQuery;
-        private Button machineApply;
         private Button progress;
         private Button info;
         private Button haveSend;
-        private Button myOrder;
         private TextView flag;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;
@@ -285,39 +251,33 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
 
         ViewHolder(View view) {
             orderId = (TextView) view.findViewById(
-                    R.id.listview_item_business_leader_order_id_tv);
+                    R.id.listview_item_business_director_order_id_tv);
             completeInfo = (Button) view.findViewById(
-                    R.id.listview_item_business_leader_complete_info_btn);
-            suppliesQuery = (Button) view.findViewById(
-                    R.id.listview_item_business_leader_query_supplies_btn);
-            machineApply = (Button) view.findViewById(
-                    R.id.listview_item_business_leader_machine_apply_btn);
+                    R.id.listview_item_business_director_complete_info_btn);
             progress = (Button) view.findViewById(
-                    R.id.listview_item_business_leader_progress_btn);
+                    R.id.listview_item_business_director_progress_btn);
             info = (Button) view.findViewById(
-                    R.id.listview_item_business_leader_info_btn);
+                    R.id.listview_item_business_director_info_btn);
             haveSend = (Button) view.findViewById(
-                    R.id.listview_item_business_leader_have_send_btn);
-            myOrder = (Button) view.findViewById(
-                    R.id.listview_item_business_leader_my_order_btn);
+                    R.id.listview_item_business_director_have_send_btn);
             urgent = (ImageView) view.findViewById(
-                    R.id.listview_item_business_leader_urgent_iv);
+                    R.id.listview_item_business_director_urgent_iv);
             type = (TextView) view.findViewById(
-                    R.id.listview_item_business_leader_type_tv);
+                    R.id.listview_item_business_director_type_tv);
             state = (TextView) view.findViewById(
-                    R.id.listview_item_business_leader_state_tv);
+                    R.id.listview_item_business_director_state_tv);
             receivedTime = (TextView) view.findViewById(
-                    R.id.listview_item_business_leader_received_time_tv);
+                    R.id.listview_item_business_director_received_time_tv);
             deadline = (TextView) view.findViewById(
-                    R.id.listview_item_business_leader_deadline_tv);
+                    R.id.listview_item_business_director_deadline_tv);
             temInfo = (TextView) view.findViewById(
-                    R.id.listview_item_business_leader_tem_info_tv);
+                    R.id.listview_item_business_director_tem_info_tv);
             flag = (TextView) view.findViewById(
-                    R.id.listview_item_business_leader_flag_tv);
+                    R.id.listview_item_business_director_flag_tv);
             bg_ll = (LinearLayout) view.findViewById(
-                    R.id.listview_item_business_leader_bg_ll);
+                    R.id.listview_item_business_director_bg_ll);
             btn_rl = (RelativeLayout) view.findViewById(
-                    R.id.listview_item_business_leader_rl);
+                    R.id.listview_item_business_director_rl);
             deleteHolder = (ViewGroup) view.findViewById(R.id.holder);
         }
     }

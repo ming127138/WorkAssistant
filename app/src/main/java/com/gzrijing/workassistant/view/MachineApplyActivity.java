@@ -85,6 +85,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Handler handler = new Handler();
     private BusinessData businessData;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +103,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
         userNo = app.getString("userNo", "");
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
+        id = intent.getIntExtra("id", -1);
 
         getDBData();
 
@@ -112,7 +114,7 @@ public class MachineApplyActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getDBData() {
-        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId).find(BusinessData.class, true).get(0);
+        businessData = DataSupport.find(BusinessData.class, id, true);
         List<MachineNoData> machineNoDataList = businessData.getMachineNoList();
         for (MachineNoData data : machineNoDataList) {
             if (data.getApplyId() != null && !data.getApplyId().equals("")) {

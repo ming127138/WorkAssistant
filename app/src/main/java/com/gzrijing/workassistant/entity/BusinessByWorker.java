@@ -1,8 +1,11 @@
 package com.gzrijing.workassistant.entity;
 
+import com.gzrijing.workassistant.widget.SlideView;
+
 import java.util.ArrayList;
 
 public class BusinessByWorker {
+    private int id;                      //数据库ID
     private String orderId;                 //工程编码
     private String type;                    //工程类型
     private String state;                   //工程状态
@@ -15,11 +18,13 @@ public class BusinessByWorker {
     private ArrayList<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();   //详细信息
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();     //图片URL
     private ArrayList<Inspection> InspectionInfos = new ArrayList<Inspection>(); //巡查任务点
+    private SlideView slideView;
 
     public BusinessByWorker() {
     }
 
-    public BusinessByWorker(String orderId, String type, String state, String receivedTime, String deadline, boolean urgent, int temInfoNum, String flag, String recordFileName, ArrayList<DetailedInfo> detailedInfos, ArrayList<PicUrl> picUrls, ArrayList<Inspection> inspectionInfos) {
+    public BusinessByWorker(int id, String orderId, String type, String state, String receivedTime, String deadline, boolean urgent, int temInfoNum, String flag, String recordFileName, ArrayList<DetailedInfo> detailedInfos, ArrayList<PicUrl> picUrls, ArrayList<Inspection> inspectionInfos, SlideView slideView) {
+        this.id = id;
         this.orderId = orderId;
         this.type = type;
         this.state = state;
@@ -32,6 +37,15 @@ public class BusinessByWorker {
         this.detailedInfos = detailedInfos;
         this.picUrls = picUrls;
         InspectionInfos = inspectionInfos;
+        this.slideView = slideView;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getOrderId() {
@@ -128,5 +142,13 @@ public class BusinessByWorker {
 
     public void setInspectionInfos(ArrayList<Inspection> inspectionInfos) {
         InspectionInfos = inspectionInfos;
+    }
+
+    public SlideView getSlideView() {
+        return slideView;
+    }
+
+    public void setSlideView(SlideView slideView) {
+        this.slideView = slideView;
     }
 }

@@ -47,9 +47,10 @@ public class DetailedInfoActivity extends BaseActivity {
         userNo = app.getString("userNo", "");
         Intent intent = getIntent();
         orderId = intent.getStringExtra("orderId");
+        int id = intent.getIntExtra("id", -1);
 
-        businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
-                .find(BusinessData.class, true).get(0);
+
+        businessData = DataSupport.find(BusinessData.class, id, true);
         List<DetailedInfoData> detailedDatas = businessData.getDetailedInfoList();
         for (DetailedInfoData data : detailedDatas) {
             DetailedInfo info = new DetailedInfo();

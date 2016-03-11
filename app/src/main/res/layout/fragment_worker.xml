@@ -51,7 +51,7 @@
             android:textSize="@dimen/sw_15dp" />
     </LinearLayout>
 
-    <ListView
+    <com.gzrijing.workassistant.widget.ListViewCompatByWorker
         android:id="@+id/fragment_worker_order_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

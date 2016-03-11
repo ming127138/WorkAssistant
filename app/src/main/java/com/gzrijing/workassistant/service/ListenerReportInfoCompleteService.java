@@ -4,10 +4,14 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 
+import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
+
+import org.litepal.crud.DataSupport;
 
 public class ListenerReportInfoCompleteService extends IntentService {
 
@@ -20,6 +24,15 @@ public class ListenerReportInfoCompleteService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         orderId = intent.getStringExtra("orderId");
+        String userNo = intent.getStringExtra("userNo");
+
+        ContentValues values = new ContentValues();
+        values.put("state", "已完成");
+        DataSupport.updateAll(BusinessData.class, values, "userNo = ? and orderId = ?", userNo, orderId);
+
+        Intent intent1 = new Intent("action.com.gzrijing.workassistant.LeaderFragment");
+        sendBroadcast(intent1);
+
         sendNotification();
 
     }

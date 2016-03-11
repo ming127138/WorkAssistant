@@ -148,7 +148,7 @@ public class MainReceiver extends BroadcastReceiver {
                                 if(cmd.equals("getfinishconstruction")){
                                     String orderId = jsonObject.getString("FileNo");
                                     if(!orderId.equals("")){
-                                        listenerReportInfoComplete(orderId);
+                                        listenerReportInfoComplete(orderId, userNo);
                                     }
                                 }
                                 if(cmd.equals("getmachineneedlist")){
@@ -324,9 +324,10 @@ public class MainReceiver extends BroadcastReceiver {
     /**
      * 监听是否有新的完工汇报信息
      */
-    private void listenerReportInfoComplete(String orderId){
+    private void listenerReportInfoComplete(String orderId, String userNo){
         Intent intent = new Intent(MyApplication.getContext(), ListenerReportInfoCompleteService.class);
         intent.putExtra("orderId", orderId);
+        intent.putExtra("userNo", userNo);
         MyApplication.getContext().startService(intent);
     }
 

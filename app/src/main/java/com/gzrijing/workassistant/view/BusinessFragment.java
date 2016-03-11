@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -34,6 +35,7 @@ import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.service.GetWorkerBusinessService;
+import com.gzrijing.workassistant.util.DeleteFolderUtil;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
@@ -59,6 +61,7 @@ public class BusinessFragment extends Fragment {
     private View layoutView;
     private LeaderFragment leaderFragment;
     private WorkerFragment workerFragment;
+    private DirectorFragment directorFragment;
     private String userRank;
     private String userNo;
     private Handler handler = new Handler();
@@ -100,6 +103,7 @@ public class BusinessFragment extends Fragment {
             } else {
                 DataSupport.deleteAll(BusinessData.class);
                 DataSupport.deleteAll(TimeData.class);
+                DeleteFolderUtil.deleteFolder(Environment.getExternalStorageDirectory()+"/GZRJWorkassistant");
                 mImageLoader = ImageLoader.getInstance();
                 pDialog = new ProgressDialog(getActivity());
                 pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -111,12 +115,110 @@ public class BusinessFragment extends Fragment {
                 if(userRank.equals("1")){
                     getLeaderBusiness();
                 }
+                if(userRank.equals("2")){
+                    getDirectorBusiness();
+                }
             }
 
         }
 
         return layoutView;
     }
+
+    private void getDirectorBusiness() {
+        String time = "2016-1-10 10:00:00";
+        TimeData timeData = new TimeData();
+        timeData.setTime(time);
+        timeData.setUserNo(userNo);
+        timeData.save();
+
+        String url = null;
+        try {
+            url = "?cmd=getconstruction&userno=" + URLEncoder.encode(userNo, "UTF-8") + "&begindate=" + URLEncoder.encode(time, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                Log.e("response", response);
+                saveDirectorBusinessData(response);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(getActivity(), "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
+                    }
+                });
+            }
+        });
+    }
+
+    private void saveDirectorBusinessData(String data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+08"));
+        String time = sdf.format(new Date(System.currentTimeMillis()));
+
+        ContentValues values = new ContentValues();
+        values.put("time", time);
+        DataSupport.updateAll(TimeData.class, values, "userNo = ?", userNo);
+
+        List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(data);
+        if(list.size() == 0){
+            pDialog.dismiss();
+        }
+        for (final BusinessByLeader order : list) {
+            BusinessData data1 = new BusinessData();
+            data1.setUser(userNo);
+            data1.setOrderId(order.getOrderId());
+            data1.setUrgent(order.isUrgent());
+            data1.setType(order.getType());
+            data1.setState(order.getState());
+            data1.setReceivedTime(order.getReceivedTime());
+            data1.setDeadline(order.getDeadline());
+            data1.setFlag(order.getFlag());
+            List<DetailedInfo> infos = order.getDetailedInfos();
+            for (DetailedInfo info : infos) {
+                DetailedInfoData data2 = new DetailedInfoData();
+                data2.setKey(info.getKey());
+                data2.setValue(info.getValue());
+                data2.save();
+                data1.getDetailedInfoList().add(data2);
+            }
+            List<PicUrl> picUrls = order.getPicUrls();
+            for (final PicUrl picUrl : picUrls) {
+                Log.e("picUrl", HttpUtils.imageURLPath + "/Pic/" + picUrl.getPicUrl());
+                mImageLoader.loadImage(HttpUtils.imageURLPath + "/Pic/" + picUrl.getPicUrl(), new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        super.onLoadingComplete(imageUri, view, loadedImage);
+                        try {
+                            File path = ImageUtils.getImagePath(getActivity(), userNo, order.getOrderId());
+                            ImageUtils.saveFile(getActivity(), loadedImage, picUrl.getPicUrl(), path);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                ImageData data3 = new ImageData();
+                data3.setUrl(picUrl.getPicUrl());
+                data3.save();
+                data1.getImageDataList().add(data3);
+            }
+            data1.save();
+        }
+        pDialog.dismiss();
+        Fragment fragment = getChildFragmentManager().findFragmentByTag(userRank);
+        if (fragment == null) {
+            setTabSelection(Integer.valueOf(userRank));
+        }
+    }
+
 
     private void getLeaderBusiness() {
         String time = "2016-1-10 10:00:00";
@@ -645,6 +747,14 @@ public class BusinessFragment extends Fragment {
                     transaction.show(leaderFragment);
                 }
                 break;
+            case 2:
+                if (directorFragment == null) {
+                    directorFragment = new DirectorFragment();
+                    transaction.add(R.id.fragment_business, directorFragment, "2");
+                } else {
+                    transaction.show(directorFragment);
+                }
+                break;
         }
         transaction.commit();
     }
@@ -658,6 +768,9 @@ public class BusinessFragment extends Fragment {
         }
         if (workerFragment != null) {
             transaction.hide(workerFragment);
+        }
+        if (directorFragment != null) {
+            transaction.hide(directorFragment);
         }
     }
 

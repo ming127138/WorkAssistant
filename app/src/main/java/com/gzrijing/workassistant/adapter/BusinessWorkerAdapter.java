@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +26,11 @@ import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
+import com.gzrijing.workassistant.util.DeleteFolderUtil;
 import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
+import com.gzrijing.workassistant.util.VoiceUtil;
 import com.gzrijing.workassistant.view.GetGPSActivity;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
 import com.gzrijing.workassistant.view.QueryProjectAmountActivity;
@@ -36,6 +38,7 @@ import com.gzrijing.workassistant.view.ReportActivity;
 import com.gzrijing.workassistant.view.SuppliesApplyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
+import com.gzrijing.workassistant.widget.SlideView;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 
@@ -46,12 +49,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class BusinessWorkerAdapter extends BaseAdapter {
+public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSlideListener {
     private Context context;
     private LayoutInflater listContainer;
     private List<BusinessByWorker> orderList;
     private String userNo;
     private Handler handler = new Handler();
+    private SlideView mLastSlideViewWithStatusOn;
 
     public BusinessWorkerAdapter(Context context, List<BusinessByWorker> orderList, String userNo) {
         this.context = context;
@@ -78,46 +82,23 @@ public class BusinessWorkerAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder v = null;
-        if (convertView == null) {
-            v = new ViewHolder();
-            convertView = listContainer.inflate(
+        SlideView slideView = (SlideView) convertView;
+        if (slideView == null) {
+            View itemView = listContainer.inflate(
                     R.layout.listview_item_business_worker, parent, false);
-            v.orderId = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_worker_order_id_tv);
-            v.urgent = (ImageView) convertView.findViewById(
-                    R.id.listview_item_business_worker_urgent_iv);
-            v.type = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_worker_type_tv);
-            v.state = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_worker_state_tv);
-            v.receivedTime = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_worker_received_time_tv);
-            v.deadline = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_worker_deadline_tv);
-            v.temInfo = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_worker_tem_info_tv);
-            v.suppliesApply = (Button) convertView.findViewById(
-                    R.id.listview_item_business_worker_supplies_apply_btn);
-            v.info = (Button) convertView.findViewById(
-                    R.id.listview_item_business_worker_info_btn);
-            v.gps = (Button) convertView.findViewById(
-                    R.id.listview_item_business_worker_gps_btn);
-            v.queryProjectAmount = (Button) convertView.findViewById(
-                    R.id.listview_item_business_worker_project_amount_btn);
-            v.flag = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_worker_flag_tv);
-            v.head_rl = (RelativeLayout) convertView.findViewById(
-                    R.id.listview_item_business_worker_head_rl);
-            v.bg_ll = (LinearLayout) convertView.findViewById(
-                    R.id.listview_item_business_worker_bg_ll);
-            v.btn_rl = (RelativeLayout) convertView.findViewById(
-                    R.id.listview_item_business_worker_rl);
-            v.timeLeft = (TextView) convertView.findViewById(
-                    R.id.listview_item_business_time_left_tv);
-            convertView.setTag(v);
+
+            slideView = new SlideView(context);
+            slideView.setContentView(itemView);
+            v = new ViewHolder(slideView);
+            slideView.setOnSlideListener(this);
+            slideView.setTag(v);
         } else {
-            v = (ViewHolder) convertView.getTag();
+            v = (ViewHolder) slideView.getTag();
         }
+
+        BusinessByWorker item = orderList.get(position);
+        item.setSlideView(slideView);
+        item.getSlideView().shrink();
 
         v.orderId.setText(orderList.get(position).getOrderId());
         v.type.setText(orderList.get(position).getType());
@@ -148,13 +129,13 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             String surpTime = dayNm + "天" + hourNm + "时" + minNm + "分";
             if (dayNm == 0 && hourNm < 4 && hourNm > 1) {
                 v.timeLeft.setText(surpTime);
-                v.head_rl.setBackgroundColor(convertView.getResources().getColor(R.color.orangeShallow));
+                v.head_rl.setBackgroundColor(context.getResources().getColor(R.color.orangeShallow));
             } else if (dayNm == 0 && hourNm < 2) {
                 v.timeLeft.setText(surpTime);
-                v.head_rl.setBackgroundColor(convertView.getResources().getColor(R.color.redShallow));
-            }else{
+                v.head_rl.setBackgroundColor(context.getResources().getColor(R.color.redShallow));
+            } else {
                 v.timeLeft.setText(surpTime);
-                v.head_rl.setBackgroundColor(convertView.getResources().getColor(R.color.blue));
+                v.head_rl.setBackgroundColor(context.getResources().getColor(R.color.blue));
             }
             if (dayNm == 0 && hourNm == 1 && minNm == 59) {
                 NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
@@ -188,9 +169,9 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         }
         final String flag = orderList.get(position).getFlag();
         v.flag.setText(flag);
-        if(flag.equals("确认收到") || flag.equals("处理")){
+        if (flag.equals("确认收到") || flag.equals("处理")) {
             v.bg_ll.setBackgroundResource(R.color.pink_bg);
-        }else{
+        } else {
             v.bg_ll.setBackgroundResource(R.color.white);
         }
 
@@ -207,6 +188,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, SuppliesApplyActivity.class);
+                intent.putExtra("id", orderList.get(position).getId());
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 intent.putExtra("type", orderList.get(position).getType());
                 context.startActivity(intent);
@@ -218,6 +200,7 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailedInfoActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
+                intent.putExtra("id", orderList.get(position).getId());
                 context.startActivity(intent);
             }
         });
@@ -275,7 +258,25 @@ public class BusinessWorkerAdapter extends BaseAdapter {
             }
         });
 
-        return convertView;
+        v.deleteHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(orderList.get(position).getType().equals("供水管网巡查")){
+                    orderList.remove(position);
+                    notifyDataSetChanged();
+                }else{
+                    DataSupport.delete(BusinessData.class, orderList.get(position).getId());
+                    String picPath = ImageUtils.getImagePath(context, userNo, orderList.get(position).getOrderId()).getPath();
+                    DeleteFolderUtil.deleteFolder(picPath);
+                    String voicePath = VoiceUtil.getVoicePath(context, userNo, orderList.get(position).getOrderId()).getPath();
+                    DeleteFolderUtil.deleteFolder(voicePath);
+                    orderList.remove(position);
+                    notifyDataSetChanged();
+                }
+            }
+        });
+
+        return slideView;
     }
 
     private void sendSure(final int position) {
@@ -372,6 +373,18 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         });
     }
 
+    @Override
+    public void onSlide(View view, int status) {
+        if (mLastSlideViewWithStatusOn != null
+                && mLastSlideViewWithStatusOn != view) {
+            mLastSlideViewWithStatusOn.shrink();
+        }
+
+        if (status == SLIDE_STATUS_ON) {
+            mLastSlideViewWithStatusOn = (SlideView) view;
+        }
+    }
+
     class ViewHolder {
         private TextView orderId;
         private ImageView urgent;
@@ -389,5 +402,42 @@ public class BusinessWorkerAdapter extends BaseAdapter {
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;
         private TextView timeLeft;
+        public ViewGroup deleteHolder;
+
+        ViewHolder(View view) {
+            orderId = (TextView) view.findViewById(
+                    R.id.listview_item_business_worker_order_id_tv);
+            urgent = (ImageView) view.findViewById(
+                    R.id.listview_item_business_worker_urgent_iv);
+            type = (TextView) view.findViewById(
+                    R.id.listview_item_business_worker_type_tv);
+            state = (TextView) view.findViewById(
+                    R.id.listview_item_business_worker_state_tv);
+            receivedTime = (TextView) view.findViewById(
+                    R.id.listview_item_business_worker_received_time_tv);
+            deadline = (TextView) view.findViewById(
+                    R.id.listview_item_business_worker_deadline_tv);
+            temInfo = (TextView) view.findViewById(
+                    R.id.listview_item_business_worker_tem_info_tv);
+            suppliesApply = (Button) view.findViewById(
+                    R.id.listview_item_business_worker_supplies_apply_btn);
+            info = (Button) view.findViewById(
+                    R.id.listview_item_business_worker_info_btn);
+            gps = (Button) view.findViewById(
+                    R.id.listview_item_business_worker_gps_btn);
+            queryProjectAmount = (Button) view.findViewById(
+                    R.id.listview_item_business_worker_project_amount_btn);
+            flag = (TextView) view.findViewById(
+                    R.id.listview_item_business_worker_flag_tv);
+            head_rl = (RelativeLayout) view.findViewById(
+                    R.id.listview_item_business_worker_head_rl);
+            bg_ll = (LinearLayout) view.findViewById(
+                    R.id.listview_item_business_worker_bg_ll);
+            btn_rl = (RelativeLayout) view.findViewById(
+                    R.id.listview_item_business_worker_rl);
+            timeLeft = (TextView) view.findViewById(
+                    R.id.listview_item_business_time_left_tv);
+            deleteHolder = (ViewGroup) view.findViewById(R.id.holder);
+        }
     }
 }
