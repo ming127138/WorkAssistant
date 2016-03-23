@@ -39,6 +39,7 @@ import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.entity.SuppliesVerify;
 import com.gzrijing.workassistant.entity.SuppliesVerifyInfo;
+import com.gzrijing.workassistant.entity.TemInfo;
 import com.gzrijing.workassistant.entity.User;
 
 import org.json.JSONArray;
@@ -92,6 +93,7 @@ public class JsonParseUtils {
                 String receivedTime = jsonObject.getString("CheckDate").replace("/", "-");
                 String deadline = jsonObject.getString("EstimateFinishDate").replace("/", "-");
                 boolean urgent = jsonObject.getBoolean("IsUrgent");
+                int temInfoNum = Integer.valueOf(jsonObject.getString("TempMsgQty"));
 
                 BusinessByLeader businessByLeader = new BusinessByLeader();
                 businessByLeader.setOrderId(orderId);
@@ -100,6 +102,7 @@ public class JsonParseUtils {
                 businessByLeader.setReceivedTime(receivedTime);
                 businessByLeader.setDeadline(deadline);
                 businessByLeader.setUrgent(urgent);
+                businessByLeader.setTemInfoNum(temInfoNum);
                 if (state.equals("未派工")) {
                     businessByLeader.setFlag("确认收到");
                 } else {
@@ -195,6 +198,7 @@ public class JsonParseUtils {
                 String receivedTime = jsonObject.getString("CheckDate").replace("/", "-");
                 String deadline = jsonObject.getString("EstimateFinishDate").replace("/", "-");
                 boolean urgent = jsonObject.getBoolean("IsUrgent");
+                int temInfoNum = Integer.valueOf(jsonObject.getString("TempMsgQty"));
 
                 BusinessByWorker businessByWorker = new BusinessByWorker();
                 businessByWorker.setOrderId(orderId);
@@ -204,6 +208,7 @@ public class JsonParseUtils {
                 businessByWorker.setDeadline(deadline);
                 businessByWorker.setUrgent(urgent);
                 businessByWorker.setFlag(flag);
+                businessByWorker.setTemInfoNum(temInfoNum);
 
                 ArrayList<DetailedInfo> infos = new ArrayList<DetailedInfo>();
                 JSONArray jsonArray1 = jsonObject.getJSONArray("Detail");
@@ -2252,5 +2257,24 @@ public class JsonParseUtils {
         return list;
     }
 
+    /**
+     * 获取工程临时信息
+     */
+    public static ArrayList<TemInfo> getTemInfo(String jsonData) {
+        ArrayList<TemInfo> list = new ArrayList<TemInfo>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String message = jsonObject.getString("Message");
 
+                TemInfo temInfo = new TemInfo();
+                temInfo.setMessage(message);
+                list.add(temInfo);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

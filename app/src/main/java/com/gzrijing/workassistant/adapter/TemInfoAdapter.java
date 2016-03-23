@@ -8,15 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.entity.TemInfo;
 
 import java.util.List;
 
 public class TemInfoAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<String> list;
+    private List<TemInfo> list;
 
-    public TemInfoAdapter(Context context, List<String> list) {
+    public TemInfoAdapter(Context context, List<TemInfo> list) {
         listContainer = LayoutInflater.from(context);
         this.list = list;
     }
@@ -48,11 +49,8 @@ public class TemInfoAdapter extends BaseAdapter {
         } else {
             v = (ViewHolder) convertView.getTag();
         }
-        if(list.get(position).length()>8){
-            v.info.setText((position + 1) + "." + list.get(position).substring(0, 8) + "...");
-        }else {
-            v.info.setText((position + 1) + "." + list.get(position));
-        }
+
+        v.info.setText(position + 1 + "." + list.get(position).getMessage());
         return convertView;
     }
 

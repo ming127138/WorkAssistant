@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
     private static final int REQUEST_CONNECT_DEVICE = 1;  //获取设备消息
     private boolean isConnect;
     private Acceptance acceptance;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,9 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void initData() {
+        SharedPreferences app = getSharedPreferences(
+                "saveUser", MODE_PRIVATE);
+        userName = app.getString("userName", "");
         Intent intent = getIntent();
         acceptance = intent.getParcelableExtra("acceptance");
         String flag = intent.getStringExtra("flag");
@@ -197,7 +202,9 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
 
         if (id == R.id.action_print) {
             if (isConnect) {
-                mService.sendMessage("中山市润丰水业有限公司工程施工作业单\n", "GBK");
+                mService.sendMessage("             中山市润丰水业有限公司\n", "GBK");
+                mService.sendMessage("施工员:" + userName + "         单号:" + acceptance.getOrderId(), "GBK");
+                mService.sendMessage("————————————————————————", "GBK");
                 StringBuilder sb = new StringBuilder();
                 for (DetailedInfo info : acceptance.getDetailedInfos()) {
                     sb.append(info.getKey() + "：" + info.getValue() + "\n");
@@ -210,8 +217,11 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
                     sb.append(" 　" + supplies.getName() + "　　" + supplies.getSpec() + "　　" + supplies.getUnit()
                             + "　　" + supplies.getNum() + "\n");
                 }
-                sb.append("\n\n\n    　　用户签字:_________　　日期:_________");
-                sb.append("\n\n\n");
+                sb.append("\n\n\n 用户签字:__________　　 审核人员:__________");
+                sb.append("\n\n 　　日期:__________　 　　　日期:__________");
+                sb.append("\n\n ———————————————————————");
+                sb.append("有问题可以拨打热线电话：xxxx-xxxxxxx");
+                sb.append("\n\n\n\n");
                 String msg = sb.toString();
                 mService.sendMessage(msg, "GBK");
             } else {

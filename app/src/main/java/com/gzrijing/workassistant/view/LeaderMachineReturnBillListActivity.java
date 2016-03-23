@@ -79,6 +79,7 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
         adapter = new LeaderMachineReturnBillListAdapter(LeaderMachineReturnBillListActivity.this, billList, userNo);
         lv_bill.setAdapter(adapter);
 
+        getReturnBill();
     }
 
     private void setListeners() {
@@ -107,9 +108,9 @@ public class LeaderMachineReturnBillListActivity extends BaseActivity implements
                     + "&fileno=&billtype=" + URLEncoder.encode("退还", "UTF-8") + "&isallappoint=";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            pDialog.show();
         }
 
-        Log.e("url", url);
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {

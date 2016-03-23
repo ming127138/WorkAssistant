@@ -182,6 +182,7 @@ public class BusinessFragment extends Fragment {
             data1.setReceivedTime(order.getReceivedTime());
             data1.setDeadline(order.getDeadline());
             data1.setFlag(order.getFlag());
+            data1.setTemInfoNum(order.getTemInfoNum());
             List<DetailedInfo> infos = order.getDetailedInfos();
             for (DetailedInfo info : infos) {
                 DetailedInfoData data2 = new DetailedInfoData();
@@ -279,6 +280,7 @@ public class BusinessFragment extends Fragment {
             data1.setReceivedTime(order.getReceivedTime());
             data1.setDeadline(order.getDeadline());
             data1.setFlag(order.getFlag());
+            data1.setTemInfoNum(order.getTemInfoNum());
             List<DetailedInfo> infos = order.getDetailedInfos();
             for (DetailedInfo info : infos) {
                 DetailedInfoData data2 = new DetailedInfoData();
@@ -507,6 +509,7 @@ public class BusinessFragment extends Fragment {
             data1.setReceivedTime(order.getReceivedTime());
             data1.setDeadline(order.getDeadline());
             data1.setFlag(order.getFlag());
+            data1.setTemInfoNum(order.getTemInfoNum());
             data1.setRecordFileName(order.getRecordFileName());
             if (order.getRecordFileName() != null && !order.getRecordFileName().equals("")) {
                 String url = HttpUtils.voiceURLPath + order.getRecordFileName();

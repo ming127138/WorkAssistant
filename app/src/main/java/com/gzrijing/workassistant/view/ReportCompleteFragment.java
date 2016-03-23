@@ -91,7 +91,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     private EditText et_value12;
     private LinearLayout ll_item13;
     private TextView tv_key13;
-    private TextView tv_value13;
+    private EditText et_value13;
     private LinearLayout ll_item14;
     private TextView tv_key14;
     private TextView tv_value14;
@@ -247,7 +247,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
 
         ll_item13 = (LinearLayout) layoutView.findViewById(R.id.fragment_report_complete_item13_ll);
         tv_key13 = (TextView) layoutView.findViewById(R.id.fragment_report_complete_item13_key_tv);
-        tv_value13 = (TextView) layoutView.findViewById(R.id.fragment_report_complete_item13_value_tv);
+        et_value13 = (EditText) layoutView.findViewById(R.id.fragment_report_complete_item13_value_et);
 
         ll_item14 = (LinearLayout) layoutView.findViewById(R.id.fragment_report_complete_item14_ll);
         tv_key14 = (TextView) layoutView.findViewById(R.id.fragment_report_complete_item14_key_tv);
@@ -345,7 +345,6 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     }
 
     private void setListeners() {
-        tv_value13.setOnClickListener(this);
         tv_value14.setOnClickListener(this);
         tv_value15.setOnClickListener(this);
         tv_value16.setOnClickListener(this);
@@ -415,10 +414,6 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.fragment_report_complete_item13_value_tv:
-                getDate(tv_value13);
-                break;
-
             case R.id.fragment_report_complete_item14_value_tv:
                 getDate(tv_value14);
                 break;
@@ -484,7 +479,7 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
                 info.setValue(et_value12.getText().toString().trim());
             }
             if(info.getKey().equals("排水时间")){
-                info.setValue(tv_value13.getText().toString());
+                info.setValue(et_value13.getText().toString().trim());
             }
             if(info.getKey().equals("抄表日期")){
                 info.setValue(tv_value14.getText().toString());

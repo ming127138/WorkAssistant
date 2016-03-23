@@ -3,7 +3,6 @@ package com.gzrijing.workassistant.util;
 import android.util.Log;
 
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
-import com.nostra13.universalimageloader.utils.L;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -91,7 +90,6 @@ public class HttpUtils {
                 mOkHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Request request, IOException e) {
-                        Log.e("voice request", request.toString());
                         if (listener != null) {
                             listener.onError(e);
                         }
@@ -116,7 +114,6 @@ public class HttpUtils {
                                     listener.onFinish("ok");
                                 }
                             } catch (IOException e) {
-                                Log.e("eeeee", e.toString());
                                 if (listener != null) {
                                     listener.onError(e);
                                 }

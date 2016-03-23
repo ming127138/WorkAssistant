@@ -41,7 +41,7 @@ import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
-public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSlideListener{
+public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSlideListener {
     private Context context;
     private LayoutInflater listContainer;
     private List<BusinessByLeader> orderList;
@@ -97,7 +97,7 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
         v.state.setText(orderList.get(position).getState());
         v.receivedTime.setText(orderList.get(position).getReceivedTime());
         v.deadline.setText(orderList.get(position).getDeadline());
-        v.temInfo.setText(orderList.get(position).getTemInfoNum()+"条新临时信息");
+        v.temInfo.setText("有" + orderList.get(position).getTemInfoNum() + "条临时信息");
 
         if (orderList.get(position).isUrgent()) {
             v.urgent.setVisibility(View.VISIBLE);

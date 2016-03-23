@@ -18,6 +18,7 @@ import com.gzrijing.workassistant.service.ListenerMachineReceivedStateService;
 import com.gzrijing.workassistant.service.ListenerMachineReturnStateService;
 import com.gzrijing.workassistant.service.ListenerMachineSendOkService;
 import com.gzrijing.workassistant.service.ListenerOrderStateService;
+import com.gzrijing.workassistant.service.ListenerOrderTemInfoService;
 import com.gzrijing.workassistant.service.ListenerReportInfoCompleteService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProblemService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProgressService;
@@ -162,6 +163,12 @@ public class MainReceiver extends BroadcastReceiver {
                                     String state = jsonObject.getString("State");
                                     if(!orderId.equals("")){
                                         listenerOrderState(user, orderId, state);
+                                    }
+                                }
+                                if(cmd.equals("getconstempmsg")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    if(!orderId.equals("")){
+                                        listenerOrderTemInfo(userNo, orderId);
                                     }
                                 }
                             }
@@ -358,6 +365,14 @@ public class MainReceiver extends BroadcastReceiver {
         MyApplication.getContext().startService(intent);
     }
 
-
+    /**
+     * 监听工程临时信息
+     */
+    private void listenerOrderTemInfo(String userNo, String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerOrderTemInfoService.class);
+        intent.putExtra("userNo", userNo);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
 
 }

@@ -144,10 +144,6 @@
             android:label="@string/title_activity_tem_info"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.TemInfoContentActivity"
-            android:label="@string/title_activity_tem_info_content"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.ReportActivity"
             android:label="@string/title_activity_report"
             android:screenOrientation="portrait" />
@@ -535,6 +531,9 @@
             android:exported="false" />
         <service
             android:name=".service.ListenerOrderStateService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerOrderTemInfoService"
             android:exported="false" />
 
         <!-- app service -->

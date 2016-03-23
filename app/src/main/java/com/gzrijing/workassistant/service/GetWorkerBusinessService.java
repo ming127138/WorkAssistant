@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
 import com.gzrijing.workassistant.db.ImageData;
@@ -83,7 +84,7 @@ public class GetWorkerBusinessService extends IntentService {
                 public void onFinish(String response) {
                     Log.e("response", response);
                     saveData(response);
-                    sendNotification();
+                    sendNotification1();
                 }
 
                 @Override
@@ -97,7 +98,7 @@ public class GetWorkerBusinessService extends IntentService {
                 }
             });
         } else {
-            sendNotification1();
+            sendNotification();
         }
 
     }
@@ -123,6 +124,7 @@ public class GetWorkerBusinessService extends IntentService {
             data1.setReceivedTime(order.getReceivedTime());
             data1.setDeadline(order.getDeadline());
             data1.setFlag(order.getFlag());
+            data1.setTemInfoNum(order.getTemInfoNum());
             data1.setRecordFileName(order.getRecordFileName());
             if (order.getRecordFileName() != null && !order.getRecordFileName().equals("")) {
                 String url = HttpUtils.voiceURLPath + order.getRecordFileName();
@@ -203,7 +205,7 @@ public class GetWorkerBusinessService extends IntentService {
                 .build();
         notification.defaults = Notification.DEFAULT_SOUND;
         notification.flags = Notification.FLAG_AUTO_CANCEL;
-        manager.notify(0, notification);
+        manager.notify(MyApplication.notificationId++, notification);
     }
 
     private void sendNotification1() {
@@ -220,6 +222,6 @@ public class GetWorkerBusinessService extends IntentService {
                 .build();
         notification.defaults = Notification.DEFAULT_SOUND;
         notification.flags = Notification.FLAG_AUTO_CANCEL;
-        manager.notify(0, notification);
+        manager.notify(MyApplication.notificationId++, notification);
     }
 }

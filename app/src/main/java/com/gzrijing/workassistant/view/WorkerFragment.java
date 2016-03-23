@@ -96,6 +96,7 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
         intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.add");
         intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.update");
         intentFilter.addAction("action.com.gzrijing.workassistant.PipeInspectMap.inspection");
+        intentFilter.addAction("action.com.gzrijing.workassistant.temInfoNum");
         getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
 
         getWorkerOreder();
@@ -118,6 +119,7 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
             order.setReceivedTime(data.getReceivedTime());
             order.setDeadline(data.getDeadline());
             order.setFlag(data.getFlag());
+            order.setTemInfoNum(data.getTemInfoNum());
             order.setRecordFileName(data.getRecordFileName());
             orderListByWorker.add(order);
         }
@@ -341,6 +343,22 @@ public class WorkerFragment extends Fragment implements AdapterView.OnItemSelect
                 for(BusinessByWorker order : orderList){
                     if(orderId.equals(order.getOrderId())){
                         order.setState(state);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            if(action.equals("action.com.gzrijing.workassistant.temInfoNum")){
+                String orderId = intent.getStringExtra("orderId");
+                int num = intent.getIntExtra("temInfoNum", -1);
+                for(BusinessByWorker order : orderListByWorker){
+                    if(orderId.equals(order.getOrderId())){
+                        order.setTemInfoNum(num);
+                    }
+                }
+                for(BusinessByWorker order : orderList){
+                    if(orderId.equals(order.getOrderId())){
+                        order.setTemInfoNum(num);
                         adapter.notifyDataSetChanged();
                     }
                 }

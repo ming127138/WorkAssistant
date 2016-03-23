@@ -105,6 +105,7 @@ public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSl
         v.state.setText(orderList.get(position).getState());
         v.receivedTime.setText(orderList.get(position).getReceivedTime());
         v.deadline.setText(orderList.get(position).getDeadline());
+        v.temInfo.setText("有" + orderList.get(position).getTemInfoNum() + "条临时信息");
 
         String endTime = orderList.get(position).getDeadline();
         try {

@@ -78,6 +78,8 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
         adapter = new LeaderMachineApplyBillListAdapter(LeaderMachineApplyBillListActivity.this, billList, userNo);
         lv_bill.setAdapter(adapter);
 
+        getApplyBill();
+
     }
 
     private void setListeners() {
@@ -106,6 +108,7 @@ public class LeaderMachineApplyBillListActivity extends BaseActivity implements 
                     + "&fileno=&billtype=" + URLEncoder.encode("申请", "UTF-8") + "&isallappoint=";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            pDialog.show();
         }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override

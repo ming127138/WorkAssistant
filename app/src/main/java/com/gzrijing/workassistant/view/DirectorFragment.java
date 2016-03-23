@@ -74,6 +74,7 @@ public class DirectorFragment extends Fragment implements AdapterView.OnItemSele
         IntentFilter mIntentFilter = new IntentFilter();
         mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment");
         mIntentFilter.addAction("action.com.gzrijing.workassistant.LeaderFragment.Distribute");
+        mIntentFilter.addAction("action.com.gzrijing.workassistant.temInfoNum");
         MyApplication.getContext().registerReceiver(mBroadcastReceiver, mIntentFilter);
     }
 
@@ -187,7 +188,8 @@ public class DirectorFragment extends Fragment implements AdapterView.OnItemSele
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             Log.e("action", action);
-            if(action.equals("action.com.gzrijing.workassistant.LeaderFragment")){
+            if(action.equals("action.com.gzrijing.workassistant.LeaderFragment") ||
+                    action.equals("action.com.gzrijing.workassistant.temInfoNum")){
 //                String jsonData = intent.getStringExtra("jsonData");
 //                Log.e("jsonData", jsonData);
 //                List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(jsonData);

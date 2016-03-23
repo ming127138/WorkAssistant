@@ -14,7 +14,7 @@ public class BusinessByLeader {
     private String receivedTime;            //接单时间
     private String deadline;                //工程期限
     private boolean urgent;                 //工程是否紧急
-    private int temInfoNum;                 //标记有多少条未查看的临时信息
+    private int temInfoNum;                 //标记有多少条临时信息
     private String flag;
     private List<DetailedInfo> detailedInfos = new ArrayList<DetailedInfo>();   //详细信息
     private List<PicUrl> picUrls = new ArrayList<PicUrl>();     //图片URL

@@ -454,14 +454,24 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/sw_15dp" />
 
-            <TextView
-                android:id="@+id/fragment_report_complete_item13_value_tv"
+            <EditText
+                android:id="@+id/fragment_report_complete_item13_value_et"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="点击选择时间"
+                android:minWidth="@dimen/sw_60dp"
                 android:background="@drawable/edit_line_blue"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sw_15dp"/>
+                android:textSize="@dimen/sw_15dp"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="分钟"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sw_15dp" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/fragment_report_complete_item14_ll"

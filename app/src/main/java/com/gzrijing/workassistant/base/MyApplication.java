@@ -13,6 +13,7 @@ public class MyApplication extends LitePalApplication {
     private static Context context;
     private static SQLiteDatabase db;
     private static ImageLoaderConfiguration configuration;
+    public static int notificationId;
 
     @Override
     public void onCreate() {

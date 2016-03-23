@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.DetailedInfoData;
 import com.gzrijing.workassistant.db.ImageData;
@@ -116,6 +117,7 @@ public class GetLeaderBusinessService extends IntentService {
             data1.setReceivedTime(order.getReceivedTime());
             data1.setDeadline(order.getDeadline());
             data1.setFlag(order.getFlag());
+            data1.setTemInfoNum(order.getTemInfoNum());
             List<DetailedInfo> infos = order.getDetailedInfos();
             for (DetailedInfo info : infos) {
                 DetailedInfoData data2 = new DetailedInfoData();
@@ -166,6 +168,6 @@ public class GetLeaderBusinessService extends IntentService {
                 .build();
         notification.defaults = Notification.DEFAULT_SOUND;
         notification.flags = Notification.FLAG_AUTO_CANCEL;
-        manager.notify(0, notification);
+        manager.notify(MyApplication.notificationId++, notification);
     }
 }

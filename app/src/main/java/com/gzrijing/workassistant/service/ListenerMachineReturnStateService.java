@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
 
+import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.MachineNoData;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
@@ -71,7 +72,7 @@ public class ListenerMachineReturnStateService extends IntentService {
                 .build();
         notification.defaults = Notification.DEFAULT_SOUND;
         notification.flags = Notification.FLAG_AUTO_CANCEL;
-        manager.notify(0, notification);
+        manager.notify(MyApplication.notificationId++, notification);
     }
 
 }

@@ -166,7 +166,6 @@
                 android:id="@+id/listview_item_business_worker_tem_info_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0条新临时信息"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_15dp" />
         </LinearLayout>
