@@ -6,6 +6,14 @@
         android:id="@+id/action_apply"
         android:orderInCategory="100"
         android:icon="@drawable/icon_apply"
+        android:visible="false"
         android:title="重新申请"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_print"
+        android:orderInCategory="100"
+        android:icon="@drawable/icon_print"
+        android:visible="false"
+        android:title="打印"
         app:showAsAction="always" />
 </menu>

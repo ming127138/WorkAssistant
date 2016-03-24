@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.ReportInfoProjectAmountByOkAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
+import com.gzrijing.workassistant.entity.Acceptance;
 import com.gzrijing.workassistant.entity.QueryProjectAmount;
 import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -27,6 +29,8 @@ import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,6 +131,14 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_query_project_amount_by_info, menu);
+
+        String state = projectAmount.getState();
+        if(state.equals("已审核")){
+            menu.findItem(R.id.action_print).setVisible(true);
+        }
+        if(state.equals("不通过")){
+            menu.findItem(R.id.action_apply).setVisible(true);
+        }
         return true;
     }
 
@@ -139,12 +151,63 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
             return true;
         }
 
+        if (id == R.id.action_print) {
+            print();
+            return true;
+        }
+
         if (id == R.id.action_apply) {
             apply();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void print() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在获取打印数据...");
+        pDialog.show();
+
+        String url = null;
+        try {
+            url = "?cmd=getfinishconstruction&userno=" + URLEncoder.encode(userNo, "UTF-8")
+                    + "&fileno=" + URLEncoder.encode(orderId, "UTF-8") + "&enddate=&isfinish=2";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ArrayList<Acceptance> list = JsonParseUtils.getAcceptanceInfo(response);
+                        if(list.size()>0){
+                            Intent intent = new Intent(QueryProjectAmountByInfoActivity.this, PrintActivity.class);
+                            intent.putExtra("flag", projectAmount.getFeeType());
+                            intent.putExtra("acceptance", list.get(0));
+                            startActivity(intent);
+                        }
+                        pDialog.dismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(QueryProjectAmountByInfoActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
+                    }
+                });
+            }
+        });
     }
 
     private void apply() {

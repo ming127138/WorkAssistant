@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByWorker;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
@@ -151,7 +152,7 @@ public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSl
                         .build();
                 notification.defaults = Notification.DEFAULT_SOUND;
                 notification.flags = Notification.FLAG_INSISTENT;
-                manager.notify(1, notification);
+                manager.notify(MyApplication.notificationId++, notification);
             }
         } catch (ParseException e) {
             e.printStackTrace();

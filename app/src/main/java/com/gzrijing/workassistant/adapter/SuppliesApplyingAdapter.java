@@ -56,7 +56,7 @@ public class SuppliesApplyingAdapter extends BaseAdapter {
         v.name.setText(applyingList.get(position).getName());
         v.spec.setText(applyingList.get(position).getSpec());
         v.unit.setText(applyingList.get(position).getUnit());
-        v.num.setText(applyingList.get(position).getApplyNum());
+        v.num.setText(applyingList.get(position).getNum());
         return convertView;
     }
 

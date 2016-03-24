@@ -60,18 +60,18 @@ public class ReportInfoProjectAmountAdapter extends BaseAdapter {
             v = (ViewHolder) convertView.getTag();
         }
 
-        v.content.setText(list.get(position).getFeeType()+"的工程量单");
+        v.content.setText("    " + list.get(position).getFeeType() + "的工程量单");
 
-        if(list.get(position).getState().equals("未审核")){
+        if (list.get(position).getState().equals("未审核")) {
             v.approval.setText("审核");
-        }else{
+        } else {
             v.approval.setText("查看");
         }
 
         v.approval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(list.get(position).getState().equals("未审核")){
+                if (list.get(position).getState().equals("未审核")) {
                     Intent intent = new Intent(context, ReportInfoProjectAmountByWaitActivity.class);
                     intent.putExtra("id", togetherid);
                     intent.putExtra("projectAmount", list.get(position));
@@ -79,7 +79,7 @@ public class ReportInfoProjectAmountAdapter extends BaseAdapter {
                     context.startActivity(intent);
                 }
 
-                if(list.get(position).getState().equals("已审核")){
+                if (list.get(position).getState().equals("已审核")) {
                     Intent intent = new Intent(context, ReportInfoProjectAmountByOkActivity.class);
                     intent.putExtra("id", togetherid);
                     intent.putExtra("projectAmount", list.get(position));
