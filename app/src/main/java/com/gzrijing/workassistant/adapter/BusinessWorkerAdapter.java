@@ -34,6 +34,7 @@ import com.gzrijing.workassistant.util.ToastUtil;
 import com.gzrijing.workassistant.util.VoiceUtil;
 import com.gzrijing.workassistant.view.GetGPSActivity;
 import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
+import com.gzrijing.workassistant.view.ProblemProcessResultActivity;
 import com.gzrijing.workassistant.view.QueryProjectAmountActivity;
 import com.gzrijing.workassistant.view.ReportActivity;
 import com.gzrijing.workassistant.view.SuppliesApplyActivity;
@@ -225,6 +226,15 @@ public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSl
             }
         });
 
+        v.problemResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProblemProcessResultActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
         v.btn_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -400,6 +410,7 @@ public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSl
         private Button info;
         private Button gps;
         private Button queryProjectAmount;
+        private Button problemResult;
         private RelativeLayout head_rl;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;
@@ -429,6 +440,8 @@ public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSl
                     R.id.listview_item_business_worker_gps_btn);
             queryProjectAmount = (Button) view.findViewById(
                     R.id.listview_item_business_worker_project_amount_btn);
+            problemResult = (Button) view.findViewById(
+                    R.id.listview_item_business_worker_problem_process_result_btn);
             flag = (TextView) view.findViewById(
                     R.id.listview_item_business_worker_flag_tv);
             head_rl = (RelativeLayout) view.findViewById(

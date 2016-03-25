@@ -22,6 +22,7 @@ import com.gzrijing.workassistant.entity.MachineVerifyInfo;
 import com.gzrijing.workassistant.entity.Notice;
 import com.gzrijing.workassistant.entity.OrderTypeSupplies;
 import com.gzrijing.workassistant.entity.PicUrl;
+import com.gzrijing.workassistant.entity.ProblemResult;
 import com.gzrijing.workassistant.entity.ProblemType;
 import com.gzrijing.workassistant.entity.Progress;
 import com.gzrijing.workassistant.entity.QueryProjectAmount;
@@ -2271,6 +2272,29 @@ public class JsonParseUtils {
                 TemInfo temInfo = new TemInfo();
                 temInfo.setMessage(message);
                 list.add(temInfo);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取工程问题处理结果
+     */
+    public static ArrayList<ProblemResult> getProblemProcessResult(String jsonData) {
+        ArrayList<ProblemResult> list = new ArrayList<ProblemResult>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String reason = jsonObject.getString("Reason");
+                String result = jsonObject.getString("HandleResult");
+
+                ProblemResult problemResult = new ProblemResult();
+                problemResult.setReason(reason);
+                problemResult.setResult(result);
+                list.add(problemResult);
             }
         } catch (JSONException e) {
             e.printStackTrace();

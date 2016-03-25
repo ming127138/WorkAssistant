@@ -15,8 +15,7 @@
         android:background="@color/grey"
         android:text="未连接蓝牙打印机"
         android:textColor="@color/black"
-        android:textSize="@dimen/sw_20dp"
-        />
+        android:textSize="@dimen/sw_20dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -32,9 +31,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="中山市润丰水业有限公司工程施工作业单"
+                android:text="中山市润丰水业有限公司"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sw_20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/sw_5dp">
+
+                <TextView
+                    android:id="@+id/print_worker_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+                <TextView
+                    android:id="@+id/print_order_id_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sw_15dp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
 
             <com.gzrijing.workassistant.widget.MyListView
                 android:id="@+id/print_info_lv"

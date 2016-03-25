@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
@@ -43,6 +44,8 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
     private boolean isConnect;
     private Acceptance acceptance;
     private String userName;
+    private TextView tv_worker;
+    private TextView tv_orderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,11 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        tv_worker = (TextView) findViewById(R.id.print_worker_tv);
+        tv_worker.setText("施工员：" + userName);
+        tv_orderId = (TextView) findViewById(R.id.print_order_id_tv);
+        tv_orderId.setText("工单：" + acceptance.getOrderId());
 
         btn_connect = (Button) findViewById(R.id.print_connect_btn);
 

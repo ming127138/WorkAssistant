@@ -424,6 +424,10 @@
             android:name=".view.BusinessHaveSendByAllActivity"
             android:label="已派任务"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ProblemProcessResultActivity"
+            android:label="问题处理结果"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 

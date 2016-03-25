@@ -164,13 +164,15 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         StringBuilder sb = new StringBuilder();
-                        for(int i = 0 ; i< checkedItems.length;i++){
-                            if(checkedItems[i]){
-                                sb.append(BHSList.get(i).getId()+",");
+                        for (int i = 0; i < checkedItems.length; i++) {
+                            if (checkedItems[i]) {
+                                sb.append(BHSList.get(i).getId() + ",");
                             }
                         }
-                        String str = sb.toString().substring(0, sb.length()-1);
-                        tv_influence.setText(str);
+                        if(sb.length() > 0){
+                            String str = sb.toString().substring(0, sb.length() - 1);
+                            tv_influence.setText(str);
+                        }
                     }
                 }).show();
 
@@ -262,7 +264,7 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
                         if (response.substring(0, 1).equals("E")) {
                             ToastUtil.showToast(ReportInfoProblemByProcessActivity.this,
                                     "提交失败", Toast.LENGTH_SHORT);
-                        }else{
+                        } else {
                             ToastUtil.showToast(ReportInfoProblemByProcessActivity.this,
                                     "提交成功", Toast.LENGTH_SHORT);
                         }
