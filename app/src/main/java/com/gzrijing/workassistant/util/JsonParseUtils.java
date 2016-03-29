@@ -29,6 +29,8 @@ import com.gzrijing.workassistant.entity.QueryProjectAmount;
 import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
 import com.gzrijing.workassistant.entity.ReturnMachine;
+import com.gzrijing.workassistant.entity.SafetyInspectFail;
+import com.gzrijing.workassistant.entity.SafetyInspectFailItem;
 import com.gzrijing.workassistant.entity.SafetyInspectFirstItem;
 import com.gzrijing.workassistant.entity.SafetyInspectForm;
 import com.gzrijing.workassistant.entity.SafetyInspectSecondItem;
@@ -1558,6 +1560,33 @@ public class JsonParseUtils {
     }
 
     /**
+     * 获取安全检查不合格工程
+     * @param jsonData
+     * @return
+     */
+    public static ArrayList<SafetyInspectFail> getSafetyInspectFail(String jsonData) {
+        ArrayList<SafetyInspectFail> list = new ArrayList<SafetyInspectFail>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String orderId = jsonObject.getString("ErroeProNo");
+                String name = jsonObject.getString("ErrorProName");
+                String type = jsonObject.getString("ErroeProClass");
+
+                SafetyInspectFail fail = new SafetyInspectFail();
+                fail.setOrderId(orderId);
+                fail.setName(name);
+                fail.setType(type);
+                list.add(fail);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
      * 获取安全检查表项目
      *
      * @param jsonData
@@ -2295,6 +2324,31 @@ public class JsonParseUtils {
                 problemResult.setReason(reason);
                 problemResult.setResult(result);
                 list.add(problemResult);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取某一工程不合格项
+     */
+    public static ArrayList<SafetyInspectFailItem> getSafetyInspectFailItem(String jsonData) {
+        ArrayList<SafetyInspectFailItem> list = new ArrayList<SafetyInspectFailItem>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String content = jsonObject.getString("ItemName");
+                String recordId = jsonObject.getString("RecordId");
+                String isHandle = jsonObject.getString("Flag");
+
+                SafetyInspectFailItem item = new SafetyInspectFailItem();
+                item.setContent(content);
+                item.setRecordId(recordId);
+                item.setIsHandle(isHandle);
+                list.add(item);
             }
         } catch (JSONException e) {
             e.printStackTrace();

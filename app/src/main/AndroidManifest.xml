@@ -40,7 +40,7 @@
         android:theme="@style/MyAppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="usHHwzjX4di1HX2Hwz85xRtg" />
+            android:value="Txc9L9HTxjpI9g7WiTfWxeti" />
 
         <service
             android:name="com.baidu.location.f"
@@ -428,6 +428,12 @@
             android:name=".view.ProblemProcessResultActivity"
             android:label="问题处理结果"
             android:screenOrientation="portrait" />
+        <activity android:name=".view.SafetyInspectFailActivity"
+            android:label="不合格工程"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.SafetyInspectFailItemActivity"
+            android:label="不合格项"
+            android:screenOrientation="portrait"/>
         <!-- app activity -->
 
 

@@ -16,6 +16,8 @@ import com.gzrijing.workassistant.view.BusinessHaveSendByAllActivity;
 import com.gzrijing.workassistant.view.EntrustActivity;
 import com.gzrijing.workassistant.view.LeaderMachineApplyBillListActivity;
 import com.gzrijing.workassistant.view.LeaderMachineReturnBillListActivity;
+import com.gzrijing.workassistant.view.SafetyInspectFailActivity;
+import com.gzrijing.workassistant.view.SafetyInspectTaskActivity;
 import com.gzrijing.workassistant.view.TrajectoryQueryActivity;
 
 public class ManageGridViewAdapter extends BaseAdapter {
@@ -93,6 +95,16 @@ public class ManageGridViewAdapter extends BaseAdapter {
 
                 if(position == 5){
                     Intent intent = new Intent(context, BusinessHaveSendByAllActivity.class);
+                    context.startActivity(intent);
+                }
+
+                if(position == 6){
+                    Intent intent = new Intent(context, SafetyInspectTaskActivity.class);
+                    context.startActivity(intent);
+                }
+
+                if(position == 7){
+                    Intent intent = new Intent(context, SafetyInspectFailActivity.class);
                     context.startActivity(intent);
                 }
 

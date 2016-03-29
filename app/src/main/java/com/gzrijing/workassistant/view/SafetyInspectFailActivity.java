@@ -1,8 +1,9 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.ProgressDialog;
-import android.os.Bundle;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,9 +13,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.SafetyInspectTaskAdapter;
+import com.gzrijing.workassistant.adapter.SafetyInspectFailAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.SafetyInspectTask;
+import com.gzrijing.workassistant.entity.SafetyInspectFail;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
@@ -24,20 +25,21 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SafetyInspectTaskActivity extends BaseActivity implements View.OnClickListener {
+public class SafetyInspectFailActivity extends BaseActivity implements View.OnClickListener {
 
-    private ListView lv_tasks;
-    private ArrayList<SafetyInspectTask> taskList = new ArrayList<SafetyInspectTask>();
-    private SafetyInspectTaskAdapter adapter;
-    private EditText et_id;
+    private EditText et_orderId;
     private Button btn_query;
+    private ListView lv_failList;
     private ProgressDialog pDialog;
+    private ArrayList<SafetyInspectFail> failList = new ArrayList<SafetyInspectFail>();
+    private SafetyInspectFailAdapter adapter;
     private Handler handler = new Handler();
+    private String userNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_safety_inspect_task);
+        setContentView(R.layout.activity_safety_inspect_fail);
 
         initViews();
         initData();
@@ -45,7 +47,11 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
     }
 
     private void initData() {
-        queryTasks();
+        SharedPreferences app = getSharedPreferences(
+                "saveUser", MODE_PRIVATE);
+        userNo = app.getString("userNo", "");
+
+        query();
     }
 
     private void initViews() {
@@ -53,12 +59,12 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        et_id = (EditText) findViewById(R.id.safety_inspect_task_id_et);
-        btn_query = (Button) findViewById(R.id.safety_inspect_task_query_btn);
+        et_orderId = (EditText) findViewById(R.id.safety_inspect_fail_order_id_et);
+        btn_query = (Button) findViewById(R.id.safety_inspect_fail_query_btn);
 
-        lv_tasks = (ListView) findViewById(R.id.safety_inspect_task_lv);
-        adapter = new SafetyInspectTaskAdapter(this, taskList);
-        lv_tasks.setAdapter(adapter);
+        lv_failList = (ListView) findViewById(R.id.safety_inspect_fail_lv);
+        adapter = new SafetyInspectFailAdapter(this, failList);
+        lv_failList.setAdapter(adapter);
     }
 
     private void setListeners() {
@@ -69,36 +75,37 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.safety_inspect_task_query_btn:
-                queryTasks();
+                query();
                 break;
         }
     }
 
-    private void queryTasks() {
+    private void query() {
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setMessage("正在加载数据");
         pDialog.show();
-        String id = et_id.getText().toString().trim();
+        String orderId = et_orderId.getText().toString().trim();
         String url = null;
         try {
-            url = "?cmd=LoadTaskInf&fileid=" + URLEncoder.encode(id, "UTF-8");
+            url = "?cmd=getprosafeerrorlist&fileno=" + URLEncoder.encode(orderId, "UTF-8") +
+                    "&userno=" + URLEncoder.encode(userNo, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                ArrayList<SafetyInspectTask> list = JsonParseUtils.getSafetyInspectTask(response);
-                taskList.clear();
-                taskList.addAll(list);
+                ArrayList<SafetyInspectFail> list = JsonParseUtils.getSafetyInspectFail(response);
+                failList.clear();
+                failList.addAll(list);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         adapter.notifyDataSetChanged();
                     }
                 });
-                pDialog.cancel();
+                pDialog.dismiss();
             }
 
             @Override
@@ -106,10 +113,10 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(SafetyInspectTaskActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(SafetyInspectFailActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
                     }
                 });
-                pDialog.cancel();
+                pDialog.dismiss();
             }
         });
     }
@@ -125,4 +132,5 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
 
         return super.onOptionsItemSelected(item);
     }
+
 }

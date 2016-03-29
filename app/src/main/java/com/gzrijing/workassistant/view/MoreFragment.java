@@ -40,8 +40,8 @@ public class MoreFragment extends Fragment {
 
     private void initData() {
         iconIds = new int[]{R.drawable.icon_notice, R.drawable.icon_send_machine, R.drawable.icon_back_machine,
-                R.drawable.icon_safety_inspect, R.drawable.icon_setting};
-        texts = new String[]{"通知公告", "送机列表", "退机列表", "安全检查", "　设置　"};
+                R.drawable.icon_setting};
+        texts = new String[]{"通知公告", "送机列表", "退机列表", "　设置　"};
     }
 
     private void initViews() {
@@ -70,11 +70,6 @@ public class MoreFragment extends Fragment {
                 }
 
                 if(position == 3){
-                    Intent intent = new Intent(getActivity(), SafetyInspectTaskActivity.class);
-                    getActivity().startActivity(intent);
-                }
-
-                if(position == 4){
                     Intent intent = new Intent(getActivity(), SettingActivity.class);
                     getActivity().startActivity(intent);
                 }
