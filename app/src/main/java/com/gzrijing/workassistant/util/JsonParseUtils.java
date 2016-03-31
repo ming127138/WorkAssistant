@@ -31,6 +31,7 @@ import com.gzrijing.workassistant.entity.ReportInfoProjectAmount;
 import com.gzrijing.workassistant.entity.ReturnMachine;
 import com.gzrijing.workassistant.entity.SafetyInspectFail;
 import com.gzrijing.workassistant.entity.SafetyInspectFailItem;
+import com.gzrijing.workassistant.entity.SafetyInspectFailReport;
 import com.gzrijing.workassistant.entity.SafetyInspectFirstItem;
 import com.gzrijing.workassistant.entity.SafetyInspectForm;
 import com.gzrijing.workassistant.entity.SafetyInspectSecondItem;
@@ -2343,11 +2344,46 @@ public class JsonParseUtils {
                 String content = jsonObject.getString("ItemName");
                 String recordId = jsonObject.getString("RecordId");
                 String isHandle = jsonObject.getString("Flag");
+                String isDistributed = jsonObject.getString("ChargeFlag");
+                String remark = jsonObject.getString("ChargeInf");
+                String worker = jsonObject.getString("ChargeUserName");
 
                 SafetyInspectFailItem item = new SafetyInspectFailItem();
                 item.setContent(content);
                 item.setRecordId(recordId);
                 item.setIsHandle(isHandle);
+                item.setWorker(worker);
+                item.setIsDistributed(isDistributed);
+                item.setRemark(remark);
+                list.add(item);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取某一工程不合格项处理信息
+     */
+    public static ArrayList<SafetyInspectFailReport> getSafetyInspectFailReport(String jsonData) {
+        ArrayList<SafetyInspectFailReport> list = new ArrayList<SafetyInspectFailReport>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String recordId = jsonObject.getString("HandleRecId");
+                String content = jsonObject.getString("HandleSafeItem");
+                String time = jsonObject.getString("HandleTime");
+                String worker = jsonObject.getString("HandleUserName");
+                String remark = jsonObject.getString("HandleInf");
+
+                SafetyInspectFailReport item = new SafetyInspectFailReport();
+                item.setRecordId(recordId);
+                item.setContent(content);
+                item.setWorker(worker);
+                item.setTime(time);
+                item.setRemark(remark);
                 list.add(item);
             }
         } catch (JSONException e) {

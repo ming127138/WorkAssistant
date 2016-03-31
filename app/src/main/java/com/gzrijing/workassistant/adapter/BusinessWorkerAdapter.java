@@ -37,6 +37,7 @@ import com.gzrijing.workassistant.view.PipeInspectionMapActivity;
 import com.gzrijing.workassistant.view.ProblemProcessResultActivity;
 import com.gzrijing.workassistant.view.QueryProjectAmountActivity;
 import com.gzrijing.workassistant.view.ReportActivity;
+import com.gzrijing.workassistant.view.SafetyInspectFailReportActivity;
 import com.gzrijing.workassistant.view.SuppliesApplyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
@@ -82,7 +83,7 @@ public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSl
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
         ViewHolder v = null;
         SlideView slideView = (SlideView) convertView;
         if (slideView == null) {
@@ -182,6 +183,15 @@ public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSl
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TemInfoActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
+        v.safetyInspectFail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SafetyInspectFailReportActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
                 context.startActivity(intent);
             }
@@ -406,6 +416,7 @@ public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSl
         private TextView deadline;
         private TextView temInfo;
         private TextView flag;
+        private Button safetyInspectFail;
         private Button suppliesApply;
         private Button info;
         private Button gps;
@@ -432,6 +443,8 @@ public class BusinessWorkerAdapter extends BaseAdapter implements SlideView.OnSl
                     R.id.listview_item_business_worker_deadline_tv);
             temInfo = (TextView) view.findViewById(
                     R.id.listview_item_business_worker_tem_info_tv);
+            safetyInspectFail = (Button) view.findViewById(
+                    R.id.listview_item_business_worker_safety_inspect_fail_btn);
             suppliesApply = (Button) view.findViewById(
                     R.id.listview_item_business_worker_supplies_apply_btn);
             info = (Button) view.findViewById(

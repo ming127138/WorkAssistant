@@ -5,17 +5,19 @@ public class SafetyInspectFailItem {
     private String recordId;
     private String isHandle;        //是否处理（0：未处理  1：已处理）
     private String isDistributed;   //是否派工（0：未派发  1：已派发）
+    private String workerNo;        //整改人编号
     private String worker;          //整改人
     private String remark;          //备注信息
 
     public SafetyInspectFailItem() {
     }
 
-    public SafetyInspectFailItem(String content, String recordId, String isHandle, String isDistributed, String worker, String remark) {
+    public SafetyInspectFailItem(String content, String recordId, String isHandle, String isDistributed, String workerNo, String worker, String remark) {
         this.content = content;
         this.recordId = recordId;
         this.isHandle = isHandle;
         this.isDistributed = isDistributed;
+        this.workerNo = workerNo;
         this.worker = worker;
         this.remark = remark;
     }
@@ -50,6 +52,14 @@ public class SafetyInspectFailItem {
 
     public void setIsDistributed(String isDistributed) {
         this.isDistributed = isDistributed;
+    }
+
+    public String getWorkerNo() {
+        return workerNo;
+    }
+
+    public void setWorkerNo(String workerNo) {
+        this.workerNo = workerNo;
     }
 
     public String getWorker() {

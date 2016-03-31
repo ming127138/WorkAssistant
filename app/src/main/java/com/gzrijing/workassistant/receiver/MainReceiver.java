@@ -24,6 +24,9 @@ import com.gzrijing.workassistant.service.ListenerReportInfoProblemService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProgressService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProjectAmountService;
 import com.gzrijing.workassistant.service.ListenerReturnMachineOrderService;
+import com.gzrijing.workassistant.service.ListenerSafetyInspectFailByDistributedService;
+import com.gzrijing.workassistant.service.ListenerSafetyInspectFailByHandleService;
+import com.gzrijing.workassistant.service.ListenerSafetyInspectFailService;
 import com.gzrijing.workassistant.service.ListenerSendMachineOrderService;
 import com.gzrijing.workassistant.service.ListenerSuppliesApplyStateService;
 import com.gzrijing.workassistant.service.ListenerSuppliesReceivedStateService;
@@ -169,6 +172,24 @@ public class MainReceiver extends BroadcastReceiver {
                                     String orderId = jsonObject.getString("FileNo");
                                     if(!orderId.equals("")){
                                         listenerOrderTemInfo(userNo, orderId);
+                                    }
+                                }
+                                if(cmd.equals("LoadSafeItemSaved")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    if(!orderId.equals("")){
+                                        listenerSafetyInspectFail(orderId);
+                                    }
+                                }
+                                if(cmd.equals("handlegettask")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    if(!orderId.equals("")){
+                                        listenerSafetyInspectFailByDistributed(orderId);
+                                    }
+                                }
+                                if(cmd.equals("handlegetinsys")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    if(!orderId.equals("")){
+                                        listenerSafetyInspectFailByHandle(orderId);
                                     }
                                 }
                             }
@@ -371,6 +392,33 @@ public class MainReceiver extends BroadcastReceiver {
     private void listenerOrderTemInfo(String userNo, String orderId){
         Intent intent = new Intent(MyApplication.getContext(), ListenerOrderTemInfoService.class);
         intent.putExtra("userNo", userNo);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听安全检查不合格项
+     */
+    private void listenerSafetyInspectFail(String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerSafetyInspectFailService.class);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听派发后安全检查不合格项
+     */
+    private void listenerSafetyInspectFailByDistributed(String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerSafetyInspectFailByDistributedService.class);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听处理后安全检查不合格项
+     */
+    private void listenerSafetyInspectFailByHandle(String orderId){
+        Intent intent = new Intent(MyApplication.getContext(), ListenerSafetyInspectFailByHandleService.class);
         intent.putExtra("orderId", orderId);
         MyApplication.getContext().startService(intent);
     }

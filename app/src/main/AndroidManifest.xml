@@ -428,12 +428,18 @@
             android:name=".view.ProblemProcessResultActivity"
             android:label="问题处理结果"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.SafetyInspectFailActivity"
+        <activity
+            android:name=".view.SafetyInspectFailActivity"
             android:label="不合格工程"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".view.SafetyInspectFailItemActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectFailItemActivity"
             android:label="不合格项"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectFailReportActivity"
+            android:label="不合格项"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -544,6 +550,15 @@
             android:exported="false" />
         <service
             android:name=".service.ListenerOrderTemInfoService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerSafetyInspectFailService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerSafetyInspectFailByDistributedService"
+            android:exported="false" />
+        <service
+            android:name=".service.ListenerSafetyInspectFailByHandleService"
             android:exported="false" />
 
         <!-- app service -->
