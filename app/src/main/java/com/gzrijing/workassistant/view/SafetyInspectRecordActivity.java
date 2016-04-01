@@ -62,8 +62,8 @@ public class SafetyInspectRecordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_safety_inspect_record);
 
-        initData();
         initViews();
+        initData();
         setListeners();
     }
 

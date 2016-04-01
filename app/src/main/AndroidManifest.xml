@@ -671,6 +671,8 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
+        <activity android:name=".view.SafetyInspectHistoryRecordActivity" />
+        <activity android:name=".view.SafetyInspectHistoryRecordItemActivity"></activity>
     </application>
 
 </manifest>

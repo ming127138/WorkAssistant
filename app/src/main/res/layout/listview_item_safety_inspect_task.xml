@@ -78,6 +78,7 @@
             android:layout_marginTop="@dimen/sw_10dp"
             android:layout_marginBottom="@dimen/sw_5dp"
             android:layout_marginRight="@dimen/sw_10dp">
+
             <Button
                 android:id="@+id/listview_item_safety_inspect_task_record_btn"
                 android:layout_width="@dimen/sw_60dp"
@@ -89,13 +90,13 @@
                 android:textSize="@dimen/sw_12dp"/>
 
             <Button
-                android:id="@+id/listview_item_safety_inspect_task_upload_pic_btn"
+                android:id="@+id/listview_item_safety_inspect_task_history_record_btn"
                 android:layout_width="@dimen/sw_60dp"
                 android:layout_height="@dimen/sw_25dp"
                 android:layout_toLeftOf="@+id/listview_item_safety_inspect_task_record_btn"
                 android:layout_marginRight="@dimen/sw_10dp"
                 android:background="@drawable/btn_blue_frame"
-                android:text="上传照片"
+                android:text="历史记录"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
 
@@ -124,6 +125,17 @@
                 android:layout_marginRight="@dimen/sw_10dp"
                 android:background="@drawable/btn_blue_frame"
                 android:text="查询地点"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_12dp"/>
+
+            <Button
+                android:id="@+id/listview_item_safety_inspect_task_upload_pic_btn"
+                android:layout_width="@dimen/sw_60dp"
+                android:layout_height="@dimen/sw_25dp"
+                android:layout_toLeftOf="@+id/listview_item_safety_inspect_task_location_btn"
+                android:layout_marginRight="@dimen/sw_10dp"
+                android:background="@drawable/btn_blue_frame"
+                android:text="上传照片"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
         </RelativeLayout>

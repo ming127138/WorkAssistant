@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.entity.SafetyInspectTask;
 import com.gzrijing.workassistant.view.SafetyInspectFormActivity;
+import com.gzrijing.workassistant.view.SafetyInspectHistoryRecordActivity;
+import com.gzrijing.workassistant.view.SafetyInspectHistoryRecordItemActivity;
 import com.gzrijing.workassistant.view.SafetyInspectMapActivity;
 import com.gzrijing.workassistant.view.SafetyInspectRecordActivity;
 import com.gzrijing.workassistant.view.SafetyInspectUploadImageActivity;
@@ -59,6 +61,7 @@ public class SafetyInspectTaskAdapter extends BaseAdapter {
             v.location = (Button) convertView.findViewById(R.id.listview_item_safety_inspect_task_location_btn);
             v.record = (Button) convertView.findViewById(R.id.listview_item_safety_inspect_task_record_btn);
             v.upload = (Button) convertView.findViewById(R.id.listview_item_safety_inspect_task_upload_pic_btn);
+            v.historyRecord = (Button) convertView.findViewById(R.id.listview_item_safety_inspect_task_history_record_btn);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
@@ -104,6 +107,15 @@ public class SafetyInspectTaskAdapter extends BaseAdapter {
             }
         });
 
+        v.historyRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SafetyInspectHistoryRecordItemActivity.class);
+                intent.putExtra("orderId", list.get(position).getId());
+                context.startActivity(intent);
+            }
+        });
+
         return convertView;
     }
 
@@ -115,6 +127,7 @@ public class SafetyInspectTaskAdapter extends BaseAdapter {
         private Button location;
         private Button record;
         private Button upload;
+        private Button historyRecord;
 
     }
 }

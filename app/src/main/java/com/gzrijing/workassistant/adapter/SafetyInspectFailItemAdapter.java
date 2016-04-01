@@ -216,6 +216,7 @@ public class SafetyInspectFailItemAdapter extends BaseAdapter {
                 .add("RecordId", list.get(position).getRecordId())
                 .add("UserNo", list.get(position).getWorkerNo())
                 .add("UserInf", list.get(position).getRemark())
+                .add("UserName", list.get(position).getWorker())
                 .build();
 
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {

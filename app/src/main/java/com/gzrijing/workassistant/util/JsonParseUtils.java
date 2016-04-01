@@ -34,6 +34,8 @@ import com.gzrijing.workassistant.entity.SafetyInspectFailItem;
 import com.gzrijing.workassistant.entity.SafetyInspectFailReport;
 import com.gzrijing.workassistant.entity.SafetyInspectFirstItem;
 import com.gzrijing.workassistant.entity.SafetyInspectForm;
+import com.gzrijing.workassistant.entity.SafetyInspectHistoryRecord;
+import com.gzrijing.workassistant.entity.SafetyInspectHistoryRecordFailItem;
 import com.gzrijing.workassistant.entity.SafetyInspectSecondItem;
 import com.gzrijing.workassistant.entity.SafetyInspectTask;
 import com.gzrijing.workassistant.entity.SendMachine;
@@ -2384,6 +2386,65 @@ public class JsonParseUtils {
                 item.setWorker(worker);
                 item.setTime(time);
                 item.setRemark(remark);
+                list.add(item);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 获取某一工程安全检查历史记录
+     */
+    public static ArrayList<SafetyInspectHistoryRecord> getSafetyInspectHistoryRecord(String jsonData) {
+        ArrayList<SafetyInspectHistoryRecord> list = new ArrayList<SafetyInspectHistoryRecord>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String situation = jsonObject.getString("TaskCi");
+                String process = jsonObject.getString("TaskSi");
+                String submitTime = jsonObject.getString("TaskUt");
+                String flag = jsonObject.getString("TaskSf");
+
+                String failure = jsonObject.getString("TaskDel");
+                ArrayList<SafetyInspectHistoryRecordFailItem> failureList = new ArrayList<SafetyInspectHistoryRecordFailItem>();
+                if (!failure.equals("")) {
+                    JSONArray jsonArray1 = jsonObject.getJSONArray("TaskDel");
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
+                        String failContent = jsonObject1.getString("ItemName");
+                        String handleName = jsonObject1.getString("handlename");
+                        String handleTime = jsonObject1.getString("handletime");
+                        SafetyInspectHistoryRecordFailItem failureItem = new SafetyInspectHistoryRecordFailItem();
+                        failureItem.setFailContent(failContent);
+                        failureItem.setHandleName(handleName);
+                        failureItem.setHandleTime(handleTime);
+                        failureList.add(failureItem);
+                    }
+                }
+
+                String picUrlStr = jsonObject.getString("TaskPicD");
+                ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
+                if (!picUrlStr.equals("")) {
+                    JSONArray jsonArray2 = jsonObject.getJSONArray("TaskPicD");
+                    for (int k = 0; k < jsonArray2.length(); k++) {
+                        JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
+                        String picUri = jsonObject2.getString("PicUri");
+                        PicUrl picUrl = new PicUrl();
+                        picUrl.setPicUrl(picUri);
+                        picUrls.add(picUrl);
+                    }
+                }
+
+                SafetyInspectHistoryRecord item = new SafetyInspectHistoryRecord();
+                item.setSituation(situation);
+                item.setProcess(process);
+                item.setSubmitDate(submitTime);
+                item.setFlag(flag);
+                item.setFailure(failureList);
+                item.setPicUrls(picUrls);
                 list.add(item);
             }
         } catch (JSONException e) {
