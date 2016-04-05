@@ -14,11 +14,22 @@
 
     <TextView
         android:id="@+id/listview_item_safety_inspect_record_name_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginLeft="@dimen/sw_5dp"
+        android:layout_marginRight="@dimen/sw_5dp"
         android:layout_gravity="center_vertical"
         android:textColor="@color/black"
+        android:textSize="@dimen/sw_15dp"/>
+
+    <TextView
+        android:id="@+id/listview_item_safety_inspect_record_is_handle_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="1111111111"
+        android:textColor="@color/blue"
         android:textSize="@dimen/sw_15dp"/>
 
 </LinearLayout>

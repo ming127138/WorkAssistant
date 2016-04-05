@@ -60,12 +60,18 @@ public class SafetyInspectRecordAdapter extends BaseAdapter {
                     R.layout.listview_item_safety_inspect_record, parent, false);
             v.image = (ImageView) convertView.findViewById(R.id.listview_item_safety_inspect_record_image_iv);
             v.name = (TextView) convertView.findViewById(R.id.listview_item_safety_inspect_record_name_tv);
+            v.isHandle = (TextView) convertView.findViewById(R.id.listview_item_safety_inspect_record_is_handle_tv);
             convertView.setTag(v);
         } else {
             v = (ViewHolder) convertView.getTag();
         }
 
         v.name.setText(list.get(position).getName());
+        if (list.get(position).getIsHandle().equals("1")) {
+            v.isHandle.setText("处理完");
+        } else {
+            v.isHandle.setText("未处理");
+        }
         v.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,11 +89,11 @@ public class SafetyInspectRecordAdapter extends BaseAdapter {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                if(response.equals("ok")){
+                                if (response.equals("ok")) {
                                     list.remove(position);
                                     notifyDataSetChanged();
                                     ToastUtil.showToast(context, "删除成功", Toast.LENGTH_SHORT);
-                                }else {
+                                } else {
                                     ToastUtil.showToast(context, "删除失败", Toast.LENGTH_SHORT);
                                 }
                             }
@@ -112,5 +118,6 @@ public class SafetyInspectRecordAdapter extends BaseAdapter {
     class ViewHolder {
         private ImageView image;
         private TextView name;
+        private TextView isHandle;
     }
 }

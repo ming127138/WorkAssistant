@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,7 +31,6 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SafetyInspectFormActivity extends BaseActivity {
 
@@ -41,6 +41,7 @@ public class SafetyInspectFormActivity extends BaseActivity {
     private ArrayList<SafetyInspectSecondItem> checkedList = new ArrayList<SafetyInspectSecondItem>();
     private SafetyInspectFormExpandableAdapter expandableAdapter;
     private Handler handler = new Handler();
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class SafetyInspectFormActivity extends BaseActivity {
     private void getCheckedItems() {
         String url = null;
         try {
-            url = "?cmd=cmd=LoadSafeItemSaved&fileid=" + URLEncoder.encode(orderId, "UTF-8");
+            url = "?cmd=LoadSafeItemSaved&fileid=" + URLEncoder.encode(orderId, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -106,7 +107,8 @@ public class SafetyInspectFormActivity extends BaseActivity {
                         for (SafetyInspectSecondItem checkedItem : checkedList) {
                             for (SafetyInspectFirstItem groupItem : groupList) {
                                 for (SafetyInspectSecondItem childItem : groupItem.getChildList()) {
-                                    if (checkedItem.getId().equals(checkedItem.getId())) {
+                                    if (checkedItem.getId().equals(childItem.getId())) {
+                                        childItem.setSubmit(true);
                                         childItem.setCheck(true);
                                     }
                                 }
@@ -166,12 +168,16 @@ public class SafetyInspectFormActivity extends BaseActivity {
     }
 
     private void submit() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在上传图片");
+        pDialog.show();
         JSONArray jsonArray = new JSONArray();
         try {
             for (SafetyInspectFirstItem group : groupList) {
                 for (SafetyInspectSecondItem child : group.getChildList()) {
                     for (SafetyInspectSecondItem checkedItem : checkedList) {
-                        if (child.getId().equals(child.getId())) {
+                        if (child.getId().equals(checkedItem.getId())) {
                             child.setCheck(false);
                         }
                     }
@@ -203,6 +209,7 @@ public class SafetyInspectFormActivity extends BaseActivity {
                     @Override
                     public void run() {
                         if (response.equals("ok")) {
+                            pDialog.dismiss();
                             ToastUtil.showToast(SafetyInspectFormActivity.this, "提交成功", Toast.LENGTH_SHORT);
                             Intent intent = new Intent(SafetyInspectFormActivity.this, SafetyInspectRecordActivity.class);
                             intent.putExtra("orderId", orderId);
@@ -210,6 +217,7 @@ public class SafetyInspectFormActivity extends BaseActivity {
                             finish();
                         } else {
                             ToastUtil.showToast(SafetyInspectFormActivity.this, "提交失败", Toast.LENGTH_SHORT);
+                            pDialog.dismiss();
                         }
                     }
                 });
@@ -221,6 +229,7 @@ public class SafetyInspectFormActivity extends BaseActivity {
                     @Override
                     public void run() {
                         ToastUtil.showToast(SafetyInspectFormActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }

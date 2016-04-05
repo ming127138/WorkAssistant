@@ -11,12 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.entity.SafetyInspectHistoryRecord;
 import com.gzrijing.workassistant.view.AccidentsActivity;
 import com.gzrijing.workassistant.view.BusinessHaveSendByAllActivity;
 import com.gzrijing.workassistant.view.EntrustActivity;
 import com.gzrijing.workassistant.view.LeaderMachineApplyBillListActivity;
 import com.gzrijing.workassistant.view.LeaderMachineReturnBillListActivity;
 import com.gzrijing.workassistant.view.SafetyInspectFailActivity;
+import com.gzrijing.workassistant.view.SafetyInspectHistoryRecordQueryActivity;
 import com.gzrijing.workassistant.view.SafetyInspectTaskActivity;
 import com.gzrijing.workassistant.view.TrajectoryQueryActivity;
 
@@ -105,6 +107,11 @@ public class ManageGridViewAdapter extends BaseAdapter {
 
                 if(position == 7){
                     Intent intent = new Intent(context, SafetyInspectFailActivity.class);
+                    context.startActivity(intent);
+                }
+
+                if(position == 8){
+                    Intent intent = new Intent(context, SafetyInspectHistoryRecordQueryActivity.class);
                     context.startActivity(intent);
                 }
 

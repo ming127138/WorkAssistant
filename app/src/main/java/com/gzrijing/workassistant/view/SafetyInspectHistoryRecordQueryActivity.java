@@ -13,9 +13,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
-import com.gzrijing.workassistant.adapter.SafetyInspectTaskAdapter;
+import com.gzrijing.workassistant.adapter.SafetyInspectHistoryRecordItemAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.entity.SafetyInspectTask;
+import com.gzrijing.workassistant.entity.SafetyInspectHistoryRecord;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
@@ -25,28 +25,28 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SafetyInspectTaskActivity extends BaseActivity implements View.OnClickListener {
+public class SafetyInspectHistoryRecordQueryActivity extends BaseActivity implements View.OnClickListener {
 
-    private ListView lv_tasks;
-    private ArrayList<SafetyInspectTask> taskList = new ArrayList<SafetyInspectTask>();
-    private SafetyInspectTaskAdapter adapter;
     private EditText et_id;
     private Button btn_query;
+    private ListView lv_item;
     private ProgressDialog pDialog;
+    private ArrayList<SafetyInspectHistoryRecord> failureList = new ArrayList<SafetyInspectHistoryRecord>();
+    private SafetyInspectHistoryRecordItemAdapter adapter;
     private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_safety_inspect_task);
+        setContentView(R.layout.activity_safety_inspect_history_record_query);
 
-        initViews();
         initData();
+        initViews();
         setListeners();
     }
 
     private void initData() {
-        queryTasks();
+
     }
 
     private void initViews() {
@@ -54,53 +54,60 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        et_id = (EditText) findViewById(R.id.safety_inspect_task_id_et);
-        btn_query = (Button) findViewById(R.id.safety_inspect_task_query_btn);
+        et_id = (EditText) findViewById(R.id.safety_inspect_history_record_query_order_id_et);
+        btn_query = (Button) findViewById(R.id.safety_inspect_history_record_query_query_btn);
 
-        lv_tasks = (ListView) findViewById(R.id.safety_inspect_task_lv);
-        adapter = new SafetyInspectTaskAdapter(this, taskList);
-        lv_tasks.setAdapter(adapter);
+        lv_item = (ListView) findViewById(R.id.safety_inspect_history_record_query_lv);
+        adapter = new SafetyInspectHistoryRecordItemAdapter(SafetyInspectHistoryRecordQueryActivity.this, failureList);
+        lv_item.setAdapter(adapter);
     }
 
     private void setListeners() {
         btn_query.setOnClickListener(this);
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.safety_inspect_task_query_btn:
-                queryTasks();
+            case R.id.safety_inspect_history_record_query_query_btn:
+                query();
                 break;
         }
     }
 
-    private void queryTasks() {
+    private void query() {
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setMessage("正在加载数据");
         pDialog.show();
-        String id = et_id.getText().toString().trim();
+        String orderId = et_id.getText().toString().trim();
         String url = null;
         try {
-            url = "?cmd=LoadTaskInf&fileid=" + URLEncoder.encode(id, "UTF-8");
+            url = "?cmd=GetSafeOldInf&fileid=" + URLEncoder.encode(orderId, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
-            public void onFinish(String response) {
+            public void onFinish(final String response) {
                 Log.e("response", response);
-                ArrayList<SafetyInspectTask> list = JsonParseUtils.getSafetyInspectTask(response);
-                taskList.clear();
-                taskList.addAll(list);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        ArrayList<SafetyInspectHistoryRecord> list = JsonParseUtils.getSafetyInspectHistoryRecord(response);
+                        failureList.clear();
+                        for (SafetyInspectHistoryRecord form : list) {
+                            if (form.getFlag().equals("1")) {
+                                failureList.add(form);
+                            }
+                        }
                         adapter.notifyDataSetChanged();
+                        pDialog.dismiss();
                     }
                 });
-                pDialog.cancel();
+
             }
 
             @Override
@@ -108,10 +115,10 @@ public class SafetyInspectTaskActivity extends BaseActivity implements View.OnCl
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(SafetyInspectTaskActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        ToastUtil.showToast(SafetyInspectHistoryRecordQueryActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
-                pDialog.cancel();
             }
         });
     }

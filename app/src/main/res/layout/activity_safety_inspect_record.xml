@@ -94,7 +94,7 @@
 
             <com.gzrijing.workassistant.widget.MyListView
                 android:id="@+id/safety_inspect_record_failure_lv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <TextView

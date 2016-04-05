@@ -1681,9 +1681,11 @@ public class JsonParseUtils {
                         JSONObject jsonObject1 = jsonArray1.getJSONObject(j);
                         String id = jsonObject1.getString("ItemId");
                         String name = jsonObject1.getString("ItemName");
+                        String isHandle = jsonObject1.getString("HandleFlag");
                         SafetyInspectSecondItem failureItem = new SafetyInspectSecondItem();
                         failureItem.setId(id);
                         failureItem.setName(name);
+                        failureItem.setIsHandle(isHandle);
                         failureList.add(failureItem);
                     }
                 }

@@ -40,8 +40,8 @@ public class ManageFragment extends Fragment {
     private void initData() {
         iconIds = new int[]{R.drawable.icon_trajectory_query, R.drawable.icon_entrust, R.drawable.icon_accidents,
                 R.drawable.icon_apply_machine, R.drawable.icon_return_machine, R.drawable.icon_business_have_send,
-                R.drawable.icon_safety_inspect, R.drawable.icon_safety_inspect};
-        texts = new String[]{"轨迹查询", "代班功能", "意外情况", "机械申请单", "机械退机单", "已派任务", "　 安全检查　　", "安全检查不合格项"};
+                R.drawable.icon_safety_inspect, R.drawable.icon_safety_inspect, R.drawable.icon_safety_inspect};
+        texts = new String[]{"轨迹查询", "代班功能", "意外情况", "机械申请单", "机械退机单", "已派任务", "　　安全检查　　", "安全检查不合格项", "安全检查历史查询"};
     }
 
     private void initViews() {

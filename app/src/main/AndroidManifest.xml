@@ -440,6 +440,18 @@
             android:name=".view.SafetyInspectFailReportActivity"
             android:label="不合格项"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectHistoryRecordActivity"
+            android:label="历史纪录信息"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectHistoryRecordItemActivity"
+            android:label="历史纪录清单"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.SafetyInspectHistoryRecordQueryActivity"
+            android:label="历史纪录查询"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -671,8 +683,6 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".view.SafetyInspectHistoryRecordActivity" />
-        <activity android:name=".view.SafetyInspectHistoryRecordItemActivity"></activity>
     </application>
 
 </manifest>

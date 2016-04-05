@@ -19,19 +19,19 @@ public class HttpUtils {
     /**
      * get请求路径
      */
-    private static final String URLPath = "http://120.24.62.15:83/main.ashx";
+    private static final String URLPath = "http://120.24.62.15:90/main.ashx";
     /**
      * post请求路径
      */
-    private static final String postURLPath = "http://120.24.62.15:83/mainpost.ashx";
+    private static final String postURLPath = "http://120.24.62.15:90/mainpost.ashx";
     /**
      * 图片请求路径
      */
-    public static final String imageURLPath = "http://120.24.62.15:83";
+    public static final String imageURLPath = "http://120.24.62.15:90";
     /**
      * 音频请求路径
      */
-    public static final String voiceURLPath = "http://120.24.62.15:83//Sound/";
+    public static final String voiceURLPath = "http://120.24.62.15:90//Sound/";
 
     private static OkHttpClient mOkHttpClient = new OkHttpClient();
 

@@ -113,13 +113,15 @@ public class SafetyInspectFormExpandableAdapter extends BaseExpandableListAdapte
             v.iv.setImageResource(R.drawable.login_checkbox_off);
         }
 
-        v.ll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                child.setCheck(!child.isCheck());
-                notifyDataSetChanged();
-            }
-        });
+        if(!child.isSubmit()){
+            v.ll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    child.setCheck(!child.isCheck());
+                    notifyDataSetChanged();
+                }
+            });
+        }
 
         return convertView;
     }
