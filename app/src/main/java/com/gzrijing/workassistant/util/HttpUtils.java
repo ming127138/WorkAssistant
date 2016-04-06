@@ -17,21 +17,27 @@ import java.util.concurrent.TimeUnit;
 
 public class HttpUtils {
     /**
+     * 小榄：120.25.169.30:80
+     */
+    /**
+     * 自己：120.24.62.15:83
+     */
+    /**
      * get请求路径
      */
-    private static final String URLPath = "http://120.24.62.15:90/main.ashx";
+    private static final String URLPath = "http://120.25.169.30:80/main.ashx";
     /**
      * post请求路径
      */
-    private static final String postURLPath = "http://120.24.62.15:90/mainpost.ashx";
+    private static final String postURLPath = "http://120.25.169.30:80/mainpost.ashx";
     /**
      * 图片请求路径
      */
-    public static final String imageURLPath = "http://120.24.62.15:90";
+    public static final String imageURLPath = "http://120.25.169.30:80";
     /**
      * 音频请求路径
      */
-    public static final String voiceURLPath = "http://120.24.62.15:90//Sound/";
+    public static final String voiceURLPath = "http://120.25.169.30:80//Sound/";
 
     private static OkHttpClient mOkHttpClient = new OkHttpClient();
 

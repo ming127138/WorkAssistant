@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SharedPreferences sp; // 声明一个SharedPreferences
     private String clientId;
     private ProgressDialog pDialog;
+    private PushManager pushManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void initData() {
         //初始化推送服务
-        PushManager.getInstance().initialize(getApplicationContext());
+        pushManager = PushManager.getInstance();
+        pushManager.initialize(getApplicationContext());
         ServiceOpenAndClose serviceOpenAndClose = DataSupport.find(ServiceOpenAndClose.class, 1);
         if (serviceOpenAndClose == null) {
             ServiceOpenAndClose service = new ServiceOpenAndClose();
@@ -70,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             values.put("pushService", "1");
             DataSupport.update(ServiceOpenAndClose.class, values, 1);
         }
-        clientId = PushManager.getInstance().getClientid(getApplicationContext());
+        clientId = pushManager.getClientid(getApplicationContext());
 
         getUserNamePwd();
     }
@@ -147,8 +150,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void login() {
         if (clientId == null) {
-            ToastUtil.showToast(this, "clientId == null, 请重启应用", Toast.LENGTH_SHORT);
-            return;
+            clientId = pushManager.getClientid(getApplicationContext());
+            if(clientId == null){
+                ToastUtil.showToast(LoginActivity.this, "网络延迟，请重新登录", Toast.LENGTH_LONG);
+                return;
+            }
         }
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -173,8 +179,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 Message msg = null;
-                if (response.substring(0, 5).equals("Error")) {
+                if (response.substring(0, 1).equals("E")) {
                     msg = handler.obtainMessage(1);
                 } else {
                     pwd = finalPWD;
@@ -200,11 +207,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             switch (msg.what) {
                 case 0:
                     ToastUtil.showToast(LoginActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
-                    pDialog.cancel();
+                    pDialog.dismiss();
                     break;
                 case 1:
                     ToastUtil.showToast(LoginActivity.this, "用户账号与密码不匹配", Toast.LENGTH_SHORT);
-                    pDialog.cancel();
+                    pDialog.dismiss();
                     break;
                 case 2:
                     User user = (User) msg.obj;
@@ -219,7 +226,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     intent.putExtra("fragId", "0");
                     startActivity(intent);
                     ToastUtil.showToast(LoginActivity.this, "欢迎" + user.getUserName() + "登录", Toast.LENGTH_SHORT);
-                    pDialog.cancel();
+                    pDialog.dismiss();
                     finish();
                     break;
             }
