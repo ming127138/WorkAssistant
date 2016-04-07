@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -71,6 +72,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private Handler handler = new Handler();
     private boolean isCheck;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,6 +250,10 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
             return;
         }
 
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在登陆...");
+        pDialog.show();
         JSONArray jsonArray = new JSONArray();
         for (Machine machine : returnList) {
             try {
@@ -289,6 +295,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
                         @Override
                         public void run() {
                             ToastUtil.showToast(MachineReturnEditActivity.this, "申请失败", Toast.LENGTH_SHORT);
+                            pDialog.dismiss();
                         }
                     });
                 } else {
@@ -296,6 +303,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
                         @Override
                         public void run() {
                             MachineNo machineNo = savaMachineNo(response);
+                            pDialog.dismiss();
                             Intent  intent = getIntent();
                             setResult(30, intent);
                             finish();
@@ -311,6 +319,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void run() {
                         ToastUtil.showToast(MachineReturnEditActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }

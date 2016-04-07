@@ -51,7 +51,7 @@ public class ReturnMachineActivity extends AppCompatActivity {
 
         getReturnMachine();
 
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.ReturnMachine");
+        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.SendMachine");
         registerReceiver(mBroadcastReceiver, intentFilter);
 
     }
@@ -118,7 +118,7 @@ public class ReturnMachineActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals("action.com.gzrijing.workassistant.ReturnMachine")) {
+            if (action.equals("action.com.gzrijing.workassistant.SendMachine")) {
                 getReturnMachine();
             }
         }

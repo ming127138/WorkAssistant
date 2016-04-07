@@ -362,6 +362,7 @@ public class BusinessFragment extends Fragment {
                         machineData.setUnit(machine.getUnit());
                         machineData.setApplyNum(machine.getApplyNum());
                         machineData.setSendNum(machine.getSendNum());
+                        machineData.setReceivedState("");
                         machineData.save();
                         businessData.getMachineDataList().add(machineData);
                     }

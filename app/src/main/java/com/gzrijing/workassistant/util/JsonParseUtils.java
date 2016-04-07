@@ -1380,6 +1380,7 @@ public class JsonParseUtils {
                 String sendId = jsonObject.getString("Sendid");
                 String orderId = jsonObject.getString("FileNo");
                 String billNo = jsonObject.getString("BillNo");
+                String sendAddress = jsonObject.getString("MachineAddress");
                 String address = jsonObject.getString("ProAddress");
                 String machineNo = jsonObject.getString("MachineNo");
                 String machineName = jsonObject.getString("MachineName");
@@ -1392,6 +1393,7 @@ public class JsonParseUtils {
                 returnMachine.setSendId(sendId);
                 returnMachine.setOrderId(orderId);
                 returnMachine.setBillNo(billNo);
+                returnMachine.setSendAddress(sendAddress);
                 returnMachine.setAddress(address);
                 returnMachine.setMachineNo(machineNo);
                 returnMachine.setMachineName(machineName);
@@ -1856,6 +1858,7 @@ public class JsonParseUtils {
                         String machineNo = jsonObject1.getString("MachineNo");
                         String name = jsonObject1.getString("MachineName");
                         String unit = jsonObject1.getString("MachineUnit");
+                        String num = jsonObject1.getString("NeedQty");
                         String flag = jsonObject1.getString("SendName");
                         if (flag.equals("")) {
                             flag = "0";
@@ -1867,6 +1870,7 @@ public class JsonParseUtils {
                         machine.setMachineNo(machineNo);
                         machine.setName(name);
                         machine.setUnit(unit);
+                        machine.setNum(num);
                         machine.setFlag(flag);
                         machineList.add(machine);
                     }

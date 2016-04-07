@@ -38,9 +38,9 @@ public class SendMachineInfoActivity extends BaseActivity {
         String flag = intent.getStringExtra("flag");
         if (flag.equals("ReturnMachine")) {
             returnMachineInfo = intent.getParcelableExtra("ReturnMachine");
-            String[] key = {"工程单号", "申请单号", "退机地址", "机械编号", "机械名称", "数量", "退机人", "退机时间", "退机类型"};
-            String[] value = {returnMachineInfo.getOrderId(), returnMachineInfo.getBillNo(),
-                    returnMachineInfo.getAddress(), returnMachineInfo.getMachineNo(), returnMachineInfo.getMachineName(),
+            String[] key = {"工程单号", "申请单号", "取机地址", "送机地址", "机械编号", "机械名称", "数量", "退机人", "退机时间", "退机类型"};
+            String[] value = {returnMachineInfo.getOrderId(), returnMachineInfo.getBillNo(), returnMachineInfo.getAddress(),
+                    returnMachineInfo.getSendAddress(), returnMachineInfo.getMachineNo(), returnMachineInfo.getMachineName(),
                     returnMachineInfo.getMachineNum(), returnMachineInfo.getReturnName(), returnMachineInfo.getReturnTiem(), returnMachineInfo.getType()};
 
             for (int i = 0; i < key.length; i++) {

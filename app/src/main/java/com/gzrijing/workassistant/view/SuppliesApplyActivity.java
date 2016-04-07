@@ -538,6 +538,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         HttpUtils.sendHttpPostRequest(requestBody, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
+                Log.e("response", response);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

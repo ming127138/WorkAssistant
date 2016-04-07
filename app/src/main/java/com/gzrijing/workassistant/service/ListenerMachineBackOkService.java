@@ -7,25 +7,15 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.MachineData;
 import com.gzrijing.workassistant.db.MachineNoData;
-import com.gzrijing.workassistant.entity.Machine;
-import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
-import com.gzrijing.workassistant.util.HttpUtils;
-import com.gzrijing.workassistant.util.JsonParseUtils;
-import com.gzrijing.workassistant.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListenerMachineBackOkService extends IntentService {

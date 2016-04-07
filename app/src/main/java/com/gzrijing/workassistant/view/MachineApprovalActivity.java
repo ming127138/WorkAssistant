@@ -3,6 +3,7 @@ package com.gzrijing.workassistant.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ public class MachineApprovalActivity extends BaseActivity {
         Intent intent = getIntent();
         machineNo = (MachineNo) intent.getParcelableExtra("machineNo");
         List<MachineData> machineDataList = DataSupport.where("applyId = ? and receivedState=?", machineNo.getApplyId(), "").find(MachineData.class);
+        Log.e("size", machineDataList.size()+"");
         for (MachineData data : machineDataList) {
             Machine machine = new Machine();
             machine.setName(data.getName());

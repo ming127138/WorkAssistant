@@ -239,7 +239,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.ReturnMachineActivity"
-            android:label="退机信息"
+            android:label="退机列表"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.ReportInfoCompleteActivity"

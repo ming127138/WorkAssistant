@@ -7,7 +7,8 @@ public class ReturnMachine implements Parcelable {
     private String sendId;
     private String orderId;         //工程单号
     private String billNo;          //机械申请单号
-    private String address;         //退机械地址
+    private String sendAddress;     //送取机械地址
+    private String address;         //取机械地址
     private String type;            //退回类型
     private String machineNo;       //机械编号
     private String machineName;     //机械名称
@@ -18,10 +19,11 @@ public class ReturnMachine implements Parcelable {
     public ReturnMachine() {
     }
 
-    public ReturnMachine(String sendId, String orderId, String billNo, String address, String type, String machineNo, String machineName, String machineNum, String returnName, String returnTiem) {
+    public ReturnMachine(String sendId, String orderId, String billNo, String sendAddress, String address, String type, String machineNo, String machineName, String machineNum, String returnName, String returnTiem) {
         this.sendId = sendId;
         this.orderId = orderId;
         this.billNo = billNo;
+        this.sendAddress = sendAddress;
         this.address = address;
         this.type = type;
         this.machineNo = machineNo;
@@ -53,6 +55,14 @@ public class ReturnMachine implements Parcelable {
 
     public void setBillNo(String billNo) {
         this.billNo = billNo;
+    }
+
+    public String getSendAddress() {
+        return sendAddress;
+    }
+
+    public void setSendAddress(String sendAddress) {
+        this.sendAddress = sendAddress;
     }
 
     public String getAddress() {
@@ -121,6 +131,7 @@ public class ReturnMachine implements Parcelable {
         dest.writeString(this.sendId);
         dest.writeString(this.orderId);
         dest.writeString(this.billNo);
+        dest.writeString(this.sendAddress);
         dest.writeString(this.address);
         dest.writeString(this.type);
         dest.writeString(this.machineNo);
@@ -134,6 +145,7 @@ public class ReturnMachine implements Parcelable {
         this.sendId = in.readString();
         this.orderId = in.readString();
         this.billNo = in.readString();
+        this.sendAddress = in.readString();
         this.address = in.readString();
         this.type = in.readString();
         this.machineNo = in.readString();
@@ -144,10 +156,12 @@ public class ReturnMachine implements Parcelable {
     }
 
     public static final Creator<ReturnMachine> CREATOR = new Creator<ReturnMachine>() {
+        @Override
         public ReturnMachine createFromParcel(Parcel source) {
             return new ReturnMachine(source);
         }
 
+        @Override
         public ReturnMachine[] newArray(int size) {
             return new ReturnMachine[size];
         }
