@@ -145,8 +145,8 @@ final class CameraConfigurationManager {
                 Log.w(TAG, "Bad preview-size: " + previewSize);
                 continue;
             }
-
-            int newDiff = Math.abs(newX - screenResolution.x) + Math.abs(newY - screenResolution.y);
+            int newDiff=Math.abs(newY - screenResolution.x) + Math.abs(newX - screenResolution.y);
+ //           int newDiff = Math.abs(newX - screenResolution.x) + Math.abs(newY - screenResolution.y);
             if (newDiff == 0) {
                 bestX = newX;
                 bestY = newY;
