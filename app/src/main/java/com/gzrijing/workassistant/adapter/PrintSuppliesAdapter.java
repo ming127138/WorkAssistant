@@ -12,12 +12,12 @@ import com.gzrijing.workassistant.entity.Supplies;
 
 import java.util.ArrayList;
 
-public class SuppliesApplyingAdapter extends BaseAdapter {
+public class PrintSuppliesAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
     private ArrayList<Supplies> applyingList;
 
-    public SuppliesApplyingAdapter(Context context, ArrayList<Supplies> applyingList) {
+    public PrintSuppliesAdapter(Context context, ArrayList<Supplies> applyingList) {
         listContainer = LayoutInflater.from(context);
         this.applyingList = applyingList;
     }
@@ -56,7 +56,7 @@ public class SuppliesApplyingAdapter extends BaseAdapter {
         v.name.setText(applyingList.get(position).getName());
         v.spec.setText(applyingList.get(position).getSpec());
         v.unit.setText(applyingList.get(position).getUnit());
-        v.num.setText(applyingList.get(position).getApplyNum());
+        v.num.setText(applyingList.get(position).getNum());
         return convertView;
     }
 

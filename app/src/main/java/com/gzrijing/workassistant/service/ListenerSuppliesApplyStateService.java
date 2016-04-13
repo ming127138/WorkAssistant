@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.db.SuppliesNoData;
+import com.gzrijing.workassistant.entity.Supplies;
 import com.gzrijing.workassistant.entity.SuppliesNo;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.receiver.NotificationReceiver;
@@ -45,7 +46,7 @@ public class ListenerSuppliesApplyStateService extends IntentService {
         userNo = intent.getStringExtra("userNo");
         orderId = intent.getStringExtra("orderId");
 
-        if(userRank.equals("0")){
+        if (userRank.equals("0")) {
             String url = null;
             try {
                 url = "?cmd=getmymaterialneedmain&userno=" + URLEncoder.encode(userNo, "UTF-8") +
@@ -72,7 +73,7 @@ public class ListenerSuppliesApplyStateService extends IntentService {
                     });
                 }
             });
-        }else{
+        } else {
             Intent intent1 = new Intent("action.com.gzrijing.workassistant.SuppliesApply.refresh");
             sendBroadcast(intent1);
             sendNotification();
@@ -85,6 +86,12 @@ public class ListenerSuppliesApplyStateService extends IntentService {
         BusinessData businessData = DataSupport.where("user = ? and orderId = ?", userNo, orderId)
                 .find(BusinessData.class, true).get(0);
         List<SuppliesNoData> suppliesNoDataList = businessData.getSuppliesNoList();
+        for (int i = 0; i < suppliesNoDataList.size(); i++) {
+            if(suppliesNoDataList.get(i).getReceivedId() != null
+                    && !suppliesNoDataList.get(i).getReceivedId().equals("")){
+                suppliesNoDataList.remove(i);
+            }
+        }
 
         List<SuppliesNo> list = JsonParseUtils.getLitenerSuppliesApplyState(jsonData);
         for (SuppliesNo suppliesNo : list) {

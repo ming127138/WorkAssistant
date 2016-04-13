@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class QueryProjectAmount implements Parcelable {
     private String id;
-    private String feeType;         //收费性质
+    private String feeType;         //收费性质 (客户，水务）
     private String content;         //施工内容
     private String civil;           //土建项目
     private String approvalName;    //审核人

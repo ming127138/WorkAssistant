@@ -126,6 +126,11 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Machine received = receivedList.get(position);
+                for(Machine machine : returnList){
+                    if(machine.getId().equals(received.getId())){
+                        return;
+                    }
+                }
                 Machine machine = new Machine();
                 machine.setId(received.getId());
                 machine.setName(received.getName());
@@ -252,7 +257,7 @@ public class MachineReturnEditActivity extends BaseActivity implements View.OnCl
 
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pDialog.setMessage("正在登陆...");
+        pDialog.setMessage("正在申请...");
         pDialog.show();
         JSONArray jsonArray = new JSONArray();
         for (Machine machine : returnList) {

@@ -1,11 +1,11 @@
 package com.gzrijing.workassistant.entity;
 
 public class User {
-    private String userNo;
-    private String userName;
-    private String userDept;
-    private String userSit;
-    private String userRank;
+    private String userNo;          //账号
+    private String userName;        //用户名称
+    private String userDept;        //部门
+    private String userSit;         //职位
+    private String userRank;        //1表示是组长；0表示施工员；2表示主任
 
     public User() {
     }

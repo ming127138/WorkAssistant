@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.GridView;
@@ -14,6 +15,7 @@ import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.GridViewImageForReportInfoAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.PicUrl;
+import com.gzrijing.workassistant.entity.ReportInfo;
 import com.gzrijing.workassistant.service.DownLoadProblemImageService;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 
@@ -21,18 +23,16 @@ import java.util.ArrayList;
 
 public class ReportInfoProblemActivity extends BaseActivity {
 
-    private String describe;
     private TextView tv_describe;
-    private String reportor;
-    private String reportTime;
     private TextView tv_reportor;
     private TextView tv_reportTime;
     private GridView gv_image;
     private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
     private GridViewImageForReportInfoAdapter adapter;
     private Intent imageService;
-    private String id;
-    private String fileNo;
+    private ReportInfo info;
+    private TextView tv_handleName;
+    private TextView tv_handleResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,22 +46,20 @@ public class ReportInfoProblemActivity extends BaseActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        id = intent.getStringExtra("id");
-        fileNo = intent.getStringExtra("fileNo");
-        reportor = intent.getStringExtra("reportor");
-        reportTime = intent.getStringExtra("reportTime");
-        describe = intent.getStringExtra("content");
+
+        info = intent.getParcelableExtra("problemInfo");
 
         initImageList();
 
     }
 
     private void initImageList() {
+        gv_image = (GridView) findViewById(R.id.report_info_problem_image_gv);
         IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.ReportInfoProblem");
         registerReceiver(mBroadcastReceiver, intentFilter);
         imageService = new Intent(this, DownLoadProblemImageService.class);
-        imageService.putExtra("id", id);
-        imageService.putExtra("fileNo", fileNo);
+        imageService.putExtra("id", info.getId());
+        imageService.putExtra("fileNo", info.getFileNo());
         startService(imageService);
     }
 
@@ -71,13 +69,15 @@ public class ReportInfoProblemActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tv_reportor = (TextView) findViewById(R.id.report_info_problem_reportor_tv);
-        tv_reportor.setText(reportor);
+        tv_reportor.setText(info.getReportor());
         tv_reportTime = (TextView) findViewById(R.id.report_info_problem_report_time_tv);
-        tv_reportTime.setText(reportTime);
+        tv_reportTime.setText(info.getReportTime());
         tv_describe = (TextView) findViewById(R.id.report_info_problem_describe_tv);
-        tv_describe.setText(describe);
-
-        gv_image = (GridView) findViewById(R.id.report_info_problem_image_gv);
+        tv_describe.setText(info.getContent());
+        tv_handleName = (TextView) findViewById(R.id.report_info_problem_handle_name_tv);
+        tv_handleName.setText(info.getHandleName());
+        tv_handleResult = (TextView) findViewById(R.id.report_info_problem_handle_result_tv);
+        tv_handleResult.setText(info.getHandleResult());
 
     }
 

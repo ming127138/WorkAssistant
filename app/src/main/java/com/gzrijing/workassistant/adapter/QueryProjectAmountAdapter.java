@@ -18,6 +18,7 @@ import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.entity.QueryProjectAmount;
 import com.gzrijing.workassistant.view.ImageBrowserForHttpActivity;
 import com.gzrijing.workassistant.view.QueryProjectAmountByInfoActivity;
+import com.gzrijing.workassistant.view.QueryProjectAmountByInfoModifyActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,10 +74,17 @@ public class QueryProjectAmountAdapter extends BaseAdapter {
         v.query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, QueryProjectAmountByInfoActivity.class);
-                intent.putExtra("orderId", orderId);
-                intent.putExtra("projectAmount", list.get(position));
-                context.startActivity(intent);
+                if(list.get(position).getState().equals("不通过")){
+                    Intent intent = new Intent(context, QueryProjectAmountByInfoModifyActivity.class);
+                    intent.putExtra("orderId", orderId);
+                    intent.putExtra("projectAmount", list.get(position));
+                    context.startActivity(intent);
+                }else{
+                    Intent intent = new Intent(context, QueryProjectAmountByInfoActivity.class);
+                    intent.putExtra("orderId", orderId);
+                    intent.putExtra("projectAmount", list.get(position));
+                    context.startActivity(intent);
+                }
             }
         });
 

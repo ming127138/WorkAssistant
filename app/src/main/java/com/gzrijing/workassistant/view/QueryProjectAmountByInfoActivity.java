@@ -69,9 +69,6 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
         orderId = intent.getStringExtra("orderId");
         projectAmount = intent.getParcelableExtra("projectAmount");
 
-        IntentFilter intentFilter = new IntentFilter("action.com.gzrijing.workassistant.ReportProjectAmountFragment");
-        registerReceiver(mBroadcastReceiver, intentFilter);
-
         getQueryProjectAmountSupplies();
     }
 
@@ -136,9 +133,6 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
         if(state.equals("已审核")){
             menu.findItem(R.id.action_print).setVisible(true);
         }
-        if(state.equals("不通过")){
-            menu.findItem(R.id.action_apply).setVisible(true);
-        }
         return true;
     }
 
@@ -153,11 +147,6 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
 
         if (id == R.id.action_print) {
             print();
-            return true;
-        }
-
-        if (id == R.id.action_apply) {
-            apply();
             return true;
         }
 
@@ -177,7 +166,7 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
+        Log.e("url", url);
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
@@ -210,43 +199,4 @@ public class QueryProjectAmountByInfoActivity extends BaseActivity {
         });
     }
 
-    private void apply() {
-        pDialog = new ProgressDialog(this);
-        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pDialog.setMessage("正在提交");
-        pDialog.show();
-        Intent intent = new Intent(this, ReportProjectAmountService.class);
-        intent.putExtra("userNo", userNo);
-        intent.putExtra("orderId", orderId);
-        intent.putExtra("type", tv_feeType.getText().toString());
-        intent.putExtra("content", tv_content.getText().toString());
-        intent.putExtra("civil", tv_civil.getText().toString());
-        intent.putParcelableArrayListExtra("suppliesList", suppliesList);
-        intent.putExtra("flag", "1");  //0=施工员审核通过，不通知组长   1=保存状态，通知组长审核
-        intent.putExtra("id", projectAmount.getId());
-        startService(intent);
-    }
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals("action.com.gzrijing.workassistant.ReportProjectAmountFragment")) {
-                String result = intent.getStringExtra("result");
-                ToastUtil.showToast(context, result, Toast.LENGTH_SHORT);
-                pDialog.cancel();
-                if(result.equals("汇报成功")){
-                    Intent intent1 = new Intent("action.com.gzrijing.workassistant.QueryProjectAmount");
-                    sendBroadcast(intent1);
-                    finish();
-                }
-            }
-        }
-    };
-
-    @Override
-    public void onDestroy() {
-        unregisterReceiver(mBroadcastReceiver);
-        super.onDestroy();
-    }
 }

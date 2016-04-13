@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +43,7 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
     private int index;
     private ArrayList<OrderTypeSupplies> groupList = new ArrayList<OrderTypeSupplies>();
     private QueryBeforeSuppliesExpandableAdapter adapter;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,10 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
     }
 
     private void getCaliberItem() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在加载数据...");
+        pDialog.show();
         String url = null;
         try {
             url = "?cmd=getdrainsize&userno=" + URLEncoder.encode(userNo, "UTF-8")
@@ -82,6 +89,7 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
                         item[i] = list.get(i);
                     }
                 }
+                pDialog.dismiss();
             }
 
             @Override
@@ -89,7 +97,9 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        item = new String[0];
                         ToastUtil.showToast(QueryBeforeSuppliesActivity.this, "与服务器断开", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -152,6 +162,10 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
     }
 
     private void query() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在查询数据...");
+        pDialog.show();
         String url = null;
         try {
             url = "?cmd=getnearmaterialneed&userno="+ URLEncoder.encode(userNo, "UTF-8")
@@ -170,6 +184,7 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
                         groupList.clear();
                         groupList.addAll(list);
                         adapter.notifyDataSetChanged();
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -180,6 +195,7 @@ public class QueryBeforeSuppliesActivity extends BaseActivity implements View.On
                     @Override
                     public void run() {
                         ToastUtil.showToast(QueryBeforeSuppliesActivity.this, "与服务器断开", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }

@@ -68,11 +68,7 @@ public class ReportInfoByProblemAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ReportInfoProblemActivity.class);
-                intent.putExtra("id", list.get(position).getId());
-                intent.putExtra("fileNo", list.get(position).getFileNo());
-                intent.putExtra("reportor", list.get(position).getReportor());
-                intent.putExtra("reportTime", list.get(position).getReportTime());
-                intent.putExtra("content", list.get(position).getContent());
+                intent.putExtra("problemInfo", list.get(position));
                 context.startActivity(intent);
             }
         });

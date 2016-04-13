@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.PrintInfoAdapter;
+import com.gzrijing.workassistant.adapter.PrintSuppliesAdapter;
 import com.gzrijing.workassistant.adapter.SuppliesApplyingAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
 import com.gzrijing.workassistant.entity.Acceptance;
@@ -36,7 +37,7 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
     private ListView lv_supplies;
     private ArrayList<Supplies> suppliesList;
     private PrintInfoAdapter adapter;
-    private SuppliesApplyingAdapter receivedAdapter;
+    private PrintSuppliesAdapter receivedAdapter;
     BluetoothService mService = null;
     BluetoothDevice con_dev = null;
     private static final int REQUEST_ENABLE_BT = 2;
@@ -73,8 +74,29 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
         String flag = intent.getStringExtra("flag");
         if (flag.equals("客户")) {
             suppliesList = acceptance.getSuppliesByClient();
+
+            DetailedInfo contentInfo = new DetailedInfo();
+            contentInfo.setKey("施工内容");
+            contentInfo.setValue(acceptance.getKHContent());
+            acceptance.getDetailedInfos().add(contentInfo);
+
+            DetailedInfo civilInfo = new DetailedInfo();
+            civilInfo.setKey("土建项目");
+            civilInfo.setValue(acceptance.getKHCivil());
+            acceptance.getDetailedInfos().add(civilInfo);
+
         } else {
             suppliesList = acceptance.getSuppliesByWater();
+
+            DetailedInfo contentInfo = new DetailedInfo();
+            contentInfo.setKey("施工内容");
+            contentInfo.setValue(acceptance.getSWContent());
+            acceptance.getDetailedInfos().add(contentInfo);
+
+            DetailedInfo civilInfo = new DetailedInfo();
+            civilInfo.setKey("土建项目");
+            civilInfo.setValue(acceptance.getSWCivil());
+            acceptance.getDetailedInfos().add(civilInfo);
         }
     }
 
@@ -95,7 +117,7 @@ public class PrintActivity extends BaseActivity implements View.OnClickListener 
         lv_info.setAdapter(adapter);
 
         lv_supplies = (ListView) findViewById(R.id.print_supplies_lv);
-        receivedAdapter = new SuppliesApplyingAdapter(this, suppliesList);
+        receivedAdapter = new PrintSuppliesAdapter(this, suppliesList);
         lv_supplies.setAdapter(receivedAdapter);
     }
 

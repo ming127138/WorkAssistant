@@ -123,7 +123,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
         List<SuppliesNoData> suppliesNoData = businessData.getSuppliesNoList();
         for (SuppliesNoData data : suppliesNoData) {
             if (data.getApplyId() != null && !data.getApplyId().equals("")) {
-                if(data.getApplyState()!= null){
+                if (data.getApplyState() != null) {
                     if (data.getApplyState().equals("申请中") || data.getApplyState().equals("不批准")) {
                         SuppliesNo applying = new SuppliesNo();
                         applying.setApplyId(data.getApplyId());
@@ -135,7 +135,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                         applyingList.add(applying);
                     }
 
-                    if (data.getApplyState().equals("已审批")) {
+                    if (data.getReceivedId() == null && data.getApplyState().equals("已审批")) {
                         SuppliesNo approval = new SuppliesNo();
                         approval.setApplyId(data.getApplyId());
                         approval.setApplyState(data.getApplyState());
@@ -569,10 +569,10 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                                                 receivedSuppliesList.add(supplies);
                                             }
                                             List<SuppliesData> suppliesDataList = businessData.getSuppliesDataList();
-                                            for(Supplies supplies : receivedSuppliesList){
-                                                for(SuppliesData suppliesData : suppliesDataList){
-                                                    if(suppliesData.getReceivedId() == null && suppliesData.getApplyId().equals(suppliesNo.getApplyId())
-                                                            && suppliesData.getName().equals(supplies.getName()) && suppliesData.getSpec().equals(supplies.getSpec())){
+                                            for (Supplies supplies : receivedSuppliesList) {
+                                                for (SuppliesData suppliesData : suppliesDataList) {
+                                                    if (suppliesData.getReceivedId() == null && suppliesData.getApplyId().equals(suppliesNo.getApplyId())
+                                                            && suppliesData.getName().equals(supplies.getName()) && suppliesData.getSpec().equals(supplies.getSpec())) {
                                                         ContentValues values1 = new ContentValues();
                                                         values.put("sendNum", String.valueOf(
                                                                 Float.valueOf(suppliesData.getSendNum()) + Float.valueOf(supplies.getSendNum())));
@@ -596,7 +596,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
 
                                     receivedAdapter.notifyDataSetChanged();
                                     approvalAdapter.notifyDataSetChanged();
-                                    ToastUtil.showToast(SuppliesApplyActivity.this, "发放单ID:"+id+",领出成功", Toast.LENGTH_SHORT);
+                                    ToastUtil.showToast(SuppliesApplyActivity.this, "发放单ID:" + id + ",领出成功", Toast.LENGTH_SHORT);
                                 }
                             }
                         } else {
@@ -639,7 +639,7 @@ public class SuppliesApplyActivity extends BaseActivity implements View.OnClickL
                                 if (suppliesNo.getReturnId().equals(id)) {
                                     suppliesNo.setReturnState("已退回");
                                     returnAdapter.notifyDataSetChanged();
-                                    ToastUtil.showToast(SuppliesApplyActivity.this, "退回单ID:"+id+",退回成功", Toast.LENGTH_SHORT);
+                                    ToastUtil.showToast(SuppliesApplyActivity.this, "退回单ID:" + id + ",退回成功", Toast.LENGTH_SHORT);
                                 }
                             }
                         } else {

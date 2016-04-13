@@ -50,7 +50,7 @@ public class ReportCompleteService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(final Intent intent) {
         final ArrayList<PicUrl> picUrls = intent.getParcelableArrayListExtra("picUrls");
         picUrls.remove(0);
         final String orderId = intent.getStringExtra("orderId");
@@ -109,6 +109,7 @@ public class ReportCompleteService extends IntentService {
                 } else {
                     Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportComplete");
                     intent1.putExtra("result", "汇报失败");
+                    intent1.putExtra("response", response);
                     sendBroadcast(intent1);
                 }
             }

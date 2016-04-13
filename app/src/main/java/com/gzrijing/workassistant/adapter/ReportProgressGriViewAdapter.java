@@ -3,6 +3,7 @@ package com.gzrijing.workassistant.adapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,24 +68,26 @@ public class ReportProgressGriViewAdapter extends BaseAdapter {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
         v.image.setLayoutParams(params);
 
+        Log.e("size", picUrls.size()+"");
+        Log.e("position", position+"");
+
         if (picUrls.size() == 1) {
             v.image.setImageResource(R.drawable.upload_photo);
             v.delete.setVisibility(View.GONE);
-            return convertView;
-        }
-
-        if (picUrls.size() > 1 && position + 1 == picUrls.size()) {
+        }else if(picUrls.size() > 1 && position + 1 == picUrls.size()) {
+            Log.e("pic", "pic");
             v.image.setImageResource(R.drawable.upload_photo);
             v.delete.setVisibility(View.GONE);
-        } else {
-            String imageUrl = ImageDownloader.Scheme.FILE.wrap(picUrls.get(position+1).getPicUrl());
+        } else if(picUrls.size() > 1 && position + 1 != picUrls.size()){
+            Log.e("else", "else");
+            String imageUrl = ImageDownloader.Scheme.FILE.wrap(picUrls.get(position + 1).getPicUrl());
             ImageLoader.getInstance().displayImage(imageUrl, v.image);
 
             v.delete.setVisibility(View.VISIBLE);
             v.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    picUrls.remove(position+1);
+                    picUrls.remove(position + 1);
                     notifyDataSetChanged();
                 }
             });

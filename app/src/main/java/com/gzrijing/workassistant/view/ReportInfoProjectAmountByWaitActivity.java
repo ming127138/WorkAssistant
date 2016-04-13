@@ -164,6 +164,7 @@ public class ReportInfoProjectAmountByWaitActivity extends BaseActivity implemen
     }
 
     private void selectFeeType() {
+        final int flag = index;
         new AlertDialog.Builder(this).setTitle("选择归属类型：").setSingleChoiceItems(
                 new String[]{"客户", "水务"}, index, new DialogInterface.OnClickListener() {
                     @Override
@@ -182,7 +183,12 @@ public class ReportInfoProjectAmountByWaitActivity extends BaseActivity implemen
                         }
                     }
                 })
-                .setNegativeButton("取消", null).show();
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        index = flag;
+                    }
+                }).show();
     }
 
     private void submit() {

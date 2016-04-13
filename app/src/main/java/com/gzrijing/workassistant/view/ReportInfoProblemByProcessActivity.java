@@ -87,6 +87,7 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
         HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
+                Log.e("response", response);
                 ArrayList<ProblemType> list = JsonParseUtils.getProblemType(response);
                 problemTypeList.addAll(list);
                 pDialog.cancel();
@@ -153,7 +154,7 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
         for (int i = 0; i < BHSList.size(); i++) {
             influence[i] = BHSList.get(i).getId() + "--" + BHSList.get(i).getContent();
         }
-        new AlertDialog.Builder(this).setTitle("选择影响工程").setMultiChoiceItems(
+        new AlertDialog.Builder(this).setTitle("选择受影响的已派任务：").setMultiChoiceItems(
                 influence, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -209,7 +210,7 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
 
     private void selectState() {
         final int index = stateIndex;
-        new AlertDialog.Builder(this).setTitle("选择归属类型：").setSingleChoiceItems(
+        new AlertDialog.Builder(this).setTitle("选择工程状态：").setSingleChoiceItems(
                 new String[]{"暂缓执行", "停止", "取消"}, stateIndex, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -243,13 +244,18 @@ public class ReportInfoProblemByProcessActivity extends BaseActivity implements 
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDialog.setMessage("正在提交...");
         pDialog.show();
+
+        String handleuno = problemTypeList.get(typeIndex).getUserNo();
+        if(handleuno.equals("")){
+           handleuno = userNo;
+        }
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "dosaveconsaccidentfreedom")
                 .add("userno", userNo)
                 .add("fileno", orderId)
                 .add("filestate", tv_state.getText().toString())
                 .add("accidentreason", tv_type.getText().toString())
-                .add("handleuno", problemTypeList.get(typeIndex).getUserNo())
+                .add("handleuno", handleuno)
                 .add("handlereason", et_reason.getText().toString().trim())
                 .add("relationfileno", et_relationOrderId.getText().toString().trim())
                 .add("appointinstallid", tv_influence.getText().toString())

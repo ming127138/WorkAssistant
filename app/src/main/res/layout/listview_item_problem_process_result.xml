@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/pink_bg"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/pink_bg"
-        android:layout_marginTop="@dimen/sw_10dp"
-        android:layout_marginLeft="@dimen/sw_10dp"
-        android:layout_marginRight="@dimen/sw_10dp">
+        android:layout_marginTop="@dimen/sw_5dp"
+        android:layout_marginLeft="@dimen/sw_5dp"
+        android:layout_marginRight="@dimen/sw_5dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,10 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/pink_bg"
-        android:layout_marginLeft="@dimen/sw_10dp"
-        android:layout_marginRight="@dimen/sw_10dp"
-        android:layout_marginBottom="@dimen/sw_10dp"
+        android:layout_marginLeft="@dimen/sw_5dp"
+        android:layout_marginRight="@dimen/sw_5dp"
+        android:layout_marginBottom="@dimen/sw_5dp"
         android:paddingTop="@dimen/sw_10dp">
 
         <TextView

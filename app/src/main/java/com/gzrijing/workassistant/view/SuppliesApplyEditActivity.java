@@ -117,12 +117,19 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Supplies query = suppliesQueries.get(position);
+                for(Supplies sup : suppliesList){
+                    if(sup.getId().equals(query.getId())){
+                        sup.setApplyNum(String.valueOf(Float.valueOf(sup.getApplyNum())+1));
+                        adapter.notifyDataSetChanged();
+                        return;
+                    }
+                }
                 Supplies supplies = new Supplies();
                 supplies.setId(query.getId());
                 supplies.setName(query.getName());
                 supplies.setSpec(query.getSpec());
                 supplies.setUnit(query.getUnit());
-                supplies.setApplyNum("1");
+                supplies.setApplyNum("1.0");
                 suppliesList.add(supplies);
                 adapter.notifyDataSetChanged();
             }
@@ -210,7 +217,7 @@ public class SuppliesApplyEditActivity extends BaseActivity implements View.OnCl
         supplies.setName(name);
         supplies.setSpec(spec);
         supplies.setUnit(unit);
-        supplies.setApplyNum("1");
+        supplies.setApplyNum("1.0");
         suppliesList.add(supplies);
         adapter.notifyDataSetChanged();
         et_name.setText("");

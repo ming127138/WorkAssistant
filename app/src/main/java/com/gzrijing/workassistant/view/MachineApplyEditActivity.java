@@ -112,6 +112,13 @@ public class MachineApplyEditActivity extends BaseActivity implements View.OnCli
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Machine query = machineQueries.get(position);
+                for(Machine machine : machineList){
+                    if(machine.getName().equals(query.getName())){
+                        machine.setApplyNum(machine.getApplyNum()+1);
+                        applyAdapter.notifyDataSetChanged();
+                        return;
+                    }
+                }
                 Machine apply = new Machine();
                 apply.setId(query.getId());
                 apply.setName(query.getName());

@@ -6,21 +6,29 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gzrijing.workassistant.R;
+import com.gzrijing.workassistant.adapter.GridViewImageForReportInfoAdapter;
 import com.gzrijing.workassistant.base.BaseActivity;
-import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.entity.Accident;
+import com.gzrijing.workassistant.entity.PicUrl;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.ToastUtil;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class AccidentsProcessActivity extends BaseActivity {
 
@@ -37,6 +45,9 @@ public class AccidentsProcessActivity extends BaseActivity {
     private Handler handler = new Handler();
     private ProgressDialog pDialog;
     private int position;
+    private GridView gv_image;
+    private ArrayList<PicUrl> picUrls = new ArrayList<PicUrl>();
+    private GridViewImageForReportInfoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +66,52 @@ public class AccidentsProcessActivity extends BaseActivity {
         Intent intent = getIntent();
         accident = intent.getParcelableExtra("accident");
         position = intent.getIntExtra("position", -1);
+
+        getProblemPic();
+    }
+
+    private void getProblemPic() {
+        gv_image = (GridView) findViewById(R.id.accidents_process_image_gv);
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在加载数据...");
+        pDialog.show();
+        String url = null;
+        try {
+            url = "?cmd=getconspic&fileno=" + URLEncoder.encode(accident.getOrderId(), "UTF-8")
+                    + "&relationid=" + accident.getId() + "&pictype=WnW_ConsAccidentPic";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        Log.e("url", url);
+
+        HttpUtils.sendHttpGetRequest(url, new HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                Log.e("response", response);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        picUrls = JsonParseUtils.getImageUrl(response);
+                        adapter = new GridViewImageForReportInfoAdapter(AccidentsProcessActivity.this, picUrls);
+                        gv_image.setAdapter(adapter);
+                        pDialog.dismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(AccidentsProcessActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
+                    }
+                });
+            }
+        });
     }
 
     private void initViews() {

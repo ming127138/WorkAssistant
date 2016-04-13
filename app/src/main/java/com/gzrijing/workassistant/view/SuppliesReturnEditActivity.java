@@ -105,12 +105,19 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Supplies received = receivedList.get(position);
+                for(Supplies sup : returnList){
+                    if(sup.getId().equals(received.getId())){
+                        sup.setApplyNum(String.valueOf(Float.valueOf(sup.getApplyNum())+1));
+                        returnAdapter.notifyDataSetChanged();
+                        return;
+                    }
+                }
                 Supplies supplies = new Supplies();
                 supplies.setId(received.getId());
                 supplies.setName(received.getName());
                 supplies.setSpec(received.getSpec());
                 supplies.setUnit(received.getUnit());
-                supplies.setApplyNum("1");
+                supplies.setApplyNum("1.0");
                 returnList.add(supplies);
                 returnAdapter.notifyDataSetChanged();
             }

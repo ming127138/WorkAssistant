@@ -606,6 +606,8 @@ public class JsonParseUtils {
                 String picNum = jsonObject.getString("PicQty");
                 String reportor = jsonObject.getString("SaveName");
                 String reportTime = jsonObject.getString("SaveDate");
+                String handleResult = jsonObject.getString("HandleResult");
+                String handleName = jsonObject.getString("HandleName");
 
                 ReportInfo info = new ReportInfo();
                 info.setId(id);
@@ -614,6 +616,8 @@ public class JsonParseUtils {
                 info.setPicNum(picNum);
                 info.setReportor(reportor);
                 info.setReportTime(reportTime);
+                info.setHandleName(handleName);
+                info.setHandleResult(handleResult);
                 if (state.equals("停止")) {
                     info.setState("0");
                 }
@@ -1910,6 +1914,10 @@ public class JsonParseUtils {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String orderId = jsonObject.getString("FileNo");
                 String orderType = jsonObject.getString("ConsTypeName");
+                String KHContent = jsonObject.getString("KHConsContent");
+                String SWContent = jsonObject.getString("SWConsContent");
+                String KHCivil = jsonObject.getString("KHEarthWorkContent");
+                String SWCivil = jsonObject.getString("SWEarthWorkContent");
 
                 String KHMaking = jsonObject.getString("KHMaking");
                 ArrayList<Supplies> suppliesByClient = new ArrayList<Supplies>();
@@ -1978,6 +1986,10 @@ public class JsonParseUtils {
                 Acceptance acceptance = new Acceptance();
                 acceptance.setOrderId(orderId);
                 acceptance.setOrderType(orderType);
+                acceptance.setKHContent(KHContent);
+                acceptance.setKHCivil(KHCivil);
+                acceptance.setSWContent(SWContent);
+                acceptance.setSWCivil(SWCivil);
                 acceptance.setSuppliesByClient(suppliesByClient);
                 acceptance.setSuppliesByWater(suppliesByWater);
                 acceptance.setDetailedInfos(detailedInfos);

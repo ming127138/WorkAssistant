@@ -1,7 +1,6 @@
 package com.gzrijing.workassistant.view;
 
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -435,9 +434,24 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
                 break;
 
             case R.id.fragment_report_complete_report_btn:
-                report();
+                prompt();
                 break;
         }
+    }
+
+    private void prompt() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("是否汇报？")
+                .setMessage("如果汇报了完工信息后，工程量汇报信息就不能汇报了，请确认汇报了工程量后，再进行此操作")
+                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        report();
+                    }
+                })
+                .setNegativeButton("否", null)
+                .show();
+
     }
 
     private void report() {
@@ -616,7 +630,8 @@ public class ReportCompleteFragment extends Fragment implements View.OnClickList
                     ToastUtil.showToast(context, "汇报成功", Toast.LENGTH_SHORT);
                 }
                 if(result.equals("汇报失败")){
-                    ToastUtil.showToast(context, "汇报失败", Toast.LENGTH_SHORT);
+                    String response = intent.getStringExtra("response");
+                    ToastUtil.showToast(context, response, Toast.LENGTH_LONG);
                 }
                 if(result.equals("与服务器断开连接")){
                     ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);

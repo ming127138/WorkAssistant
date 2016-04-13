@@ -1,6 +1,7 @@
 package com.gzrijing.workassistant.view;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
     private Handler handler = new Handler();
     private String[] item;
     private int index;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +66,19 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
                 "saveUser", MODE_PRIVATE);
         userNo = app.getString("userNo", "");
         userSit = app.getString("userSit", "");
+        String userRank = app.getString("userRank", "");
 
-        getReplaceLeader();
+        if(!userRank.equals("0")){
+            getReplaceLeader();
+        }
 
     }
 
     private void getReplaceLeader() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在加载代班人...");
+        pDialog.show();
         String url = null;
         try {
             url = "?cmd=getreplaceuser&userno=" + URLEncoder.encode(userNo, "UTF-8")
@@ -90,6 +99,7 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
                         item[i] = userList.get(i).getUserName();
                     }
                 }
+                pDialog.dismiss();
             }
 
             @Override
@@ -98,6 +108,7 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void run() {
                         ToastUtil.showToast(EntrustActivity.this, "与服务器断开", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -240,6 +251,10 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
             return;
         }
 
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在委托中...");
+        pDialog.show();
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "dosavereplacesitleader")
                 .add("userno", userNo)
@@ -261,6 +276,7 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
                         }else{
                             ToastUtil.showToast(EntrustActivity.this, "委托失败", Toast.LENGTH_SHORT);
                         }
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -271,6 +287,7 @@ public class EntrustActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void run() {
                         ToastUtil.showToast(EntrustActivity.this, "与服务器断开", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }

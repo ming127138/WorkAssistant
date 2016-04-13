@@ -20,7 +20,8 @@ import com.gzrijing.workassistant.util.JsonParseUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportInfoByProblemActivity extends BaseActivity {
+public class
+ReportInfoByProblemActivity extends BaseActivity {
 
     private ListView lv_problem;
     private String togetherid;

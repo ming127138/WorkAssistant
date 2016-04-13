@@ -63,7 +63,8 @@ public class AccidentsActivity extends BaseActivity {
         pDialog.show();
         String url = null;
         try {
-            url = "?cmd=getaccident&userno=" + URLEncoder.encode(userNo, "UTF-8") + "&handleuno=&fileno=&isfinish=0&accidentid=";
+            url = "?cmd=getaccident&userno=" + URLEncoder.encode(userNo, "UTF-8") +
+                    "&handleuno=" + URLEncoder.encode(userNo, "UTF-8") + "&fileno=&isfinish=0&accidentid=";
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

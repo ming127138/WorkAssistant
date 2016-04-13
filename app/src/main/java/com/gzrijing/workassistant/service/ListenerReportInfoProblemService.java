@@ -22,9 +22,6 @@ public class ListenerReportInfoProblemService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         orderId = intent.getStringExtra("orderId");
 
-        Intent intent1 = new Intent("action.com.gzrijing.workassistant.ReportInfo.problem.refresh");
-        sendBroadcast(intent1);
-
         sendNotification();
 
     }
@@ -36,8 +33,8 @@ public class ListenerReportInfoProblemService extends IntentService {
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle(orderId)
-                .setContentText("有一条新的问题汇报信息")
-                .setTicker("有一条新的问题汇报信息")
+                .setContentText("有一条新的意外情况需要处理")
+                .setTicker("有一条新的意外情况需要处理")
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(android.R.drawable.ic_notification_clear_all)
                 .build();
