@@ -74,7 +74,7 @@ public class SafetyInspectFailActivity extends BaseActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.safety_inspect_task_query_btn:
+            case R.id.safety_inspect_fail_query_btn:
                 query();
                 break;
         }

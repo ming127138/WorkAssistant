@@ -71,13 +71,23 @@ public class SuppliesReturnEditActivity extends BaseActivity implements View.OnC
         for (SuppliesNo suppliesNo : suppliesNoList) {
             List<SuppliesData> suppliesDataList = DataSupport.where("receivedId = ?", suppliesNo.getReceivedId()).find(SuppliesData.class);
             for (SuppliesData data : suppliesDataList) {
-                Supplies supplies = new Supplies();
-                supplies.setId(data.getNo());
-                supplies.setName(data.getName());
-                supplies.setSpec(data.getSpec());
-                supplies.setUnit(data.getUnit());
-                supplies.setSendNum(data.getSendNum());
-                receivedList.add(supplies);
+                int index = 0;
+                for(Supplies sup : receivedList){
+                    if(sup.getId().equals(data.getNo())){
+                        index++;
+                        sup.setSendNum(String.valueOf(Float.valueOf(sup.getSendNum())+Float.valueOf(data.getSendNum())));
+                        break;
+                    }
+                }
+                if(index == 0){
+                    Supplies supplies = new Supplies();
+                    supplies.setId(data.getNo());
+                    supplies.setName(data.getName());
+                    supplies.setSpec(data.getSpec());
+                    supplies.setUnit(data.getUnit());
+                    supplies.setSendNum(data.getSendNum());
+                    receivedList.add(supplies);
+                }
             }
         }
     }

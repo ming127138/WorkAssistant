@@ -49,42 +49,29 @@ public class ReportProgressGriViewAdapter extends BaseAdapter {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder v = null;
-        if (convertView == null) {
-            v = new ViewHolder();
-            convertView = listContainer.inflate(
-                    R.layout.gridview_item_image, parent, false);
-            v.image = (ImageView) convertView.findViewById(R.id.gridview_item_image_image_iv);
-            v.delete = (ImageView) convertView.findViewById(R.id.gridview_item_image_delete_iv);
-            convertView.setTag(v);
-        } else {
-            v = (ViewHolder) convertView.getTag();
-        }
-
+        convertView = listContainer.inflate(
+                R.layout.gridview_item_image, parent, false);
+        ImageView image = (ImageView) convertView.findViewById(R.id.gridview_item_image_image_iv);
+        ImageView delete = (ImageView) convertView.findViewById(R.id.gridview_item_image_delete_iv);
         GridView gv = (GridView) parent;
         int horizontalSpacing = gv.getHorizontalSpacing();
         int width = (gv.getWidth() - horizontalSpacing * 2
                 - gv.getPaddingLeft() - gv.getPaddingRight()) / 3;
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
-        v.image.setLayoutParams(params);
-
-        Log.e("size", picUrls.size()+"");
-        Log.e("position", position+"");
+        image.setLayoutParams(params);
 
         if (picUrls.size() == 1) {
-            v.image.setImageResource(R.drawable.upload_photo);
-            v.delete.setVisibility(View.GONE);
-        }else if(picUrls.size() > 1 && position + 1 == picUrls.size()) {
-            Log.e("pic", "pic");
-            v.image.setImageResource(R.drawable.upload_photo);
-            v.delete.setVisibility(View.GONE);
-        } else if(picUrls.size() > 1 && position + 1 != picUrls.size()){
-            Log.e("else", "else");
+            image.setImageResource(R.drawable.upload_photo);
+            delete.setVisibility(View.GONE);
+        } else if (picUrls.size() > 1 && position + 1 == picUrls.size()) {
+            image.setImageResource(R.drawable.upload_photo);
+            delete.setVisibility(View.GONE);
+        } else if (picUrls.size() > 1 && position + 1 != picUrls.size()) {
             String imageUrl = ImageDownloader.Scheme.FILE.wrap(picUrls.get(position + 1).getPicUrl());
-            ImageLoader.getInstance().displayImage(imageUrl, v.image);
+            ImageLoader.getInstance().displayImage(imageUrl, image);
 
-            v.delete.setVisibility(View.VISIBLE);
-            v.delete.setOnClickListener(new View.OnClickListener() {
+            delete.setVisibility(View.VISIBLE);
+            delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     picUrls.remove(position + 1);
@@ -93,11 +80,6 @@ public class ReportProgressGriViewAdapter extends BaseAdapter {
             });
         }
         return convertView;
-    }
-
-    public static class ViewHolder {
-        public ImageView image;
-        public ImageView delete;
     }
 
 }
