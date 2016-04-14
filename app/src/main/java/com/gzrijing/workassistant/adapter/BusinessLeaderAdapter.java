@@ -30,6 +30,7 @@ import com.gzrijing.workassistant.view.MachineApplyActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.DistributeActivity;
 import com.gzrijing.workassistant.view.ReportInfoCompleteActivity;
+import com.gzrijing.workassistant.view.SafetyInspectFailReportActivity;
 import com.gzrijing.workassistant.view.SuppliesVerifyActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
@@ -170,6 +171,15 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
             }
         });
 
+        v.safetyFail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SafetyInspectFailReportActivity.class);
+                intent.putExtra("orderId", orderList.get(position).getOrderId());
+                context.startActivity(intent);
+            }
+        });
+
         v.temInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,6 +288,7 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
         private Button info;
         private Button haveSend;
         private Button myOrder;
+        private Button safetyFail;
         private TextView flag;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;
@@ -300,6 +311,8 @@ public class BusinessLeaderAdapter extends BaseAdapter implements SlideView.OnSl
                     R.id.listview_item_business_leader_have_send_btn);
             myOrder = (Button) view.findViewById(
                     R.id.listview_item_business_leader_my_order_btn);
+            safetyFail = (Button) view.findViewById(
+                    R.id.listview_item_business_leader_safety_inspect_fail_btn);
             urgent = (ImageView) view.findViewById(
                     R.id.listview_item_business_leader_urgent_iv);
             type = (TextView) view.findViewById(

@@ -452,6 +452,18 @@
             android:name=".view.SafetyInspectHistoryRecordQueryActivity"
             android:label="历史纪录查询"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.QueryProjectAmountByInfoModifyActivity"
+            android:label="工程量修改"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.DistributeByDirectorActivity"
+            android:label="工程派工"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.WorkGroupActivity"
+            android:label="工作组"
+            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
@@ -572,6 +584,9 @@
         <service
             android:name=".service.ListenerSafetyInspectFailByHandleService"
             android:exported="false" />
+        <service
+            android:name=".service.ListenerProjectAmountIsCheckService"
+            android:exported="false" />
 
         <!-- app service -->
 
@@ -683,7 +698,6 @@
             android:process=":pushservice" />
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".view.QueryProjectAmountByInfoModifyActivity"></activity>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
@@ -27,6 +28,7 @@ public class SafetyInspectFailReportAdapter extends BaseAdapter {
     private LayoutInflater listContainer;
     private ArrayList<SafetyInspectFailReport> list;
     private Handler handler = new Handler();
+    private ProgressDialog pDialog;
 
     public SafetyInspectFailReportAdapter(Context context, ArrayList<SafetyInspectFailReport> list) {
         this.context = context;
@@ -81,6 +83,10 @@ public class SafetyInspectFailReportAdapter extends BaseAdapter {
     }
 
     private void report(final int position) {
+        pDialog = new ProgressDialog(context);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在反馈...");
+        pDialog.show();
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "handlegetinsys")
                 .add("RecordId", list.get(position).getRecordId())
@@ -104,6 +110,7 @@ public class SafetyInspectFailReportAdapter extends BaseAdapter {
                                 }else{
                                     ToastUtil.showToast(context, response, Toast.LENGTH_SHORT);
                                 }
+                                pDialog.dismiss();
                             }
                         });
                     }
@@ -116,6 +123,7 @@ public class SafetyInspectFailReportAdapter extends BaseAdapter {
                     @Override
                     public void run() {
                         ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }

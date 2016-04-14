@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.view;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class SubordinateActivity extends BaseActivity {
     private String orderId;
     private String userNo;
     private Handler handler = new Handler();
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,10 @@ public class SubordinateActivity extends BaseActivity {
     }
 
     private void initSubordinatesByMachine() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在加载数据...");
+        pDialog.show();
         String url = null;
         try {
             url = "?cmd=getsitusergl&userno=" + URLEncoder.encode(userNo, "UTF-8");
@@ -93,6 +99,7 @@ public class SubordinateActivity extends BaseActivity {
                         subordinates.addAll(subList);
                         adapter = new SubordinateAdapter(SubordinateActivity.this, subordinates, iv_checkAll, tv_selected, names);
                         lv_subordinate.setAdapter(adapter);
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -103,6 +110,7 @@ public class SubordinateActivity extends BaseActivity {
                     @Override
                     public void run() {
                         ToastUtil.showToast(SubordinateActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
 
@@ -111,6 +119,10 @@ public class SubordinateActivity extends BaseActivity {
     }
 
     private void initSubordinates() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在加载数据...");
+        pDialog.show();
         String url = null;
         try {
             url = "?cmd=getsituser&fileno=" + URLEncoder.encode(orderId, "UTF-8");
@@ -127,6 +139,7 @@ public class SubordinateActivity extends BaseActivity {
                         subordinates.addAll(subList);
                         adapter = new SubordinateAdapter(SubordinateActivity.this, subordinates, iv_checkAll, tv_selected, names);
                         lv_subordinate.setAdapter(adapter);
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -137,6 +150,7 @@ public class SubordinateActivity extends BaseActivity {
                     @Override
                     public void run() {
                         ToastUtil.showToast(SubordinateActivity.this, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
 

@@ -1,5 +1,6 @@
 package com.gzrijing.workassistant.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
@@ -41,6 +42,7 @@ public class SafetyInspectFailItemAdapter extends BaseAdapter {
     private Handler handler = new Handler();
     private HashMap<Integer, String> etMapList = new HashMap<Integer, String>();
     private int index = -1;
+    private ProgressDialog pDialog;
 
     public SafetyInspectFailItemAdapter(Context context, ArrayList<SafetyInspectFailItem> list,
                                         ArrayList<SubordinateLocation> workerList) {
@@ -211,6 +213,10 @@ public class SafetyInspectFailItemAdapter extends BaseAdapter {
     }
 
     private void distributed(final int position) {
+        pDialog = new ProgressDialog(context);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("正在派发...");
+        pDialog.show();
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("cmd", "safeinf_handle")
                 .add("RecordId", list.get(position).getRecordId())
@@ -233,6 +239,7 @@ public class SafetyInspectFailItemAdapter extends BaseAdapter {
                         } else {
                             ToastUtil.showToast(context, response, Toast.LENGTH_SHORT);
                         }
+                        pDialog.dismiss();
                     }
                 });
             }
@@ -243,6 +250,7 @@ public class SafetyInspectFailItemAdapter extends BaseAdapter {
                     @Override
                     public void run() {
                         ToastUtil.showToast(context, "与服务器断开连接", Toast.LENGTH_SHORT);
+                        pDialog.dismiss();
                     }
                 });
             }

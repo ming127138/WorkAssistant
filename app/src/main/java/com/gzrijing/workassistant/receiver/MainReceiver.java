@@ -19,6 +19,7 @@ import com.gzrijing.workassistant.service.ListenerMachineReturnStateService;
 import com.gzrijing.workassistant.service.ListenerMachineSendOkService;
 import com.gzrijing.workassistant.service.ListenerOrderStateService;
 import com.gzrijing.workassistant.service.ListenerOrderTemInfoService;
+import com.gzrijing.workassistant.service.ListenerProjectAmountIsCheckService;
 import com.gzrijing.workassistant.service.ListenerReportInfoCompleteService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProblemService;
 import com.gzrijing.workassistant.service.ListenerReportInfoProgressService;
@@ -181,7 +182,7 @@ public class MainReceiver extends BroadcastReceiver {
                                     }
                                 }
                                 if(cmd.equals("handlegettask")){
-                                    String orderId = jsonObject.getString("FileNo");
+                                    String orderId = jsonObject.getString("fileid");
                                     if(!orderId.equals("")){
                                         listenerSafetyInspectFailByDistributed(orderId);
                                     }
@@ -190,6 +191,12 @@ public class MainReceiver extends BroadcastReceiver {
                                     String orderId = jsonObject.getString("FileNo");
                                     if(!orderId.equals("")){
                                         listenerSafetyInspectFailByHandle(orderId);
+                                    }
+                                }
+                                if(cmd.equals("getmyconsconfirm")){
+                                    String orderId = jsonObject.getString("FileNo");
+                                    if(!orderId.equals("")){
+                                        listenerProjectAmountIsCheck(orderId);
                                     }
                                 }
                             }
@@ -419,6 +426,15 @@ public class MainReceiver extends BroadcastReceiver {
      */
     private void listenerSafetyInspectFailByHandle(String orderId){
         Intent intent = new Intent(MyApplication.getContext(), ListenerSafetyInspectFailByHandleService.class);
+        intent.putExtra("orderId", orderId);
+        MyApplication.getContext().startService(intent);
+    }
+
+    /**
+     * 监听工程量单审核后提醒
+     */
+    private void listenerProjectAmountIsCheck(String orderId) {
+        Intent intent = new Intent(MyApplication.getContext(), ListenerProjectAmountIsCheckService.class);
         intent.putExtra("orderId", orderId);
         MyApplication.getContext().startService(intent);
     }

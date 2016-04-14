@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.gzrijing.workassistant.R;
 import com.gzrijing.workassistant.adapter.BusinessDirectorAdapter;
-import com.gzrijing.workassistant.adapter.BusinessLeaderAdapter;
 import com.gzrijing.workassistant.base.MyApplication;
 import com.gzrijing.workassistant.db.BusinessData;
 import com.gzrijing.workassistant.entity.BusinessByLeader;
@@ -190,9 +189,6 @@ public class DirectorFragment extends Fragment implements AdapterView.OnItemSele
             Log.e("action", action);
             if(action.equals("action.com.gzrijing.workassistant.LeaderFragment") ||
                     action.equals("action.com.gzrijing.workassistant.temInfoNum")){
-//                String jsonData = intent.getStringExtra("jsonData");
-//                Log.e("jsonData", jsonData);
-//                List<BusinessByLeader> list = JsonParseUtils.getLeaderBusiness(jsonData);
                 getDBData();
                 orderList.clear();
                 orderList.addAll(orderListByLeader);

@@ -47,6 +47,7 @@ import com.gzrijing.workassistant.entity.SuppliesVerify;
 import com.gzrijing.workassistant.entity.SuppliesVerifyInfo;
 import com.gzrijing.workassistant.entity.TemInfo;
 import com.gzrijing.workassistant.entity.User;
+import com.gzrijing.workassistant.entity.WorkGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -168,6 +169,28 @@ public class JsonParseUtils {
             e.printStackTrace();
         }
         return subList;
+    }
+
+    /**
+     * 获取所有工作组
+     */
+    public static List<WorkGroup> getWorkGroup(String jsonData) {
+        List<WorkGroup> list = new ArrayList<WorkGroup>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonData);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String groupNo = jsonObject.getString("WorkSitNo");
+                String groupName = jsonObject.getString("WorkSit");
+                WorkGroup workGroup = new WorkGroup();
+                workGroup.setGroupNo(groupNo);
+                workGroup.setGroupName(groupName);
+                list.add(workGroup);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     /**
@@ -2470,4 +2493,5 @@ public class JsonParseUtils {
         }
         return list;
     }
+
 }

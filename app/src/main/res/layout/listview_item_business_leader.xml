@@ -154,6 +154,23 @@
             android:layout_marginBottom="@dimen/sw_10dp"
             android:layout_marginRight="@dimen/sw_10dp">
             <Button
+                android:id="@+id/listview_item_business_leader_safety_inspect_fail_btn"
+                android:layout_width="@dimen/sw_120dp"
+                android:layout_height="@dimen/sw_25dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/btn_blue_frame"
+                android:text="安全检查不合格项"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sw_12dp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/sw_10dp"
+            android:layout_marginRight="@dimen/sw_10dp">
+            <Button
                 android:id="@+id/listview_item_business_leader_machine_apply_btn"
                 android:layout_width="@dimen/sw_60dp"
                 android:layout_height="@dimen/sw_25dp"
@@ -213,24 +230,24 @@
                 android:textSize="@dimen/sw_12dp"/>
 
             <Button
-                android:id="@+id/listview_item_business_leader_have_send_btn"
+                android:id="@+id/listview_item_business_leader_my_order_btn"
                 android:layout_width="@dimen/sw_60dp"
                 android:layout_height="@dimen/sw_25dp"
                 android:layout_toLeftOf="@+id/listview_item_business_leader_progress_btn"
                 android:layout_marginRight="@dimen/sw_10dp"
                 android:background="@drawable/btn_blue_frame"
-                android:text="已派任务"
+                android:text="我的任务"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
 
             <Button
-                android:id="@+id/listview_item_business_leader_my_order_btn"
+                android:id="@+id/listview_item_business_leader_have_send_btn"
                 android:layout_width="@dimen/sw_60dp"
                 android:layout_height="@dimen/sw_25dp"
-                android:layout_toLeftOf="@+id/listview_item_business_leader_have_send_btn"
+                android:layout_toLeftOf="@+id/listview_item_business_leader_my_order_btn"
                 android:layout_marginRight="@dimen/sw_10dp"
                 android:background="@drawable/btn_blue_frame"
-                android:text="我的任务"
+                android:text="已派任务"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/sw_12dp"/>
         </RelativeLayout>

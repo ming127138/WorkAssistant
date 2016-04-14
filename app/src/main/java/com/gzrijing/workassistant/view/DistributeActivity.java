@@ -335,7 +335,7 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
     private void distribute() {
         pDialog = new ProgressDialog(this);
         pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pDialog.setMessage("正在加载数据...");
+        pDialog.setMessage("正在提交数据...");
         pDialog.show();
         StringBuilder sb = new StringBuilder();
         for (Subordinate sub : subordinates) {

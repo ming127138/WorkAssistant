@@ -99,6 +99,8 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
                     R.id.listview_item_business_worker_gps_btn);
             v.queryProjectAmount = (Button) convertView.findViewById(
                     R.id.listview_item_business_worker_project_amount_btn);
+            v.safetyFail = (Button) convertView.findViewById(
+                    R.id.listview_item_business_worker_safety_inspect_fail_btn);
             v.flag = (TextView) convertView.findViewById(
                     R.id.listview_item_business_worker_flag_tv);
             v.head_rl = (RelativeLayout) convertView.findViewById(
@@ -119,6 +121,7 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
         v.state.setText(orderList.get(position).getState());
         v.receivedTime.setText(orderList.get(position).getReceivedTime());
         v.deadline.setText(orderList.get(position).getDeadline());
+        v.safetyFail.setVisibility(View.GONE);
 
         String endTime = orderList.get(position).getDeadline();
         try {
@@ -370,6 +373,7 @@ public class BusinessLeaderByMyOrderAdapter extends BaseAdapter {
         private Button info;
         private Button gps;
         private Button queryProjectAmount;
+        private Button safetyFail;
         private RelativeLayout head_rl;
         private LinearLayout bg_ll;
         private RelativeLayout btn_rl;

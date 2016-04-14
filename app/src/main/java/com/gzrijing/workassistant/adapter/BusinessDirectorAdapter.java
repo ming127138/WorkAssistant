@@ -27,6 +27,7 @@ import com.gzrijing.workassistant.util.VoiceUtil;
 import com.gzrijing.workassistant.view.BusinessHaveSendActivity;
 import com.gzrijing.workassistant.view.DetailedInfoActivity;
 import com.gzrijing.workassistant.view.DistributeActivity;
+import com.gzrijing.workassistant.view.DistributeByDirectorActivity;
 import com.gzrijing.workassistant.view.ProgressActivity;
 import com.gzrijing.workassistant.view.ReportInfoCompleteActivity;
 import com.gzrijing.workassistant.view.TemInfoActivity;
@@ -163,7 +164,7 @@ public class BusinessDirectorAdapter extends BaseAdapter implements SlideView.On
                     sendSure(position);
                 }
                 if (flag.equals("派工")) {
-                    Intent intent = new Intent(context, DistributeActivity.class);
+                    Intent intent = new Intent(context, DistributeByDirectorActivity.class);
                     intent.putExtra("orderId", orderList.get(position).getOrderId());
                     context.startActivity(intent);
                 }
