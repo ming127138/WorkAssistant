@@ -37,9 +37,11 @@ import com.gzrijing.workassistant.entity.Subordinate;
 import com.gzrijing.workassistant.listener.HttpCallbackListener;
 import com.gzrijing.workassistant.service.DownLoadAllImageService;
 import com.gzrijing.workassistant.util.HttpUtils;
+import com.gzrijing.workassistant.util.ImageUtils;
 import com.gzrijing.workassistant.util.JsonParseUtils;
 import com.gzrijing.workassistant.util.JudgeDate;
 import com.gzrijing.workassistant.util.ToastUtil;
+import com.gzrijing.workassistant.util.VoiceUtil;
 import com.gzrijing.workassistant.widget.selectdate.ScreenInfo;
 import com.gzrijing.workassistant.widget.selectdate.WheelMain;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -288,7 +290,13 @@ public class DistributeActivity extends BaseActivity implements View.OnClickList
         if (requestCode == 30) {
             if (resultCode == RESULT_OK) {
                 Uri recordUri = data.getData();
-                String path = recordUri.getPath();
+                Log.e("recordUri", recordUri.toString());
+                String path;
+                if (recordUri.toString().split(":")[0].equals("content")) {
+                    path = VoiceUtil.getMediaStoreVideoPath(this, recordUri);
+                } else {
+                    path = recordUri.toString().split(":")[1].substring(2);
+                }
                 String fileName = path.substring(path.lastIndexOf("/") + 1);
                 Log.e("path", path);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

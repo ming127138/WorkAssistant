@@ -1,7 +1,11 @@
 package com.gzrijing.workassistant.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import java.io.File;
@@ -27,6 +31,21 @@ public class VoiceUtil {
             path.mkdirs();
         }
 
+        return path;
+    }
+
+    /**
+     * 获取音频路径
+     * @param uri
+     * @return
+     */
+    public static String getMediaStoreVideoPath(Context context, Uri uri) {
+        ContentResolver mResolver = context.getContentResolver();
+        String[] proj = {MediaStore.Video.Media.DATA};
+        Cursor cursor = mResolver.query(uri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String path = cursor.getString(column_index);
         return path;
     }
 

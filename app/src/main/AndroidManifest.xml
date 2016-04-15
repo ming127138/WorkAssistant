@@ -460,10 +460,6 @@
             android:name=".view.DistributeByDirectorActivity"
             android:label="工程派工"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.WorkGroupActivity"
-            android:label="工作组"
-            android:screenOrientation="portrait" />
         <!-- app activity -->
 
 
